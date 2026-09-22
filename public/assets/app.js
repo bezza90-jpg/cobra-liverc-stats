@@ -65,6 +65,7 @@ function filters() {
 
 function ensureEnhancedMarkup() {
   $('divisionFilter')?.closest('label')?.remove();
+  if (!$('resultsNavigation')) document.querySelector('.brand')?.insertAdjacentHTML('afterend', '<nav class="results-nav" id="resultsNavigation" aria-label="Results pages"><a href="./" aria-current="page">Race Stats</a><a href="sword/">SWORD Championship</a><a href="club/">Club Series</a></nav>');
   if ($('eventTypeFilter')) $('eventTypeFilter').innerHTML = '<option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option>';
   if ($('classFilter')) $('classFilter').innerHTML = '<option value="senior">All senior classes</option>';
   if (!$('liveRcArchiveLink')) $('updateSchedule')?.insertAdjacentHTML('afterend', '<a class="archive-link" id="liveRcArchiveLink" href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">Event Results</a>');
@@ -582,6 +583,8 @@ async function init() {
       syncClassButtons();
       refresh();
     });
+    const requestedDriver = new URLSearchParams(window.location.search).get('driver');
+    if (requestedDriver && data.driverByKey[requestedDriver]) driverProfile(requestedDriver);
   } catch (error) {
     $('updatedStatus').textContent = 'Statistics could not be loaded.';
     $('leaderboardBody').innerHTML = `<tr><td colspan="10">${escapeHtml(error.message)}</td></tr>`;
