@@ -61,6 +61,8 @@ th { color: #415048; background: #f0f5f1; font-size: .72rem; letter-spacing: .04
 tbody tr:last-child td { border-bottom: 0; }
 tbody tr:hover { background: #f7fbf8; }
 td:nth-child(2) { font-weight: 750; }
+.driver-name { padding: 0; color: var(--green-dark); background: transparent; border: 0; border-radius: 0; font-weight: 850; text-align: left; text-decoration: underline; text-decoration-color: #9dd7a5; text-underline-offset: 3px; }
+.driver-name:hover { color: #044f0c; background: transparent; text-decoration-color: currentColor; }
 .definition { margin: 14px 0 0; color: var(--muted); font-size: .82rem; }
 
 .h2h-controls { display: grid; grid-template-columns: 1fr auto 1fr auto; align-items: end; gap: 14px; }
@@ -88,6 +90,22 @@ details .table-wrap { margin: 0 14px 14px; }
 .result-cell { min-width: 165px; line-height: 1.45; }
 .result-cell strong, .result-cell small { display: block; }
 .result-cell small { color: var(--muted); font-weight: 500; }
+
+.driver-dialog { width: min(1120px, calc(100% - 28px)); max-height: 92vh; padding: 0; color: var(--ink); background: var(--surface); border: 0; border-radius: 16px; box-shadow: 0 28px 90px rgba(0,0,0,.35); }
+.driver-dialog::backdrop { background: rgba(3, 10, 6, .72); backdrop-filter: blur(3px); }
+.dialog-shell { position: relative; padding: clamp(22px, 4vw, 38px); }
+.dialog-close { position: absolute; top: 14px; right: 14px; width: 42px; height: 42px; padding: 0; color: #344039; background: #eef3ef; border-radius: 50%; font-size: 1.65rem; line-height: 1; }
+.dialog-close:hover { color: #fff; background: var(--green-dark); }
+.profile-context { margin: 8px 52px 22px 0; color: var(--muted); }
+.profile-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 10px; }
+.profile-stats article { min-height: 106px; padding: 16px; background: #f3f7f4; border: 1px solid var(--line); border-top: 3px solid var(--green); border-radius: 9px; }
+.profile-stats strong { display: block; font-size: 1.65rem; line-height: 1; }
+.profile-stats span { display: block; margin-top: 8px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.profile-section { margin-top: 28px; }
+.profile-section h3 { margin: 0 0 12px; font-size: 1.2rem; }
+.profile-history { max-height: 430px; }
+.profile-history th:first-child, .profile-history td:first-child { text-align: left; }
+.profile-history a, .profile-section a { color: var(--green-dark); font-weight: 800; }
 
 .method { margin: 38px 0; padding: clamp(24px, 5vw, 46px); color: #fff; background: #111713; border-radius: 14px; }
 .method p { max-width: 900px; color: #c7d1ca; line-height: 1.7; }
