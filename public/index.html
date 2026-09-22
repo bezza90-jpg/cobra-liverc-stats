@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a8f18">
+  <meta name="description" content="COBRA Cardiff driver and race statistics from LiveRC">
+  <title>COBRA Race Statistics</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="brand" aria-label="COBRA Cardiff Off Road Buggy Racing Association">
+      <span class="brand-mark">COBRA</span>
+      <span class="brand-copy">Cardiff Off Road Buggy Racing Association</span>
+    </div>
+    <div class="hero-copy">
+      <p class="eyebrow">Official race archive</p>
+      <h1>Driver &amp; Race Statistics</h1>
+      <p>Explore COBRA results from January 2022, compare drivers and filter the record books by class or date.</p>
+    </div>
+    <div class="updated" id="updatedStatus">Loading statistics…</div>
+  </header>
+
+  <main>
+    <section class="overview" aria-label="Archive overview">
+      <article><strong id="eventTotal">—</strong><span>Official events</span></article>
+      <article><strong id="driverTotal">—</strong><span>Drivers</span></article>
+      <article><strong id="raceTotal">—</strong><span>Races</span></article>
+      <article><strong id="resultTotal">—</strong><span>Race results</span></article>
+    </section>
+
+    <section class="panel filters" aria-labelledby="filtersTitle">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Choose the record set</p>
+          <h2 id="filtersTitle">Statistics filters</h2>
+        </div>
+        <button type="button" class="secondary" id="resetFilters">Reset filters</button>
+      </div>
+      <div class="filter-grid">
+        <label>From date<input type="date" id="fromDate" min="2022-01-01"></label>
+        <label>To date<input type="date" id="toDate"></label>
+        <label>Class<select id="classFilter"><option value="">All classes</option></select></label>
+        <label>Find a driver<input type="search" id="driverSearch" placeholder="Start typing a name…"></label>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="leaderboardTitle">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Filtered record book</p>
+          <h2 id="leaderboardTitle">Driver leaderboard</h2>
+        </div>
+        <p class="result-count" id="leaderboardCount"></p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Driver</th>
+              <th scope="col" title="Unique events attended">Events</th>
+              <th scope="col">Entries</th>
+              <th scope="col">TQs</th>
+              <th scope="col">A wins</th>
+              <th scope="col">Lower wins</th>
+              <th scope="col">Race wins</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+      <p class="definition">Attendance counts each meeting once. A-final wins and lower-final wins are deliberately kept separate.</p>
+    </section>
+
+    <section class="panel head-to-head" aria-labelledby="h2hTitle">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Same meeting, same track</p>
+          <h2 id="h2hTitle">Driver head-to-head</h2>
+        </div>
+      </div>
+      <div class="h2h-controls">
+        <label>Driver one<select id="driverA"><option value="">Select driver</option></select></label>
+        <span class="versus" aria-hidden="true">VS</span>
+        <label>Driver two<select id="driverB"><option value="">Select driver</option></select></label>
+        <button type="button" id="compareDrivers">Compare</button>
+      </div>
+      <div id="h2hEmpty" class="empty-state">Choose two drivers to compare results within the selected dates and class.</div>
+      <div id="h2hResults" hidden>
+        <div class="comparison-grid">
+          <article>
+            <span>Shared events</span><strong id="sharedEvents">0</strong>
+            <small>Both attended, including different classes</small>
+          </article>
+          <article>
+            <span>Event comparisons</span><strong id="eventMeetings">0</strong>
+            <div class="score"><b id="eventScoreA">0</b><em>–</em><b id="eventScoreB">0</b></div>
+          </article>
+          <article>
+            <span>Race comparisons</span><strong id="raceMeetings">0</strong>
+            <div class="score"><b id="raceScoreA">0</b><em>–</em><b id="raceScoreB">0</b></div>
+          </article>
+        </div>
+        <p class="comparison-summary" id="comparisonSummary"></p>
+        <details>
+          <summary>Show event comparison details</summary>
+          <div class="table-wrap compact">
+            <table>
+              <thead><tr><th>Date</th><th>Event</th><th>Class</th><th id="eventHeadA">Driver 1</th><th id="eventHeadB">Driver 2</th></tr></thead>
+              <tbody id="eventDetails"></tbody>
+            </table>
+          </div>
+        </details>
+        <details>
+          <summary>Show race comparison details</summary>
+          <div class="table-wrap compact">
+            <table>
+              <thead><tr><th>Date</th><th>Event / race</th><th>Class</th><th id="raceHeadA">Driver 1</th><th id="raceHeadB">Driver 2</th></tr></thead>
+              <tbody id="raceDetails"></tbody>
+            </table>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="method">
+      <h2>How comparisons are counted</h2>
+      <p><strong>Event comparison:</strong> both drivers have an overall final result in the same class at the same event. <strong>Race comparison:</strong> both drivers took part in the same heat or final. Tests are excluded.</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>COBRA — Cardiff Off Road Buggy Racing Association</span>
+    <a href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">View source results on LiveRC</a>
+  </footer>
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>

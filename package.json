@@ -1,0 +1,16 @@
+{
+  "name": "cobra-liverc-statistics",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Automatically updated COBRA LiveRC statistics dashboard",
+  "scripts": {
+    "update": "node scripts/update-liverc.mjs",
+    "build": "node scripts/build-dashboard.mjs",
+    "validate": "node scripts/validate.mjs",
+    "check": "node --check public/assets/app.js && node --check scripts/update-liverc.mjs && npm run validate"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
