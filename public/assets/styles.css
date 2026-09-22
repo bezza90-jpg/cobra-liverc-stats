@@ -54,6 +54,8 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .results-nav a { padding: 8px 12px; color: #dce9df; border: 1px solid rgba(255,255,255,.18); border-radius: 5px; font-size: .78rem; font-weight: 800; text-decoration: none; }
 .results-nav a:hover, .results-nav a[aria-current="page"] { color: #071109; background: #fff; }
 .championship-hero .hero-copy { padding-top: 38px; }
+.season-selector { position: relative; z-index: 1; display: inline-flex; margin: 0 12px 12px 0; align-items: center; gap: 10px; color: #dce9df; }
+.season-selector select { min-width: 170px; height: 40px; color: #0c1b10; background: #fff; border-color: #fff; font-weight: 850; }
 .championship-overview strong { font-size: clamp(1.3rem, 3vw, 2.1rem); }
 .championship-table th a { color: var(--green-dark); text-decoration: none; }
 .championship-table th small { display: block; margin-top: 4px; color: var(--muted); font-size: .62rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
@@ -154,6 +156,7 @@ footer a { color: #85e391; }
 @media (max-width: 520px) {
   .brand { align-items: flex-start; flex-direction: column; gap: 7px; }
   .results-nav { display: grid; grid-template-columns: 1fr; }
+  .season-selector { display: grid; width: 100%; }
   .brand-copy { max-width: 230px; }
   .hero-copy { padding-top: 38px; }
   .update-schedule { display: block; margin-left: 0; }

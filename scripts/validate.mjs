@@ -51,7 +51,9 @@ for (const key of ['sword', 'club']) {
   if (!config || config.scheduledRounds !== 6 || config.bestRounds !== 4 || config.pointsStart !== 100 || config.tqBonus !== 1) errors.push(`${key} championship scoring configuration is invalid.`);
 }
 if (!swordHtml.includes('data-championship="sword"') || !clubHtml.includes('data-championship="club"')) errors.push('Championship page identity is missing.');
+if (!swordHtml.includes('id="seasonSelect"') || !clubHtml.includes('id="seasonSelect"')) errors.push('Championship season selectors are missing.');
 if (!championshipJs.includes('highestDrop') || !championshipJs.includes('qualifyingPosition')) errors.push('Championship tie-break or TQ scoring logic is missing.');
+if (!championshipJs.includes('a && b && a.total')) errors.push('Championship first-place tie guard is missing.');
 if (!styles.includes('@media (max-width: 520px)')) errors.push('Mobile layout rules are missing.');
 if (errors.length) {
   console.error(errors.join('\n'));
