@@ -6,6 +6,8 @@ This repository hosts the public COBRA statistics dashboard and refreshes it fro
 
 - Searchable driver leaderboard.
 - Date and class filters.
+- LiveRC-style leaderboard buttons for 2WD, 4WD, Junior Racers, Trucks and Vintage; the top filter also retains the combined All Seniors view, which excludes Junior Racers results.
+- A header link opens the COBRA LiveRC event archive directly.
 - The default view is the rolling year ending at the latest imported event.
 - The default leaderboard requires ten final results, with options for any, 5, 10, 20 or 30 finals.
 - Clicking a leaderboard name opens a detailed driver profile with attendance, finishing, qualifying, performance, consistency, class and event history statistics.

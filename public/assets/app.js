@@ -33,6 +33,18 @@ function eventMatches(eventId, eventType) {
   return !eventType || state.data.eventById[eventId]?.t === eventType;
 }
 
+function classMatches(className, selectedClass) {
+  if (selectedClass === 'senior') return className !== 'Junior Racers';
+  return !selectedClass || className === selectedClass;
+}
+
+function syncClassButtons() {
+  const selected = $('classFilter').value;
+  document.querySelectorAll('[data-class-filter]').forEach(button => {
+    button.setAttribute('aria-pressed', String(button.dataset.classFilter === selected));
+  });
+}
+
 function attendanceAdjustedResults(values, higherIsBetter = false) {
   if (!values.length) return [];
   const ordered = values.slice().sort((a, b) => higherIsBetter ? b - a : a - b);
@@ -54,6 +66,11 @@ function filters() {
 function ensureEnhancedMarkup() {
   $('divisionFilter')?.closest('label')?.remove();
   if ($('eventTypeFilter')) $('eventTypeFilter').innerHTML = '<option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option>';
+  if ($('classFilter')) $('classFilter').innerHTML = '<option value="senior">All senior classes</option>';
+  if (!$('liveRcArchiveLink')) $('updateSchedule')?.insertAdjacentHTML('afterend', '<a class="archive-link" id="liveRcArchiveLink" href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">Event Results</a>');
+  if (!$('leaderboardClassTabs')) $('leaderboardTitle')?.insertAdjacentHTML('afterend', `<div class="class-tabs" id="leaderboardClassTabs" aria-label="Leaderboard class">
+    <button type="button" data-class-filter="2-Wheel Drive Buggy" aria-pressed="false">2WD</button><button type="button" data-class-filter="4-Wheel Drive Buggy" aria-pressed="false">4WD</button><button type="button" data-class-filter="Junior Racers" aria-pressed="false">Junior Racers</button><button type="button" data-class-filter="Trucks" aria-pressed="false">Trucks</button><button type="button" data-class-filter="Vintage" aria-pressed="false">Vintage</button>
+  </div>`);
   const minimum = $('minimumFinals');
   if (minimum) {
     minimum.innerHTML = '<option value="1">1+ final</option><option value="5">5+ finals</option><option value="10">10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option>';
@@ -103,6 +120,7 @@ function ensureEnhancedMarkup() {
       .driver-dialog{width:min(1120px,calc(100% - 28px));max-height:92vh;padding:0;color:#111714;background:#fff;border:0;border-radius:16px;box-shadow:0 28px 90px rgba(0,0,0,.35)}.driver-dialog::backdrop{background:rgba(3,10,6,.72);backdrop-filter:blur(3px)}.dialog-shell{position:relative;padding:clamp(22px,4vw,38px)}.dialog-close{position:absolute;top:14px;right:14px;width:42px;height:42px;padding:0;color:#344039;background:#eef3ef;border-radius:50%;font-size:1.65rem;line-height:1}.dialog-close:hover{color:#fff;background:#067b14}.profile-context{margin:8px 52px 22px 0;color:#637069}.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.profile-stats article{min-height:106px;padding:16px;background:#f3f7f4;border:1px solid #dfe6e1;border-top:3px solid #08a31a;border-radius:9px}.profile-stats strong{display:block;font-size:1.65rem;line-height:1}.profile-stats span{display:block;margin-top:8px;color:#637069;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}.profile-section{margin-top:28px}.profile-section h3{margin:0 0 12px;font-size:1.2rem}.profile-history{max-height:430px}.profile-history th:first-child,.profile-history td:first-child{text-align:left}.profile-history a,.profile-section a{color:#067b14;font-weight:800}
       .race-explorer-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(280px,1.5fr) auto auto;align-items:end;gap:12px;margin-bottom:22px}.race-result-title{margin:0 0 12px;font-size:1.05rem}.inline-races summary{padding:0;color:#067b14;font-size:.78rem;white-space:nowrap}.inline-races[open]{min-width:640px}.inline-races .table-wrap{margin:10px 0 0;max-height:300px}@media(max-width:820px){.race-explorer-controls{grid-template-columns:1fr 1fr}}@media(max-width:520px){.race-explorer-controls{grid-template-columns:1fr}}
       .update-schedule{position:relative;z-index:1;display:inline-block;margin:8px 0 0 10px;color:#b8c9bd;font-size:.78rem}@media(max-width:520px){.update-schedule{display:block;margin-left:0}}
+      .archive-link{position:relative;z-index:1;display:inline-block;margin:8px 0 0 10px;padding:9px 16px;color:#055f10;background:#fff;border:1px solid #fff;border-radius:6px;box-shadow:0 5px 18px rgba(0,0,0,.2);font-size:.78rem;font-weight:900;text-decoration:none}.archive-link:hover{color:#fff;background:#08a31a;border-color:#08a31a}.class-tabs{display:inline-flex;flex-wrap:wrap;gap:0;margin-top:14px;border:1px solid #b9c5bd;border-radius:5px;overflow:hidden}.class-tabs button{padding:8px 12px;color:#26332b;background:#edf1ee;border:0;border-right:1px solid #b9c5bd;border-radius:0;font-size:.76rem}.class-tabs button:last-child{border-right:0}.class-tabs button[aria-pressed="true"]{color:#fff;background:#067b14}@media(max-width:520px){.archive-link{display:block;width:max-content;margin-left:0}.class-tabs{display:flex}.class-tabs button{flex:1 1 auto}}
     </style>`);
   }
 }
@@ -126,7 +144,7 @@ function calculateLeaderboard() {
 
   for (const result of data.eventResults) {
     const [eventId, date, cls, driverKey, finalPosition] = result;
-    if (!isPublishedFinal(result) || !inRange(date, from, to) || !eventMatches(eventId, eventType) || (className && cls !== className)) continue;
+    if (!isPublishedFinal(result) || !inRange(date, from, to) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
     const row = stats.get(driverKey);
     if (!row) continue;
     const fieldSize = fieldSizes.get(`${eventId}|${cls}`) || 1;
@@ -145,7 +163,7 @@ function calculateLeaderboard() {
   for (const [raceId, driverKey, , , , , , consistency] of data.raceResults) {
     const race = data.raceById[raceId];
     const value = Number.parseFloat(consistency);
-    if (!race || !Number.isFinite(value) || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || (className && race.c !== className)) continue;
+    if (!race || !Number.isFinite(value) || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
     const row = stats.get(driverKey);
     if (!row) continue;
     row.consistencyTotal += value;
@@ -219,7 +237,7 @@ function updateRaceSelection(preserve = true) {
   const previous = preserve ? $('raceSelection').value : '';
   const { className } = filters();
   const races = Object.entries(data.raceById)
-    .filter(([, race]) => race.e === eventId && (!className || race.c === className))
+    .filter(([, race]) => race.e === eventId && classMatches(race.c, className))
     .sort(([, a], [, b]) => Number(b.f) - Number(a.f) || a.r.localeCompare(b.r) || a.n.localeCompare(b.n));
   $('raceSelection').innerHTML = races.map(([id, race]) => `<option value="${escapeHtml(id)}">${race.f ? 'Final · ' : ''}${escapeHtml(race.r)} · ${escapeHtml(race.n)}</option>`).join('');
   $('raceSelection').value = races.some(([id]) => id === previous) ? previous : (races[0]?.[0] || '');
@@ -230,7 +248,7 @@ function updateRaceExplorer(preserve = true) {
   const data = state.data;
   const { from, to, eventType, className } = filters();
   const previous = preserve ? $('raceEvent').value : '';
-  const raceEvents = new Set(Object.values(data.raceById).filter(race => !className || race.c === className).map(race => race.e));
+  const raceEvents = new Set(Object.values(data.raceById).filter(race => classMatches(race.c, className)).map(race => race.e));
   const events = data.events.filter(event => raceEvents.has(event.i) && inRange(event.d, from, to) && eventMatches(event.i, eventType)).sort((a, b) => b.d.localeCompare(a.d));
   $('raceEvent').innerHTML = events.map(event => `<option value="${escapeHtml(event.i)}">${dateFmt.format(new Date(`${event.d}T12:00:00Z`))} — ${escapeHtml(event.n)}</option>`).join('');
   $('raceEvent').value = events.some(event => event.i === previous) ? previous : (events[0]?.i || '');
@@ -250,7 +268,7 @@ function driverProfile(driverKey) {
   const driver = data.drivers.find(row => row.k === driverKey);
   if (!driver) return;
   const { from, to, eventType, className } = filters();
-  const matches = (eventId, date, cls) => inRange(date, from, to) && eventMatches(eventId, eventType) && (!className || cls === className);
+  const matches = (eventId, date, cls) => inRange(date, from, to) && eventMatches(eventId, eventType) && classMatches(cls, className);
   const entries = data.entries.filter(row => row[3] === driverKey && matches(row[0], row[1], row[2]));
   const results = data.eventResults.filter(row => row[3] === driverKey && isPublishedFinal(row) && matches(row[0], row[1], row[2]));
   const runs = data.raceResults.filter(row => {
@@ -274,7 +292,7 @@ function driverProfile(driverKey) {
   const consistencies = runs.map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
   const uniqueEvents = new Set(entries.map(row => row[0]));
   const eligibleEventIds = new Set(data.events
-    .filter(event => inRange(event.d, from, to) && eventMatches(event.i, eventType) && (!className || data.entries.some(row => row[0] === event.i && row[2] === className)))
+    .filter(event => inRange(event.d, from, to) && eventMatches(event.i, eventType) && data.entries.some(row => row[0] === event.i && classMatches(row[2], className)))
     .map(event => event.i));
   const swordEvents = new Set(entries.filter(row => data.eventById[row[0]]?.t === 'sword').map(row => row[0]));
   const clubEvents = new Set(entries.filter(row => data.eventById[row[0]]?.t === 'club').map(row => row[0]));
@@ -288,7 +306,7 @@ function driverProfile(driverKey) {
   const performance = average(keptPerformances);
 
   const typeLabel = eventType === 'sword' ? 'SWORD' : eventType === 'club' ? 'Club Days' : eventType === 'other' ? 'Other official events' : 'All official events';
-  const classLabel = className || 'All classes';
+  const classLabel = className === 'senior' ? 'All senior classes' : (classLabels[className] || className || 'All classes');
   const fromLabel = from ? dateFmt.format(new Date(`${from}T12:00:00Z`)) : 'Beginning of archive';
   const toLabel = to ? dateFmt.format(new Date(`${to}T12:00:00Z`)) : 'Latest result';
   $('driverProfileName').textContent = `${driver.n}${driver.j ? ' — Junior' : ''}`;
@@ -392,7 +410,7 @@ function eventResultCell(row, otherPosition) {
 }
 
 function sharedEventIds(aKey, bKey, from, to, eventType, className) {
-  const eligible = row => isPublishedFinal(row) && inRange(row[1], from, to) && eventMatches(row[0], eventType) && (!className || row[2] === className);
+  const eligible = row => isPublishedFinal(row) && inRange(row[1], from, to) && eventMatches(row[0], eventType) && classMatches(row[2], className);
   const idsA = new Set(state.data.eventResults.filter(row => row[3] === aKey && eligible(row)).map(row => row[0]));
   return [...new Set(state.data.eventResults.filter(row => row[3] === bKey && idsA.has(row[0]) && eligible(row)).map(row => row[0]))];
 }
@@ -435,12 +453,12 @@ function compareDrivers(preserveEvent = false) {
   const eventMapB = new Map();
   for (const row of data.eventResults) {
     const [eventId, date, cls, driverKey] = row;
-    if (driverKey === bKey && isPublishedFinal(row) && selected(eventId) && inRange(date, from, to) && eventMatches(eventId, eventType) && (!className || cls === className)) eventMapB.set(`${eventId}|${cls}`, row);
+    if (driverKey === bKey && isPublishedFinal(row) && selected(eventId) && inRange(date, from, to) && eventMatches(eventId, eventType) && classMatches(cls, className)) eventMapB.set(`${eventId}|${cls}`, row);
   }
   const eventMeetings = [];
   for (const rowA of data.eventResults) {
     const [eventId, date, cls, driverKey, positionA] = rowA;
-    if (driverKey !== aKey || !isPublishedFinal(rowA) || !selected(eventId) || !inRange(date, from, to) || !eventMatches(eventId, eventType) || (className && cls !== className)) continue;
+    if (driverKey !== aKey || !isPublishedFinal(rowA) || !selected(eventId) || !inRange(date, from, to) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
     const rowB = eventMapB.get(`${eventId}|${cls}`);
     if (rowB) eventMeetings.push({ eventId, date, cls, a: positionA, b: rowB[4], rowA, rowB });
   }
@@ -451,7 +469,7 @@ function compareDrivers(preserveEvent = false) {
     if (rowA[1] !== aKey) continue;
     const race = data.raceById[rowA[0]];
     const rowB = raceMapB.get(rowA[0]);
-    if (!race?.f || !rowB || !selected(race.e) || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || (className && race.c !== className)) continue;
+    if (!race?.f || !rowB || !selected(race.e) || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
     finalMeetings.push({ raceId: rowA[0], race, a: rowA[2], b: rowB[2], rowA, rowB });
   }
 
@@ -512,6 +530,7 @@ async function init() {
     $('fromDate').value = oneYearBefore(data.meta.latestEventDate);
 
     for (const className of data.classes) $('classFilter').insertAdjacentHTML('beforeend', `<option value="${escapeHtml(className)}">${escapeHtml(classLabels[className] || className)}</option>`);
+    $('classFilter').value = 'senior';
     const driverOptions = data.drivers.slice().sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.k)}">${escapeHtml(driver.n)}${driver.j ? ' (Junior)' : ''}</option>`).join('');
     $('driverA').insertAdjacentHTML('beforeend', driverOptions);
     $('driverB').insertAdjacentHTML('beforeend', driverOptions);
@@ -524,6 +543,16 @@ async function init() {
       refresh();
     });
     $('classFilter').addEventListener('change', () => {
+      if ($('classFilter').value === 'Junior Racers' && $('minimumFinals').value === '10') $('minimumFinals').value = '5';
+      syncClassButtons();
+      refresh();
+    });
+    $('leaderboardClassTabs').addEventListener('click', event => {
+      const button = event.target.closest('[data-class-filter]');
+      if (!button) return;
+      $('classFilter').value = button.dataset.classFilter;
+      if ($('classFilter').value === 'Junior Racers' && $('minimumFinals').value === '10') $('minimumFinals').value = '5';
+      syncClassButtons();
       refresh();
     });
     $('driverSearch').addEventListener('input', renderLeaderboard);
@@ -547,9 +576,10 @@ async function init() {
       $('fromDate').value = oneYearBefore(data.meta.latestEventDate);
       $('toDate').value = data.meta.latestEventDate;
       $('eventTypeFilter').value = '';
-      $('classFilter').value = '';
+      $('classFilter').value = 'senior';
       $('minimumFinals').value = '10';
       $('driverSearch').value = '';
+      syncClassButtons();
       refresh();
     });
   } catch (error) {
