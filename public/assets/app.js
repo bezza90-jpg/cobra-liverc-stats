@@ -3,6 +3,13 @@ const $ = id => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
+const classLabels = {
+  'Junior Racers': 'Juniors',
+  '2-Wheel Drive Buggy': '2WD',
+  '4-Wheel Drive Buggy': '4WD',
+  'Trucks': 'Trucks',
+  'Vintage': 'Vintage'
+};
 
 function escapeHtml(value = '') {
   return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
@@ -26,10 +33,10 @@ function eventMatches(eventId, eventType) {
   return !eventType || state.data.eventById[eventId]?.t === eventType;
 }
 
-function bestEightyPercent(values, higherIsBetter = false) {
+function attendanceAdjustedResults(values, higherIsBetter = false) {
   if (!values.length) return [];
   const ordered = values.slice().sort((a, b) => higherIsBetter ? b - a : a - b);
-  const discard = Math.floor(ordered.length * 0.2);
+  const discard = Math.max(0, Math.floor(ordered.length / 5) - 1);
   return ordered.slice(0, ordered.length - discard);
 }
 
@@ -37,7 +44,6 @@ function filters() {
   return {
     from: $('fromDate').value,
     to: $('toDate').value,
-    division: $('divisionFilter').value,
     eventType: $('eventTypeFilter').value,
     className: $('classFilter').value,
     minimumFinals: Number($('minimumFinals').value),
@@ -46,13 +52,15 @@ function filters() {
 }
 
 function ensureEnhancedMarkup() {
+  $('divisionFilter')?.closest('label')?.remove();
+  if ($('eventTypeFilter')) $('eventTypeFilter').innerHTML = '<option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option>';
   const minimum = $('minimumFinals');
   if (minimum) {
-    minimum.innerHTML = '<option value="1">Any</option><option value="5">5 finals</option><option value="10">10 finals</option><option value="20">20 finals</option><option value="30">30 finals</option>';
+    minimum.innerHTML = '<option value="1">1+ final</option><option value="5">5+ finals</option><option value="10">10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option>';
     minimum.value = '10';
   }
   const definition = document.querySelector('.definition');
-  if (definition) definition.textContent = 'Each driver is calculated separately. Ranking uses their average overall finish after their own worst 20% of finals is removed. Their lowest 20% of performance and consistency scores is also removed. Attendance, finals, wins and podiums remain complete totals.';
+  if (definition) definition.textContent = 'Ranking is attendance-adjusted: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. The same allowance applies to performance and consistency. Attendance, finals, wins and podiums remain complete totals.';
   if (!$('updateSchedule')) $('updatedStatus')?.insertAdjacentHTML('afterend', '<p class="update-schedule" id="updateSchedule">Results update automatically each day at 18:00 UK time.</p>');
 
   if (!$('raceExplorer')) {
@@ -100,7 +108,7 @@ function ensureEnhancedMarkup() {
 }
 
 function calculateLeaderboard() {
-  const { from, to, division, eventType, className, minimumFinals, search } = filters();
+  const { from, to, eventType, className, minimumFinals, search } = filters();
   const data = state.data;
   const stats = new Map(data.drivers.map(driver => [driver.k, {
     driverKey: driver.k, name: driver.n, junior: Boolean(driver.j), finals: 0,
@@ -145,12 +153,14 @@ function calculateLeaderboard() {
     row.consistencies.push(value);
   }
 
-  const ranked = [...stats.values()]
-    .filter(row => row.finals >= minimumFinals && (division === 'all' || (division === 'junior') === row.junior))
+  const eligible = [...stats.values()].filter(row => row.finals > 0);
+  state.leaderboardEligibleCount = eligible.length;
+  const ranked = eligible
+    .filter(row => row.finals >= minimumFinals)
     .map(row => {
-      const keptPositions = bestEightyPercent(row.positions);
-      const keptPerformances = bestEightyPercent(row.performances, true);
-      const keptConsistencies = bestEightyPercent(row.consistencies, true);
+      const keptPositions = attendanceAdjustedResults(row.positions);
+      const keptPerformances = attendanceAdjustedResults(row.performances, true);
+      const keptConsistencies = attendanceAdjustedResults(row.consistencies, true);
       return {
         ...row,
         average: average(keptPositions),
@@ -170,7 +180,7 @@ function countAndRate(count, total) {
 
 function renderLeaderboard() {
   const rows = calculateLeaderboard();
-  $('leaderboardCount').textContent = `${fmt.format(rows.length)} driver${rows.length === 1 ? '' : 's'}`;
+  $('leaderboardCount').textContent = `${fmt.format(rows.length)} ranked · ${fmt.format(state.leaderboardEligibleCount)} recorded`;
   $('leaderboardBody').innerHTML = rows.length ? rows.map(row => `
     <tr>
       <td>${row.rank}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button></td><td>${row.finals}</td>
@@ -272,9 +282,9 @@ function driverProfile(driverKey) {
   const podiums = positions.filter(value => value <= 3).length;
   const wins = positions.filter(value => value === 1).length;
   const aFinals = results.filter(row => /^A-(?:Main|Final)$/i.test(row[7] || '')).length;
-  const keptPositions = bestEightyPercent(positions);
-  const keptPerformances = bestEightyPercent(results.map(performanceFor), true);
-  const keptConsistencies = bestEightyPercent(consistencies, true);
+  const keptPositions = attendanceAdjustedResults(positions);
+  const keptPerformances = attendanceAdjustedResults(results.map(performanceFor), true);
+  const keptConsistencies = attendanceAdjustedResults(consistencies, true);
   const performance = average(keptPerformances);
 
   const typeLabel = eventType === 'sword' ? 'SWORD' : eventType === 'club' ? 'Club Days' : eventType === 'other' ? 'Other official events' : 'All official events';
@@ -288,7 +298,7 @@ function driverProfile(driverKey) {
     profileStat(eligibleEventIds.size ? `${Math.round(100 * uniqueEvents.size / eligibleEventIds.size)}%` : '—', 'Attendance rate'),
     profileStat(entries.length, 'Class entries'),
     profileStat(results.length, 'Completed finals'),
-    profileStat(keptPositions.length ? average(keptPositions).toFixed(1) : '—', 'Best-80% avg overall'),
+    profileStat(keptPositions.length ? average(keptPositions).toFixed(1) : '—', 'Adjusted avg overall'),
     profileStat(positions.length ? Math.min(...positions) : '—', 'Best overall'),
     profileStat(results.length ? countAndRate(topFive, results.length) : '—', 'Top-five finishes'),
     profileStat(results.length ? countAndRate(podiums, results.length) : '—', 'Podiums'),
@@ -296,7 +306,7 @@ function driverProfile(driverKey) {
     profileStat(aFinals, 'A-final appearances'),
     profileStat(performance === null ? '—' : performance.toFixed(1), 'Performance score'),
     profileStat(qualifying.length ? average(qualifying).toFixed(1) : '—', 'Average qualifying'),
-    profileStat(keptConsistencies.length ? `${average(keptConsistencies).toFixed(1)}%` : '—', 'Best-80% consistency'),
+    profileStat(keptConsistencies.length ? `${average(keptConsistencies).toFixed(1)}%` : '—', 'Adjusted consistency'),
     profileStat(runs.length, 'Recorded runs'),
     profileStat(`${swordEvents.size} / ${clubEvents.size}`, 'SWORD / Club events')
   ].join('');
@@ -310,8 +320,8 @@ function driverProfile(driverKey) {
     const classPositions = rows.map(row => row[4]);
     const classTopFive = classPositions.filter(value => value <= 5).length;
     const classPodiums = classPositions.filter(value => value <= 3).length;
-    const classKeptPositions = bestEightyPercent(classPositions);
-    const classKeptPerformance = bestEightyPercent(rows.map(performanceFor), true);
+    const classKeptPositions = attendanceAdjustedResults(classPositions);
+    const classKeptPerformance = attendanceAdjustedResults(rows.map(performanceFor), true);
     return `<tr><td>${escapeHtml(cls)}</td><td>${rows.length}</td><td>${average(classKeptPositions).toFixed(1)}</td><td>${Math.min(...classPositions)}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${average(classKeptPerformance).toFixed(1)}</td></tr>`;
   }).join('') || '<tr><td colspan="7">No completed finals within these filters.</td></tr>';
 
@@ -337,7 +347,7 @@ function driverProfile(driverKey) {
     const event = data.eventById[eventId];
     const letter = (raceTier || '').charAt(0).toUpperCase();
     const final = finalByEventClass.get(`${eventId}|${cls}|${letter}`);
-    const eventConsistency = average(bestEightyPercent(consistencyByEventClass.get(`${eventId}|${cls}`) || [], true));
+    const eventConsistency = average(attendanceAdjustedResults(consistencyByEventClass.get(`${eventId}|${cls}`) || [], true));
     const eventName = event?.u ? `<a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">${escapeHtml(event.n)}</a>` : escapeHtml(event?.n || eventId);
     const finalName = final?.race.u ? `<a href="${escapeHtml(final.race.u)}" target="_blank" rel="noopener">${escapeHtml(raceTier)}</a>` : escapeHtml(raceTier || '—');
     const eventRuns = runs.filter(run => {
@@ -501,16 +511,19 @@ async function init() {
     $('toDate').value = data.meta.latestEventDate;
     $('fromDate').value = oneYearBefore(data.meta.latestEventDate);
 
-    for (const className of data.classes) $('classFilter').insertAdjacentHTML('beforeend', `<option value="${escapeHtml(className)}">${escapeHtml(className)}</option>`);
+    for (const className of data.classes) $('classFilter').insertAdjacentHTML('beforeend', `<option value="${escapeHtml(className)}">${escapeHtml(classLabels[className] || className)}</option>`);
     const driverOptions = data.drivers.slice().sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.k)}">${escapeHtml(driver.n)}${driver.j ? ' (Junior)' : ''}</option>`).join('');
     $('driverA').insertAdjacentHTML('beforeend', driverOptions);
     $('driverB').insertAdjacentHTML('beforeend', driverOptions);
     renderLeaderboard();
     updateRaceExplorer(false);
 
-    for (const id of ['fromDate', 'toDate', 'divisionFilter', 'eventTypeFilter', 'minimumFinals']) $(id).addEventListener('change', refresh);
+    for (const id of ['fromDate', 'toDate', 'minimumFinals']) $(id).addEventListener('change', refresh);
+    $('eventTypeFilter').addEventListener('change', () => {
+      if ($('eventTypeFilter').value === 'sword' && $('minimumFinals').value === '10') $('minimumFinals').value = '5';
+      refresh();
+    });
     $('classFilter').addEventListener('change', () => {
-      if ($('classFilter').value === 'Junior Racers') $('divisionFilter').value = 'junior';
       refresh();
     });
     $('driverSearch').addEventListener('input', renderLeaderboard);
@@ -533,7 +546,6 @@ async function init() {
     $('resetFilters').addEventListener('click', () => {
       $('fromDate').value = oneYearBefore(data.meta.latestEventDate);
       $('toDate').value = data.meta.latestEventDate;
-      $('divisionFilter').value = 'open';
       $('eventTypeFilter').value = '';
       $('classFilter').value = '';
       $('minimumFinals').value = '10';

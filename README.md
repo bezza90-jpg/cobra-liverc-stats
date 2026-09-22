@@ -19,7 +19,7 @@ This repository hosts the public COBRA statistics dashboard and refreshes it fro
 
 Definitions:
 
-- **Leaderboard:** published overall final positions only. Each driver is calculated separately: their worst 20% of final finishes is removed before calculating and ranking their average, and their lowest 20% of field-normalised performance and consistency scores is also removed. Attendance, finals, wins and podium totals are never reduced.
+- **Leaderboard:** published overall final positions only. The adjustment grows with attendance: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. The same allowance applies to field-normalised performance and consistency. Attendance, finals, wins and podium totals are never reduced.
 - **Event head-to-head:** both drivers have a final overall result in the same class at the same event.
 - **Same-final head-to-head:** both drivers appear in the same main final; heats and practice are excluded.
 
