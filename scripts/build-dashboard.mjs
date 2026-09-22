@@ -17,8 +17,10 @@ const [events, entries, eventResults, races, raceResults, sync] = await Promise.
 
 const names = new Map();
 for (const row of [...entries, ...eventResults, ...raceResults]) names.set(row.driverKey, row.driverName);
+const juniorKeys = new Set(eventResults.filter(row => /junior/i.test(row.className)).map(row => row.driverKey));
 const classes = [...new Set([...entries, ...eventResults, ...races].map(row => row.className).filter(Boolean))].sort();
 const orderedEvents = events.slice().sort((a, b) => a.date.localeCompare(b.date));
+const eventType = name => /sword/i.test(name) ? 'sword' : /club day/i.test(name) ? 'club' : 'other';
 const dashboard = {
   meta: {
     generatedAt: sync.lastCheckedAt || new Date().toISOString(),
@@ -31,15 +33,21 @@ const dashboard = {
     sourceUrl: 'https://cobracardiff.liverc.com/events/'
   },
   classes,
-  events: events.map(row => ({ i: row.liveRcEventId, n: row.name, d: row.date })),
-  drivers: [...names].map(([key, name]) => ({ k: key, n: name })),
+  events: events.map(row => ({ i: row.liveRcEventId, n: row.name, d: row.date, t: eventType(row.name), u: row.sourceUrl || '' })),
+  drivers: [...names].map(([key, name]) => ({ k: key, n: name, j: juniorKeys.has(key) })),
   entries: entries.map(row => [row.liveRcEventId, row.eventDate, row.className, row.driverKey]),
-  eventResults: eventResults.map(row => [row.liveRcEventId, row.eventDate, row.className, row.driverKey, row.finalPosition, row.qualifyingPosition]),
+  eventResults: eventResults.map(row => [
+    row.liveRcEventId, row.eventDate, row.className, row.driverKey,
+    row.finalPosition, row.qualifyingPosition, row.result || '', row.raceTier || ''
+  ]),
   raceById: Object.fromEntries(races.map(row => [row.liveRcRaceId, {
     e: row.liveRcEventId, d: row.eventDate, c: row.className, n: row.raceName,
-    r: row.round, m: row.mainLetter || '', f: Boolean(row.isFinal)
+    r: row.round, m: row.mainLetter || '', f: Boolean(row.isFinal), u: row.sourceUrl || ''
   }])),
-  raceResults: raceResults.map(row => [row.liveRcRaceId, row.driverKey, row.position])
+  raceResults: raceResults.map(row => [
+    row.liveRcRaceId, row.driverKey, row.position, row.lapsTime || '', row.behind || '',
+    row.fastestLap || '', row.averageLap || '', row.consistency || '', row.qualifyingPosition || null
+  ])
 };
 
 const temporary = `${output}.tmp`;

@@ -41,7 +41,10 @@
       <div class="filter-grid">
         <label>From date<input type="date" id="fromDate" min="2022-01-01"></label>
         <label>To date<input type="date" id="toDate"></label>
+        <label>Driver division<select id="divisionFilter"><option value="open">Adult / Open</option><option value="junior">Juniors</option><option value="all">All drivers</option></select></label>
+        <label>Event type<select id="eventTypeFilter"><option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option><option value="other">Other official events</option></select></label>
         <label>Class<select id="classFilter"><option value="">All classes</option></select></label>
+        <label>Minimum finals<select id="minimumFinals"><option value="1">Any</option><option value="3" selected>3 finals</option><option value="5">5 finals</option><option value="10">10 finals</option></select></label>
         <label>Find a driver<input type="search" id="driverSearch" placeholder="Start typing a name…"></label>
       </div>
     </section>
@@ -58,19 +61,22 @@
         <table>
           <thead>
             <tr>
+              <th scope="col">Rank</th>
               <th scope="col">Driver</th>
-              <th scope="col" title="Unique events attended">Events</th>
-              <th scope="col">Entries</th>
-              <th scope="col">TQs</th>
-              <th scope="col">A wins</th>
-              <th scope="col">Lower wins</th>
-              <th scope="col">Race wins</th>
+              <th scope="col" title="Published overall final results">Finals</th>
+              <th scope="col">Avg overall</th>
+              <th scope="col">Best</th>
+              <th scope="col">Top 5</th>
+              <th scope="col">Podiums</th>
+              <th scope="col">Wins</th>
+              <th scope="col" title="Average field-normalised overall finish">Performance</th>
+              <th scope="col" title="Average consistency from every recorded run">Consistency</th>
             </tr>
           </thead>
           <tbody id="leaderboardBody"></tbody>
         </table>
       </div>
-      <p class="definition">Attendance counts each meeting once. A-final wins and lower-final wins are deliberately kept separate.</p>
+      <p class="definition">Ranking uses published overall final positions, adjusted for field size: 5th of 40 scores higher than 5th of 8. Consistency is an information column averaged from all recorded runs; it does not alter rank.</p>
     </section>
 
     <section class="panel head-to-head" aria-labelledby="h2hTitle">
@@ -86,25 +92,31 @@
         <label>Driver two<select id="driverB"><option value="">Select driver</option></select></label>
         <button type="button" id="compareDrivers">Compare</button>
       </div>
+      <div class="event-picker" id="eventPickerWrap" hidden>
+        <label>Compare a specific event
+          <select id="comparisonEvent"><option value="">All shared events</option></select>
+        </label>
+        <a class="event-link" id="openEventResults" href="#" target="_blank" rel="noopener" hidden>Open selected event results ↗</a>
+      </div>
       <div id="h2hEmpty" class="empty-state">Choose two drivers to compare results within the selected dates and class.</div>
       <div id="h2hResults" hidden>
         <div class="comparison-grid">
           <article>
             <span>Shared events</span><strong id="sharedEvents">0</strong>
-            <small>Both attended, including different classes</small>
+            <small>Both recorded an official result</small>
           </article>
           <article>
             <span>Event comparisons</span><strong id="eventMeetings">0</strong>
             <div class="score"><b id="eventScoreA">0</b><em>–</em><b id="eventScoreB">0</b></div>
           </article>
           <article>
-            <span>Race comparisons</span><strong id="raceMeetings">0</strong>
+            <span>Same-final comparisons</span><strong id="raceMeetings">0</strong>
             <div class="score"><b id="raceScoreA">0</b><em>–</em><b id="raceScoreB">0</b></div>
           </article>
         </div>
         <p class="comparison-summary" id="comparisonSummary"></p>
         <details>
-          <summary>Show event comparison details</summary>
+          <summary>Show overall-position comparison</summary>
           <div class="table-wrap compact">
             <table>
               <thead><tr><th>Date</th><th>Event</th><th>Class</th><th id="eventHeadA">Driver 1</th><th id="eventHeadB">Driver 2</th></tr></thead>
@@ -113,10 +125,10 @@
           </div>
         </details>
         <details>
-          <summary>Show race comparison details</summary>
+          <summary>Show final laps and times</summary>
           <div class="table-wrap compact">
             <table>
-              <thead><tr><th>Date</th><th>Event / race</th><th>Class</th><th id="raceHeadA">Driver 1</th><th id="raceHeadB">Driver 2</th></tr></thead>
+              <thead><tr><th>Date</th><th>Event / final</th><th>Class</th><th id="raceHeadA">Driver 1</th><th id="raceHeadB">Driver 2</th></tr></thead>
               <tbody id="raceDetails"></tbody>
             </table>
           </div>
@@ -126,7 +138,7 @@
 
     <section class="method">
       <h2>How comparisons are counted</h2>
-      <p><strong>Event comparison:</strong> both drivers have an overall final result in the same class at the same event. <strong>Race comparison:</strong> both drivers took part in the same heat or final. Tests are excluded.</p>
+      <p><strong>Overall comparison:</strong> both drivers have a published overall final result in the same class at the same event. <strong>Same-final comparison:</strong> both drivers raced in the same main final. Qualifying heats and practice runs never affect these scores. Tests are excluded.</p>
     </section>
   </main>
 

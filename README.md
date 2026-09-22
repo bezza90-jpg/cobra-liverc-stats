@@ -6,19 +6,19 @@ This repository hosts the public COBRA statistics dashboard and refreshes it fro
 
 - Searchable driver leaderboard.
 - Date and class filters.
-- Event attendance, class entries and TQs.
-- A-final and lower-final wins shown separately.
-- Driver head-to-head comparisons at event and individual-race level.
-- Shared event attendance, even when two drivers raced different classes.
+- The default view is the rolling year ending at the latest imported event.
+- The default leaderboard requires three final results, preventing one-off appearances from outranking established drivers; this can be changed in the filters.
+- Overall-final leaderboard with field-normalised performance, wins, podiums, top-five rate, average/best finish and all-run consistency.
+- Separate Adult / Open and Junior leaderboards; junior status comes from the LiveRC `Junior Racers` class.
+- Driver head-to-head comparisons using overall results and same-main finals only.
+- Specific-event comparison with laps/time, fastest lap, average lap and consistency.
+- Direct links to the selected LiveRC event and each exact final result page.
 
 Definitions:
 
-- **Attendance:** one event per driver, regardless of the number of classes entered.
+- **Leaderboard:** published overall final positions only. Ranking uses average field-normalised finish, so the size of each class field is taken into account. All-run consistency is displayed but does not affect rank.
 - **Event head-to-head:** both drivers have a final overall result in the same class at the same event.
-- **Race head-to-head:** both drivers appear in the same heat or final.
-- **A-final wins:** first place in an A-main only.
-- **Lower-final wins:** first place in a B-main or lower main.
-- **TQ:** first place in the published qualifying-points table.
+- **Same-final head-to-head:** both drivers appear in the same main final; heats and practice are excluded.
 
 ## GitHub setup
 
