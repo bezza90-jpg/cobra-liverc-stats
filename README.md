@@ -2,6 +2,10 @@
 
 This repository hosts the public COBRA statistics dashboard and refreshes it from the public COBRA LiveRC archive. It contains the complete verified history from 1 January 2022 and is designed for embedding in the Wix Harmony site.
 
+It also includes a Podium Gallery at `/podiums/`. The newest event opens automatically, with the previous 12 months grouped by year and event. Every final displays its official top three and links to the complete LiveRC result.
+
+To add a podium photograph, follow `public/podium-photos/README.md`. Photographs are connected to a final through a predictable LiveRC event-and-race filename, so no code changes are needed.
+
 It also publishes automatically calculated championship tables at `/sword/` and `/club/`, with a selector covering every September-to-April season present in the archive. Both use overall final positions, award 100 points for first then reduce by one point per position, add one TQ bonus point, and count up to the best four rounds. DNS and DNF entries retain the points for their published overall position. The highest dropped score breaks a points tie; if that remains equal, the championship position is tied. The Club 2021/22 season is labelled as a partial archive because the retained LiveRC history begins in January 2022.
 
 ## What it publishes
