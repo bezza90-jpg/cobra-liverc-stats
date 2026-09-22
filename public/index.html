@@ -42,10 +42,9 @@
       <div class="filter-grid">
         <label>From date<input type="date" id="fromDate" min="2022-01-01"></label>
         <label>To date<input type="date" id="toDate"></label>
-        <label>Driver division<select id="divisionFilter"><option value="open">Adult / Open</option><option value="junior">Juniors</option><option value="all">All drivers</option></select></label>
-        <label>Event type<select id="eventTypeFilter"><option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option><option value="other">Other official events</option></select></label>
+        <label>Event type<select id="eventTypeFilter"><option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option></select></label>
         <label>Class<select id="classFilter"><option value="">All classes</option></select></label>
-        <label>Minimum finals<select id="minimumFinals"><option value="1">Any</option><option value="5">5 finals</option><option value="10" selected>10 finals</option><option value="20">20 finals</option><option value="30">30 finals</option></select></label>
+        <label>Minimum finals<select id="minimumFinals"><option value="1">1+ final</option><option value="5">5+ finals</option><option value="10" selected>10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option></select></label>
         <label>Find a driver<input type="search" id="driverSearch" placeholder="Start typing a name…"></label>
       </div>
     </section>
@@ -77,7 +76,7 @@
           <tbody id="leaderboardBody"></tbody>
         </table>
       </div>
-      <p class="definition">Each driver is calculated separately. Ranking uses their average overall finish after their own worst 20% of finals is removed. Their lowest 20% of performance and consistency scores is also removed. Attendance, finals, wins and podiums remain complete totals.</p>
+      <p class="definition">Ranking is attendance-adjusted: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. The same allowance applies to performance and consistency. Attendance, finals, wins and podiums remain complete totals.</p>
     </section>
 
     <section class="panel race-explorer" id="raceExplorer" aria-labelledby="raceExplorerTitle">

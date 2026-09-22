@@ -15,10 +15,22 @@ const [events, entries, eventResults, races, raceResults, sync] = await Promise.
   read('races.json'), read('race-results.json'), read('sync.json')
 ]);
 
+function canonicalClass(value = '') {
+  const name = String(value).replace(/\s+[A-Z]\d*-Main\b.*$/i, '').trim();
+  if (/junior/i.test(name)) return 'Junior Racers';
+  if (/(?:4[ -]?wheel|4wd)/i.test(name)) return '4-Wheel Drive Buggy';
+  if (/(?:2[ -]?wheel|2wd)/i.test(name)) return '2-Wheel Drive Buggy';
+  if (/truck/i.test(name)) return 'Trucks';
+  if (/vintage/i.test(name)) return 'Vintage';
+  return '';
+}
+
 const names = new Map();
 for (const row of [...entries, ...eventResults, ...raceResults]) names.set(row.driverKey, row.driverName);
-const juniorKeys = new Set(eventResults.filter(row => /junior/i.test(row.className)).map(row => row.driverKey));
-const classes = [...new Set([...entries, ...eventResults, ...races].map(row => row.className).filter(Boolean))].sort();
+const juniorKeys = new Set(eventResults.filter(row => canonicalClass(row.className) === 'Junior Racers').map(row => row.driverKey));
+const classOrder = ['Junior Racers', '2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Trucks', 'Vintage'];
+const availableClasses = new Set([...entries, ...eventResults, ...races].map(row => canonicalClass(row.className)).filter(Boolean));
+const classes = classOrder.filter(name => availableClasses.has(name));
 const orderedEvents = events.slice().sort((a, b) => a.date.localeCompare(b.date));
 const eventType = name => /sword/i.test(name) ? 'sword' : /club day/i.test(name) ? 'club' : 'other';
 const dashboard = {
@@ -35,15 +47,15 @@ const dashboard = {
   classes,
   events: events.map(row => ({ i: row.liveRcEventId, n: row.name, d: row.date, t: eventType(row.name), u: row.sourceUrl || '' })),
   drivers: [...names].map(([key, name]) => ({ k: key, n: name, j: juniorKeys.has(key) })),
-  entries: entries.map(row => [row.liveRcEventId, row.eventDate, row.className, row.driverKey]),
+  entries: entries.map(row => [row.liveRcEventId, row.eventDate, canonicalClass(row.className), row.driverKey]).filter(row => row[2]),
   eventResults: eventResults.map(row => [
-    row.liveRcEventId, row.eventDate, row.className, row.driverKey,
+    row.liveRcEventId, row.eventDate, canonicalClass(row.className), row.driverKey,
     row.finalPosition, row.qualifyingPosition, row.result || '', row.raceTier || ''
-  ]),
+  ]).filter(row => row[2]),
   raceById: Object.fromEntries(races.map(row => [row.liveRcRaceId, {
-    e: row.liveRcEventId, d: row.eventDate, c: row.className, n: row.raceName,
+    e: row.liveRcEventId, d: row.eventDate, c: canonicalClass(row.className), n: row.raceName,
     r: row.round, m: row.mainLetter || '', f: Boolean(row.isFinal), u: row.sourceUrl || ''
-  }])),
+  }]).filter(([, race]) => race.c)),
   raceResults: raceResults.map(row => [
     row.liveRcRaceId, row.driverKey, row.position, row.lapsTime || '', row.behind || '',
     row.fastestLap || '', row.averageLap || '', row.consistency || '', row.qualifyingPosition || null
