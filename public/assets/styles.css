@@ -50,6 +50,23 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .class-tabs button[aria-pressed="true"] { color: #fff; background: var(--green-dark); }
 .archive-link { position: relative; z-index: 1; display: inline-block; margin: 8px 0 0 10px; padding: 9px 16px; color: #055f10; background: #fff; border: 1px solid #fff; border-radius: 6px; box-shadow: 0 5px 18px rgba(0, 0, 0, .2); font-size: .78rem; font-weight: 900; text-decoration: none; }
 .archive-link:hover { color: #fff; background: var(--green); border-color: var(--green); }
+.results-nav { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 22px; }
+.results-nav a { padding: 8px 12px; color: #dce9df; border: 1px solid rgba(255,255,255,.18); border-radius: 5px; font-size: .78rem; font-weight: 800; text-decoration: none; }
+.results-nav a:hover, .results-nav a[aria-current="page"] { color: #071109; background: #fff; }
+.championship-hero .hero-copy { padding-top: 38px; }
+.championship-overview strong { font-size: clamp(1.3rem, 3vw, 2.1rem); }
+.championship-table th a { color: var(--green-dark); text-decoration: none; }
+.championship-table th small { display: block; margin-top: 4px; color: var(--muted); font-size: .62rem; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.championship-table th:first-child, .championship-table td:first-child { text-align: center; }
+.round-score a { display: block; color: inherit; text-decoration: none; }
+.round-score strong, .round-score small { display: block; }
+.round-score strong { font-size: 1rem; }
+.round-score small { margin-top: 3px; color: var(--muted); font-size: .66rem; font-weight: 500; }
+.dropped-score { background: #f4f4f4; opacity: .64; }
+.empty-score { color: #a7b0aa; text-align: center; }
+.championship-total { color: var(--green-dark); font-size: 1.05rem; font-weight: 950; }
+.empty-standings { padding: 36px; color: var(--muted); text-align: center !important; }
+.round-links { display: flex; flex-wrap: wrap; gap: 10px; }
 h2 { margin: 0; font-size: clamp(1.5rem, 4vw, 2.1rem); letter-spacing: -.035em; }
 .result-count { color: var(--muted); white-space: nowrap; }
 .filter-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
@@ -136,6 +153,7 @@ footer a { color: #85e391; }
 
 @media (max-width: 520px) {
   .brand { align-items: flex-start; flex-direction: column; gap: 7px; }
+  .results-nav { display: grid; grid-template-columns: 1fr; }
   .brand-copy { max-width: 230px; }
   .hero-copy { padding-top: 38px; }
   .update-schedule { display: block; margin-left: 0; }

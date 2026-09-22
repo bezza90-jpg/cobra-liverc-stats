@@ -4,11 +4,14 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = async relative => JSON.parse(await readFile(path.join(root, relative), 'utf8'));
-const [events, entries, eventResults, races, raceResults, dashboard, indexHtml, appJs, styles] = await Promise.all([
+const [events, entries, eventResults, races, raceResults, dashboard, championships, indexHtml, swordHtml, clubHtml, appJs, championshipJs, styles] = await Promise.all([
   readJson('data/raw/events.json'), readJson('data/raw/entries.json'), readJson('data/raw/event-results.json'),
-  readJson('data/raw/races.json'), readJson('data/raw/race-results.json'), readJson('public/data/dashboard.json'),
+  readJson('data/raw/races.json'), readJson('data/raw/race-results.json'), readJson('public/data/dashboard.json'), readJson('public/data/championships.json'),
   readFile(path.join(root, 'public/index.html'), 'utf8'),
+  readFile(path.join(root, 'public/sword/index.html'), 'utf8'),
+  readFile(path.join(root, 'public/club/index.html'), 'utf8'),
   readFile(path.join(root, 'public/assets/app.js'), 'utf8'),
+  readFile(path.join(root, 'public/assets/championship.js'), 'utf8'),
   readFile(path.join(root, 'public/assets/styles.css'), 'utf8')
 ]);
 
@@ -43,6 +46,12 @@ for (const row of raceResults) raceField.set(row.liveRcRaceId, (raceField.get(ro
 if (![...raceField.values()].some(count => count >= 2)) errors.push('No race is suitable for head-to-head comparison.');
 if (!indexHtml.includes('data/dashboard.json') && !appJs.includes('data/dashboard.json')) errors.push('The dashboard data file is not referenced by the website.');
 if (!indexHtml.includes('assets/styles.css') || !indexHtml.includes('assets/app.js')) errors.push('Website asset links are missing.');
+for (const key of ['sword', 'club']) {
+  const config = championships[key];
+  if (!config || config.scheduledRounds !== 6 || config.bestRounds !== 4 || config.pointsStart !== 100 || config.tqBonus !== 1) errors.push(`${key} championship scoring configuration is invalid.`);
+}
+if (!swordHtml.includes('data-championship="sword"') || !clubHtml.includes('data-championship="club"')) errors.push('Championship page identity is missing.');
+if (!championshipJs.includes('highestDrop') || !championshipJs.includes('qualifyingPosition')) errors.push('Championship tie-break or TQ scoring logic is missing.');
 if (!styles.includes('@media (max-width: 520px)')) errors.push('Mobile layout rules are missing.');
 if (errors.length) {
   console.error(errors.join('\n'));

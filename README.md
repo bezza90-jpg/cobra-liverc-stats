@@ -2,6 +2,8 @@
 
 This repository hosts the public COBRA statistics dashboard and refreshes it from the public COBRA LiveRC archive. It contains the complete verified history from 1 January 2022 and is designed for embedding in the Wix Harmony site.
 
+It also publishes automatically calculated 2026/27 championship tables at `/sword/` and `/club/`. Both use overall final positions, award 100 points for first then reduce by one point per position, add one TQ bonus point, and count the best four of six rounds. DNS and DNF entries retain the points for their published overall position. The highest dropped score breaks a points tie; if that remains equal, the championship position is tied.
+
 ## What it publishes
 
 - Searchable driver leaderboard.

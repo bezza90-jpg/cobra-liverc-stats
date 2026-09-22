@@ -1,0 +1,30 @@
+{
+  "sword": {
+    "title": "SWORD Championship",
+    "shortTitle": "SWORD",
+    "season": "2026/27",
+    "eventType": "sword",
+    "startDate": "2026-10-04",
+    "endDate": "2027-03-21",
+    "scheduledRounds": 6,
+    "bestRounds": 4,
+    "pointsStart": 100,
+    "pointsStep": 1,
+    "tqBonus": 1,
+    "classes": ["2-Wheel Drive Buggy", "4-Wheel Drive Buggy", "Junior Racers"]
+  },
+  "club": {
+    "title": "Club Series",
+    "shortTitle": "Club",
+    "season": "2026/27",
+    "eventType": "club",
+    "startDate": "2026-09-20",
+    "endDate": "2027-04-04",
+    "scheduledRounds": 6,
+    "bestRounds": 4,
+    "pointsStart": 100,
+    "pointsStep": 1,
+    "tqBonus": 1,
+    "classes": ["2-Wheel Drive Buggy", "4-Wheel Drive Buggy", "Junior Racers", "Trucks", "Vintage"]
+  }
+}
