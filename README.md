@@ -14,10 +14,12 @@ This repository hosts the public COBRA statistics dashboard and refreshes it fro
 - Driver head-to-head comparisons using overall results and same-main finals only.
 - Specific-event comparison with laps/time, fastest lap, average lap and consistency.
 - Direct links to the selected LiveRC event and each exact final result page.
+- Event and race explorer for every practice, qualifying heat and final, with full result statistics and direct LiveRC links.
+- Expandable individual-race history inside every driver profile.
 
 Definitions:
 
-- **Leaderboard:** published overall final positions only, ranked by lowest average finishing position. Ties use overall wins, podiums and number of finals. Field-normalised performance and all-run consistency are displayed but do not affect rank.
+- **Leaderboard:** published overall final positions only. Each driver is calculated separately: their worst 20% of final finishes is removed before calculating and ranking their average, and their lowest 20% of field-normalised performance and consistency scores is also removed. Attendance, finals, wins and podium totals are never reduced.
 - **Event head-to-head:** both drivers have a final overall result in the same class at the same event.
 - **Same-final head-to-head:** both drivers appear in the same main final; heats and practice are excluded.
 
@@ -30,7 +32,7 @@ Definitions:
 5. Open **Actions → Update and publish COBRA statistics → Run workflow**.
 6. When the workflow succeeds, GitHub Pages will provide the dashboard address.
 
-The workflow checks LiveRC nightly at 04:17 UTC. The non-round minute reduces the chance of GitHub delaying a job during peak scheduler traffic. You can also run it manually at any time.
+The workflow checks LiveRC daily at 18:00 UK time using the `Europe/London` timezone. It therefore remains at 18:00 through both BST and GMT. You can also run it manually at any time.
 
 ## Wix Harmony setup
 

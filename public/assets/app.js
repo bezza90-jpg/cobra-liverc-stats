@@ -2,6 +2,7 @@ const state = { data: null, profileKey: '' };
 const $ = id => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
 
 function escapeHtml(value = '') {
   return String(value).replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
@@ -25,6 +26,13 @@ function eventMatches(eventId, eventType) {
   return !eventType || state.data.eventById[eventId]?.t === eventType;
 }
 
+function bestEightyPercent(values, higherIsBetter = false) {
+  if (!values.length) return [];
+  const ordered = values.slice().sort((a, b) => higherIsBetter ? b - a : a - b);
+  const discard = Math.floor(ordered.length * 0.2);
+  return ordered.slice(0, ordered.length - discard);
+}
+
 function filters() {
   return {
     from: $('fromDate').value,
@@ -37,13 +45,68 @@ function filters() {
   };
 }
 
+function ensureEnhancedMarkup() {
+  const minimum = $('minimumFinals');
+  if (minimum) {
+    minimum.innerHTML = '<option value="1">Any</option><option value="5">5 finals</option><option value="10">10 finals</option><option value="20">20 finals</option><option value="30">30 finals</option>';
+    minimum.value = '10';
+  }
+  const definition = document.querySelector('.definition');
+  if (definition) definition.textContent = 'Each driver is calculated separately. Ranking uses their average overall finish after their own worst 20% of finals is removed. Their lowest 20% of performance and consistency scores is also removed. Attendance, finals, wins and podiums remain complete totals.';
+  if (!$('updateSchedule')) $('updatedStatus')?.insertAdjacentHTML('afterend', '<p class="update-schedule" id="updateSchedule">Results update automatically each day at 18:00 UK time.</p>');
+
+  if (!$('raceExplorer')) {
+    document.querySelector('.head-to-head')?.insertAdjacentHTML('beforebegin', `
+      <section class="panel race-explorer" id="raceExplorer" aria-labelledby="raceExplorerTitle">
+        <div class="section-heading"><div><p class="eyebrow">Open the meeting</p><h2 id="raceExplorerTitle">Event &amp; race explorer</h2></div></div>
+        <div class="race-explorer-controls">
+          <label>Event<select id="raceEvent"></select></label><label>Individual race<select id="raceSelection"></select></label>
+          <a class="event-link" id="raceEventLink" href="#" target="_blank" rel="noopener">Open event results ↗</a>
+          <a class="event-link" id="raceResultLink" href="#" target="_blank" rel="noopener">Open this race ↗</a>
+        </div>
+        <h3 class="race-result-title" id="raceResultTitle">Select a race</h3>
+        <div class="table-wrap compact"><table><thead><tr><th>Pos</th><th>Driver</th><th>Qualifying</th><th>Laps / time</th><th>Behind</th><th>Fastest lap</th><th>Average lap</th><th>Consistency</th></tr></thead><tbody id="raceExplorerResults"></tbody></table></div>
+      </section>`);
+  }
+
+  if (!$('driverDialog')) {
+    document.querySelector('footer')?.insertAdjacentHTML('beforebegin', `
+      <dialog class="driver-dialog" id="driverDialog" aria-labelledby="driverProfileName">
+        <div class="dialog-shell">
+          <button type="button" class="dialog-close" id="closeDriverProfile" aria-label="Close driver profile">×</button>
+          <p class="eyebrow">Driver profile</p><h2 id="driverProfileName">Driver</h2>
+          <p class="profile-context" id="driverProfileContext"></p>
+          <div class="profile-stats" id="driverProfileStats"></div>
+          <section class="profile-section"><h3>Class breakdown</h3><div class="table-wrap compact"><table>
+            <thead><tr><th>Class</th><th>Finals</th><th>Avg overall</th><th>Best</th><th>Top 5</th><th>Podiums</th><th>Performance</th></tr></thead>
+            <tbody id="driverClassDetails"></tbody>
+          </table></div></section>
+          <section class="profile-section"><h3>Event and final history</h3><div class="table-wrap profile-history"><table>
+            <thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Overall</th><th>Final</th><th>Qualifying</th><th>Final result</th><th>Fastest lap</th><th>Consistency</th><th>Individual races</th></tr></thead>
+            <tbody id="driverEventDetails"></tbody>
+          </table></div></section>
+        </div>
+      </dialog>`);
+  }
+
+  if (!document.querySelector('#driver-profile-runtime-styles')) {
+    document.head.insertAdjacentHTML('beforeend', `<style id="driver-profile-runtime-styles">
+      .driver-name{padding:0;color:#067b14;background:transparent;border:0;border-radius:0;font-weight:850;text-align:left;text-decoration:underline;text-decoration-color:#9dd7a5;text-underline-offset:3px}.driver-name:hover{color:#044f0c;background:transparent;text-decoration-color:currentColor}
+      .driver-dialog{width:min(1120px,calc(100% - 28px));max-height:92vh;padding:0;color:#111714;background:#fff;border:0;border-radius:16px;box-shadow:0 28px 90px rgba(0,0,0,.35)}.driver-dialog::backdrop{background:rgba(3,10,6,.72);backdrop-filter:blur(3px)}.dialog-shell{position:relative;padding:clamp(22px,4vw,38px)}.dialog-close{position:absolute;top:14px;right:14px;width:42px;height:42px;padding:0;color:#344039;background:#eef3ef;border-radius:50%;font-size:1.65rem;line-height:1}.dialog-close:hover{color:#fff;background:#067b14}.profile-context{margin:8px 52px 22px 0;color:#637069}.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.profile-stats article{min-height:106px;padding:16px;background:#f3f7f4;border:1px solid #dfe6e1;border-top:3px solid #08a31a;border-radius:9px}.profile-stats strong{display:block;font-size:1.65rem;line-height:1}.profile-stats span{display:block;margin-top:8px;color:#637069;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}.profile-section{margin-top:28px}.profile-section h3{margin:0 0 12px;font-size:1.2rem}.profile-history{max-height:430px}.profile-history th:first-child,.profile-history td:first-child{text-align:left}.profile-history a,.profile-section a{color:#067b14;font-weight:800}
+      .race-explorer-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(280px,1.5fr) auto auto;align-items:end;gap:12px;margin-bottom:22px}.race-result-title{margin:0 0 12px;font-size:1.05rem}.inline-races summary{padding:0;color:#067b14;font-size:.78rem;white-space:nowrap}.inline-races[open]{min-width:640px}.inline-races .table-wrap{margin:10px 0 0;max-height:300px}@media(max-width:820px){.race-explorer-controls{grid-template-columns:1fr 1fr}}@media(max-width:520px){.race-explorer-controls{grid-template-columns:1fr}}
+      .update-schedule{position:relative;z-index:1;display:inline-block;margin:8px 0 0 10px;color:#b8c9bd;font-size:.78rem}@media(max-width:520px){.update-schedule{display:block;margin-left:0}}
+    </style>`);
+  }
+}
+
 function calculateLeaderboard() {
   const { from, to, division, eventType, className, minimumFinals, search } = filters();
   const data = state.data;
   const stats = new Map(data.drivers.map(driver => [driver.k, {
     driverKey: driver.k, name: driver.n, junior: Boolean(driver.j), finals: 0,
     overallWins: 0, podiums: 0, topFive: 0, positionTotal: 0,
-    performanceTotal: 0, best: Infinity, consistencyTotal: 0, consistencyRuns: 0
+    performanceTotal: 0, best: Infinity, consistencyTotal: 0, consistencyRuns: 0,
+    positions: [], performances: [], consistencies: []
   }]));
 
   const fieldSizes = new Map();
@@ -63,6 +126,8 @@ function calculateLeaderboard() {
     row.finals += 1;
     row.positionTotal += finalPosition;
     row.performanceTotal += Math.max(0, performance);
+    row.positions.push(finalPosition);
+    row.performances.push(Math.max(0, performance));
     row.best = Math.min(row.best, finalPosition);
     if (finalPosition === 1) row.overallWins += 1;
     if (finalPosition <= 3) row.podiums += 1;
@@ -77,16 +142,22 @@ function calculateLeaderboard() {
     if (!row) continue;
     row.consistencyTotal += value;
     row.consistencyRuns += 1;
+    row.consistencies.push(value);
   }
 
   const ranked = [...stats.values()]
     .filter(row => row.finals >= minimumFinals && (division === 'all' || (division === 'junior') === row.junior))
-    .map(row => ({
-      ...row,
-      average: row.positionTotal / row.finals,
-      performance: row.performanceTotal / row.finals,
-      consistency: row.consistencyRuns ? row.consistencyTotal / row.consistencyRuns : null
-    }))
+    .map(row => {
+      const keptPositions = bestEightyPercent(row.positions);
+      const keptPerformances = bestEightyPercent(row.performances, true);
+      const keptConsistencies = bestEightyPercent(row.consistencies, true);
+      return {
+        ...row,
+        average: average(keptPositions),
+        performance: average(keptPerformances),
+        consistency: average(keptConsistencies)
+      };
+    })
     .sort((a, b) => a.average - b.average || b.overallWins - a.overallWins || b.podiums - a.podiums || b.finals - a.finals || a.name.localeCompare(b.name))
     .map((row, index) => ({ ...row, rank: index + 1 }));
 
@@ -107,6 +178,53 @@ function renderLeaderboard() {
       <td>${countAndRate(row.podiums, row.finals)}</td><td>${row.overallWins}</td>
       <td>${row.performance.toFixed(1)}</td><td>${row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`}</td>
     </tr>`).join('') : '<tr><td colspan="10">No drivers match these filters.</td></tr>';
+}
+
+function renderRaceExplorer(raceId) {
+  const data = state.data;
+  const race = data.raceById[raceId];
+  const body = $('raceExplorerResults');
+  if (!race) {
+    $('raceResultTitle').textContent = 'No races match these filters';
+    body.innerHTML = '<tr><td colspan="8">Choose a different event or class.</td></tr>';
+    $('raceResultLink').hidden = true;
+    return;
+  }
+  const event = data.eventById[race.e];
+  $('raceResultTitle').textContent = `${event?.n || ''} — ${race.n}`;
+  $('raceEventLink').href = event?.u || '#';
+  $('raceEventLink').hidden = !event?.u;
+  $('raceResultLink').href = race.u || '#';
+  $('raceResultLink').hidden = !race.u;
+  const rows = data.raceResults.filter(row => row[0] === raceId).sort((a, b) => a[2] - b[2]);
+  body.innerHTML = rows.length ? rows.map(row => `
+    <tr><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>
+    <td>${row[8] ? `P${row[8]}` : '—'}</td><td>${escapeHtml(row[3] || '—')}</td><td>${escapeHtml(row[4] || '—')}</td>
+    <td>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td></tr>`).join('') : '<tr><td colspan="8">No results were recorded for this race.</td></tr>';
+}
+
+function updateRaceSelection(preserve = true) {
+  const data = state.data;
+  const eventId = $('raceEvent').value;
+  const previous = preserve ? $('raceSelection').value : '';
+  const { className } = filters();
+  const races = Object.entries(data.raceById)
+    .filter(([, race]) => race.e === eventId && (!className || race.c === className))
+    .sort(([, a], [, b]) => Number(b.f) - Number(a.f) || a.r.localeCompare(b.r) || a.n.localeCompare(b.n));
+  $('raceSelection').innerHTML = races.map(([id, race]) => `<option value="${escapeHtml(id)}">${race.f ? 'Final · ' : ''}${escapeHtml(race.r)} · ${escapeHtml(race.n)}</option>`).join('');
+  $('raceSelection').value = races.some(([id]) => id === previous) ? previous : (races[0]?.[0] || '');
+  renderRaceExplorer($('raceSelection').value);
+}
+
+function updateRaceExplorer(preserve = true) {
+  const data = state.data;
+  const { from, to, eventType, className } = filters();
+  const previous = preserve ? $('raceEvent').value : '';
+  const raceEvents = new Set(Object.values(data.raceById).filter(race => !className || race.c === className).map(race => race.e));
+  const events = data.events.filter(event => raceEvents.has(event.i) && inRange(event.d, from, to) && eventMatches(event.i, eventType)).sort((a, b) => b.d.localeCompare(a.d));
+  $('raceEvent').innerHTML = events.map(event => `<option value="${escapeHtml(event.i)}">${dateFmt.format(new Date(`${event.d}T12:00:00Z`))} — ${escapeHtml(event.n)}</option>`).join('');
+  $('raceEvent').value = events.some(event => event.i === previous) ? previous : (events[0]?.i || '');
+  updateRaceSelection(preserve);
 }
 
 function average(values) {
@@ -154,7 +272,10 @@ function driverProfile(driverKey) {
   const podiums = positions.filter(value => value <= 3).length;
   const wins = positions.filter(value => value === 1).length;
   const aFinals = results.filter(row => /^A-(?:Main|Final)$/i.test(row[7] || '')).length;
-  const performance = average(results.map(performanceFor));
+  const keptPositions = bestEightyPercent(positions);
+  const keptPerformances = bestEightyPercent(results.map(performanceFor), true);
+  const keptConsistencies = bestEightyPercent(consistencies, true);
+  const performance = average(keptPerformances);
 
   const typeLabel = eventType === 'sword' ? 'SWORD' : eventType === 'club' ? 'Club Days' : eventType === 'other' ? 'Other official events' : 'All official events';
   const classLabel = className || 'All classes';
@@ -167,7 +288,7 @@ function driverProfile(driverKey) {
     profileStat(eligibleEventIds.size ? `${Math.round(100 * uniqueEvents.size / eligibleEventIds.size)}%` : '—', 'Attendance rate'),
     profileStat(entries.length, 'Class entries'),
     profileStat(results.length, 'Completed finals'),
-    profileStat(positions.length ? average(positions).toFixed(1) : '—', 'Average overall'),
+    profileStat(keptPositions.length ? average(keptPositions).toFixed(1) : '—', 'Best-80% avg overall'),
     profileStat(positions.length ? Math.min(...positions) : '—', 'Best overall'),
     profileStat(results.length ? countAndRate(topFive, results.length) : '—', 'Top-five finishes'),
     profileStat(results.length ? countAndRate(podiums, results.length) : '—', 'Podiums'),
@@ -175,7 +296,7 @@ function driverProfile(driverKey) {
     profileStat(aFinals, 'A-final appearances'),
     profileStat(performance === null ? '—' : performance.toFixed(1), 'Performance score'),
     profileStat(qualifying.length ? average(qualifying).toFixed(1) : '—', 'Average qualifying'),
-    profileStat(consistencies.length ? `${average(consistencies).toFixed(1)}%` : '—', 'All-run consistency'),
+    profileStat(keptConsistencies.length ? `${average(keptConsistencies).toFixed(1)}%` : '—', 'Best-80% consistency'),
     profileStat(runs.length, 'Recorded runs'),
     profileStat(`${swordEvents.size} / ${clubEvents.size}`, 'SWORD / Club events')
   ].join('');
@@ -189,7 +310,9 @@ function driverProfile(driverKey) {
     const classPositions = rows.map(row => row[4]);
     const classTopFive = classPositions.filter(value => value <= 5).length;
     const classPodiums = classPositions.filter(value => value <= 3).length;
-    return `<tr><td>${escapeHtml(cls)}</td><td>${rows.length}</td><td>${average(classPositions).toFixed(1)}</td><td>${Math.min(...classPositions)}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${average(rows.map(performanceFor)).toFixed(1)}</td></tr>`;
+    const classKeptPositions = bestEightyPercent(classPositions);
+    const classKeptPerformance = bestEightyPercent(rows.map(performanceFor), true);
+    return `<tr><td>${escapeHtml(cls)}</td><td>${rows.length}</td><td>${average(classKeptPositions).toFixed(1)}</td><td>${Math.min(...classPositions)}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${average(classKeptPerformance).toFixed(1)}</td></tr>`;
   }).join('') || '<tr><td colspan="7">No completed finals within these filters.</td></tr>';
 
   const finalByEventClass = new Map();
@@ -214,11 +337,25 @@ function driverProfile(driverKey) {
     const event = data.eventById[eventId];
     const letter = (raceTier || '').charAt(0).toUpperCase();
     const final = finalByEventClass.get(`${eventId}|${cls}|${letter}`);
-    const eventConsistency = average(consistencyByEventClass.get(`${eventId}|${cls}`) || []);
+    const eventConsistency = average(bestEightyPercent(consistencyByEventClass.get(`${eventId}|${cls}`) || [], true));
     const eventName = event?.u ? `<a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">${escapeHtml(event.n)}</a>` : escapeHtml(event?.n || eventId);
     const finalName = final?.race.u ? `<a href="${escapeHtml(final.race.u)}" target="_blank" rel="noopener">${escapeHtml(raceTier)}</a>` : escapeHtml(raceTier || '—');
-    return `<tr><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td></tr>`;
-  }).join('') || '<tr><td colspan="9">No completed finals within these filters.</td></tr>';
+    const eventRuns = runs.filter(run => {
+      const race = data.raceById[run[0]];
+      return race?.e === eventId && race.c === cls;
+    }).sort((a, b) => {
+      const raceA = data.raceById[a[0]];
+      const raceB = data.raceById[b[0]];
+      return Number(raceB.f) - Number(raceA.f) || raceA.r.localeCompare(raceB.r) || raceA.n.localeCompare(raceB.n);
+    });
+    const runRows = eventRuns.map(run => {
+      const race = data.raceById[run[0]];
+      const raceName = race.u ? `<a href="${escapeHtml(race.u)}" target="_blank" rel="noopener">${escapeHtml(race.n)}</a>` : escapeHtml(race.n);
+      return `<tr><td>${escapeHtml(race.r)}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td></tr>`;
+    }).join('');
+    const raceDrilldown = `<details class="inline-races"><summary>${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}</summary><div class="table-wrap"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th></tr></thead><tbody>${runRows}</tbody></table></div></details>`;
+    return `<tr><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${raceDrilldown}</td></tr>`;
+  }).join('') || '<tr><td colspan="10">No completed finals within these filters.</td></tr>';
 
   state.profileKey = driverKey;
   const dialog = $('driverDialog');
@@ -342,6 +479,7 @@ function compareDrivers(preserveEvent = false) {
 
 function refresh() {
   renderLeaderboard();
+  updateRaceExplorer(true);
   if (!$('h2hResults').hidden) compareDrivers(true);
   if ($('driverDialog').open && state.profileKey) driverProfile(state.profileKey);
 }
@@ -358,7 +496,7 @@ async function init() {
     $('driverTotal').textContent = fmt.format(data.meta.driverCount);
     $('raceTotal').textContent = fmt.format(data.meta.raceCount);
     $('resultTotal').textContent = fmt.format(data.meta.raceResultCount);
-    $('updatedStatus').textContent = `Data checked ${dateFmt.format(new Date(data.meta.generatedAt))}`;
+    $('updatedStatus').textContent = `Last updated ${dateTimeFmt.format(new Date(data.meta.generatedAt))} UK time`;
     $('toDate').max = data.meta.latestEventDate;
     $('toDate').value = data.meta.latestEventDate;
     $('fromDate').value = oneYearBefore(data.meta.latestEventDate);
@@ -368,6 +506,7 @@ async function init() {
     $('driverA').insertAdjacentHTML('beforeend', driverOptions);
     $('driverB').insertAdjacentHTML('beforeend', driverOptions);
     renderLeaderboard();
+    updateRaceExplorer(false);
 
     for (const id of ['fromDate', 'toDate', 'divisionFilter', 'eventTypeFilter', 'minimumFinals']) $(id).addEventListener('change', refresh);
     $('classFilter').addEventListener('change', () => {
@@ -375,6 +514,12 @@ async function init() {
       refresh();
     });
     $('driverSearch').addEventListener('input', renderLeaderboard);
+    $('raceEvent').addEventListener('change', () => updateRaceSelection(false));
+    $('raceSelection').addEventListener('change', () => renderRaceExplorer($('raceSelection').value));
+    $('raceExplorerResults').addEventListener('click', event => {
+      const button = event.target.closest('[data-driver-key]');
+      if (button) driverProfile(button.dataset.driverKey);
+    });
     $('leaderboardBody').addEventListener('click', event => {
       const button = event.target.closest('[data-driver-key]');
       if (button) driverProfile(button.dataset.driverKey);
@@ -401,4 +546,5 @@ async function init() {
   }
 }
 
+ensureEnhancedMarkup();
 init();
