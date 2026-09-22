@@ -21,6 +21,7 @@
     </div>
     <div class="updated" id="updatedStatus">Loading last update…</div>
     <p class="update-schedule" id="updateSchedule">Results update automatically each day at 18:00 UK time.</p>
+    <a class="archive-link" id="liveRcArchiveLink" href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">Event Results</a>
   </header>
 
   <main>
@@ -43,7 +44,7 @@
         <label>From date<input type="date" id="fromDate" min="2022-01-01"></label>
         <label>To date<input type="date" id="toDate"></label>
         <label>Event type<select id="eventTypeFilter"><option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option></select></label>
-        <label>Class<select id="classFilter"><option value="">All classes</option></select></label>
+        <label>Class<select id="classFilter"><option value="senior">All senior classes</option></select></label>
         <label>Minimum finals<select id="minimumFinals"><option value="1">1+ final</option><option value="5">5+ finals</option><option value="10" selected>10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option></select></label>
         <label>Find a driver<input type="search" id="driverSearch" placeholder="Start typing a name…"></label>
       </div>
@@ -54,6 +55,13 @@
         <div>
           <p class="eyebrow">Filtered record book</p>
           <h2 id="leaderboardTitle">Driver leaderboard</h2>
+          <div class="class-tabs" id="leaderboardClassTabs" aria-label="Leaderboard class">
+            <button type="button" data-class-filter="2-Wheel Drive Buggy" aria-pressed="false">2WD</button>
+            <button type="button" data-class-filter="4-Wheel Drive Buggy" aria-pressed="false">4WD</button>
+            <button type="button" data-class-filter="Junior Racers" aria-pressed="false">Junior Racers</button>
+            <button type="button" data-class-filter="Trucks" aria-pressed="false">Trucks</button>
+            <button type="button" data-class-filter="Vintage" aria-pressed="false">Vintage</button>
+          </div>
         </div>
         <p class="result-count" id="leaderboardCount"></p>
       </div>
