@@ -1,8 +1,13 @@
-import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260923-rome1';
+import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260923-istanbul1';
 
 const state = { data: null, profileKey: '' };
 let journeyMap = null;
 let journeyMapLayers = null;
+let journeyDriverMarkers = new Map();
+let journeySelectedKey = '';
+let journeyTimelineDates = [];
+let journeyPlaybackTimer = null;
+const journeyPlaybackDurationMs = 120000;
 const $ = id => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -131,8 +136,14 @@ function ensureEnhancedMarkup() {
         <button type="button" class="dialog-close journey-map-close" id="closeJourneyMap" aria-label="Close road map">×</button>
         <p class="eyebrow">Distance raced</p><h3 id="journeyMapTitle">Virtual road journey</h3>
         <p class="journey-map-copy" id="journeyMapCopy"></p>
+        <div class="journey-map-controls">
+          <label>Find a driver<input type="search" id="journeyDriverSearch" list="journeyDriverOptions" placeholder="Start typing a name…"><datalist id="journeyDriverOptions"></datalist></label>
+          <button type="button" id="journeyPlay">▶ Play 2-minute journey</button>
+          <label class="journey-timeline">Journey date <strong id="journeyDateLabel">Latest</strong><input type="range" id="journeyDateSlider" min="0" max="0" value="0" step="1" aria-label="Journey date from January 2022 to the latest result"></label>
+        </div>
+        <div class="journey-milestones" id="journeyMilestones" aria-label="Journey milestones"></div>
         <div class="journey-map" id="journeyMap"></div>
-        <div class="journey-map-legend"><span><i class="selected"></i> Selected driver</span><span><i></i> Similar-distance drivers</span><span>Route: House of Sport, Cardiff → Munich → Rome</span></div>
+        <div class="journey-map-legend"><span><i class="selected"></i> Selected driver</span><span><i></i> Other drivers</span><span>Route: House of Sport, Cardiff → Munich → Rome → Istanbul</span></div>
       </div>
     </section>`);
 
@@ -408,25 +419,152 @@ function journeyRouteAt(distanceKm) {
   return { point: journeyRoadRoute.at(-1), travelled: journeyRoadRoute.slice() };
 }
 
-function journeyDriverDistances() {
-  const laps = new Map();
+const journeyMilestoneData = [
+  ['Cardiff', 0], ['London', 236], ['Calais', 417], ['Reims', 677], ['Saarbrücken', 920],
+  ['Munich', 1377], ['Innsbruck', 1538], ['Verona', 1799], ['Rome', 2293],
+  ['Zagreb', 3181], ['Belgrade', 3581], ['Sofia', 3968], ['Istanbul', 4522]
+];
+
+function journeyDriverDistances(cutoffDate = '9999-12-31') {
+  const stats = new Map();
   for (const run of state.data.raceResults) {
     const race = state.data.raceById[run[0]];
-    if (!race || race.d < '2022-01-01') continue;
-    laps.set(run[1], (laps.get(run[1]) || 0) + completedLaps(run));
+    if (!race || race.d < '2022-01-01' || race.d > cutoffDate) continue;
+    if (!stats.has(run[1])) stats.set(run[1], { laps: 0, runs: 0, events: new Set(), classes: new Set(), lastDate: '', lastEventId: '' });
+    const row = stats.get(run[1]);
+    row.laps += completedLaps(run);
+    row.runs += 1;
+    row.events.add(race.e);
+    row.classes.add(race.c);
+    if (race.d >= row.lastDate) {
+      row.lastDate = race.d;
+      row.lastEventId = race.e;
+    }
   }
-  return [...laps].map(([driverKey, count]) => ({ driverKey, name: state.data.driverByKey[driverKey] || driverKey, km: Number((count * 0.15).toFixed(1)) })).filter(driver => driver.km > 0);
+  return [...stats].map(([driverKey, row]) => ({
+    driverKey,
+    name: state.data.driverByKey[driverKey] || driverKey,
+    km: Number((row.laps * 0.15).toFixed(1)),
+    laps: row.laps,
+    runs: row.runs,
+    events: row.events.size,
+    classes: [...row.classes],
+    lastDate: row.lastDate,
+    lastEvent: state.data.eventById[row.lastEventId]?.n || ''
+  })).filter(driver => driver.km > 0);
+}
+
+function stopJourneyPlayback() {
+  if (journeyPlaybackTimer) clearInterval(journeyPlaybackTimer);
+  journeyPlaybackTimer = null;
+  if ($('journeyPlay')) $('journeyPlay').textContent = '▶ Play 2-minute journey';
+}
+
+function buildJourneyTimeline(endDate, frameCount = 121) {
+  const startMs = Date.parse('2022-01-01T12:00:00Z');
+  const endMs = Math.max(startMs, Date.parse(`${endDate}T12:00:00Z`));
+  return Array.from({ length: frameCount }, (_, index) => {
+    const progress = index / (frameCount - 1);
+    return new Date(startMs + (endMs - startMs) * progress).toISOString().slice(0, 10);
+  });
+}
+
+function journeyCutoffDate() {
+  return journeyTimelineDates[Number($('journeyDateSlider').value)] || journeyTimelineDates.at(-1) || '9999-12-31';
+}
+
+function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
+  if (!window.L || !journeyMap) return;
+  const cutoffDate = journeyCutoffDate();
+  const drivers = journeyDriverDistances(cutoffDate).sort((a, b) => b.km - a.km);
+  const selectedName = state.data.driverByKey[journeySelectedKey] || 'Selected driver';
+  const selected = drivers.find(driver => driver.driverKey === journeySelectedKey) || { driverKey: journeySelectedKey, name: selectedName, km: 0, laps: 0, runs: 0, events: 0, classes: [], lastDate: '', lastEvent: '' };
+  const latest = cutoffDate === journeyTimelineDates.at(-1);
+  $('journeyDateLabel').textContent = latest ? `Latest · ${dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`))}` : dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
+  $('journeyMapTitle').textContent = `${selected.name} — ${fmt.format(selected.km)} km`;
+  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(Number((selected.km - journeyRoadDistanceKm).toFixed(1)))} km.` : `Their pin shows the equivalent point reached along the route.`;
+  $('journeyMapCopy').textContent = `Combined distance from every recorded class and official event since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
+
+  journeyMapLayers.clearLayers();
+  journeyDriverMarkers = new Map();
+  window.L.polyline(journeyRoadRoute, { color: '#6f7972', weight: 5, opacity: .65 }).addTo(journeyMapLayers);
+  const selectedRoute = journeyRouteAt(selected.km);
+  window.L.polyline(selectedRoute.travelled, { color: '#08a31a', weight: 7, opacity: .9 }).addTo(journeyMapLayers);
+
+  for (const [name, km] of journeyMilestoneData) {
+    const point = journeyRouteAt(km).point;
+    window.L.circleMarker(point, { radius: 4, color: '#fff', weight: 1, fillColor: selected.km >= km ? '#08a31a' : '#778078', fillOpacity: 1 })
+      .bindTooltip(`${escapeHtml(name)} · ${fmt.format(km)} km`, { direction: 'top' }).addTo(journeyMapLayers);
+  }
+  const nextMilestone = journeyMilestoneData.find(([, km]) => km > selected.km);
+  $('journeyMilestones').innerHTML = journeyMilestoneData.map(([name, km]) => `<span class="${selected.km >= km ? 'reached' : nextMilestone?.[0] === name ? 'next' : ''}">${selected.km >= km ? '✓ ' : ''}${escapeHtml(name)} <small>${fmt.format(km)} km</small></span>`).join('');
+
+  for (const driver of drivers) {
+    const route = journeyRouteAt(driver.km);
+    const selectedDriver = driver.driverKey === journeySelectedKey;
+    const icon = window.L.divIcon({ className: 'journey-driver-icon', html: `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: [18, 24], iconAnchor: [9, 21] });
+    const classText = driver.classes.map(cls => classLabels[cls] || cls).join(', ');
+    const lastEvent = driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : '';
+    const popup = `<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(driver.km)} km</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${escapeHtml(classText)}</span>${lastEvent}</div>`;
+    const marker = window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 1000 : 0 })
+      .bindTooltip(escapeHtml(driver.name), { permanent: true, direction: 'top', offset: [0, -18], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` })
+      .bindPopup(popup).addTo(journeyMapLayers);
+    journeyDriverMarkers.set(driver.driverKey, marker);
+  }
+  window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
+  window.L.circleMarker(journeyRoadRoute.at(-1), { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Istanbul, Türkiye', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
+  if (resetView) journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
+  if (focusDriver && journeyDriverMarkers.has(journeySelectedKey)) {
+    const marker = journeyDriverMarkers.get(journeySelectedKey);
+    journeyMap.setView(marker.getLatLng(), Math.max(journeyMap.getZoom(), 8));
+    marker.openPopup();
+  }
+}
+
+function selectJourneyDriver() {
+  const query = $('journeyDriverSearch').value.trim().toLowerCase();
+  if (!query) return;
+  const driver = state.data.drivers.find(row => row.n.toLowerCase() === query) || state.data.drivers.find(row => row.n.toLowerCase().includes(query));
+  if (!driver) return;
+  journeySelectedKey = driver.k;
+  $('journeyDriverSearch').value = driver.n;
+  renderJourneyMap({ focusDriver: true });
+}
+
+function toggleJourneyPlayback() {
+  if (journeyPlaybackTimer) {
+    stopJourneyPlayback();
+    return;
+  }
+  const slider = $('journeyDateSlider');
+  if (Number(slider.value) >= Number(slider.max)) {
+    slider.value = '0';
+    renderJourneyMap();
+  }
+  $('journeyPlay').textContent = '❚❚ Pause';
+  const frameInterval = journeyPlaybackDurationMs / Math.max(1, journeyTimelineDates.length - 1);
+  journeyPlaybackTimer = setInterval(() => {
+    const next = Number(slider.value) + 1;
+    if (next > Number(slider.max)) {
+      stopJourneyPlayback();
+      return;
+    }
+    slider.value = String(next);
+    renderJourneyMap();
+  }, frameInterval);
 }
 
 function openJourneyMap(driverKey) {
-  const drivers = journeyDriverDistances();
-  const selected = drivers.find(driver => driver.driverKey === driverKey);
-  if (!selected) return;
-  const peers = drivers.filter(driver => driver.driverKey !== driverKey).sort((a, b) => b.km - a.km);
-  $('journeyMapTitle').textContent = `${selected.name} — ${fmt.format(selected.km)} km`;
-  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Rome and covered a further ${fmt.format(Number((selected.km - journeyRoadDistanceKm).toFixed(1)))} km.` : `Their pin shows the equivalent point reached along the road route.`;
-  $('journeyMapCopy').textContent = `Career distance across every recorded class and official event since 1 January 2022, starting at Cardiff City House of Sport. ${routeStatus} Every driver with recorded mileage is shown; zoom in to separate nearby names.`;
+  journeySelectedKey = driverKey;
+  const latestDate = state.data.meta.latestEventDate || Object.values(state.data.raceById).map(race => race.d).sort().at(-1) || '2022-01-01';
+  journeyTimelineDates = buildJourneyTimeline(latestDate);
+  const slider = $('journeyDateSlider');
+  slider.max = String(Math.max(0, journeyTimelineDates.length - 1));
+  slider.value = slider.max;
+  $('journeyDriverOptions').innerHTML = state.data.drivers.slice().sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.n)}"></option>`).join('');
+  $('journeyDriverSearch').value = state.data.driverByKey[driverKey] || '';
   $('journeyMapOverlay').hidden = false;
+  stopJourneyPlayback();
   requestAnimationFrame(() => {
     if (!window.L) {
       $('journeyMap').textContent = 'The road map could not be loaded. Please check the internet connection and try again.';
@@ -437,21 +575,7 @@ function openJourneyMap(driverKey) {
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
     }
-    journeyMapLayers.clearLayers();
-    window.L.polyline(journeyRoadRoute, { color: '#6f7972', weight: 5, opacity: .65 }).addTo(journeyMapLayers);
-    const selectedRoute = journeyRouteAt(selected.km);
-    window.L.polyline(selectedRoute.travelled, { color: '#08a31a', weight: 7, opacity: .9 }).addTo(journeyMapLayers);
-    for (const driver of [selected, ...peers]) {
-      const route = journeyRouteAt(driver.km);
-      const selectedDriver = driver.driverKey === driverKey;
-      const icon = window.L.divIcon({ className: 'journey-driver-icon', html: `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: [18, 24], iconAnchor: [9, 21] });
-      window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 1000 : 0 }).bindTooltip(escapeHtml(driver.name), { permanent: true, direction: 'top', offset: [0, -18], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` }).addTo(journeyMapLayers);
-    }
-    const start = journeyRoadRoute[0];
-    const destination = journeyRoadRoute.at(-1);
-    window.L.circleMarker(start, { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
-    window.L.circleMarker(destination, { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Rome, Italy', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
-    journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
+    renderJourneyMap({ resetView: true });
     setTimeout(() => journeyMap.invalidateSize(), 50);
   });
 }
@@ -845,7 +969,22 @@ async function init() {
       const button = event.target.closest('[data-journey-driver]');
       if (button) openJourneyMap(button.dataset.journeyDriver);
     });
-    $('closeJourneyMap').addEventListener('click', () => { $('journeyMapOverlay').hidden = true; });
+    $('closeJourneyMap').addEventListener('click', () => {
+      stopJourneyPlayback();
+      $('journeyMapOverlay').hidden = true;
+    });
+    $('journeyDriverSearch').addEventListener('change', selectJourneyDriver);
+    $('journeyDriverSearch').addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        selectJourneyDriver();
+      }
+    });
+    $('journeyDateSlider').addEventListener('input', () => {
+      stopJourneyPlayback();
+      renderJourneyMap();
+    });
+    $('journeyPlay').addEventListener('click', toggleJourneyPlayback);
     $('closeDriverProfile').addEventListener('click', () => $('driverDialog').close());
     $('driverDialog').addEventListener('click', event => {
       if (event.target === $('driverDialog')) $('driverDialog').close();
