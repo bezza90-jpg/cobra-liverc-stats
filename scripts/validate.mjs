@@ -63,6 +63,7 @@ if (!indexHtml.includes('Distance') || !appJs.includes('totalLaps(runs) * 0.15')
 if (!indexHtml.includes('id="leaderboardMetric"') || !appJs.includes('leaderboardMetrics')) errors.push('Rankable driver-record metrics are missing.');
 if (!indexHtml.includes('id="driverConsistencyDetails"') || !appJs.includes('Runs at 95%+')) errors.push('Driver consistency breakdown is missing.');
 if (!indexHtml.includes('id="raceVideoLink"') || !appJs.includes('data/videos.json')) errors.push('YouTube race links are missing.');
+if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Race Videos'))) errors.push('The permanent YouTube channel button is missing from one or more pages.');
 if (videos.meta?.fromDate !== '2025-01-01' || !youtubeJs.includes("channelHandle = 'Bezza90'") || !youtubeJs.includes('/\\bCOBRA\\b/i')) errors.push('YouTube matching rules are invalid.');
 if (!championshipJs.includes('highestDrop') || !championshipJs.includes('qualifyingPosition')) errors.push('Championship tie-break or TQ scoring logic is missing.');
 if (!championshipJs.includes('a && b && a.total')) errors.push('Championship first-place tie guard is missing.');
