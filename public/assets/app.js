@@ -1,4 +1,4 @@
-import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js';
+import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260923-rome1';
 
 const state = { data: null, profileKey: '' };
 let journeyMap = null;
@@ -132,7 +132,7 @@ function ensureEnhancedMarkup() {
         <p class="eyebrow">Distance raced</p><h3 id="journeyMapTitle">Virtual road journey</h3>
         <p class="journey-map-copy" id="journeyMapCopy"></p>
         <div class="journey-map" id="journeyMap"></div>
-        <div class="journey-map-legend"><span><i class="selected"></i> Selected driver</span><span><i></i> Similar-distance drivers</span><span>Route: House of Sport, Cardiff → Munich, Germany</span></div>
+        <div class="journey-map-legend"><span><i class="selected"></i> Selected driver</span><span><i></i> Similar-distance drivers</span><span>Route: House of Sport, Cardiff → Munich → Rome</span></div>
       </div>
     </section>`);
 
@@ -367,7 +367,7 @@ function profileStat(value, label) {
 
 function distanceJourneyStat(runs, driverKey) {
   const km = Number((totalLaps(runs) * 0.15).toFixed(1));
-  return `<article class="journey-stat"><button type="button" class="journey-map-button" data-journey-driver="${escapeHtml(driverKey)}" aria-label="Show ${fmt.format(km)} kilometre road journey on map"><strong>${fmt.format(km)} km</strong><span>Distance raced · open road map</span></button></article>`;
+  return `<article class="journey-stat"><button type="button" class="journey-map-button" data-journey-driver="${escapeHtml(driverKey)}" aria-label="Show ${fmt.format(km)} kilometre career road journey on map"><strong>${fmt.format(km)} km</strong><span>Total distance since Jan 2022 · open road map</span></button></article>`;
 }
 
 function geoKm(a, b) {
@@ -409,11 +409,10 @@ function journeyRouteAt(distanceKm) {
 }
 
 function journeyDriverDistances() {
-  const { from, to, eventType, className } = filters();
   const laps = new Map();
   for (const run of state.data.raceResults) {
     const race = state.data.raceById[run[0]];
-    if (!race || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
+    if (!race || race.d < '2022-01-01') continue;
     laps.set(run[1], (laps.get(run[1]) || 0) + completedLaps(run));
   }
   return [...laps].map(([driverKey, count]) => ({ driverKey, name: state.data.driverByKey[driverKey] || driverKey, km: Number((count * 0.15).toFixed(1)) })).filter(driver => driver.km > 0);
@@ -423,10 +422,10 @@ function openJourneyMap(driverKey) {
   const drivers = journeyDriverDistances();
   const selected = drivers.find(driver => driver.driverKey === driverKey);
   if (!selected) return;
-  const peers = drivers.filter(driver => driver.driverKey !== driverKey).sort((a, b) => Math.abs(a.km - selected.km) - Math.abs(b.km - selected.km)).slice(0, 8);
+  const peers = drivers.filter(driver => driver.driverKey !== driverKey).sort((a, b) => Math.abs(a.km - selected.km) - Math.abs(b.km - selected.km)).slice(0, 15);
   $('journeyMapTitle').textContent = `${selected.name} — ${fmt.format(selected.km)} km`;
-  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Munich and covered a further ${fmt.format(Number((selected.km - journeyRoadDistanceKm).toFixed(1)))} km.` : `Their pin shows the equivalent point reached along the road route.`;
-  $('journeyMapCopy').textContent = `Starting at Cardiff City House of Sport. ${routeStatus} The eight closest driver distance totals are labelled for comparison.`;
+  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Rome and covered a further ${fmt.format(Number((selected.km - journeyRoadDistanceKm).toFixed(1)))} km.` : `Their pin shows the equivalent point reached along the road route.`;
+  $('journeyMapCopy').textContent = `Career distance across every recorded class and official event since 1 January 2022, starting at Cardiff City House of Sport. ${routeStatus} The 15 closest career totals are labelled for comparison.`;
   $('journeyMapOverlay').hidden = false;
   requestAnimationFrame(() => {
     if (!window.L) {
@@ -451,7 +450,7 @@ function openJourneyMap(driverKey) {
     const start = journeyRoadRoute[0];
     const destination = journeyRoadRoute.at(-1);
     window.L.circleMarker(start, { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
-    window.L.circleMarker(destination, { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Munich, Germany', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
+    window.L.circleMarker(destination, { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Rome, Italy', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
     journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
     setTimeout(() => journeyMap.invalidateSize(), 50);
   });
@@ -505,6 +504,10 @@ function driverProfile(driverKey) {
   const runs = data.raceResults.filter(row => {
     const race = data.raceById[row[0]];
     return row[1] === driverKey && race && matches(race.e, race.d, race.c);
+  });
+  const careerRuns = data.raceResults.filter(row => {
+    const race = data.raceById[row[0]];
+    return row[1] === driverKey && race && race.d >= '2022-01-01';
   });
 
   const fieldSizes = new Map();
@@ -563,7 +566,7 @@ function driverProfile(driverKey) {
     profileStat(lapSpreads.length ? `${average(lapSpreads).toFixed(3)}s` : '—', 'Avg lap-time gap'),
     profileStat(runs.length, 'Recorded runs'),
     profileStat(fmt.format(totalLaps(runs)), 'Completed laps'),
-    distanceJourneyStat(runs, driverKey),
+    distanceJourneyStat(careerRuns, driverKey),
     profileStat(trackTime(runs), 'Time on track'),
     profileStat(`${swordEvents.size} / ${clubEvents.size}`, 'SWORD / Club events')
   ].join('');
