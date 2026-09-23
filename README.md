@@ -2,7 +2,9 @@
 
 This repository hosts the public COBRA statistics dashboard and refreshes it from the public COBRA LiveRC archive. It contains the complete verified history from 1 January 2022 and is designed for embedding in the Wix Harmony site.
 
-It also includes a Podium Gallery at `/podiums/`. The newest event opens automatically, with the previous 12 months grouped by year and event. Every final displays its official top three and links to the complete LiveRC result.
+It also includes a Podium Gallery at `/podiums/`. The newest event opens automatically, with the complete official archive from 2022 grouped by year and event. Every final displays its official top three and links to the complete LiveRC result.
+
+Driver profiles use all available LiveRC run data to show completed laps, estimated distance raced at 150 metres per lap, time on track, fastest laps and consistency. The class breakdown also includes entries, runs, finals, finishing statistics, TQs and race wins.
 
 To add a podium photograph, follow `public/podium-photos/README.md`. Photographs are connected to a final through a predictable LiveRC event-and-race filename, so no code changes are needed.
 

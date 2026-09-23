@@ -56,7 +56,9 @@ if (!swordHtml.includes('data-championship="sword"') || !clubHtml.includes('data
 if (!swordHtml.includes('id="seasonSelect"') || !clubHtml.includes('id="seasonSelect"')) errors.push('Championship season selectors are missing.');
 if (!podiumsHtml.includes('../data/dashboard.json') && !podiumsJs.includes('../data/dashboard.json')) errors.push('Podium gallery data link is missing.');
 if (!podiumsJs.includes("-podium.jpg") || !podiumsJs.includes('raceTopThree')) errors.push('Podium photo naming or top-three result logic is missing.');
+if (!podiumsHtml.includes('Complete archive from 2022') || podiumsJs.includes('setUTCFullYear')) errors.push('Podium gallery is not configured for the complete archive.');
 if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Podium Gallery'))) errors.push('Podium Gallery navigation is missing from one or more pages.');
+if (!indexHtml.includes('Distance') || !appJs.includes('totalLaps(runs) * 0.15')) errors.push('Driver-profile distance calculation is missing.');
 if (!championshipJs.includes('highestDrop') || !championshipJs.includes('qualifyingPosition')) errors.push('Championship tie-break or TQ scoring logic is missing.');
 if (!championshipJs.includes('a && b && a.total')) errors.push('Championship first-place tie guard is missing.');
 if (!styles.includes('@media (max-width: 520px)')) errors.push('Mobile layout rules are missing.');

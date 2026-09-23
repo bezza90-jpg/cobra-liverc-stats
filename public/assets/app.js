@@ -104,9 +104,9 @@ function ensureEnhancedMarkup() {
           <p class="profile-context" id="driverProfileContext"></p>
           <div class="profile-stats" id="driverProfileStats"></div>
           <section class="profile-section"><h3>Class breakdown</h3><div class="table-wrap compact"><table>
-            <thead><tr><th>Class</th><th>Finals</th><th>Avg overall</th><th>Best</th><th>Top 5</th><th>Podiums</th><th>Performance</th></tr></thead>
+            <thead><tr><th>Class</th><th>Entries</th><th>Runs</th><th>Laps</th><th>Distance</th><th>Track time</th><th>Finals</th><th>Avg overall</th><th>Best</th><th>Top 5</th><th>Podiums</th><th>Overall wins</th><th>Race wins</th><th>TQs</th><th>Performance</th><th>Fastest lap</th><th>Avg consistency</th></tr></thead>
             <tbody id="driverClassDetails"></tbody>
-          </table></div></section>
+          </table></div><p class="definition">Distance is estimated at 150 metres per completed lap. Track time, fastest lap and consistency use every recorded run within the selected filters.</p></section>
           <section class="profile-section"><h3>Event and final history</h3><div class="table-wrap profile-history"><table>
             <thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Overall</th><th>Final</th><th>Qualifying</th><th>Final result</th><th>Fastest lap</th><th>Consistency</th><th>Individual races</th></tr></thead>
             <tbody id="driverEventDetails"></tbody>
@@ -264,6 +264,37 @@ function profileStat(value, label) {
   return `<article><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></article>`;
 }
 
+function completedLaps(run) {
+  const match = String(run[3] || '').match(/^(\d+)\//);
+  return match ? Number(match[1]) : 0;
+}
+
+function runTimeSeconds(run) {
+  const value = String(run[3] || '');
+  const separator = value.indexOf('/');
+  if (separator < 0) return 0;
+  const time = value.slice(separator + 1);
+  const minutesAndSeconds = time.match(/^(\d+):(\d+(?:\.\d+)?)/);
+  if (minutesAndSeconds) return Number(minutesAndSeconds[1]) * 60 + Number(minutesAndSeconds[2]);
+  const seconds = Number.parseFloat(time);
+  return Number.isFinite(seconds) ? seconds : 0;
+}
+
+function totalLaps(runs) {
+  return runs.reduce((total, run) => total + completedLaps(run), 0);
+}
+
+function distanceRaced(runs) {
+  return `${fmt.format(Number((totalLaps(runs) * 0.15).toFixed(1)))} km`;
+}
+
+function trackTime(runs) {
+  const minutes = Math.round(runs.reduce((total, run) => total + runTimeSeconds(run), 0) / 60);
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  return `${hours}h ${minutes % 60}m`;
+}
+
 function driverProfile(driverKey) {
   const data = state.data;
   const driver = data.drivers.find(row => row.k === driverKey);
@@ -327,6 +358,9 @@ function driverProfile(driverKey) {
     profileStat(qualifying.length ? average(qualifying).toFixed(1) : '—', 'Average qualifying'),
     profileStat(keptConsistencies.length ? `${average(keptConsistencies).toFixed(1)}%` : '—', 'Adjusted consistency'),
     profileStat(runs.length, 'Recorded runs'),
+    profileStat(fmt.format(totalLaps(runs)), 'Completed laps'),
+    profileStat(distanceRaced(runs), 'Distance raced'),
+    profileStat(trackTime(runs), 'Time on track'),
     profileStat(`${swordEvents.size} / ${clubEvents.size}`, 'SWORD / Club events')
   ].join('');
 
@@ -335,14 +369,28 @@ function driverProfile(driverKey) {
     if (!classes.has(row[2])) classes.set(row[2], []);
     classes.get(row[2]).push(row);
   }
+  const runsByClass = new Map();
+  for (const run of runs) {
+    const race = data.raceById[run[0]];
+    if (!race) continue;
+    if (!runsByClass.has(race.c)) runsByClass.set(race.c, []);
+    runsByClass.get(race.c).push(run);
+  }
   $('driverClassDetails').innerHTML = [...classes].sort(([a], [b]) => a.localeCompare(b)).map(([cls, rows]) => {
     const classPositions = rows.map(row => row[4]);
     const classTopFive = classPositions.filter(value => value <= 5).length;
     const classPodiums = classPositions.filter(value => value <= 3).length;
+    const classOverallWins = classPositions.filter(value => value === 1).length;
+    const classTqs = rows.filter(row => Number(row[5]) === 1).length;
     const classKeptPositions = attendanceAdjustedResults(classPositions);
     const classKeptPerformance = attendanceAdjustedResults(rows.map(performanceFor), true);
-    return `<tr><td>${escapeHtml(cls)}</td><td>${rows.length}</td><td>${average(classKeptPositions).toFixed(1)}</td><td>${Math.min(...classPositions)}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${average(classKeptPerformance).toFixed(1)}</td></tr>`;
-  }).join('') || '<tr><td colspan="7">No completed finals within these filters.</td></tr>';
+    const classRuns = runsByClass.get(cls) || [];
+    const classEntries = entries.filter(row => row[2] === cls).length;
+    const classRaceWins = classRuns.filter(row => Number(row[2]) === 1).length;
+    const fastestLaps = classRuns.map(row => Number.parseFloat(row[5])).filter(value => Number.isFinite(value) && value > 0);
+    const classConsistencies = classRuns.map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
+    return `<tr><td>${escapeHtml(cls)}</td><td>${classEntries}</td><td>${classRuns.length}</td><td>${fmt.format(totalLaps(classRuns))}</td><td>${distanceRaced(classRuns)}</td><td>${trackTime(classRuns)}</td><td>${rows.length}</td><td>${average(classKeptPositions).toFixed(1)}</td><td>${Math.min(...classPositions)}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${classOverallWins}</td><td>${classRaceWins}</td><td>${classTqs}</td><td>${average(classKeptPerformance).toFixed(1)}</td><td>${fastestLaps.length ? `${Math.min(...fastestLaps).toFixed(3)}s` : '—'}</td><td>${classConsistencies.length ? `${average(classConsistencies).toFixed(1)}%` : '—'}</td></tr>`;
+  }).join('') || '<tr><td colspan="17">No completed finals within these filters.</td></tr>';
 
   const finalByEventClass = new Map();
   for (const row of runs) {
