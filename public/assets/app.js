@@ -13,6 +13,7 @@ const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
 const kmToMiles = km => Number((km * 0.621371).toFixed(1));
+const journeyExcludedDrivers = new Set(['SIMON-NOTLEY']);
 const classLabels = {
   'Junior Racers': 'Juniors',
   '2-Wheel Drive Buggy': '2WD',
@@ -379,6 +380,7 @@ function profileStat(value, label) {
 }
 
 function distanceJourneyStat(runs, driverKey) {
+  if (journeyExcludedDrivers.has(driverKey)) return '';
   const km = Number((totalLaps(runs) * 0.15).toFixed(1));
   const miles = kmToMiles(km);
   return `<article class="journey-stat"><button type="button" class="journey-map-button" data-journey-driver="${escapeHtml(driverKey)}" aria-label="Show ${fmt.format(miles)} mile career road journey on map"><strong>${fmt.format(miles)} miles</strong><span>Total distance since Jan 2022 · open road map</span></button></article>`;
@@ -432,7 +434,7 @@ function journeyDriverDistances(cutoffDate = '9999-12-31') {
   const stats = new Map();
   for (const run of state.data.raceResults) {
     const race = state.data.raceById[run[0]];
-    if (!race || race.d < '2022-01-01' || race.d > cutoffDate) continue;
+    if (!race || journeyExcludedDrivers.has(run[1]) || race.d < '2022-01-01' || race.d > cutoffDate) continue;
     if (!stats.has(run[1])) stats.set(run[1], { laps: 0, runs: 0, events: new Set(), classes: new Set(), lastDate: '', lastEventId: '' });
     const row = stats.get(run[1]);
     row.laps += completedLaps(run);
@@ -533,7 +535,8 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
 function selectJourneyDriver() {
   const query = $('journeyDriverSearch').value.trim().toLowerCase();
   if (!query) return;
-  const driver = state.data.drivers.find(row => row.n.toLowerCase() === query) || state.data.drivers.find(row => row.n.toLowerCase().includes(query));
+  const eligibleDrivers = state.data.drivers.filter(row => !journeyExcludedDrivers.has(row.k));
+  const driver = eligibleDrivers.find(row => row.n.toLowerCase() === query) || eligibleDrivers.find(row => row.n.toLowerCase().includes(query));
   if (!driver) return;
   journeySelectedKey = driver.k;
   $('journeyDriverSearch').value = driver.n;
@@ -570,7 +573,7 @@ function openJourneyMap(driverKey) {
   const slider = $('journeyDateSlider');
   slider.max = String(Math.max(0, journeyTimelineDates.length - 1));
   slider.value = slider.max;
-  $('journeyDriverOptions').innerHTML = state.data.drivers.slice().sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.n)}"></option>`).join('');
+  $('journeyDriverOptions').innerHTML = state.data.drivers.filter(driver => !journeyExcludedDrivers.has(driver.k)).sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.n)}"></option>`).join('');
   $('journeyDriverSearch').value = state.data.driverByKey[driverKey] || '';
   $('journeyMapOverlay').hidden = false;
   stopJourneyPlayback();
