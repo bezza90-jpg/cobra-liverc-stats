@@ -12,6 +12,7 @@ const $ = id => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
+const kmToMiles = km => Number((km * 0.621371).toFixed(1));
 const classLabels = {
   'Junior Racers': 'Juniors',
   '2-Wheel Drive Buggy': '2WD',
@@ -138,6 +139,7 @@ function ensureEnhancedMarkup() {
         <p class="journey-map-copy" id="journeyMapCopy"></p>
         <div class="journey-map-controls">
           <label>Find a driver<input type="search" id="journeyDriverSearch" list="journeyDriverOptions" placeholder="Start typing a name…"><datalist id="journeyDriverOptions"></datalist></label>
+          <label>Drivers shown<select id="journeyDriverLimit"><option value="0">All drivers</option><option value="25">Top 25</option><option value="50">Top 50</option><option value="100">Top 100</option><option value="200">Top 200</option></select></label>
           <button type="button" id="journeyPlay">▶ Play 2-minute journey</button>
           <label class="journey-timeline">Journey date <strong id="journeyDateLabel">Latest</strong><input type="range" id="journeyDateSlider" min="0" max="0" value="0" step="1" aria-label="Journey date from January 2022 to the latest result"></label>
         </div>
@@ -268,7 +270,7 @@ const leaderboardMetrics = {
   performance: { label: 'Performance score', value: row => row.performance, display: row => row.performance.toFixed(1) },
   finals: { label: 'Finals completed', value: row => row.finals },
   laps: { label: 'Total laps', value: row => row.laps, display: row => fmt.format(row.laps) },
-  distance: { label: 'Distance raced', value: row => row.laps * 0.15, display: row => `${fmt.format(Number((row.laps * 0.15).toFixed(1)))} km` },
+  distance: { label: 'Distance raced', value: row => row.laps * 0.15, display: row => `${fmt.format(kmToMiles(row.laps * 0.15))} miles` },
   trackTime: { label: 'Time on track', value: row => row.seconds, display: row => formatSeconds(row.seconds) },
   runs: { label: 'Recorded runs', value: row => row.runs },
   raceWins: { label: 'Individual race wins', value: row => row.raceWins },
@@ -378,7 +380,8 @@ function profileStat(value, label) {
 
 function distanceJourneyStat(runs, driverKey) {
   const km = Number((totalLaps(runs) * 0.15).toFixed(1));
-  return `<article class="journey-stat"><button type="button" class="journey-map-button" data-journey-driver="${escapeHtml(driverKey)}" aria-label="Show ${fmt.format(km)} kilometre career road journey on map"><strong>${fmt.format(km)} km</strong><span>Total distance since Jan 2022 · open road map</span></button></article>`;
+  const miles = kmToMiles(km);
+  return `<article class="journey-stat"><button type="button" class="journey-map-button" data-journey-driver="${escapeHtml(driverKey)}" aria-label="Show ${fmt.format(miles)} mile career road journey on map"><strong>${fmt.format(miles)} miles</strong><span>Total distance since Jan 2022 · open road map</span></button></article>`;
 }
 
 function geoKm(a, b) {
@@ -481,8 +484,8 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const selected = drivers.find(driver => driver.driverKey === journeySelectedKey) || { driverKey: journeySelectedKey, name: selectedName, km: 0, laps: 0, runs: 0, events: 0, classes: [], lastDate: '', lastEvent: '' };
   const latest = cutoffDate === journeyTimelineDates.at(-1);
   $('journeyDateLabel').textContent = latest ? `Latest · ${dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`))}` : dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
-  $('journeyMapTitle').textContent = `${selected.name} — ${fmt.format(selected.km)} km`;
-  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(Number((selected.km - journeyRoadDistanceKm).toFixed(1)))} km.` : `Their pin shows the equivalent point reached along the route.`;
+  $('journeyMapTitle').textContent = `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
+  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the route.`;
   $('journeyMapCopy').textContent = `Combined distance from every recorded class and official event since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
 
   journeyMapLayers.clearLayers();
@@ -494,18 +497,24 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   for (const [name, km] of journeyMilestoneData) {
     const point = journeyRouteAt(km).point;
     window.L.circleMarker(point, { radius: 4, color: '#fff', weight: 1, fillColor: selected.km >= km ? '#08a31a' : '#778078', fillOpacity: 1 })
-      .bindTooltip(`${escapeHtml(name)} · ${fmt.format(km)} km`, { direction: 'top' }).addTo(journeyMapLayers);
+      .bindTooltip(`${escapeHtml(name)} · ${fmt.format(kmToMiles(km))} miles`, { direction: 'top' }).addTo(journeyMapLayers);
   }
   const nextMilestone = journeyMilestoneData.find(([, km]) => km > selected.km);
-  $('journeyMilestones').innerHTML = journeyMilestoneData.map(([name, km]) => `<span class="${selected.km >= km ? 'reached' : nextMilestone?.[0] === name ? 'next' : ''}">${selected.km >= km ? '✓ ' : ''}${escapeHtml(name)} <small>${fmt.format(km)} km</small></span>`).join('');
+  $('journeyMilestones').innerHTML = journeyMilestoneData.map(([name, km]) => `<span class="${selected.km >= km ? 'reached' : nextMilestone?.[0] === name ? 'next' : ''}">${selected.km >= km ? '✓ ' : ''}${escapeHtml(name)} <small>${fmt.format(kmToMiles(km))} miles</small></span>`).join('');
 
-  for (const driver of drivers) {
+  const driverLimit = Number($('journeyDriverLimit').value);
+  const displayedDrivers = driverLimit ? drivers.slice(0, driverLimit) : drivers.slice();
+  if (!displayedDrivers.some(driver => driver.driverKey === journeySelectedKey) && drivers.some(driver => driver.driverKey === journeySelectedKey)) {
+    displayedDrivers.push(drivers.find(driver => driver.driverKey === journeySelectedKey));
+  }
+
+  for (const driver of displayedDrivers) {
     const route = journeyRouteAt(driver.km);
     const selectedDriver = driver.driverKey === journeySelectedKey;
     const icon = window.L.divIcon({ className: 'journey-driver-icon', html: `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: [18, 24], iconAnchor: [9, 21] });
     const classText = driver.classes.map(cls => classLabels[cls] || cls).join(', ');
     const lastEvent = driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : '';
-    const popup = `<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(driver.km)} km</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${escapeHtml(classText)}</span>${lastEvent}</div>`;
+    const popup = `<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(kmToMiles(driver.km))} miles</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${escapeHtml(classText)}</span>${lastEvent}</div>`;
     const marker = window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 1000 : 0 })
       .bindTooltip(escapeHtml(driver.name), { permanent: true, direction: 'top', offset: [0, -18], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` })
       .bindPopup(popup).addTo(journeyMapLayers);
@@ -607,7 +616,7 @@ function totalLaps(runs) {
 }
 
 function distanceRaced(runs) {
-  return `${fmt.format(Number((totalLaps(runs) * 0.15).toFixed(1)))} km`;
+  return `${fmt.format(kmToMiles(totalLaps(runs) * 0.15))} miles`;
 }
 
 function trackTime(runs) {
@@ -984,6 +993,7 @@ async function init() {
       stopJourneyPlayback();
       renderJourneyMap();
     });
+    $('journeyDriverLimit').addEventListener('change', () => renderJourneyMap());
     $('journeyPlay').addEventListener('click', toggleJourneyPlayback);
     $('closeDriverProfile').addEventListener('click', () => $('driverDialog').close());
     $('driverDialog').addEventListener('click', event => {
