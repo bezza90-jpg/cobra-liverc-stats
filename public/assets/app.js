@@ -80,7 +80,7 @@ function ensureEnhancedMarkup() {
     minimum.value = '10';
   }
   const definition = document.querySelector('.definition');
-  if (definition) definition.textContent = 'Choose any ranking measure above. Average finish, performance and consistency use the attendance adjustment: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. Activity totals always use every matching run.';
+  if (definition) definition.textContent = 'Choose any ranking measure above. Average finish, performance and consistency use the attendance adjustment: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. Consistency uses only full-duration runs with at least five laps. Activity totals always use every matching run.';
   if (!$('updateSchedule')) $('updatedStatus')?.insertAdjacentHTML('afterend', '<p class="update-schedule" id="updateSchedule">Results update automatically each day at 18:00 UK time.</p>');
 
   if (!$('raceExplorer')) {
@@ -112,7 +112,7 @@ function ensureEnhancedMarkup() {
           <section class="profile-section"><h3>Consistency breakdown</h3><div class="table-wrap compact"><table>
             <thead><tr><th>Class</th><th>Measured runs</th><th>Adjusted average</th><th>Best run</th><th>98%+</th><th>95–97.9%</th><th>90–94.9%</th><th>Below 90%</th><th>Avg fastest-to-average gap</th></tr></thead>
             <tbody id="driverConsistencyDetails"></tbody>
-          </table></div><p class="definition">Consistency bands use LiveRC’s recorded run consistency. The lap-gap figure compares each run’s fastest lap with its average lap; a smaller gap generally indicates steadier pace.</p></section>
+          </table></div><p class="definition">Consistency bands use only runs completed for the full scheduled duration with at least five laps. The lap-gap figure compares each qualifying run’s fastest lap with its average lap; a smaller gap generally indicates steadier pace.</p></section>
           <section class="profile-section"><h3>Event and final history</h3><div class="table-wrap profile-history"><table>
             <thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Overall</th><th>Final</th><th>Qualifying</th><th>Final result</th><th>Fastest lap</th><th>Consistency</th><th>Individual races</th></tr></thead>
             <tbody id="driverEventDetails"></tbody>
@@ -196,7 +196,7 @@ function calculateLeaderboard() {
     const averageLapValue = Number.parseFloat(averageLap);
     if (Number.isFinite(lap) && lap > 0 && Number.isFinite(averageLapValue) && averageLapValue >= lap) row.lapSpreads.push(averageLapValue - lap);
     const value = Number.parseFloat(consistency);
-    if (Number.isFinite(value)) {
+    if (Number.isFinite(value) && isCompleteConsistencyRun(run, data)) {
       row.consistencyTotal += value;
       row.consistencyRuns += 1;
       row.consistencies.push(value);
@@ -350,6 +350,56 @@ function profileStat(value, label) {
   return `<article><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></article>`;
 }
 
+const journeyRoute = [
+  { name: 'Cardiff', km: 0, x: 34, y: 76 },
+  { name: 'London', km: 240, x: 135, y: 64 },
+  { name: 'Dover', km: 365, x: 190, y: 82 },
+  { name: 'Calais', km: 410, x: 224, y: 98 },
+  { name: 'Lille', km: 525, x: 270, y: 121 },
+  { name: 'Reims', km: 735, x: 348, y: 147 },
+  { name: 'Metz', km: 930, x: 422, y: 124 },
+  { name: 'Saarbrücken', km: 995, x: 456, y: 105 },
+  { name: 'Frankfurt', km: 1160, x: 522, y: 72 },
+  { name: 'Nuremberg', km: 1385, x: 586, y: 112 },
+  { name: 'Munich', km: 1555, x: 642, y: 151 }
+];
+
+function journeyPosition(km) {
+  const routeLength = journeyRoute.at(-1).km;
+  const distance = Math.min(km, routeLength);
+  let nextIndex = journeyRoute.findIndex(point => point.km >= distance);
+  if (nextIndex <= 0) nextIndex = 1;
+  const start = journeyRoute[nextIndex - 1];
+  const end = journeyRoute[nextIndex];
+  const progress = Math.max(0, Math.min(1, (distance - start.km) / (end.km - start.km)));
+  return {
+    x: start.x + (end.x - start.x) * progress,
+    y: start.y + (end.y - start.y) * progress,
+    reached: km >= routeLength ? `Munich, plus ${fmt.format(Number((km - routeLength).toFixed(1)))} km` : `${fmt.format(Number((distance - start.km).toFixed(1)))} km beyond ${start.name}`,
+    routeLength
+  };
+}
+
+function distanceJourneyStat(runs) {
+  const km = Number((totalLaps(runs) * 0.15).toFixed(1));
+  const marker = journeyPosition(km);
+  const points = journeyRoute.map(point => `${point.x},${point.y}`).join(' ');
+  const labels = journeyRoute.filter((_, index) => [0, 2, 3, 5, 7, 8, 10].includes(index)).map(point =>
+    `<g><circle cx="${point.x}" cy="${point.y}" r="3"></circle><text x="${point.x}" y="${point.y - 9}">${escapeHtml(point.name)}</text></g>`).join('');
+  return `<details class="journey-stat">
+    <summary aria-label="Show distance journey. Distance raced: ${escapeHtml(`${fmt.format(km)} kilometres. ${marker.reached}`)}"><strong>${fmt.format(km)} km</strong><span>Distance raced · click to show map</span></summary>
+    <div class="journey-popover" aria-label="Virtual racing journey">
+      <b>Virtual racing journey</b><small>150 metres per completed lap</small>
+      <svg viewBox="0 0 680 190" role="img" aria-label="Route from Cardiff through France into Germany">
+        <path class="journey-land" d="M8 32 C106 13 167 29 203 68 C236 91 275 91 310 109 C371 142 420 91 470 77 C544 55 598 78 672 44 L672 184 L8 184 Z"></path>
+        <polyline class="journey-route" points="${points}"></polyline>${labels}
+        <g class="journey-marker"><circle cx="${marker.x}" cy="${marker.y}" r="8"></circle><circle cx="${marker.x}" cy="${marker.y}" r="3"></circle></g>
+      </svg>
+      <strong>${fmt.format(km)} km</strong><span>${escapeHtml(marker.reached)} · click the distance card again to close</span>
+    </div>
+  </details>`;
+}
+
 function completedLaps(run) {
   const match = String(run[3] || '').match(/^(\d+)\//);
   return match ? Number(match[1]) : 0;
@@ -364,6 +414,12 @@ function runTimeSeconds(run) {
   if (minutesAndSeconds) return Number(minutesAndSeconds[1]) * 60 + Number(minutesAndSeconds[2]);
   const seconds = Number.parseFloat(time);
   return Number.isFinite(seconds) ? seconds : 0;
+}
+
+function isCompleteConsistencyRun(run, data = state.data) {
+  const race = data?.raceById?.[run[0]];
+  const scheduledSeconds = Number(race?.l) || 0;
+  return scheduledSeconds > 0 && completedLaps(run) >= 5 && runTimeSeconds(run) >= scheduledSeconds;
 }
 
 function totalLaps(runs) {
@@ -407,8 +463,9 @@ function driverProfile(driverKey) {
 
   const positions = results.map(row => row[4]);
   const qualifying = results.map(row => Number(row[5])).filter(Number.isFinite).filter(value => value > 0);
-  const consistencies = runs.map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
-  const lapSpreads = runs.map(row => Number.parseFloat(row[6]) - Number.parseFloat(row[5])).filter(value => Number.isFinite(value) && value >= 0);
+  const consistencyRuns = runs.filter(row => isCompleteConsistencyRun(row, data));
+  const consistencies = consistencyRuns.map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
+  const lapSpreads = consistencyRuns.map(row => Number.parseFloat(row[6]) - Number.parseFloat(row[5])).filter(value => Number.isFinite(value) && value >= 0);
   const uniqueEvents = new Set(entries.map(row => row[0]));
   const eligibleEventIds = new Set(data.events
     .filter(event => inRange(event.d, from, to) && eventMatches(event.i, eventType) && data.entries.some(row => row[0] === event.i && classMatches(row[2], className)))
@@ -449,7 +506,7 @@ function driverProfile(driverKey) {
     profileStat(lapSpreads.length ? `${average(lapSpreads).toFixed(3)}s` : '—', 'Avg lap-time gap'),
     profileStat(runs.length, 'Recorded runs'),
     profileStat(fmt.format(totalLaps(runs)), 'Completed laps'),
-    profileStat(distanceRaced(runs), 'Distance raced'),
+    distanceJourneyStat(runs),
     profileStat(trackTime(runs), 'Time on track'),
     profileStat(`${swordEvents.size} / ${clubEvents.size}`, 'SWORD / Club events')
   ].join('');
@@ -478,15 +535,16 @@ function driverProfile(driverKey) {
     const classEntries = entries.filter(row => row[2] === cls).length;
     const classRaceWins = classRuns.filter(row => Number(row[2]) === 1).length;
     const fastestLaps = classRuns.map(row => Number.parseFloat(row[5])).filter(value => Number.isFinite(value) && value > 0);
-    const classConsistencies = classRuns.map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
+    const classConsistencies = classRuns.filter(row => isCompleteConsistencyRun(row, data)).map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
     return `<tr><td>${escapeHtml(cls)}</td><td>${classEntries}</td><td>${classRuns.length}</td><td>${fmt.format(totalLaps(classRuns))}</td><td>${distanceRaced(classRuns)}</td><td>${trackTime(classRuns)}</td><td>${rows.length}</td><td>${average(classKeptPositions).toFixed(1)}</td><td>${Math.min(...classPositions)}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${classOverallWins}</td><td>${classRaceWins}</td><td>${classTqs}</td><td>${average(classKeptPerformance).toFixed(1)}</td><td>${fastestLaps.length ? `${Math.min(...fastestLaps).toFixed(3)}s` : '—'}</td><td>${classConsistencies.length ? `${average(classConsistencies).toFixed(1)}%` : '—'}</td></tr>`;
   }).join('') || '<tr><td colspan="17">No completed finals within these filters.</td></tr>';
 
   $('driverConsistencyDetails').innerHTML = [...runsByClass].sort(([a], [b]) => a.localeCompare(b)).map(([cls, classRuns]) => {
-    const values = classRuns.map(run => Number.parseFloat(run[7])).filter(Number.isFinite);
+    const completeRuns = classRuns.filter(run => isCompleteConsistencyRun(run, data));
+    const values = completeRuns.map(run => Number.parseFloat(run[7])).filter(Number.isFinite);
     if (!values.length) return '';
     const adjusted = attendanceAdjustedResults(values, true);
-    const gaps = classRuns.map(run => Number.parseFloat(run[6]) - Number.parseFloat(run[5])).filter(value => Number.isFinite(value) && value >= 0);
+    const gaps = completeRuns.map(run => Number.parseFloat(run[6]) - Number.parseFloat(run[5])).filter(value => Number.isFinite(value) && value >= 0);
     const band = predicate => countAndRate(values.filter(predicate).length, values.length);
     return `<tr><td>${escapeHtml(cls)}</td><td>${values.length}</td><td>${average(adjusted).toFixed(1)}%</td><td>${Math.max(...values).toFixed(1)}%</td><td>${band(value => value >= 98)}</td><td>${band(value => value >= 95 && value < 98)}</td><td>${band(value => value >= 90 && value < 95)}</td><td>${band(value => value < 90)}</td><td>${gaps.length ? `${average(gaps).toFixed(3)}s` : '—'}</td></tr>`;
   }).join('') || '<tr><td colspan="9">No consistency data within these filters.</td></tr>';
@@ -501,6 +559,7 @@ function driverProfile(driverKey) {
   const consistencyByEventClass = new Map();
   for (const row of runs) {
     const race = data.raceById[row[0]];
+    if (!isCompleteConsistencyRun(row, data)) continue;
     const value = Number.parseFloat(row[7]);
     if (!Number.isFinite(value)) continue;
     const key = `${race.e}|${race.c}`;
