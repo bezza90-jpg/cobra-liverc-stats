@@ -100,11 +100,8 @@ async function init() {
     if (!response.ok) throw new Error(`Unable to load statistics (${response.status})`);
     data = await response.json();
     driverByKey = new Map(data.drivers.map(driver => [driver.k, driver.n]));
-    const latestDate = [...data.events].sort((a, b) => b.d.localeCompare(a.d))[0]?.d;
-    const cutoff = new Date(`${latestDate}T12:00:00Z`);
-    cutoff.setUTCFullYear(cutoff.getUTCFullYear() - 1);
     events = data.events
-      .filter(event => new Date(`${event.d}T12:00:00Z`) >= cutoff && eventFinals(event.i).length)
+      .filter(event => eventFinals(event.i).length)
       .sort((a, b) => b.d.localeCompare(a.d) || naturalSort.compare(b.n, a.n));
     $('updatedStatus').textContent = `Last updated ${formatDate(data.meta.generatedAt.slice(0, 10))}`;
     renderArchive();
