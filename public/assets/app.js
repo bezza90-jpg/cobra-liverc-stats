@@ -1,4 +1,8 @@
+import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js';
+
 const state = { data: null, profileKey: '' };
+let journeyMap = null;
+let journeyMapLayers = null;
 const $ = id => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -120,6 +124,17 @@ function ensureEnhancedMarkup() {
         </div>
       </dialog>`);
   }
+
+  if (!$('journeyMapOverlay')) $('driverDialog')?.querySelector('.dialog-shell')?.insertAdjacentHTML('beforeend', `
+    <section class="journey-map-overlay" id="journeyMapOverlay" hidden aria-label="Distance raced road map">
+      <div class="journey-map-shell">
+        <button type="button" class="dialog-close journey-map-close" id="closeJourneyMap" aria-label="Close road map">×</button>
+        <p class="eyebrow">Distance raced</p><h3 id="journeyMapTitle">Virtual road journey</h3>
+        <p class="journey-map-copy" id="journeyMapCopy"></p>
+        <div class="journey-map" id="journeyMap"></div>
+        <div class="journey-map-legend"><span><i class="selected"></i> Selected driver</span><span><i></i> Similar-distance drivers</span><span>Route: House of Sport, Cardiff → Munich, Germany</span></div>
+      </div>
+    </section>`);
 
   if (!document.querySelector('#driver-profile-runtime-styles')) {
     document.head.insertAdjacentHTML('beforeend', `<style id="driver-profile-runtime-styles">
@@ -350,54 +365,96 @@ function profileStat(value, label) {
   return `<article><strong>${escapeHtml(value)}</strong><span>${escapeHtml(label)}</span></article>`;
 }
 
-const journeyRoute = [
-  { name: 'Cardiff', km: 0, x: 34, y: 76 },
-  { name: 'London', km: 240, x: 135, y: 64 },
-  { name: 'Dover', km: 365, x: 190, y: 82 },
-  { name: 'Calais', km: 410, x: 224, y: 98 },
-  { name: 'Lille', km: 525, x: 270, y: 121 },
-  { name: 'Reims', km: 735, x: 348, y: 147 },
-  { name: 'Metz', km: 930, x: 422, y: 124 },
-  { name: 'Saarbrücken', km: 995, x: 456, y: 105 },
-  { name: 'Frankfurt', km: 1160, x: 522, y: 72 },
-  { name: 'Nuremberg', km: 1385, x: 586, y: 112 },
-  { name: 'Munich', km: 1555, x: 642, y: 151 }
-];
-
-function journeyPosition(km) {
-  const routeLength = journeyRoute.at(-1).km;
-  const distance = Math.min(km, routeLength);
-  let nextIndex = journeyRoute.findIndex(point => point.km >= distance);
-  if (nextIndex <= 0) nextIndex = 1;
-  const start = journeyRoute[nextIndex - 1];
-  const end = journeyRoute[nextIndex];
-  const progress = Math.max(0, Math.min(1, (distance - start.km) / (end.km - start.km)));
-  return {
-    x: start.x + (end.x - start.x) * progress,
-    y: start.y + (end.y - start.y) * progress,
-    reached: km >= routeLength ? `Munich, plus ${fmt.format(Number((km - routeLength).toFixed(1)))} km` : `${fmt.format(Number((distance - start.km).toFixed(1)))} km beyond ${start.name}`,
-    routeLength
-  };
+function distanceJourneyStat(runs, driverKey) {
+  const km = Number((totalLaps(runs) * 0.15).toFixed(1));
+  return `<article class="journey-stat"><button type="button" class="journey-map-button" data-journey-driver="${escapeHtml(driverKey)}" aria-label="Show ${fmt.format(km)} kilometre road journey on map"><strong>${fmt.format(km)} km</strong><span>Distance raced · open road map</span></button></article>`;
 }
 
-function distanceJourneyStat(runs) {
-  const km = Number((totalLaps(runs) * 0.15).toFixed(1));
-  const marker = journeyPosition(km);
-  const points = journeyRoute.map(point => `${point.x},${point.y}`).join(' ');
-  const labels = journeyRoute.filter((_, index) => [0, 2, 3, 5, 7, 8, 10].includes(index)).map(point =>
-    `<g><circle cx="${point.x}" cy="${point.y}" r="3"></circle><text x="${point.x}" y="${point.y - 9}">${escapeHtml(point.name)}</text></g>`).join('');
-  return `<details class="journey-stat">
-    <summary aria-label="Show distance journey. Distance raced: ${escapeHtml(`${fmt.format(km)} kilometres. ${marker.reached}`)}"><strong>${fmt.format(km)} km</strong><span>Distance raced · click to show map</span></summary>
-    <div class="journey-popover" aria-label="Virtual racing journey">
-      <b>Virtual racing journey</b><small>150 metres per completed lap</small>
-      <svg viewBox="0 0 680 190" role="img" aria-label="Route from Cardiff through France into Germany">
-        <path class="journey-land" d="M8 32 C106 13 167 29 203 68 C236 91 275 91 310 109 C371 142 420 91 470 77 C544 55 598 78 672 44 L672 184 L8 184 Z"></path>
-        <polyline class="journey-route" points="${points}"></polyline>${labels}
-        <g class="journey-marker"><circle cx="${marker.x}" cy="${marker.y}" r="8"></circle><circle cx="${marker.x}" cy="${marker.y}" r="3"></circle></g>
-      </svg>
-      <strong>${fmt.format(km)} km</strong><span>${escapeHtml(marker.reached)} · click the distance card again to close</span>
-    </div>
-  </details>`;
+function geoKm(a, b) {
+  const rad = Math.PI / 180;
+  const lat1 = a[0] * rad;
+  const lat2 = b[0] * rad;
+  const dLat = (b[0] - a[0]) * rad;
+  const dLon = (b[1] - a[1]) * rad;
+  const value = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+  return 6371 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
+}
+
+function journeyRouteAt(distanceKm) {
+  const capped = Math.max(0, Math.min(distanceKm, journeyRoadDistanceKm));
+  const segmentLengths = [];
+  let geographicTotal = 0;
+  for (let index = 1; index < journeyRoadRoute.length; index += 1) {
+    const length = geoKm(journeyRoadRoute[index - 1], journeyRoadRoute[index]);
+    segmentLengths.push(length);
+    geographicTotal += length;
+  }
+  const target = geographicTotal * capped / journeyRoadDistanceKm;
+  const travelled = [journeyRoadRoute[0]];
+  let accumulated = 0;
+  for (let index = 1; index < journeyRoadRoute.length; index += 1) {
+    const length = segmentLengths[index - 1];
+    if (accumulated + length >= target) {
+      const fraction = length ? (target - accumulated) / length : 0;
+      const start = journeyRoadRoute[index - 1];
+      const end = journeyRoadRoute[index];
+      const point = [start[0] + (end[0] - start[0]) * fraction, start[1] + (end[1] - start[1]) * fraction];
+      travelled.push(point);
+      return { point, travelled };
+    }
+    travelled.push(journeyRoadRoute[index]);
+    accumulated += length;
+  }
+  return { point: journeyRoadRoute.at(-1), travelled: journeyRoadRoute.slice() };
+}
+
+function journeyDriverDistances() {
+  const { from, to, eventType, className } = filters();
+  const laps = new Map();
+  for (const run of state.data.raceResults) {
+    const race = state.data.raceById[run[0]];
+    if (!race || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
+    laps.set(run[1], (laps.get(run[1]) || 0) + completedLaps(run));
+  }
+  return [...laps].map(([driverKey, count]) => ({ driverKey, name: state.data.driverByKey[driverKey] || driverKey, km: Number((count * 0.15).toFixed(1)) })).filter(driver => driver.km > 0);
+}
+
+function openJourneyMap(driverKey) {
+  const drivers = journeyDriverDistances();
+  const selected = drivers.find(driver => driver.driverKey === driverKey);
+  if (!selected) return;
+  const peers = drivers.filter(driver => driver.driverKey !== driverKey).sort((a, b) => Math.abs(a.km - selected.km) - Math.abs(b.km - selected.km)).slice(0, 8);
+  $('journeyMapTitle').textContent = `${selected.name} — ${fmt.format(selected.km)} km`;
+  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Munich and covered a further ${fmt.format(Number((selected.km - journeyRoadDistanceKm).toFixed(1)))} km.` : `Their pin shows the equivalent point reached along the road route.`;
+  $('journeyMapCopy').textContent = `Starting at Cardiff City House of Sport. ${routeStatus} The eight closest driver distance totals are labelled for comparison.`;
+  $('journeyMapOverlay').hidden = false;
+  requestAnimationFrame(() => {
+    if (!window.L) {
+      $('journeyMap').textContent = 'The road map could not be loaded. Please check the internet connection and try again.';
+      return;
+    }
+    if (!journeyMap) {
+      journeyMap = window.L.map('journeyMap', { zoomControl: true });
+      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
+      journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
+    }
+    journeyMapLayers.clearLayers();
+    window.L.polyline(journeyRoadRoute, { color: '#6f7972', weight: 5, opacity: .65 }).addTo(journeyMapLayers);
+    const selectedRoute = journeyRouteAt(selected.km);
+    window.L.polyline(selectedRoute.travelled, { color: '#08a31a', weight: 7, opacity: .9 }).addTo(journeyMapLayers);
+    for (const driver of [selected, ...peers]) {
+      const route = journeyRouteAt(driver.km);
+      const selectedDriver = driver.driverKey === driverKey;
+      const icon = window.L.divIcon({ className: 'journey-driver-icon', html: `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: [18, 24], iconAnchor: [9, 21] });
+      window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 1000 : 0 }).bindTooltip(escapeHtml(driver.name), { permanent: true, direction: 'top', offset: [0, -18], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` }).addTo(journeyMapLayers);
+    }
+    const start = journeyRoadRoute[0];
+    const destination = journeyRoadRoute.at(-1);
+    window.L.circleMarker(start, { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
+    window.L.circleMarker(destination, { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Munich, Germany', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
+    journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
+    setTimeout(() => journeyMap.invalidateSize(), 50);
+  });
 }
 
 function completedLaps(run) {
@@ -506,7 +563,7 @@ function driverProfile(driverKey) {
     profileStat(lapSpreads.length ? `${average(lapSpreads).toFixed(3)}s` : '—', 'Avg lap-time gap'),
     profileStat(runs.length, 'Recorded runs'),
     profileStat(fmt.format(totalLaps(runs)), 'Completed laps'),
-    distanceJourneyStat(runs),
+    distanceJourneyStat(runs, driverKey),
     profileStat(trackTime(runs), 'Time on track'),
     profileStat(`${swordEvents.size} / ${clubEvents.size}`, 'SWORD / Club events')
   ].join('');
@@ -781,6 +838,11 @@ async function init() {
       const button = event.target.closest('[data-driver-key]');
       if (button) driverProfile(button.dataset.driverKey);
     });
+    $('driverProfileStats').addEventListener('click', event => {
+      const button = event.target.closest('[data-journey-driver]');
+      if (button) openJourneyMap(button.dataset.journeyDriver);
+    });
+    $('closeJourneyMap').addEventListener('click', () => { $('journeyMapOverlay').hidden = true; });
     $('closeDriverProfile').addEventListener('click', () => $('driverDialog').close());
     $('driverDialog').addEventListener('click', event => {
       if (event.target === $('driverDialog')) $('driverDialog').close();
