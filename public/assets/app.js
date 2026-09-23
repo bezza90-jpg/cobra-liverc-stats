@@ -72,7 +72,7 @@ function ensureEnhancedMarkup() {
   if (!$('leaderboardClassTabs')) $('leaderboardTitle')?.insertAdjacentHTML('afterend', `<div class="class-tabs" id="leaderboardClassTabs" aria-label="Leaderboard class">
     <button type="button" data-class-filter="2-Wheel Drive Buggy" aria-pressed="false">2WD</button><button type="button" data-class-filter="4-Wheel Drive Buggy" aria-pressed="false">4WD</button><button type="button" data-class-filter="Junior Racers" aria-pressed="false">Junior Racers</button><button type="button" data-class-filter="Trucks" aria-pressed="false">Trucks</button><button type="button" data-class-filter="Vintage" aria-pressed="false">Vintage</button>
   </div>`);
-  if (!$('leaderboardMetric')) $('leaderboardCount')?.insertAdjacentHTML('beforebegin', `<label class="runtime-rank-control">Rank leaderboard by<select id="leaderboardMetric"><option value="average">Average overall finish</option><option value="performance">Performance score</option><option value="finals">Finals completed</option><option value="laps">Total laps</option><option value="distance">Distance raced</option><option value="trackTime">Time on track</option><option value="runs">Recorded runs</option><option value="raceWins">Individual race wins</option><option value="overallWins">Overall wins</option><option value="podiums">Podiums</option><option value="tqs">TQs</option><option value="consistency">Consistency</option><option value="fastestLap">Fastest lap</option><option value="placesGained">Average places gained</option></select></label>`);
+  if (!$('leaderboardMetric')) $('leaderboardCount')?.insertAdjacentHTML('beforebegin', `<label class="runtime-rank-control">Rank leaderboard by<select id="leaderboardMetric"><option value="average">Average overall finish</option><option value="performance">Performance score</option><option value="finals">Finals completed</option><option value="laps">Total laps</option><option value="distance">Distance raced</option><option value="trackTime">Time on track</option><option value="runs">Recorded runs</option><option value="raceWins">Individual race wins</option><option value="overallWins">Overall wins</option><option value="podiums">Podiums</option><option value="tqs">TQs</option><option value="podiumRate">Podium rate</option><option value="winRate">Overall win rate</option><option value="topFiveRate">Top-five rate</option><option value="tqRate">TQ rate</option><option value="consistency">Adjusted consistency</option><option value="bestConsistency">Best run consistency</option><option value="highConsistencyRuns">Runs at 95%+</option><option value="lapSpread">Fastest-to-average gap</option><option value="qualifyingAverage">Average qualifying position</option><option value="fastestLap">Fastest lap</option><option value="placesGained">Average places gained</option></select></label>`);
   const minimum = $('minimumFinals');
   if (minimum) {
     minimum.innerHTML = '<option value="1">1+ final</option><option value="5">5+ finals</option><option value="10">10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option>';
@@ -108,6 +108,10 @@ function ensureEnhancedMarkup() {
             <thead><tr><th>Class</th><th>Entries</th><th>Runs</th><th>Laps</th><th>Distance</th><th>Track time</th><th>Finals</th><th>Avg overall</th><th>Best</th><th>Top 5</th><th>Podiums</th><th>Overall wins</th><th>Race wins</th><th>TQs</th><th>Performance</th><th>Fastest lap</th><th>Avg consistency</th></tr></thead>
             <tbody id="driverClassDetails"></tbody>
           </table></div><p class="definition">Distance is estimated at 150 metres per completed lap. Track time, fastest lap and consistency use every recorded run within the selected filters.</p></section>
+          <section class="profile-section"><h3>Consistency breakdown</h3><div class="table-wrap compact"><table>
+            <thead><tr><th>Class</th><th>Measured runs</th><th>Adjusted average</th><th>Best run</th><th>98%+</th><th>95–97.9%</th><th>90–94.9%</th><th>Below 90%</th><th>Avg fastest-to-average gap</th></tr></thead>
+            <tbody id="driverConsistencyDetails"></tbody>
+          </table></div><p class="definition">Consistency bands use LiveRC’s recorded run consistency. The lap-gap figure compares each run’s fastest lap with its average lap; a smaller gap generally indicates steadier pace.</p></section>
           <section class="profile-section"><h3>Event and final history</h3><div class="table-wrap profile-history"><table>
             <thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Overall</th><th>Final</th><th>Qualifying</th><th>Final result</th><th>Fastest lap</th><th>Consistency</th><th>Individual races</th></tr></thead>
             <tbody id="driverEventDetails"></tbody>
@@ -134,8 +138,8 @@ function calculateLeaderboard() {
     driverKey: driver.k, name: driver.n, junior: Boolean(driver.j), finals: 0,
     entries: 0, overallWins: 0, podiums: 0, topFive: 0, tqs: 0, positionTotal: 0,
     performanceTotal: 0, best: Infinity, consistencyTotal: 0, consistencyRuns: 0,
-    runs: 0, laps: 0, seconds: 0, raceWins: 0, fastestLap: Infinity,
-    positions: [], performances: [], consistencies: [], placesGained: []
+    runs: 0, laps: 0, seconds: 0, raceWins: 0, fastestLap: Infinity, bestConsistency: 0, highConsistencyRuns: 0,
+    positions: [], performances: [], consistencies: [], placesGained: [], qualifyingPositions: [], lapSpreads: []
   }]));
 
   for (const entry of data.entries) {
@@ -170,11 +174,14 @@ function calculateLeaderboard() {
     if (finalPosition <= 5) row.topFive += 1;
     if (Number(result[5]) === 1) row.tqs += 1;
     const qualifyingPosition = Number(result[5]);
-    if (Number.isFinite(qualifyingPosition) && qualifyingPosition > 0) row.placesGained.push(qualifyingPosition - finalPosition);
+    if (Number.isFinite(qualifyingPosition) && qualifyingPosition > 0) {
+      row.qualifyingPositions.push(qualifyingPosition);
+      row.placesGained.push(qualifyingPosition - finalPosition);
+    }
   }
 
   for (const run of data.raceResults) {
-    const [raceId, driverKey, position, , , fastestLap, , consistency] = run;
+    const [raceId, driverKey, position, , , fastestLap, averageLap, consistency] = run;
     const race = data.raceById[raceId];
     if (!race || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
     const row = stats.get(driverKey);
@@ -185,11 +192,15 @@ function calculateLeaderboard() {
     if (Number(position) === 1) row.raceWins += 1;
     const lap = Number.parseFloat(fastestLap);
     if (Number.isFinite(lap) && lap > 0) row.fastestLap = Math.min(row.fastestLap, lap);
+    const averageLapValue = Number.parseFloat(averageLap);
+    if (Number.isFinite(lap) && lap > 0 && Number.isFinite(averageLapValue) && averageLapValue >= lap) row.lapSpreads.push(averageLapValue - lap);
     const value = Number.parseFloat(consistency);
     if (Number.isFinite(value)) {
       row.consistencyTotal += value;
       row.consistencyRuns += 1;
       row.consistencies.push(value);
+      row.bestConsistency = Math.max(row.bestConsistency, value);
+      if (value >= 95) row.highConsistencyRuns += 1;
     }
   }
 
@@ -206,7 +217,13 @@ function calculateLeaderboard() {
         average: average(keptPositions),
         performance: average(keptPerformances),
         consistency: average(keptConsistencies),
-        placesGainedAverage: average(row.placesGained)
+        placesGainedAverage: average(row.placesGained),
+        qualifyingAverage: average(row.qualifyingPositions),
+        lapSpreadAverage: average(row.lapSpreads),
+        topFiveRate: row.finals ? 100 * row.topFive / row.finals : 0,
+        podiumRate: row.finals ? 100 * row.podiums / row.finals : 0,
+        winRate: row.finals ? 100 * row.overallWins / row.finals : 0,
+        tqRate: row.finals ? 100 * row.tqs / row.finals : 0
       };
     })
     .sort((a, b) => compareLeaderboardRows(a, b, $('leaderboardMetric')?.value || 'average'))
@@ -231,7 +248,15 @@ const leaderboardMetrics = {
   overallWins: { label: 'Overall wins', value: row => row.overallWins },
   podiums: { label: 'Podiums', value: row => row.podiums },
   tqs: { label: 'TQs', value: row => row.tqs },
+  podiumRate: { label: 'Podium rate', value: row => row.podiumRate, display: row => `${row.podiumRate.toFixed(1)}%` },
+  winRate: { label: 'Overall win rate', value: row => row.winRate, display: row => `${row.winRate.toFixed(1)}%` },
+  topFiveRate: { label: 'Top-five rate', value: row => row.topFiveRate, display: row => `${row.topFiveRate.toFixed(1)}%` },
+  tqRate: { label: 'TQ rate', value: row => row.tqRate, display: row => `${row.tqRate.toFixed(1)}%` },
   consistency: { label: 'Adjusted consistency', value: row => row.consistency ?? -Infinity, display: row => row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%` },
+  bestConsistency: { label: 'Best run consistency', value: row => row.bestConsistency, display: row => row.bestConsistency ? `${row.bestConsistency.toFixed(1)}%` : '—' },
+  highConsistencyRuns: { label: 'Runs at 95%+', value: row => row.highConsistencyRuns },
+  lapSpread: { label: 'Avg fastest-to-average gap', lower: true, value: row => row.lapSpreadAverage ?? Infinity, display: row => row.lapSpreadAverage === null ? '—' : `${row.lapSpreadAverage.toFixed(3)}s` },
+  qualifyingAverage: { label: 'Average qualifying position', lower: true, value: row => row.qualifyingAverage ?? Infinity, display: row => row.qualifyingAverage === null ? '—' : row.qualifyingAverage.toFixed(1) },
   fastestLap: { label: 'Fastest lap', lower: true, value: row => row.fastestLap, display: row => Number.isFinite(row.fastestLap) ? `${row.fastestLap.toFixed(3)}s` : '—' },
   placesGained: { label: 'Average places gained', value: row => row.placesGainedAverage ?? -Infinity, display: row => row.placesGainedAverage === null ? '—' : `${row.placesGainedAverage >= 0 ? '+' : ''}${row.placesGainedAverage.toFixed(1)}` }
 };
@@ -382,6 +407,7 @@ function driverProfile(driverKey) {
   const positions = results.map(row => row[4]);
   const qualifying = results.map(row => Number(row[5])).filter(Number.isFinite).filter(value => value > 0);
   const consistencies = runs.map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
+  const lapSpreads = runs.map(row => Number.parseFloat(row[6]) - Number.parseFloat(row[5])).filter(value => Number.isFinite(value) && value >= 0);
   const uniqueEvents = new Set(entries.map(row => row[0]));
   const eligibleEventIds = new Set(data.events
     .filter(event => inRange(event.d, from, to) && eventMatches(event.i, eventType) && data.entries.some(row => row[0] === event.i && classMatches(row[2], className)))
@@ -417,6 +443,9 @@ function driverProfile(driverKey) {
     profileStat(performance === null ? '—' : performance.toFixed(1), 'Performance score'),
     profileStat(qualifying.length ? average(qualifying).toFixed(1) : '—', 'Average qualifying'),
     profileStat(keptConsistencies.length ? `${average(keptConsistencies).toFixed(1)}%` : '—', 'Adjusted consistency'),
+    profileStat(consistencies.length ? `${Math.max(...consistencies).toFixed(1)}%` : '—', 'Best run consistency'),
+    profileStat(consistencies.length ? countAndRate(consistencies.filter(value => value >= 95).length, consistencies.length) : '—', 'Runs at 95%+'),
+    profileStat(lapSpreads.length ? `${average(lapSpreads).toFixed(3)}s` : '—', 'Avg lap-time gap'),
     profileStat(runs.length, 'Recorded runs'),
     profileStat(fmt.format(totalLaps(runs)), 'Completed laps'),
     profileStat(distanceRaced(runs), 'Distance raced'),
@@ -451,6 +480,15 @@ function driverProfile(driverKey) {
     const classConsistencies = classRuns.map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
     return `<tr><td>${escapeHtml(cls)}</td><td>${classEntries}</td><td>${classRuns.length}</td><td>${fmt.format(totalLaps(classRuns))}</td><td>${distanceRaced(classRuns)}</td><td>${trackTime(classRuns)}</td><td>${rows.length}</td><td>${average(classKeptPositions).toFixed(1)}</td><td>${Math.min(...classPositions)}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${classOverallWins}</td><td>${classRaceWins}</td><td>${classTqs}</td><td>${average(classKeptPerformance).toFixed(1)}</td><td>${fastestLaps.length ? `${Math.min(...fastestLaps).toFixed(3)}s` : '—'}</td><td>${classConsistencies.length ? `${average(classConsistencies).toFixed(1)}%` : '—'}</td></tr>`;
   }).join('') || '<tr><td colspan="17">No completed finals within these filters.</td></tr>';
+
+  $('driverConsistencyDetails').innerHTML = [...runsByClass].sort(([a], [b]) => a.localeCompare(b)).map(([cls, classRuns]) => {
+    const values = classRuns.map(run => Number.parseFloat(run[7])).filter(Number.isFinite);
+    if (!values.length) return '';
+    const adjusted = attendanceAdjustedResults(values, true);
+    const gaps = classRuns.map(run => Number.parseFloat(run[6]) - Number.parseFloat(run[5])).filter(value => Number.isFinite(value) && value >= 0);
+    const band = predicate => countAndRate(values.filter(predicate).length, values.length);
+    return `<tr><td>${escapeHtml(cls)}</td><td>${values.length}</td><td>${average(adjusted).toFixed(1)}%</td><td>${Math.max(...values).toFixed(1)}%</td><td>${band(value => value >= 98)}</td><td>${band(value => value >= 95 && value < 98)}</td><td>${band(value => value >= 90 && value < 95)}</td><td>${band(value => value < 90)}</td><td>${gaps.length ? `${average(gaps).toFixed(3)}s` : '—'}</td></tr>`;
+  }).join('') || '<tr><td colspan="9">No consistency data within these filters.</td></tr>';
 
   const finalByEventClass = new Map();
   for (const row of runs) {

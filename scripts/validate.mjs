@@ -61,6 +61,7 @@ if (!podiumsHtml.includes('Complete archive from 2022') || podiumsJs.includes('s
 if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Podium Gallery'))) errors.push('Podium Gallery navigation is missing from one or more pages.');
 if (!indexHtml.includes('Distance') || !appJs.includes('totalLaps(runs) * 0.15')) errors.push('Driver-profile distance calculation is missing.');
 if (!indexHtml.includes('id="leaderboardMetric"') || !appJs.includes('leaderboardMetrics')) errors.push('Rankable driver-record metrics are missing.');
+if (!indexHtml.includes('id="driverConsistencyDetails"') || !appJs.includes('Runs at 95%+')) errors.push('Driver consistency breakdown is missing.');
 if (!indexHtml.includes('id="raceVideoLink"') || !appJs.includes('data/videos.json')) errors.push('YouTube race links are missing.');
 if (videos.meta?.fromDate !== '2025-01-01' || !youtubeJs.includes("channelHandle = 'Bezza90'") || !youtubeJs.includes('/\\bCOBRA\\b/i')) errors.push('YouTube matching rules are invalid.');
 if (!championshipJs.includes('highestDrop') || !championshipJs.includes('qualifyingPosition')) errors.push('Championship tie-break or TQ scoring logic is missing.');
