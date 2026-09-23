@@ -52,29 +52,27 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .archive-link:hover { color: #fff; background: var(--green); border-color: var(--green); }
 .youtube-channel-link { color: #fff; background: #c01919; border-color: #c01919; }
 .youtube-channel-link:hover { color: #fff; background: #941111; border-color: #941111; }
-.journey-stat { position: relative; min-height: 106px; padding: 0 !important; cursor: pointer; outline: none; background: #f3f7f4; border: 1px solid var(--line); border-top: 3px solid var(--green); border-radius: 9px; }
-.journey-stat summary { display: flex; min-height: 103px; padding: 16px; flex-direction: column; justify-content: flex-start; list-style: none; }
-.journey-stat summary::-webkit-details-marker { display: none; }
-.journey-stat summary::marker { display: none; content: ''; }
-.journey-stat summary strong { display: block; font-size: 1.65rem; line-height: 1; }
-.journey-stat summary span { display: block; margin-top: 8px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .04em; text-decoration: underline dotted; text-underline-offset: 3px; text-transform: uppercase; }
-.journey-stat summary:focus { border-radius: 7px; box-shadow: 0 0 0 3px rgba(8,163,26,.25); outline: none; }
-.journey-popover { position: absolute; z-index: 30; left: 50%; bottom: calc(100% + 12px); width: min(560px, 82vw); padding: 15px; color: #142019; background: #fff; border: 1px solid #aebbb2; border-radius: 10px; box-shadow: 0 16px 42px rgba(0,0,0,.25); opacity: 0; visibility: hidden; transform: translate(-50%,8px); transition: opacity .16s ease,transform .16s ease,visibility .16s; pointer-events: none; text-align: left; }
-.journey-stat:hover .journey-popover,.journey-stat:focus-within .journey-popover,.journey-stat[open] .journey-popover { opacity: 1; visibility: visible; transform: translate(-50%,0); pointer-events: auto; }
-.journey-popover::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -8px; border: 8px solid transparent; border-top-color: #fff; }
-.journey-popover > b,.journey-popover > small,.journey-popover > strong,.journey-popover > span { display: block; }
-.journey-popover > b { font-size: 1rem; }
-.journey-popover > small { margin: 2px 0 8px; color: #5f6d64; }
-.journey-popover > strong { margin-top: 5px; color: #067b14; font-size: 1.25rem; }
-.journey-popover > span { color: #34443a; font-size: .84rem; }
-.journey-popover svg { display: block; width: 100%; height: auto; background: #eaf4ee; border-radius: 7px; }
-.journey-land { fill: #d8eadc; stroke: #aec7b4; stroke-width: 1; }
-.journey-route { fill: none; stroke: #737e77; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 7 5; }
-.journey-popover svg g circle { fill: #fff; stroke: #34443a; stroke-width: 1.5; }
-.journey-popover svg text { fill: #26332b; font: 600 10px system-ui,sans-serif; text-anchor: middle; }
-.journey-marker circle:first-child { fill: #08a31a; stroke: #fff; stroke-width: 3; }
-.journey-marker circle:last-child { fill: #fff; stroke: none; }
-@media(max-width:700px){.journey-popover{position:fixed;z-index:100;left:50%;bottom:18px;width:calc(100vw - 36px);transform:translate(-50%,8px)}.journey-stat:hover .journey-popover,.journey-stat:focus-within .journey-popover,.journey-stat[open] .journey-popover{transform:translate(-50%,0)}.journey-popover::after{display:none}}
+.journey-stat { padding: 0 !important; overflow: hidden; }
+.journey-map-button { display: flex; width: 100%; min-height: 103px; padding: 16px; flex-direction: column; align-items: flex-start; color: inherit; background: transparent; border: 0; border-radius: 7px; text-align: left; cursor: pointer; }
+.journey-map-button span { text-decoration: underline dotted; text-underline-offset: 3px; }
+.journey-map-button:hover { color: #fff; background: var(--green-dark); }
+.journey-map-button:hover span { color: #fff; }
+.journey-map-overlay { position: fixed; z-index: 1000; inset: 0; display: grid; padding: 24px; place-items: center; background: rgba(3,10,6,.82); }
+.journey-map-overlay[hidden] { display: none; }
+.journey-map-shell { position: relative; width: min(1180px, 96vw); padding: 22px; background: #fff; border-radius: 14px; box-shadow: 0 26px 90px rgba(0,0,0,.45); }
+.journey-map-shell h3 { margin: 0; padding-right: 48px; font-size: clamp(1.35rem,3vw,2rem); }
+.journey-map-copy { margin: 8px 50px 14px 0; color: var(--muted); }
+.journey-map-close { z-index: 1001; }
+.journey-map { width: 100%; height: min(66vh,680px); overflow: hidden; background: #dce8df; border: 1px solid var(--line); border-radius: 10px; }
+.journey-map-legend { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px; color: var(--muted); font-size: .78rem; }
+.journey-map-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.journey-map-legend i,.journey-driver-icon i { display: block; width: 14px; height: 14px; background: #17211a; border: 2px solid #fff; border-radius: 50% 50% 50% 0; box-shadow: 0 1px 4px rgba(0,0,0,.45); transform: rotate(-45deg); }
+.journey-map-legend i.selected,.journey-driver-icon i.selected { width: 18px; height: 18px; background: var(--green); }
+.journey-driver-label { padding: 3px 6px !important; color: #fff !important; background: #17211a !important; border: 0 !important; box-shadow: 0 2px 7px rgba(0,0,0,.28) !important; font-size: 11px; font-weight: 800; }
+.journey-driver-label.selected { background: var(--green-dark) !important; font-size: 12px; }
+.journey-driver-label::before { border-top-color: #17211a !important; }
+.journey-driver-label.selected::before { border-top-color: var(--green-dark) !important; }
+@media(max-width:700px){.journey-map-overlay{padding:8px}.journey-map-shell{width:100%;padding:14px}.journey-map{height:70vh}.journey-map-copy{font-size:.82rem}.journey-map-legend{gap:8px}}
 .results-nav { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 22px; }
 .results-nav a { padding: 8px 12px; color: #dce9df; border: 1px solid rgba(255,255,255,.18); border-radius: 5px; font-size: .78rem; font-weight: 800; text-decoration: none; }
 .results-nav a:hover, .results-nav a[aria-current="page"] { color: #071109; background: #fff; }
