@@ -422,10 +422,10 @@ function openJourneyMap(driverKey) {
   const drivers = journeyDriverDistances();
   const selected = drivers.find(driver => driver.driverKey === driverKey);
   if (!selected) return;
-  const peers = drivers.filter(driver => driver.driverKey !== driverKey).sort((a, b) => Math.abs(a.km - selected.km) - Math.abs(b.km - selected.km)).slice(0, 15);
+  const peers = drivers.filter(driver => driver.driverKey !== driverKey).sort((a, b) => b.km - a.km);
   $('journeyMapTitle').textContent = `${selected.name} — ${fmt.format(selected.km)} km`;
   const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Rome and covered a further ${fmt.format(Number((selected.km - journeyRoadDistanceKm).toFixed(1)))} km.` : `Their pin shows the equivalent point reached along the road route.`;
-  $('journeyMapCopy').textContent = `Career distance across every recorded class and official event since 1 January 2022, starting at Cardiff City House of Sport. ${routeStatus} The 15 closest career totals are labelled for comparison.`;
+  $('journeyMapCopy').textContent = `Career distance across every recorded class and official event since 1 January 2022, starting at Cardiff City House of Sport. ${routeStatus} Every driver with recorded mileage is shown; zoom in to separate nearby names.`;
   $('journeyMapOverlay').hidden = false;
   requestAnimationFrame(() => {
     if (!window.L) {
