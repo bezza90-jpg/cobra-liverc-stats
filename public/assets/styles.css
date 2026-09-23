@@ -50,6 +50,8 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .class-tabs button[aria-pressed="true"] { color: #fff; background: var(--green-dark); }
 .archive-link { position: relative; z-index: 1; display: inline-block; margin: 8px 0 0 10px; padding: 9px 16px; color: #055f10; background: #fff; border: 1px solid #fff; border-radius: 6px; box-shadow: 0 5px 18px rgba(0, 0, 0, .2); font-size: .78rem; font-weight: 900; text-decoration: none; }
 .archive-link:hover { color: #fff; background: var(--green); border-color: var(--green); }
+.youtube-channel-link { color: #fff; background: #c01919; border-color: #c01919; }
+.youtube-channel-link:hover { color: #fff; background: #941111; border-color: #941111; }
 .results-nav { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 22px; }
 .results-nav a { padding: 8px 12px; color: #dce9df; border: 1px solid rgba(255,255,255,.18); border-radius: 5px; font-size: .78rem; font-weight: 800; text-decoration: none; }
 .results-nav a:hover, .results-nav a[aria-current="page"] { color: #071109; background: #fff; }
