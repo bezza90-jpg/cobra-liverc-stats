@@ -6,6 +6,19 @@ It also includes a Podium Gallery at `/podiums/`. The newest event opens automat
 
 Driver profiles use all available LiveRC run data to show completed laps, estimated distance raced at 150 metres per lap, time on track, fastest laps and consistency. The class breakdown also includes entries, runs, finals, finishing statistics, TQs and race wins.
 
+The driver leaderboard can be re-ranked using the active date, event and class filters by average finish, performance, finals, total laps, distance, track time, runs, race wins, overall wins, podiums, TQs, consistency, fastest lap or average places gained from qualifying.
+
+## YouTube race videos
+
+The daily update can index COBRA race videos from `https://www.youtube.com/@Bezza90` from 1 January 2025 onward. Add a repository Actions secret named `YOUTUBE_API_KEY` containing a free YouTube Data API v3 key. The updater then places a **Watch race video** link beside the matching LiveRC result.
+
+Video-title rules:
+
+- The title must contain `COBRA`.
+- Include the event date as `DDMMYY`.
+- Include `Qual 1`, `Qual 2`, and so on, or identify the final.
+- Include `4WD`, `Junior`, `Trucks` or `Vintage` when applicable. If no class is included, the video is treated as 2WD.
+
 To add a podium photograph, follow `public/podium-photos/README.md`. Photographs are connected to a final through a predictable LiveRC event-and-race filename, so no code changes are needed.
 
 It also publishes automatically calculated championship tables at `/sword/` and `/club/`, with a selector covering every September-to-April season present in the archive. Both use overall final positions, award 100 points for first then reduce by one point per position, add one TQ bonus point, and count up to the best four rounds. DNS and DNF entries retain the points for their published overall position. The highest dropped score breaks a points tie; if that remains equal, the championship position is tied. The Club 2021/22 season is labelled as a partial archive because the retained LiveRC history begins in January 2022.

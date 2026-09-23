@@ -5,10 +5,10 @@
   "type": "module",
   "description": "Automatically updated COBRA LiveRC statistics dashboard",
   "scripts": {
-    "update": "node scripts/update-liverc.mjs",
+    "update": "node scripts/update-liverc.mjs && node scripts/update-youtube.mjs",
     "build": "node scripts/build-dashboard.mjs",
     "validate": "node scripts/validate.mjs",
-    "check": "node --check public/assets/app.js && node --check public/assets/championship.js && node --check public/assets/podiums.js && node --check scripts/update-liverc.mjs && npm run validate"
+    "check": "node --check public/assets/app.js && node --check public/assets/championship.js && node --check public/assets/podiums.js && node --check scripts/update-liverc.mjs && node --check scripts/update-youtube.mjs && npm run validate"
   },
   "engines": {
     "node": ">=20"
