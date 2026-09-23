@@ -6,7 +6,9 @@ It also includes a Podium Gallery at `/podiums/`. The newest event opens automat
 
 Driver profiles use all available LiveRC run data to show completed laps, estimated distance raced at 150 metres per lap, time on track, fastest laps and consistency. The class breakdown also includes entries, runs, finals, finishing statistics, TQs and race wins.
 
-The driver leaderboard can be re-ranked using the active date, event and class filters by average finish, performance, finals, total laps, distance, track time, runs, race wins, overall wins, podiums, TQs, consistency, fastest lap or average places gained from qualifying.
+Profiles also contain a class-by-class consistency breakdown with adjusted average, best run, factual consistency bands (98%+, 95–97.9%, 90–94.9% and below 90%) and the average gap between fastest and average lap.
+
+The driver leaderboard can be re-ranked using the active date, event and class filters by average finish, performance, finals, total laps, distance, track time, runs, race wins, overall wins, podiums, TQs, finishing rates, consistency, number of 95%+ runs, fastest-to-average lap gap, fastest lap, qualifying average or average places gained from qualifying.
 
 ## YouTube race videos
 

@@ -70,7 +70,10 @@
             <option value="finals">Finals completed</option><option value="laps">Total laps</option><option value="distance">Distance raced</option>
             <option value="trackTime">Time on track</option><option value="runs">Recorded runs</option><option value="raceWins">Individual race wins</option>
             <option value="overallWins">Overall wins</option><option value="podiums">Podiums</option><option value="tqs">TQs</option>
-            <option value="consistency">Consistency</option><option value="fastestLap">Fastest lap</option><option value="placesGained">Average places gained</option>
+            <option value="podiumRate">Podium rate</option><option value="winRate">Overall win rate</option><option value="topFiveRate">Top-five rate</option><option value="tqRate">TQ rate</option>
+            <option value="consistency">Adjusted consistency</option><option value="bestConsistency">Best run consistency</option><option value="highConsistencyRuns">Runs at 95%+</option>
+            <option value="lapSpread">Fastest-to-average gap</option><option value="qualifyingAverage">Average qualifying position</option>
+            <option value="fastestLap">Fastest lap</option><option value="placesGained">Average places gained</option>
           </select></label>
           <p class="result-count" id="leaderboardCount"></p>
         </div>
@@ -191,6 +194,14 @@
           <tbody id="driverClassDetails"></tbody>
         </table></div>
         <p class="definition">Distance is estimated at 150 metres per completed lap. Track time, fastest lap and consistency use every recorded run within the selected filters.</p>
+      </section>
+      <section class="profile-section">
+        <h3>Consistency breakdown</h3>
+        <div class="table-wrap compact"><table>
+          <thead><tr><th>Class</th><th>Measured runs</th><th>Adjusted average</th><th>Best run</th><th>98%+</th><th>95–97.9%</th><th>90–94.9%</th><th>Below 90%</th><th>Avg fastest-to-average gap</th></tr></thead>
+          <tbody id="driverConsistencyDetails"></tbody>
+        </table></div>
+        <p class="definition">Consistency bands use LiveRC’s recorded run consistency. The lap-gap figure compares each run’s fastest lap with its average lap; a smaller gap generally indicates steadier pace.</p>
       </section>
       <section class="profile-section">
         <h3>Event and final history</h3>
