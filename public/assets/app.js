@@ -72,13 +72,14 @@ function ensureEnhancedMarkup() {
   if (!$('leaderboardClassTabs')) $('leaderboardTitle')?.insertAdjacentHTML('afterend', `<div class="class-tabs" id="leaderboardClassTabs" aria-label="Leaderboard class">
     <button type="button" data-class-filter="2-Wheel Drive Buggy" aria-pressed="false">2WD</button><button type="button" data-class-filter="4-Wheel Drive Buggy" aria-pressed="false">4WD</button><button type="button" data-class-filter="Junior Racers" aria-pressed="false">Junior Racers</button><button type="button" data-class-filter="Trucks" aria-pressed="false">Trucks</button><button type="button" data-class-filter="Vintage" aria-pressed="false">Vintage</button>
   </div>`);
+  if (!$('leaderboardMetric')) $('leaderboardCount')?.insertAdjacentHTML('beforebegin', `<label class="runtime-rank-control">Rank leaderboard by<select id="leaderboardMetric"><option value="average">Average overall finish</option><option value="performance">Performance score</option><option value="finals">Finals completed</option><option value="laps">Total laps</option><option value="distance">Distance raced</option><option value="trackTime">Time on track</option><option value="runs">Recorded runs</option><option value="raceWins">Individual race wins</option><option value="overallWins">Overall wins</option><option value="podiums">Podiums</option><option value="tqs">TQs</option><option value="consistency">Consistency</option><option value="fastestLap">Fastest lap</option><option value="placesGained">Average places gained</option></select></label>`);
   const minimum = $('minimumFinals');
   if (minimum) {
     minimum.innerHTML = '<option value="1">1+ final</option><option value="5">5+ finals</option><option value="10">10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option>';
     minimum.value = '10';
   }
   const definition = document.querySelector('.definition');
-  if (definition) definition.textContent = 'Ranking is attendance-adjusted: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. The same allowance applies to performance and consistency. Attendance, finals, wins and podiums remain complete totals.';
+  if (definition) definition.textContent = 'Choose any ranking measure above. Average finish, performance and consistency use the attendance adjustment: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. Activity totals always use every matching run.';
   if (!$('updateSchedule')) $('updatedStatus')?.insertAdjacentHTML('afterend', '<p class="update-schedule" id="updateSchedule">Results update automatically each day at 18:00 UK time.</p>');
 
   if (!$('raceExplorer')) {
@@ -88,7 +89,7 @@ function ensureEnhancedMarkup() {
         <div class="race-explorer-controls">
           <label>Event<select id="raceEvent"></select></label><label>Individual race<select id="raceSelection"></select></label>
           <a class="event-link" id="raceEventLink" href="#" target="_blank" rel="noopener">Open event results ↗</a>
-          <a class="event-link" id="raceResultLink" href="#" target="_blank" rel="noopener">Open this race ↗</a>
+          <a class="event-link" id="raceResultLink" href="#" target="_blank" rel="noopener">Open this race ↗</a><a class="event-link video-link" id="raceVideoLink" href="#" target="_blank" rel="noopener" hidden>Watch race video ▶</a>
         </div>
         <h3 class="race-result-title" id="raceResultTitle">Select a race</h3>
         <div class="table-wrap compact"><table><thead><tr><th>Pos</th><th>Driver</th><th>Qualifying</th><th>Laps / time</th><th>Behind</th><th>Fastest lap</th><th>Average lap</th><th>Consistency</th></tr></thead><tbody id="raceExplorerResults"></tbody></table></div>
@@ -119,7 +120,7 @@ function ensureEnhancedMarkup() {
     document.head.insertAdjacentHTML('beforeend', `<style id="driver-profile-runtime-styles">
       .driver-name{padding:0;color:#067b14;background:transparent;border:0;border-radius:0;font-weight:850;text-align:left;text-decoration:underline;text-decoration-color:#9dd7a5;text-underline-offset:3px}.driver-name:hover{color:#044f0c;background:transparent;text-decoration-color:currentColor}
       .driver-dialog{width:min(1120px,calc(100% - 28px));max-height:92vh;padding:0;color:#111714;background:#fff;border:0;border-radius:16px;box-shadow:0 28px 90px rgba(0,0,0,.35)}.driver-dialog::backdrop{background:rgba(3,10,6,.72);backdrop-filter:blur(3px)}.dialog-shell{position:relative;padding:clamp(22px,4vw,38px)}.dialog-close{position:absolute;top:14px;right:14px;width:42px;height:42px;padding:0;color:#344039;background:#eef3ef;border-radius:50%;font-size:1.65rem;line-height:1}.dialog-close:hover{color:#fff;background:#067b14}.profile-context{margin:8px 52px 22px 0;color:#637069}.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.profile-stats article{min-height:106px;padding:16px;background:#f3f7f4;border:1px solid #dfe6e1;border-top:3px solid #08a31a;border-radius:9px}.profile-stats strong{display:block;font-size:1.65rem;line-height:1}.profile-stats span{display:block;margin-top:8px;color:#637069;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}.profile-section{margin-top:28px}.profile-section h3{margin:0 0 12px;font-size:1.2rem}.profile-history{max-height:430px}.profile-history th:first-child,.profile-history td:first-child{text-align:left}.profile-history a,.profile-section a{color:#067b14;font-weight:800}
-      .race-explorer-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(280px,1.5fr) auto auto;align-items:end;gap:12px;margin-bottom:22px}.race-result-title{margin:0 0 12px;font-size:1.05rem}.inline-races summary{padding:0;color:#067b14;font-size:.78rem;white-space:nowrap}.inline-races[open]{min-width:640px}.inline-races .table-wrap{margin:10px 0 0;max-height:300px}@media(max-width:820px){.race-explorer-controls{grid-template-columns:1fr 1fr}}@media(max-width:520px){.race-explorer-controls{grid-template-columns:1fr}}
+      .race-explorer-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(280px,1.5fr) repeat(3,auto);align-items:end;gap:12px;margin-bottom:22px}.race-result-title{margin:0 0 12px;font-size:1.05rem}.inline-races summary{padding:0;color:#067b14;font-size:.78rem;white-space:nowrap}.inline-races[open]{min-width:640px}.inline-races .table-wrap{margin:10px 0 0;max-height:300px}@media(max-width:820px){.race-explorer-controls{grid-template-columns:1fr 1fr}}@media(max-width:520px){.race-explorer-controls{grid-template-columns:1fr}}
       .update-schedule{position:relative;z-index:1;display:inline-block;margin:8px 0 0 10px;color:#b8c9bd;font-size:.78rem}@media(max-width:520px){.update-schedule{display:block;margin-left:0}}
       .archive-link{position:relative;z-index:1;display:inline-block;margin:8px 0 0 10px;padding:9px 16px;color:#055f10;background:#fff;border:1px solid #fff;border-radius:6px;box-shadow:0 5px 18px rgba(0,0,0,.2);font-size:.78rem;font-weight:900;text-decoration:none}.archive-link:hover{color:#fff;background:#08a31a;border-color:#08a31a}.class-tabs{display:inline-flex;flex-wrap:wrap;gap:0;margin-top:14px;border:1px solid #b9c5bd;border-radius:5px;overflow:hidden}.class-tabs button{padding:8px 12px;color:#26332b;background:#edf1ee;border:0;border-right:1px solid #b9c5bd;border-radius:0;font-size:.76rem}.class-tabs button:last-child{border-right:0}.class-tabs button[aria-pressed="true"]{color:#fff;background:#067b14}@media(max-width:520px){.archive-link{display:block;width:max-content;margin-left:0}.class-tabs{display:flex}.class-tabs button{flex:1 1 auto}}
     </style>`);
@@ -131,10 +132,18 @@ function calculateLeaderboard() {
   const data = state.data;
   const stats = new Map(data.drivers.map(driver => [driver.k, {
     driverKey: driver.k, name: driver.n, junior: Boolean(driver.j), finals: 0,
-    overallWins: 0, podiums: 0, topFive: 0, positionTotal: 0,
+    entries: 0, overallWins: 0, podiums: 0, topFive: 0, tqs: 0, positionTotal: 0,
     performanceTotal: 0, best: Infinity, consistencyTotal: 0, consistencyRuns: 0,
-    positions: [], performances: [], consistencies: []
+    runs: 0, laps: 0, seconds: 0, raceWins: 0, fastestLap: Infinity,
+    positions: [], performances: [], consistencies: [], placesGained: []
   }]));
+
+  for (const entry of data.entries) {
+    const [eventId, date, cls, driverKey] = entry;
+    if (!inRange(date, from, to) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
+    const row = stats.get(driverKey);
+    if (row) row.entries += 1;
+  }
 
   const fieldSizes = new Map();
   for (const result of data.eventResults) {
@@ -159,17 +168,29 @@ function calculateLeaderboard() {
     if (finalPosition === 1) row.overallWins += 1;
     if (finalPosition <= 3) row.podiums += 1;
     if (finalPosition <= 5) row.topFive += 1;
+    if (Number(result[5]) === 1) row.tqs += 1;
+    const qualifyingPosition = Number(result[5]);
+    if (Number.isFinite(qualifyingPosition) && qualifyingPosition > 0) row.placesGained.push(qualifyingPosition - finalPosition);
   }
 
-  for (const [raceId, driverKey, , , , , , consistency] of data.raceResults) {
+  for (const run of data.raceResults) {
+    const [raceId, driverKey, position, , , fastestLap, , consistency] = run;
     const race = data.raceById[raceId];
-    const value = Number.parseFloat(consistency);
-    if (!race || !Number.isFinite(value) || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
+    if (!race || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
     const row = stats.get(driverKey);
     if (!row) continue;
-    row.consistencyTotal += value;
-    row.consistencyRuns += 1;
-    row.consistencies.push(value);
+    row.runs += 1;
+    row.laps += completedLaps(run);
+    row.seconds += runTimeSeconds(run);
+    if (Number(position) === 1) row.raceWins += 1;
+    const lap = Number.parseFloat(fastestLap);
+    if (Number.isFinite(lap) && lap > 0) row.fastestLap = Math.min(row.fastestLap, lap);
+    const value = Number.parseFloat(consistency);
+    if (Number.isFinite(value)) {
+      row.consistencyTotal += value;
+      row.consistencyRuns += 1;
+      row.consistencies.push(value);
+    }
   }
 
   const eligible = [...stats.values()].filter(row => row.finals > 0);
@@ -184,10 +205,11 @@ function calculateLeaderboard() {
         ...row,
         average: average(keptPositions),
         performance: average(keptPerformances),
-        consistency: average(keptConsistencies)
+        consistency: average(keptConsistencies),
+        placesGainedAverage: average(row.placesGained)
       };
     })
-    .sort((a, b) => a.average - b.average || b.overallWins - a.overallWins || b.podiums - a.podiums || b.finals - a.finals || a.name.localeCompare(b.name))
+    .sort((a, b) => compareLeaderboardRows(a, b, $('leaderboardMetric')?.value || 'average'))
     .map((row, index) => ({ ...row, rank: index + 1 }));
 
   return ranked.filter(row => !search || row.name.includes(search));
@@ -197,16 +219,49 @@ function countAndRate(count, total) {
   return `${count} (${Math.round(100 * count / total)}%)`;
 }
 
+const leaderboardMetrics = {
+  average: { label: 'Average overall finish', lower: true, value: row => row.average, display: row => row.average.toFixed(1) },
+  performance: { label: 'Performance score', value: row => row.performance, display: row => row.performance.toFixed(1) },
+  finals: { label: 'Finals completed', value: row => row.finals },
+  laps: { label: 'Total laps', value: row => row.laps, display: row => fmt.format(row.laps) },
+  distance: { label: 'Distance raced', value: row => row.laps * 0.15, display: row => `${fmt.format(Number((row.laps * 0.15).toFixed(1)))} km` },
+  trackTime: { label: 'Time on track', value: row => row.seconds, display: row => formatSeconds(row.seconds) },
+  runs: { label: 'Recorded runs', value: row => row.runs },
+  raceWins: { label: 'Individual race wins', value: row => row.raceWins },
+  overallWins: { label: 'Overall wins', value: row => row.overallWins },
+  podiums: { label: 'Podiums', value: row => row.podiums },
+  tqs: { label: 'TQs', value: row => row.tqs },
+  consistency: { label: 'Adjusted consistency', value: row => row.consistency ?? -Infinity, display: row => row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%` },
+  fastestLap: { label: 'Fastest lap', lower: true, value: row => row.fastestLap, display: row => Number.isFinite(row.fastestLap) ? `${row.fastestLap.toFixed(3)}s` : '—' },
+  placesGained: { label: 'Average places gained', value: row => row.placesGainedAverage ?? -Infinity, display: row => row.placesGainedAverage === null ? '—' : `${row.placesGainedAverage >= 0 ? '+' : ''}${row.placesGainedAverage.toFixed(1)}` }
+};
+
+function compareLeaderboardRows(a, b, metricKey) {
+  const metric = leaderboardMetrics[metricKey] || leaderboardMetrics.average;
+  const first = metric.value(a);
+  const second = metric.value(b);
+  const primary = metric.lower ? first - second : second - first;
+  return primary || a.average - b.average || b.overallWins - a.overallWins || b.podiums - a.podiums || b.finals - a.finals || a.name.localeCompare(b.name);
+}
+
+function formatSeconds(seconds) {
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes} min`;
+  return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+}
+
 function renderLeaderboard() {
   const rows = calculateLeaderboard();
+  const metric = leaderboardMetrics[$('leaderboardMetric')?.value || 'average'] || leaderboardMetrics.average;
+  if ($('leaderboardMetricHeading')) $('leaderboardMetricHeading').textContent = metric.label;
   $('leaderboardCount').textContent = `${fmt.format(rows.length)} ranked · ${fmt.format(state.leaderboardEligibleCount)} recorded`;
   $('leaderboardBody').innerHTML = rows.length ? rows.map(row => `
     <tr>
-      <td>${row.rank}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button></td><td>${row.finals}</td>
+      <td>${row.rank}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button></td><td class="ranked-metric">${escapeHtml(metric.display ? metric.display(row) : metric.value(row))}</td><td>${row.finals}</td>
       <td>${row.average.toFixed(1)}</td><td>${row.best}</td><td>${countAndRate(row.topFive, row.finals)}</td>
       <td>${countAndRate(row.podiums, row.finals)}</td><td>${row.overallWins}</td>
       <td>${row.performance.toFixed(1)}</td><td>${row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`}</td>
-    </tr>`).join('') : '<tr><td colspan="10">No drivers match these filters.</td></tr>';
+    </tr>`).join('') : '<tr><td colspan="11">No drivers match these filters.</td></tr>';
 }
 
 function renderRaceExplorer(raceId) {
@@ -217,6 +272,7 @@ function renderRaceExplorer(raceId) {
     $('raceResultTitle').textContent = 'No races match these filters';
     body.innerHTML = '<tr><td colspan="8">Choose a different event or class.</td></tr>';
     $('raceResultLink').hidden = true;
+    $('raceVideoLink').hidden = true;
     return;
   }
   const event = data.eventById[race.e];
@@ -225,6 +281,10 @@ function renderRaceExplorer(raceId) {
   $('raceEventLink').hidden = !event?.u;
   $('raceResultLink').href = race.u || '#';
   $('raceResultLink').hidden = !race.u;
+  const video = data.videos.find(item => item.raceId === raceId);
+  $('raceVideoLink').href = video?.url || '#';
+  $('raceVideoLink').textContent = video ? `Watch ${video.round || 'race'} video ▶` : 'Watch race video ▶';
+  $('raceVideoLink').hidden = !video;
   const rows = data.raceResults.filter(row => row[0] === raceId).sort((a, b) => a[2] - b[2]);
   body.innerHTML = rows.length ? rows.map(row => `
     <tr><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>
@@ -428,9 +488,11 @@ function driverProfile(driverKey) {
     const runRows = eventRuns.map(run => {
       const race = data.raceById[run[0]];
       const raceName = race.u ? `<a href="${escapeHtml(race.u)}" target="_blank" rel="noopener">${escapeHtml(race.n)}</a>` : escapeHtml(race.n);
-      return `<tr><td>${escapeHtml(race.r)}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td></tr>`;
+      const video = data.videos.find(item => item.raceId === run[0]);
+      const videoLink = video ? `<a class="race-video-inline" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">Watch ▶</a>` : '—';
+      return `<tr><td>${escapeHtml(race.r)}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td><td>${videoLink}</td></tr>`;
     }).join('');
-    const raceDrilldown = `<details class="inline-races"><summary>${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}</summary><div class="table-wrap"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th></tr></thead><tbody>${runRows}</tbody></table></div></details>`;
+    const raceDrilldown = `<details class="inline-races"><summary>${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}</summary><div class="table-wrap"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Video</th></tr></thead><tbody>${runRows}</tbody></table></div></details>`;
     return `<tr><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${raceDrilldown}</td></tr>`;
   }).join('') || '<tr><td colspan="10">No completed finals within these filters.</td></tr>';
 
@@ -563,9 +625,14 @@ function refresh() {
 
 async function init() {
   try {
-    const response = await fetch('data/dashboard.json', { cache: 'no-cache' });
+    const [response, videoResponse] = await Promise.all([
+      fetch('data/dashboard.json', { cache: 'no-cache' }),
+      fetch('data/videos.json', { cache: 'no-cache' })
+    ]);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const data = await response.json();
+    const videoData = videoResponse.ok ? await videoResponse.json() : { videos: [] };
+    data.videos = videoData.videos || [];
     data.eventById = Object.fromEntries(data.events.map(event => [event.i, event]));
     data.driverByKey = Object.fromEntries(data.drivers.map(driver => [driver.k, driver.n]));
     state.data = data;
@@ -605,6 +672,7 @@ async function init() {
       refresh();
     });
     $('driverSearch').addEventListener('input', renderLeaderboard);
+    $('leaderboardMetric').addEventListener('change', renderLeaderboard);
     $('raceEvent').addEventListener('change', () => updateRaceSelection(false));
     $('raceSelection').addEventListener('change', () => renderRaceExplorer($('raceSelection').value));
     $('raceExplorerResults').addEventListener('click', event => {
@@ -627,6 +695,7 @@ async function init() {
       $('eventTypeFilter').value = '';
       $('classFilter').value = 'senior';
       $('minimumFinals').value = '10';
+      $('leaderboardMetric').value = 'average';
       $('driverSearch').value = '';
       syncClassButtons();
       refresh();
@@ -635,7 +704,7 @@ async function init() {
     if (requestedDriver && data.driverByKey[requestedDriver]) driverProfile(requestedDriver);
   } catch (error) {
     $('updatedStatus').textContent = 'Statistics could not be loaded.';
-    $('leaderboardBody').innerHTML = `<tr><td colspan="10">${escapeHtml(error.message)}</td></tr>`;
+    $('leaderboardBody').innerHTML = `<tr><td colspan="11">${escapeHtml(error.message)}</td></tr>`;
   }
 }
 

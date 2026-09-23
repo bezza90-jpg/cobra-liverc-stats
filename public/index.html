@@ -64,7 +64,16 @@
             <button type="button" data-class-filter="Vintage" aria-pressed="false">Vintage</button>
           </div>
         </div>
-        <p class="result-count" id="leaderboardCount"></p>
+        <div class="leaderboard-ranking">
+          <label>Rank leaderboard by<select id="leaderboardMetric">
+            <option value="average">Average overall finish</option><option value="performance">Performance score</option>
+            <option value="finals">Finals completed</option><option value="laps">Total laps</option><option value="distance">Distance raced</option>
+            <option value="trackTime">Time on track</option><option value="runs">Recorded runs</option><option value="raceWins">Individual race wins</option>
+            <option value="overallWins">Overall wins</option><option value="podiums">Podiums</option><option value="tqs">TQs</option>
+            <option value="consistency">Consistency</option><option value="fastestLap">Fastest lap</option><option value="placesGained">Average places gained</option>
+          </select></label>
+          <p class="result-count" id="leaderboardCount"></p>
+        </div>
       </div>
       <div class="table-wrap">
         <table>
@@ -72,6 +81,7 @@
             <tr>
               <th scope="col">Rank</th>
               <th scope="col">Driver</th>
+              <th scope="col" id="leaderboardMetricHeading">Average overall finish</th>
               <th scope="col" title="Published overall final results">Finals</th>
               <th scope="col">Avg overall</th>
               <th scope="col">Best</th>
@@ -85,7 +95,7 @@
           <tbody id="leaderboardBody"></tbody>
         </table>
       </div>
-      <p class="definition">Ranking is attendance-adjusted: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. The same allowance applies to performance and consistency. Attendance, finals, wins and podiums remain complete totals.</p>
+      <p class="definition">Choose any ranking measure above. Average finish, performance and consistency use the attendance adjustment: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. Activity totals always use every matching run.</p>
     </section>
 
     <section class="panel race-explorer" id="raceExplorer" aria-labelledby="raceExplorerTitle">
@@ -95,6 +105,7 @@
         <label>Individual race<select id="raceSelection"></select></label>
         <a class="event-link" id="raceEventLink" href="#" target="_blank" rel="noopener">Open event results ↗</a>
         <a class="event-link" id="raceResultLink" href="#" target="_blank" rel="noopener">Open this race ↗</a>
+        <a class="event-link video-link" id="raceVideoLink" href="#" target="_blank" rel="noopener" hidden>Watch race video ▶</a>
       </div>
       <h3 class="race-result-title" id="raceResultTitle">Select a race</h3>
       <div class="table-wrap compact"><table>

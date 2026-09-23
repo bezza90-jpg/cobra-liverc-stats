@@ -4,9 +4,9 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = async relative => JSON.parse(await readFile(path.join(root, relative), 'utf8'));
-const [events, entries, eventResults, races, raceResults, dashboard, championships, indexHtml, swordHtml, clubHtml, podiumsHtml, appJs, championshipJs, podiumsJs, styles] = await Promise.all([
+const [events, entries, eventResults, races, raceResults, dashboard, championships, videos, indexHtml, swordHtml, clubHtml, podiumsHtml, appJs, championshipJs, podiumsJs, youtubeJs, styles] = await Promise.all([
   readJson('data/raw/events.json'), readJson('data/raw/entries.json'), readJson('data/raw/event-results.json'),
-  readJson('data/raw/races.json'), readJson('data/raw/race-results.json'), readJson('public/data/dashboard.json'), readJson('public/data/championships.json'),
+  readJson('data/raw/races.json'), readJson('data/raw/race-results.json'), readJson('public/data/dashboard.json'), readJson('public/data/championships.json'), readJson('public/data/videos.json'),
   readFile(path.join(root, 'public/index.html'), 'utf8'),
   readFile(path.join(root, 'public/sword/index.html'), 'utf8'),
   readFile(path.join(root, 'public/club/index.html'), 'utf8'),
@@ -14,6 +14,7 @@ const [events, entries, eventResults, races, raceResults, dashboard, championshi
   readFile(path.join(root, 'public/assets/app.js'), 'utf8'),
   readFile(path.join(root, 'public/assets/championship.js'), 'utf8'),
   readFile(path.join(root, 'public/assets/podiums.js'), 'utf8'),
+  readFile(path.join(root, 'scripts/update-youtube.mjs'), 'utf8'),
   readFile(path.join(root, 'public/assets/styles.css'), 'utf8')
 ]);
 
@@ -59,6 +60,9 @@ if (!podiumsJs.includes("-podium.jpg") || !podiumsJs.includes('raceTopThree')) e
 if (!podiumsHtml.includes('Complete archive from 2022') || podiumsJs.includes('setUTCFullYear')) errors.push('Podium gallery is not configured for the complete archive.');
 if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Podium Gallery'))) errors.push('Podium Gallery navigation is missing from one or more pages.');
 if (!indexHtml.includes('Distance') || !appJs.includes('totalLaps(runs) * 0.15')) errors.push('Driver-profile distance calculation is missing.');
+if (!indexHtml.includes('id="leaderboardMetric"') || !appJs.includes('leaderboardMetrics')) errors.push('Rankable driver-record metrics are missing.');
+if (!indexHtml.includes('id="raceVideoLink"') || !appJs.includes('data/videos.json')) errors.push('YouTube race links are missing.');
+if (videos.meta?.fromDate !== '2025-01-01' || !youtubeJs.includes("channelHandle = 'Bezza90'") || !youtubeJs.includes('/\\bCOBRA\\b/i')) errors.push('YouTube matching rules are invalid.');
 if (!championshipJs.includes('highestDrop') || !championshipJs.includes('qualifyingPosition')) errors.push('Championship tie-break or TQ scoring logic is missing.');
 if (!championshipJs.includes('a && b && a.total')) errors.push('Championship first-place tie guard is missing.');
 if (!styles.includes('@media (max-width: 520px)')) errors.push('Mobile layout rules are missing.');
