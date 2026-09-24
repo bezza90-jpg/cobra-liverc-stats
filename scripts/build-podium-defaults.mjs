@@ -12,6 +12,7 @@ const dashboard = await read('public/data/dashboard.json', null) || await read('
 if (!dashboard?.raceById || !Array.isArray(dashboard.raceResults)) throw new Error('No valid COBRA dashboard is available.');
 const avatars = await read('public/data/car-avatars.json');
 const manufacturers = await read('public/data/driver-manufacturers.json');
+const liveRcChassis = await read('public/data/liverc-chassis.json');
 const names = new Map(dashboard.drivers.map(row => [String(row.k), String(row.n)]));
 const eventNames = new Map(dashboard.events.map(row => [String(row.i), String(row.n)]));
 const results = new Map();
@@ -36,10 +37,11 @@ const embedded = new Map();
 async function driverArt(key) {
   if (embedded.has(key)) return embedded.get(key);
   const avatar = String(avatars[key] || '');
-  const manufacturer = String(manufacturers[key] || '').trim();
-  const slug = manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  const image = (avatar && await inlineImage(avatar)) || (slug && await inlineImage(`assets/manufacturers/${slug}.png`)) || '';
-  const value = { image, label: manufacturer || 'CAR PHOTO WELCOME', avatar: !!(avatar && image) };
+  const manufacturer = String(liveRcChassis[key]?.name || manufacturers[key] || '').trim();
+  const slug = String(liveRcChassis[key]?.slug || manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+  const carImage = avatar && await inlineImage(avatar);
+  const image = carImage || (slug && await inlineImage(`assets/manufacturers/${slug}.png`)) || (!manufacturer && await inlineImage('assets/cobra-logo.png')) || '';
+  const value = { image, label: manufacturer || 'COBRA', avatar: !!carImage };
   embedded.set(key, value);
   return value;
 }
@@ -50,7 +52,7 @@ let changed = 0;
 for (const [raceId, race] of Object.entries(dashboard.raceById)) {
   if (!race.f || !/^[0-9]+$/.test(raceId)) continue;
   const top = (results.get(raceId) || []).sort((a, b) => Number(a[2]) - Number(b[2]));
-  const columns = await Promise.all([1, 2, 3].map(async place => {
+  const columns = await Promise.all([2, 1, 3].map(async place => {
     const row = top.find(item => Number(item[2]) === place);
     const key = row ? String(row[1]) : '';
     const name = row ? names.get(key) || key : 'Awaiting result';
@@ -58,14 +60,16 @@ for (const [raceId, race] of Object.entries(dashboard.raceById)) {
   }));
   const cards = columns.map(({ place, name, art }, index) => {
     const x = 34 + index * 389;
-    const accent = ['#f7ce67', '#cbd5db', '#dca882'][index];
+    const accent = ({ 1: '#f7ce67', 2: '#cbd5db', 3: '#dca882' })[place];
+    const height = ({ 1: 445, 2: 395, 3: 345 })[place];
+    const y = 625 - height;
     const graphic = art.image
-      ? `<image xlink:href="${art.image}" x="${x + 35}" y="307" width="318" height="196" preserveAspectRatio="xMidYMid meet"/>`
-      : `<rect x="${x + 30}" y="348" width="329" height="102" rx="14" fill="#14291a"/><text x="${x + 194}" y="408" text-anchor="middle" font-size="23" fill="#bce9c5" font-weight="800">${escape(shorten(art.label, 24))}</text>`;
-    return `<rect x="${x}" y="209" width="379" height="416" rx="19" fill="#f5f9f5"/><rect x="${x}" y="209" width="379" height="10" rx="5" fill="${accent}"/>
-<circle cx="${x + 190}" cy="257" r="26" fill="${accent}"/><text x="${x + 190}" y="267" text-anchor="middle" font-size="27" font-weight="900" fill="#142317">${place}</text>
-${graphic}<text x="${x + 190}" y="545" text-anchor="middle" font-size="23" font-weight="900" fill="#13251a">${escape(shorten(name, 24))}</text>
-${art.image ? `<text x="${x + 190}" y="581" text-anchor="middle" font-size="16" fill="#496453">${escape(shorten(art.avatar ? 'DRIVER CAR' : art.label, 32))}</text>` : ''}`;
+      ? `<image xlink:href="${art.image}" x="${x + 35}" y="${y + 95}" width="318" height="170" preserveAspectRatio="xMidYMid meet"/>`
+      : `<rect x="${x + 30}" y="${y + 133}" width="329" height="92" rx="14" fill="#14291a"/><text x="${x + 194}" y="${y + 189}" text-anchor="middle" font-size="21" fill="#bce9c5" font-weight="800">${escape(shorten(art.label, 24))}</text>`;
+    return `<rect x="${x}" y="${y}" width="379" height="${height}" rx="19" fill="#f5f9f5"/><rect x="${x}" y="${y}" width="379" height="10" rx="5" fill="${accent}"/>
+<circle cx="${x + 190}" cy="${y + 48}" r="26" fill="${accent}"/><text x="${x + 190}" y="${y + 58}" text-anchor="middle" font-size="27" font-weight="900" fill="#142317">${place}</text>
+${graphic}<text x="${x + 190}" y="555" text-anchor="middle" font-size="23" font-weight="900" fill="#13251a">${escape(shorten(name, 24))}</text>
+${art.image ? `<text x="${x + 190}" y="590" text-anchor="middle" font-size="16" fill="#496453">${escape(shorten(art.avatar ? 'DRIVER CAR' : art.label, 32))}</text>` : ''}`;
   }).join('');
   const filename = `${race.e}-${raceId}-podium.jpg`;
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-label="Illustrated podium for ${escape(race.n)}">

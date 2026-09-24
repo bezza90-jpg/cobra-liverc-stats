@@ -12,6 +12,7 @@ let podiumPhotoOverrides = new Map();
 let podiumWebAppUrl = '';
 let carAvatars = {};
 let driverManufacturers = {};
+let livercChassis = {};
 
 function eventFinals(eventId) {
   return Object.entries(data.raceById)
@@ -39,13 +40,14 @@ function podiumRow(result) {
 }
 
 function podiumIllustration(rows, photoName) {
-  const places = [1, 2, 3].map(place => {
+  const places = [2, 1, 3].map(place => {
     const row = rows.find(result => Number(result[2]) === place);
     const key = String(row?.[1] || '');
     const name = driverByKey.get(key) || key || 'Awaiting result';
     const avatar = carAvatars[key];
-    const manufacturer = String(driverManufacturers[key] || '').trim();
-    const slug = manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const chassis = livercChassis[key];
+    const manufacturer = String(chassis?.name || driverManufacturers[key] || '').trim();
+    const slug = String(chassis?.slug || manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
     const validAvatar = typeof avatar === 'string' && /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(avatar);
     const source = validAvatar ? `../${avatar}` : slug ? `../assets/manufacturers/${slug}.png` : '../assets/cobra-logo.png';
     const fallback = manufacturer || 'COBRA';
@@ -189,7 +191,7 @@ async function loadPodiumOverrides() {
 }
 
 async function loadIllustrationData() {
-  const files = await Promise.all(['car-avatars.json', 'driver-manufacturers.json'].map(async name => {
+  const files = await Promise.all(['car-avatars.json', 'driver-manufacturers.json', 'liverc-chassis.json'].map(async name => {
     try {
       const response = await fetch(`../data/${name}`, { cache: 'no-store' });
       return response.ok ? await response.json() : {};
@@ -197,6 +199,7 @@ async function loadIllustrationData() {
   }));
   carAvatars = files[0] && typeof files[0] === 'object' ? files[0] : {};
   driverManufacturers = files[1] && typeof files[1] === 'object' ? files[1] : {};
+  livercChassis = files[2] && typeof files[2] === 'object' ? files[2] : {};
 }
 
 function openPhoto(photo) {

@@ -1,1 +1,7 @@
-Extract this ZIP. In the GitHub repository, open public/assets/ and upload app.js and styles.css from this package, replacing the existing files. Then open public/ and upload index.html, replacing it. Commit the three replacements, wait for the new Actions run to turn green, and refresh the COBRA statistics page. Wheel gestures inside the map now zoom; the normal desktop map is shorter so the dialog fits the screen.
+COBRA podium and map update
+
+At the repository top level, choose Add file > Upload files on GitHub. Drag the public and scripts folders from this ZIP into the upload area. Keep the folder paths shown, then commit. Wait for the green Update and publish COBRA statistics workflow and refresh the site.
+
+Podiums show 2nd on the left, 1st tallest in the middle, and 3rd on the right. LiveRC heat-sheet chassis brands are gathered during the statistics refresh; existing driver car avatars continue to take priority. If no chassis is listed, the COBRA logo is shown. The map uses Leaflet's built-in wheel zoom.
+
+Do not replace your existing public/data files or approved podium photographs.
