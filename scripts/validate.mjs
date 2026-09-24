@@ -63,7 +63,20 @@ if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('
 if (!indexHtml.includes('Distance') || !appJs.includes('totalLaps(runs) * 0.15') || !appJs.includes('kmToMiles') || !appJs.includes('miles')) errors.push('Driver-profile distance calculation or miles conversion is missing.');
 if (!indexHtml.includes('id="leaderboardMetric"') || !appJs.includes('leaderboardMetrics')) errors.push('Rankable driver-record metrics are missing.');
 if (!indexHtml.includes('id="driverConsistencyDetails"') || !appJs.includes('Runs at 95%+') || !appJs.includes('isCompleteConsistencyRun')) errors.push('Driver consistency breakdown is missing.');
-if (!appJs.includes('openJourneyMap') || !appJs.includes('journeyDriverDistances') || !appJs.includes("race.d < '2022-01-01'") || !appJs.includes('toggleJourneyPlayback') || !appJs.includes('id="journeySpeed"') || !appJs.includes('length: 15') || !appJs.includes('buildJourneyTimeline') || !appJs.includes('journeyMilestoneData') || !appJs.includes('journeyDriverSearch') || !appJs.includes('journeyDriverPicker') || !appJs.includes("journeyExcludedDrivers = new Set(['SIMON-NOTLEY'])") || !appJs.includes('Istanbul, Türkiye') || !appJs.includes('openstreetmap.org') || !journeyRouteJs.includes('4521.6') || !journeyRouteJs.includes('Istanbul') || !styles.includes('.journey-map-overlay') || !styles.includes('.journey-milestones')) errors.push('Lifetime Cardiff-to-Istanbul journey map, driver selection, route or adjustable playback is missing.');
+const journeyChecks = [
+  ['map opening', appJs.includes('openJourneyMap')],
+  ['driver distances', appJs.includes('journeyDriverDistances')],
+  ['races since 2022', appJs.includes("race.d < '2022-01-01'")],
+  ['playback controls', appJs.includes('toggleJourneyPlayback') && appJs.includes('id="journeySpeed"') && appJs.includes('length: 15')],
+  ['race timeline', appJs.includes('buildJourneyTimeline') && appJs.includes('journeyMilestoneData')],
+  ['driver selection', appJs.includes('journeyDriverSearch') && appJs.includes('journeyDriverPicker')],
+  ['excluded test driver', appJs.includes("journeyExcludedDrivers = new Set(['SIMON-NOTLEY'])")],
+  ['destination and map tiles', appJs.includes('Istanbul, Türkiye') && appJs.includes('openstreetmap.org')],
+  ['ERT Steyregg route', journeyRouteJs.includes('ERT Steyregg') && journeyRouteJs.includes('Istanbul') && /export const journeyRoadDistanceKm\s*=\s*\d+(?:\.\d+)?\s*;/.test(journeyRouteJs)],
+  ['map styling', styles.includes('.journey-map-overlay') && styles.includes('.journey-milestones')]
+];
+const missingJourney = journeyChecks.filter(([, valid]) => !valid).map(([name]) => name);
+if (missingJourney.length) errors.push(`Cardiff-to-Istanbul journey map is missing: ${missingJourney.join(', ')}.`);
 if (!indexHtml.includes('id="raceVideoLink"') || !appJs.includes('data/videos.json')) errors.push('YouTube race links are missing.');
 if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Race Videos'))) errors.push('The permanent YouTube channel button is missing from one or more pages.');
 if (videos.meta?.fromDate !== '2025-01-01' || !youtubeJs.includes("channelHandle = 'Bezza90'") || !youtubeJs.includes('/\\bCOBRA\\b/i')) errors.push('YouTube matching rules are invalid.');

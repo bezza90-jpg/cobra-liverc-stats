@@ -3,3 +3,5 @@ COBRA SITE UPDATE — podium artwork and tracker navigation
 Unzip this file. In the GitHub cobra-liverc-stats repository, at the TOP LEVEL choose Add file > Upload files. Drag only the public, scripts and .github folders from INSIDE the extracted package onto the upload page, then commit. The GitHub Actions update and publish job must succeed before refreshing the page.
 
 Check the buttons under the COBRA logo on Race Stats. Driver Distance Tracker is next to Podium Gallery. On the gallery, finals without an approved photograph show first, second and third place with driver names, car avatars where assigned, chassis logos where assigned, otherwise the COBRA club logo. Approved photographs remain visible. This update does not overwrite public/data/car-avatars.json, avatar PNGs, or your saved photo overrides.
+
+Route/validator repair: public/assets/journey-route.js and scripts/validate.mjs now agree on the route via ERT Steyregg.
