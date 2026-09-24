@@ -4,6 +4,8 @@ This repository hosts the public COBRA statistics dashboard and refreshes it fro
 
 It also includes a Podium Gallery at `/podiums/`. The newest event opens automatically, with the complete official archive from 2022 grouped by year and event. Every final displays its official top three and links to the complete LiveRC result.
 
+The standalone Driver Setups & Tips library is published at `/setups/`. It uses Google Drive for files and a Google Sheet as a moderated approval queue. Its Google Apps Script backend and setup instructions are in `google-apps-script/driver-setups/`; the deployed web-app URL belongs in `public/data/setups-config.json`. Approved event-specific setups link back to LiveRC and automatically show an event-podium link when the named driver finished in the top three of a final.
+
 Driver profiles use all available LiveRC run data to show completed laps, estimated distance raced at 150 metres per lap, time on track, fastest laps and consistency. The class breakdown also includes entries, runs, finals, finishing statistics, TQs and race wins.
 
 Profiles also contain a class-by-class consistency breakdown with adjusted average, best run, factual consistency bands (98%+, 95–97.9%, 90–94.9% and below 90%) and the average gap between fastest and average lap.
@@ -93,6 +95,8 @@ The updater uses only Node.js built-in features, so there are no packages to ins
 
 - `public/` — the website GitHub Pages publishes.
 - `public/data/dashboard.json` — compact browser-ready statistics.
+- `public/setups/` — standalone Driver Setups & Tips page.
+- `google-apps-script/driver-setups/` — Google Drive upload and approval backend.
 - `data/raw/` — source records used for rebuilding statistics.
 - `scripts/update-liverc.mjs` — checks LiveRC and imports eligible events.
 - `scripts/build-dashboard.mjs` — recalculates browser-ready statistics.
