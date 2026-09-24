@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <link rel="icon" href="../assets/cobra.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="COBRA SWORD Championship standings calculated from official LiveRC results.">
   <title>SWORD Championship | COBRA</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../assets/styles.css?v=20260924-podiumdefaults1">
+  <script type="module" src="../assets/site-media.js?v=20260924-site1"></script>
 </head>
 <body data-championship="sword">
   <header class="hero championship-hero">
-    <div class="brand"><span class="brand-mark">COBRA</span><span class="brand-copy">Cardiff Off Road Buggy Racing Association</span></div>
-    <nav class="results-nav" aria-label="Results pages"><a href="../">Race Stats</a><a href="../sword/" aria-current="page">SWORD Championship</a><a href="../club/">Club Series</a><a href="../podiums/">Podium Gallery</a></nav>
+    <div class="brand"><img class="brand-logo" src="../assets/cobra-logo.png" alt="COBRA — Cardiff Off Road Buggy Racing Association"></div>
+    <nav class="results-nav" aria-label="Results pages"><a href="../">Race Stats</a><a href="../sword/" aria-current="page">SWORD Championship</a><a href="../club/">Club Series</a><a href="../podiums/">Podium Gallery</a><a class="tracker-nav-button" href="../?tracker=1">Driver Distance Tracker</a></nav>
     <div class="hero-copy"><p class="eyebrow">Official championship table</p><h1 id="championshipTitle">SWORD Championship</h1><p id="championshipSeason">2026/27 championship standings</p></div>
     <label class="season-selector">Season<select id="seasonSelect" aria-label="Championship season"></select></label>
     <div class="updated" id="updatedStatus">Loading last update…</div>
