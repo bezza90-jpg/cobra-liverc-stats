@@ -925,7 +925,7 @@ function openJourneyMap(driverKey) {
       return;
     }
     if (!journeyMap) {
-      journeyMap = window.L.map('journeyMap', { zoomControl: true, scrollWheelZoom: false });
+      journeyMap = window.L.map('journeyMap', { zoomControl: true, scrollWheelZoom: true });
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
       journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
