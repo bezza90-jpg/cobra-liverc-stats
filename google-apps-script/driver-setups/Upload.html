@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <style>
+    :root { --green:#08a31a; --green-dark:#067b14; --ink:#111714; --muted:#637069; --line:#dfe6e1; --wash:#f3f7f4; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:22px; color:var(--ink); background:var(--wash); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    form { display:grid; gap:16px; max-width:760px; margin:auto; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    label { display:grid; gap:7px; color:#344039; font-size:.76rem; font-weight:850; letter-spacing:.045em; text-transform:uppercase; }
+    input,select,textarea { width:100%; min-width:0; padding:0 12px; color:var(--ink); background:#fff; border:1px solid #bcc8c0; border-radius:8px; outline:none; font:inherit; }
+    input,select { height:46px; }
+    textarea { min-height:120px; padding-top:12px; resize:vertical; }
+    input:focus,select:focus,textarea:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(8,163,26,.13); }
+    input[type=file] { height:auto; padding:12px; }
+    .full { grid-column:1/-1; }
+    .hint { margin:0; color:var(--muted); font-size:.77rem; line-height:1.5; text-transform:none; letter-spacing:0; font-weight:500; }
+    .consent { display:flex; align-items:flex-start; gap:9px; font-size:.78rem; line-height:1.45; text-transform:none; letter-spacing:0; }
+    .consent input { width:17px; height:17px; margin:2px 0 0; flex:0 0 auto; accent-color:var(--green); }
+    button { min-height:48px; padding:12px 18px; color:#fff; background:var(--green-dark); border:0; border-radius:8px; font:inherit; font-weight:850; cursor:pointer; }
+    button:hover { background:var(--green); }
+    button:disabled { cursor:wait; opacity:.58; }
+    .status { padding:14px 16px; color:#315039; background:#eef8f0; border:1px solid #bfe2c5; border-left:4px solid var(--green); border-radius:8px; line-height:1.5; }
+    .status.error { color:#711b1b; background:#fff1f1; border-color:#e9bcbc; border-left-color:#b51d1d; }
+    .honeypot { position:absolute; left:-10000px; }
+    [hidden] { display:none !important; }
+    @media(max-width:600px){ body{padding:14px}.grid{grid-template-columns:1fr}.full{grid-column:auto} }
+  </style>
+</head>
+<body>
+  <div id="loading" class="status">Loading the COBRA event list…</div>
+  <form id="setupForm" hidden>
+    <div class="grid">
+      <label>Driver name
+        <input id="driverName" name="driverName" list="driverNames" maxlength="80" autocomplete="name" required placeholder="Start typing your name">
+        <datalist id="driverNames"></datalist>
+      </label>
+      <label>Manufacturer
+        <select id="brand" name="brand" required></select>
+      </label>
+      <label>Racing class
+        <select id="className" name="className" required></select>
+      </label>
+      <label>Car model <span class="hint">Optional</span>
+        <input id="model" name="model" maxlength="80" placeholder="e.g. RC10B7.1">
+      </label>
+      <label class="full">COBRA event <span class="hint">Optional</span>
+        <select id="eventId" name="eventId"><option value="">General setup — not event specific</option></select>
+      </label>
+      <label class="full">Setup sheet
+        <input id="setupFile" type="file" required accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx,.xls,.xlsx,.csv,.txt">
+        <span class="hint">PDF, JPG, PNG, WebP, Word, Excel, CSV or text. Maximum 8 MB.</span>
+      </label>
+      <label class="full">Driver notes <span class="hint">Optional</span>
+        <textarea id="notes" name="notes" maxlength="2000" placeholder="Track conditions, tyres, changes that worked, or anything that will help another racer use this setup…"></textarea>
+      </label>
+    </div>
+    <label class="consent"><input id="consent" type="checkbox" required> I confirm that I am entitled to share this setup sheet and agree to COBRA publishing it with my name.</label>
+    <label class="honeypot">Website<input id="website" name="website" tabindex="-1" autocomplete="off"></label>
+    <button id="submitButton" type="submit">Submit setup for approval</button>
+    <div id="status" class="status" hidden aria-live="polite"></div>
+  </form>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    let options;
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+    }
+
+    function showError(error) {
+      const target = $('setupForm').hidden ? $('loading') : $('status');
+      target.hidden = false;
+      target.classList.add('error');
+      target.textContent = error && error.message ? error.message : String(error || 'Something went wrong.');
+      $('submitButton').disabled = false;
+      $('submitButton').textContent = 'Submit setup for approval';
+    }
+
+    function initialise(data) {
+      options = data;
+      $('brand').innerHTML = '<option value="">Choose manufacturer</option>' + data.brands.map(value => `<option>${escapeHtml(value)}</option>`).join('');
+      $('className').innerHTML = '<option value="">Choose class</option>' + data.classes.map(value => `<option>${escapeHtml(value)}</option>`).join('');
+      $('eventId').innerHTML += data.events.map(event => `<option value="${escapeHtml(event.id)}">${escapeHtml(event.date)} — ${escapeHtml(event.name)}</option>`).join('');
+      $('driverNames').innerHTML = data.drivers.map(value => `<option value="${escapeHtml(value)}"></option>`).join('');
+      $('loading').hidden = true;
+      $('setupForm').hidden = false;
+    }
+
+    function readFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result).split(',')[1]);
+        reader.onerror = () => reject(new Error('The selected file could not be read.'));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    $('setupForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const file = $('setupFile').files[0];
+      if (!file) return showError(new Error('Please choose a setup file.'));
+      if (file.size > options.maxFileBytes) return showError(new Error('The selected file is larger than 8 MB.'));
+      $('submitButton').disabled = true;
+      $('submitButton').textContent = 'Uploading…';
+      $('status').hidden = false;
+      $('status').classList.remove('error');
+      $('status').textContent = 'Uploading your setup securely to COBRA…';
+      try {
+        const payload = {
+          token: options.token,
+          driverName: $('driverName').value,
+          brand: $('brand').value,
+          className: $('className').value,
+          model: $('model').value,
+          eventId: $('eventId').value,
+          notes: $('notes').value,
+          website: $('website').value,
+          fileName: file.name,
+          fileType: file.type,
+          fileBase64: await readFile(file)
+        };
+        google.script.run.withSuccessHandler(result => {
+          $('status').hidden = false;
+          $('status').classList.remove('error');
+          $('status').textContent = result.message;
+          $('setupForm').reset();
+          $('submitButton').disabled = false;
+          $('submitButton').textContent = 'Submit another setup';
+          window.parent.postMessage({ type: 'cobra-setup-submitted', submissionId: result.submissionId }, '*');
+          google.script.run.withSuccessHandler(data => { options.token = data.token; }).withFailureHandler(showError).getFormOptions();
+        }).withFailureHandler(showError).submitSetup(payload);
+      } catch (error) {
+        showError(error);
+      }
+    });
+
+    google.script.run.withSuccessHandler(initialise).withFailureHandler(showError).getFormOptions();
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a8f18">
+  <meta name="description" content="COBRA driver setup sheets, car setup notes and tips for 1/10 off-road racing.">
+  <title>Driver Setups &amp; Tips | COBRA</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+</head>
+<body>
+  <header class="hero setup-hero">
+    <div class="brand" aria-label="COBRA Cardiff Off Road Buggy Racing Association">
+      <span class="brand-mark">COBRA</span>
+      <span class="brand-copy">Cardiff Off Road Buggy Racing Association</span>
+    </div>
+    <div class="hero-copy">
+      <p class="eyebrow">Shared by racers, for racers</p>
+      <h1>Driver Setups<br>&amp; Tips</h1>
+      <p>Browse setup sheets used at COBRA, read the driver's notes and share a setup that could help somebody find their next improvement.</p>
+    </div>
+    <button class="archive-link setup-upload-hero" id="openUpload" type="button">Upload a setup</button>
+  </header>
+
+  <main class="setup-main">
+    <section class="panel setup-intro">
+      <div>
+        <p class="eyebrow">The COBRA setup library</p>
+        <h2>Find a proven starting point</h2>
+        <p>Filter by manufacturer, racing class or COBRA event. Event-specific submissions include links back to the official results and, where applicable, the driver's event podiums.</p>
+      </div>
+      <div class="setup-count"><strong id="setupTotal">—</strong><span>approved setups</span></div>
+    </section>
+
+    <section class="panel setup-filters" aria-labelledby="filterHeading">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Search the library</p>
+          <h2 id="filterHeading">Setup filters</h2>
+        </div>
+        <button class="secondary" id="resetSetupFilters" type="button">Reset filters</button>
+      </div>
+      <div class="setup-filter-grid">
+        <label>Search
+          <input id="setupSearch" type="search" placeholder="Driver, model or notes">
+        </label>
+        <label>Manufacturer
+          <select id="setupBrand"><option value="">All manufacturers</option></select>
+        </label>
+        <label>Class
+          <select id="setupClass">
+            <option value="">All classes</option>
+            <option>2WD</option><option>4WD</option><option>Vintage</option><option>Truck</option>
+          </select>
+        </label>
+        <label>Event
+          <select id="setupEvent"><option value="">All events</option></select>
+        </label>
+      </div>
+    </section>
+
+    <div id="setupConnectionNotice" class="setup-notice" hidden></div>
+    <p id="setupResultCount" class="setup-result-count" aria-live="polite"></p>
+    <section id="setupGrid" class="setup-grid" aria-live="polite">
+      <div class="panel empty-state">Loading approved setup sheets…</div>
+    </section>
+
+    <section class="method setup-sharing">
+      <p class="eyebrow">Share what worked</p>
+      <h2>Have a setup worth sharing?</h2>
+      <p>Upload a PDF, photograph or common document file with your notes. Submissions are checked by COBRA before publication, and your original file remains stored in the club's Google Drive.</p>
+      <button id="openUploadBottom" type="button">Upload your setup</button>
+    </section>
+  </main>
+
+  <dialog class="setup-upload-dialog" id="setupUploadDialog">
+    <div class="setup-upload-shell">
+      <button class="dialog-close" id="closeUpload" type="button" aria-label="Close upload form">×</button>
+      <div class="setup-upload-heading">
+        <p class="eyebrow">Contribute to the library</p>
+        <h2>Upload a driver setup</h2>
+        <p>Your submission will be reviewed before it appears publicly.</p>
+      </div>
+      <div id="setupUploadUnavailable" class="setup-notice" hidden></div>
+      <iframe id="setupUploadFrame" title="COBRA setup upload form" loading="lazy"></iframe>
+    </div>
+  </dialog>
+
+  <footer>
+    <span>COBRA — Cardiff Off Road Buggy Racing Association</span>
+    <a href="https://www.cobracardiff.co.uk/" target="_top">Return to the COBRA website</a>
+  </footer>
+  <script type="module" src="../assets/setups.js"></script>
+</body>
+</html>
