@@ -7,6 +7,8 @@ let journeyDriverMarkers = new Map();
 let journeySelectedKey = '';
 let journeyTimelineDates = [];
 let journeyTimelineWeights = [];
+let journeyRoundSlots = new Map();
+let journeyRaceTimeline = [];
 let journeyPlaybackTimer = null;
 let journeyPlaybackHasStarted = false;
 let journeyFollowSelected = true;
@@ -158,6 +160,7 @@ function ensureEnhancedMarkup() {
           <label>Playback mode<select id="journeyPlaybackMode"><option value="calendar">Calendar journey</option><option value="race">Race selected drivers</option></select></label><button type="button" id="journeyPlay">▶ Play journey</button><button type="button" id="journeyFullscreen">Full screen</button><label>Playback start<select id="journeyPlaybackStart"><option value="earliest">Earliest selected record</option><option value="2022">1 January 2022</option><option value="chosen">Chosen date</option></select></label><label>Choose start date<input type="date" id="journeyStartDate" min="2022-01-01" disabled></label><label>Playback duration<select id="journeySpeed">${Array.from({ length: 15 }, (_, index) => `<option value="${(index + 1) * 60000}"${index === 1 ? ' selected' : ''}>${index + 1} ${index === 0 ? 'minute' : 'minutes'}</option>`).join('')}<option value="86400000">1 day per second</option></select></label>
           <label class="journey-timeline">Journey date <strong id="journeyDateLabel">Latest</strong><input type="range" id="journeyDateSlider" min="0" max="0" value="0" step="1" aria-label="Journey date from January 2022 to the latest result"></label>
         </div>
+        <p class="journey-round-note">Distance advances through each recorded round. Round times within an event day are illustrative.</p>
         <div class="journey-race-standings" id="journeyRaceStandings" hidden aria-live="off"></div>
         <div class="journey-milestones" id="journeyMilestones" aria-label="Journey milestones"></div>
         <div class="journey-map-toolbar"><button type="button" id="journeyRefocus">⌖ Refocus on driver</button><span id="journeyFollowStatus">Following selected driver</span></div>
@@ -440,25 +443,65 @@ function journeyRouteAt(distanceKm) {
   return { point: journeyRoadRoute.at(-1), travelled: journeyRoadRoute.slice() };
 }
 
+function journeyRoundOrder(round) {
+  const text = String(round || '');
+  const number = Number(text.match(/\d+/)?.[0]) || 0;
+  if (/practice/i.test(text)) return number;
+  if (/qualif/i.test(text)) return 10 + number;
+  if (/main|final/i.test(text)) return 30 + number;
+  return 20 + number;
+}
+
+// LiveRC supplies a date and round, but no dependable start time. Assign each
+// event's rounds consecutive slots within its day without claiming real times.
+function buildJourneyRoundSlots() {
+  const groups = new Map();
+  for (const [id, race] of Object.entries(state.data.raceById)) {
+    if (race.d < '2022-01-01') continue;
+    const key = `${race.d}|${race.e}`;
+    if (!groups.has(key)) groups.set(key, new Map());
+    const rounds = groups.get(key);
+    const name = race.r || race.n || 'Round';
+    if (!rounds.has(name)) rounds.set(name, []);
+    rounds.get(name).push(id);
+  }
+  const slots = new Map();
+  for (const [key, rounds] of groups) {
+    const [date] = key.split('|');
+    const ordered = [...rounds].sort(([a], [b]) => journeyRoundOrder(a) - journeyRoundOrder(b) || a.localeCompare(b));
+    const first = Date.parse(`${date}T09:00:00Z`);
+    const slotLength = 9 * 3600000 / ordered.length;
+    ordered.forEach(([name, ids], index) => {
+      const start = first + slotLength * index;
+      const end = first + slotLength * (index + 1);
+      for (const id of ids) slots.set(id, { start, end, date, name });
+    });
+  }
+  return slots;
+}
+
 const journeyMilestoneData = [
   ['Cardiff', 0], ['Calais', 417], ['Belgium E40', 530], ['Aachen A4', 780],
   ['Frankfurt A3', 1120], ['Passau', 1700], ['ERT Steyregg', 1830],
   ['Vienna', 2040], ['Budapest', 2300], ['Belgrade', 2700], ['Sofia', 2960], ['Istanbul', 3200]
 ];
 
-function journeyDriverDistances(cutoffDate = '9999-12-31', raceStarts = null, elapsedDays = 0) {
+function journeyDriverDistances(cutoffTime = Infinity, raceStarts = null, elapsedDays = 0) {
   const stats = new Map();
   for (const run of state.data.raceResults) {
     const race = state.data.raceById[run[0]];
     if (!race || journeyExcludedDrivers.has(run[1]) || race.d < '2022-01-01') continue;
-    if (raceStarts) {
-      const first = raceStarts.get(run[1]);
-      if (!first || (Date.parse(`${race.d}T12:00:00Z`) - first) / 86400000 >= elapsedDays) continue;
-    } else if (race.d > cutoffDate) continue;
+    const slot = journeyRoundSlots.get(run[0]);
+    if (!slot) continue;
+    const first = raceStarts?.get(run[1]);
+    if (raceStarts && first === undefined) continue;
+    const now = raceStarts ? first + elapsedDays * 86400000 : cutoffTime;
+    const progress = Math.max(0, Math.min(1, (now - slot.start) / (slot.end - slot.start)));
+    if (!progress) continue;
     if (!stats.has(run[1])) stats.set(run[1], { laps: 0, runs: 0, events: new Set(), classes: new Set(), lastDate: '', lastEventId: '' });
     const row = stats.get(run[1]);
-    row.laps += completedLaps(run);
-    row.runs += 1;
+    row.laps += completedLaps(run) * progress;
+    if (progress === 1) row.runs += 1;
     row.events.add(race.e);
     row.classes.add(race.c);
     if (race.d >= row.lastDate) {
@@ -469,8 +512,8 @@ function journeyDriverDistances(cutoffDate = '9999-12-31', raceStarts = null, el
   return [...stats].map(([driverKey, row]) => ({
     driverKey,
     name: state.data.driverByKey[driverKey] || driverKey,
-    km: Number((row.laps * 0.15).toFixed(1)),
-    laps: row.laps,
+    km: row.laps * 0.15,
+    laps: Math.floor(row.laps),
     runs: row.runs,
     events: row.events.size,
     classes: [...row.classes],
@@ -486,21 +529,31 @@ function stopJourneyPlayback() {
 }
 
 function buildJourneyTimeline(endDate, frameCount = 241) {
-  const startMs = Date.parse('2022-01-01T12:00:00Z');
-  const endMs = Math.max(startMs, Date.parse(`${endDate}T12:00:00Z`));
-  return Array.from({ length: frameCount }, (_, index) => {
+  const startMs = Date.parse('2022-01-01T00:00:00Z');
+  const endMs = Math.max(startMs, Date.parse(`${endDate}T20:00:00Z`));
+  const regular = Array.from({ length: frameCount }, (_, index) => {
     const progress = index / (frameCount - 1);
-    return new Date(startMs + (endMs - startMs) * progress).toISOString().slice(0, 10);
+    return { time: startMs + (endMs - startMs) * progress, round: '' };
   });
+  for (const slot of new Map([...journeyRoundSlots.values()].map(slot => [`${slot.date}|${slot.name}|${slot.start}`, slot])).values()) {
+    if (slot.start >= startMs && slot.end <= endMs) {
+      regular.push({ time: (slot.start + slot.end) / 2, round: slot.name });
+      regular.push({ time: slot.end, round: slot.name });
+    }
+  }
+  return regular.sort((a, b) => a.time - b.time);
 }
 
 // Summer months between racing seasons pass four times as quickly. The
 // duration chosen in the menu still describes the whole selected journey.
 function journeyWeightedDays(from, to) {
   let days = 0;
-  for (let time = Date.parse(`${from}T12:00:00Z`); time < Date.parse(`${to}T12:00:00Z`); time += 86400000) {
-    const month = new Date(time).getUTCMonth();
-    days += month >= 3 && month <= 7 ? .25 : 1;
+  for (let time = from; time < to;) {
+    const date = new Date(time);
+    const nextDay = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + 1);
+    const month = date.getUTCMonth();
+    days += (Math.min(to, nextDay) - time) / 86400000 * (month >= 3 && month <= 7 ? .25 : 1);
+    time = nextDay;
   }
   return days;
 }
@@ -508,13 +561,13 @@ function journeyWeightedDays(from, to) {
 function buildJourneyWeights(dates) {
   const weights = [0];
   for (let index = 1; index < dates.length; index++) {
-    weights.push(weights.at(-1) + journeyWeightedDays(dates[index - 1], dates[index]));
+    weights.push(weights.at(-1) + journeyWeightedDays(dates[index - 1].time, dates[index].time));
   }
   return weights;
 }
 
 function journeyCutoffDate() {
-  return journeyTimelineDates[Number($('journeyDateSlider').value)] || journeyTimelineDates.at(-1) || '9999-12-31';
+  return journeyTimelineDates[Number($('journeyDateSlider').value)] || journeyTimelineDates.at(-1) || { time: Date.now(), round: '' };
 }
 
 function journeyRaceStarts() {
@@ -524,12 +577,26 @@ function journeyRaceStarts() {
     if (!journeySelectedKeys.has(run[1])) continue;
     const day = state.data.raceById[run[0]]?.d;
     if (!day || day < '2022-01-01') continue;
-    const time = Date.parse(`${day}T12:00:00Z`);
-    starts.set(run[1], Math.min(starts.get(run[1]) ?? time, time));
-    ends.set(run[1], Math.max(ends.get(run[1]) ?? time, time));
+    const slot = journeyRoundSlots.get(run[0]);
+    if (!slot) continue;
+    starts.set(run[1], Math.min(starts.get(run[1]) ?? slot.start, slot.start));
+    ends.set(run[1], Math.max(ends.get(run[1]) ?? slot.end, slot.end));
   }
   const days = Math.max(1, ...[...starts].map(([key, first]) => Math.ceil((ends.get(key) - first) / 86400000) + 1));
   return { starts, days };
+}
+
+function buildJourneyRaceTimeline({ starts, days }) {
+  const frames = Array.from({ length: 241 }, (_, index) => days * index / 240);
+  for (const run of state.data.raceResults) {
+    const first = starts.get(run[1]);
+    const slot = journeyRoundSlots.get(run[0]);
+    if (first === undefined || !slot) continue;
+    frames.push((slot.start - first) / 86400000);
+    frames.push(((slot.start + slot.end) / 2 - first) / 86400000);
+    frames.push((slot.end - first) / 86400000);
+  }
+  return [...new Set(frames.map(value => Math.max(0, Math.min(days, value)).toFixed(5)))].map(Number).sort((a, b) => a - b);
 }
 
 function journeyRaceMode() {
@@ -540,9 +607,10 @@ function updateJourneyMode() {
   stopJourneyPlayback();
   journeyPlaybackHasStarted = false;
   const race = journeyRaceMode();
+  journeyRaceTimeline = race ? buildJourneyRaceTimeline(journeyRaceStarts()) : [];
   $('journeyPlaybackStart').disabled = race;
   $('journeyStartDate').disabled = race || $('journeyPlaybackStart').value !== 'chosen';
-  $('journeyDateSlider').max = race ? '240' : String(journeyTimelineDates.length - 1);
+  $('journeyDateSlider').max = race ? String(journeyRaceTimeline.length - 1) : String(journeyTimelineDates.length - 1);
   $('journeyDateSlider').value = $('journeyDateSlider').max;
   if ($('journeyPlaybackMode').value === 'race' && !journeySelectedKeys.size) {
     $('journeyPlay').disabled = true;
@@ -558,10 +626,11 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   // Leaflet needs an initial centre and zoom before projecting driver positions.
   if (resetView) journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
   const raceMode = journeyRaceMode();
-  const cutoffDate = journeyCutoffDate();
+  const cutoff = journeyCutoffDate();
+  const cutoffDate = new Date(cutoff.time).toISOString().slice(0, 10);
   const raceProgress = raceMode ? journeyRaceStarts() : null;
-  journeyRaceElapsedDays = raceMode ? Math.round(raceProgress.days * Number($('journeyDateSlider').value) / 240) : 0;
-  const drivers = journeyDriverDistances(cutoffDate, raceProgress?.starts, journeyRaceElapsedDays).sort((a, b) => b.km - a.km);
+  journeyRaceElapsedDays = raceMode ? journeyRaceTimeline[Number($('journeyDateSlider').value)] ?? 0 : 0;
+  const drivers = journeyDriverDistances(cutoff.time, raceProgress?.starts, journeyRaceElapsedDays).sort((a, b) => b.km - a.km);
   const activeKey = raceMode && !journeySelectedKeys.has(journeySelectedKey) ? [...journeySelectedKeys][0] : journeySelectedKey;
   const selectedName = state.data.driverByKey[activeKey] || 'Selected driver';
   const selected = drivers.find(driver => driver.driverKey === activeKey) || { driverKey: activeKey, name: selectedName, km: 0, laps: 0, runs: 0, events: 0, classes: [], lastDate: '', lastEvent: '' };
@@ -570,11 +639,12 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     if (focusDriver && journeyMap.getZoom() < 7) journeyMap.setView(point, 7, { animate: false });
     else if (journeyMap.getCenter().distanceTo(window.L.latLng(point)) > 150) journeyMap.panTo(point, { animate: false });
   }
-  const latest = cutoffDate === journeyTimelineDates.at(-1);
-  $('journeyDateLabel').textContent = raceMode ? `${journeyRaceElapsedDays} career days elapsed` : latest ? `Latest · ${dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`))}` : dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
-  $('journeyMapTitle').textContent = raceMode ? `Race: ${journeySelectedKeys.size} drivers · ${journeyRaceElapsedDays} career days` : `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
+  const latest = Number($('journeyDateSlider').value) === journeyTimelineDates.length - 1;
+  const displayDate = dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
+  $('journeyDateLabel').textContent = raceMode ? `${Math.floor(journeyRaceElapsedDays)} career days elapsed` : latest ? `Latest · ${displayDate}` : `${displayDate}${cutoff.round ? ` · ${cutoff.round}` : ''}`;
+  $('journeyMapTitle').textContent = raceMode ? `Race: ${journeySelectedKeys.size} drivers · ${Math.floor(journeyRaceElapsedDays)} career days` : `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
   const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the illustrated route.`;
-  $('journeyMapCopy').textContent = raceMode ? `All selected drivers set off from Cardiff together. Their miles advance by the same number of days since each driver's first recorded COBRA run in 2022 or later. All classes count.` : `Combined distance from every recorded class and official event since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
+  $('journeyMapCopy').textContent = raceMode ? `All selected drivers set off from Cardiff together. Their miles advance round by round from each driver's first recorded COBRA run in 2022 or later. All classes count.` : `Combined distance from every recorded practice, qualifying and final round since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
 
   journeyMapLayers.clearLayers();
   journeyDriverMarkers = new Map();
@@ -696,14 +766,14 @@ function toggleJourneyPlayback() {
   const slider = $('journeyDateSlider');
   const raceMode = journeyRaceMode();
   const start = raceMode ? '2022-01-01' : selectedJourneyStart();
-  const startIndex = raceMode ? 0 : journeyTimelineDates.findIndex(date => date >= start);
+  const startIndex = raceMode ? 0 : journeyTimelineDates.findIndex(frame => frame.time >= Date.parse(`${start}T00:00:00Z`));
   const configuredStart = Math.max(0, startIndex);
   if (!journeyPlaybackHasStarted || Number(slider.value) >= Number(slider.max)) slider.value = String(configuredStart);
   journeyPlaybackHasStarted = true;
   renderJourneyMap();
   $('journeyPlay').textContent = '❚❚ Pause';
   const duration = Number($('journeySpeed').value);
-  const weights = raceMode ? Array.from({ length: Number(slider.max) + 1 }, (_, index) => index * journeyRaceStarts().days / Number(slider.max)) : journeyTimelineWeights;
+  const weights = raceMode ? journeyRaceTimeline : journeyTimelineWeights;
   const last = Number(slider.max);
   const current = Number(slider.value);
   const origin = Math.min(configuredStart, current);
@@ -733,6 +803,7 @@ function toggleJourneyPlayback() {
 function openJourneyMap(driverKey) {
   journeySelectedKey = driverKey;
   const latestDate = state.data.meta.latestEventDate || Object.values(state.data.raceById).map(race => race.d).sort().at(-1) || '2022-01-01';
+  journeyRoundSlots = buildJourneyRoundSlots();
   journeyTimelineDates = buildJourneyTimeline(latestDate);
   journeyTimelineWeights = buildJourneyWeights(journeyTimelineDates);
   const slider = $('journeyDateSlider');
@@ -745,6 +816,7 @@ function openJourneyMap(driverKey) {
   $('journeyStartDate').max = latestDate;
   $('journeyPlaybackMode').value = 'calendar';
   $('journeyPlaybackStart').disabled = false;
+  $('driverDialog').classList.add('journey-open');
   $('journeyMapOverlay').hidden = false;
   journeyFollowSelected = true;
   journeyPlaybackHasStarted = false;
@@ -757,7 +829,7 @@ function openJourneyMap(driverKey) {
       return;
     }
     if (!journeyMap) {
-      journeyMap = window.L.map('journeyMap', { zoomControl: true });
+      journeyMap = window.L.map('journeyMap', { zoomControl: true, scrollWheelZoom: false });
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
       journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
@@ -1167,7 +1239,15 @@ async function init() {
     $('closeJourneyMap').addEventListener('click', () => {
       stopJourneyPlayback();
       $('journeyMapOverlay').hidden = true;
+      $('driverDialog').classList.remove('journey-open');
     });
+    $('journeyMapOverlay').addEventListener('wheel', event => {
+      const shell = $('journeyMapOverlay').querySelector('.journey-map-shell');
+      if (!shell.contains(event.target)) {
+        event.preventDefault();
+        shell.scrollTop += event.deltaY;
+      }
+    }, { passive: false });
     $('journeyDriverSearch').addEventListener('change', selectJourneyDriver);
     $('journeyDriverSearch').addEventListener('keydown', event => {
       if (event.key === 'Enter') {
@@ -1216,6 +1296,11 @@ async function init() {
     });
     $('journeyPlay').addEventListener('click', toggleJourneyPlayback);
     $('closeDriverProfile').addEventListener('click', () => $('driverDialog').close());
+    $('driverDialog').addEventListener('close', () => {
+      stopJourneyPlayback();
+      $('journeyMapOverlay').hidden = true;
+      $('driverDialog').classList.remove('journey-open');
+    });
     $('driverDialog').addEventListener('click', event => {
       if (event.target === $('driverDialog')) $('driverDialog').close();
     });
