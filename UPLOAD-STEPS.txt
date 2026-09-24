@@ -1,0 +1,5 @@
+COBRA TRACKER UPDATE
+
+Extract this ZIP. In the GitHub cobra-liverc-stats repository, click Add file > Upload files at the TOP LEVEL of the repo. Drag the extracted public FOLDER onto GitHub, preserving the paths public/index.html, public/assets/app.js, and public/assets/styles.css. Commit and wait for the GitHub Actions deployment to succeed. Reload the Wix page; on a phone close the old tab and reopen it if cached.
+
+This package changes the race date timeline, smooth map movement and mobile fullscreen controls. The updated COBRA Site Manager contains the same tracker code for later changes.
