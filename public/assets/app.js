@@ -1,33 +1,22 @@
-import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260923-istanbul1';
+import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-steyregg2';
 
 const state = { data: null, profileKey: '' };
 let journeyMap = null;
 let journeyMapLayers = null;
 let journeyDriverMarkers = new Map();
-let journeyLabelSeed = Math.random();
 let journeySelectedKey = '';
 let journeyTimelineDates = [];
 let journeyPlaybackTimer = null;
-const journeyPlaybackDurationMs = 120000;
+let journeySelectedKeys = new Set();
+let journeyLabelsSeed = 0;
+let journeyMapFullscreen = false;
+let journeyPlaybackDurationMs = 120000;
 const $ = id => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
 const kmToMiles = km => Number((km * 0.621371).toFixed(1));
 const journeyExcludedDrivers = new Set(['SIMON-NOTLEY']);
-const journeyCarPhotos = new Map([['MATTHEW-HODGES', 'assets/matt-hodges-car.png']]);
-const carUploadUrl = 'https://script.google.com/macros/s/AKfycbxPp3_ULUwY5QfqoqqIVPWe1r7AHpJgVpIPKL6Uo85G9VM_-OvybGapd9Y87tIi04Kb5A/exec?page=car-upload';
-window.cobraCarPhotos = payload => {
-  if (!payload?.ok || !Array.isArray(payload.photos)) return;
-  for (const photo of payload.photos) {
-    if (/^[A-Z0-9-]+$/.test(photo.driverKey) && /^https:\/\/drive\.google\.com\/thumbnail\?id=[\w-]+&sz=w600$/.test(photo.imageUrl)) journeyCarPhotos.set(photo.driverKey, photo.imageUrl);
-  }
-  if (journeyMap && !$('journeyMapOverlay')?.hidden) renderJourneyMap();
-};
-const carPhotoScript = document.createElement('script');
-carPhotoScript.src = `https://script.google.com/macros/s/AKfycbxPp3_ULUwY5QfqoqqIVPWe1r7AHpJgVpIPKL6Uo85G9VM_-OvybGapd9Y87tIi04Kb5A/exec?action=car-list&callback=cobraCarPhotos`;
-carPhotoScript.async = true;
-document.head.append(carPhotoScript);
 const classLabels = {
   'Junior Racers': 'Juniors',
   '2-Wheel Drive Buggy': '2WD',
@@ -154,14 +143,13 @@ function ensureEnhancedMarkup() {
         <p class="journey-map-copy" id="journeyMapCopy"></p>
         <div class="journey-map-controls">
           <label>Find a driver<input type="search" id="journeyDriverSearch" list="journeyDriverOptions" placeholder="Start typing a name…"><datalist id="journeyDriverOptions"></datalist></label>
-          <label>Drivers shown<select id="journeyDriverLimit"><option value="0">All drivers</option><option value="25">Top 25</option><option value="50">Top 50</option><option value="100">Top 100</option><option value="200">Top 200</option></select></label>
-          <button type="button" id="journeyPlay">▶ Play 2-minute journey</button>
-          <a class="journey-car-upload" href="${carUploadUrl}" target="_blank" rel="noopener noreferrer">Upload your car photo</a>
+          <details class="journey-driver-picker" id="journeyDriverPicker"><summary id="journeyDriverSummary">Choose playback drivers (all)</summary><div class="journey-driver-picker-inner"><input id="journeyPickerSearch" type="search" placeholder="Search drivers" aria-label="Search playback drivers"><div class="journey-driver-picker-actions"><button type="button" id="journeySelectAll">All</button><button type="button" id="journeySelectNone">Clear</button></div><div id="journeyDriverChecklist" class="journey-driver-checklist"></div></div></details>
+          <button type="button" id="journeyPlay">▶ Play journey</button><button type="button" id="journeyFullscreen">Full screen</button><label>Playback start<select id="journeyPlaybackStart"><option value="earliest">Earliest selected record</option><option value="2022">1 January 2022</option><option value="chosen">Chosen date</option></select></label><label>Choose start date<input type="date" id="journeyStartDate" min="2022-01-01" disabled></label><label>Playback duration<select id="journeySpeed"><option value="60000">1 minute</option><option value="120000" selected>2 minutes</option><option value="300000">5 minutes</option><option value="600000">10 minutes</option><option value="86400000">1 day per second</option></select></label>
           <label class="journey-timeline">Journey date <strong id="journeyDateLabel">Latest</strong><input type="range" id="journeyDateSlider" min="0" max="0" value="0" step="1" aria-label="Journey date from January 2022 to the latest result"></label>
         </div>
         <div class="journey-milestones" id="journeyMilestones" aria-label="Journey milestones"></div>
         <div class="journey-map" id="journeyMap"></div>
-        <div class="journey-map-legend"><span><i class="selected"></i> Selected driver</span><span><i></i> Other drivers</span><span>Route: House of Sport, Cardiff → Munich → Rome → Istanbul</span></div>
+        <div class="journey-map-legend"><span><i class="selected"></i> Selected driver</span><span><i></i> Other drivers</span><span>Route: Cardiff → Eurotunnel → Belgium E40 → Germany A4/A3 → ERT Steyregg → Istanbul</span></div>
       </div>
     </section>`);
 
@@ -440,9 +428,9 @@ function journeyRouteAt(distanceKm) {
 }
 
 const journeyMilestoneData = [
-  ['Cardiff', 0], ['London', 236], ['Calais', 417], ['Reims', 677], ['Saarbrücken', 920],
-  ['Munich', 1377], ['Innsbruck', 1538], ['Verona', 1799], ['Rome', 2293],
-  ['Zagreb', 3181], ['Belgrade', 3581], ['Sofia', 3968], ['Istanbul', 4522]
+  ['Cardiff', 0], ['Calais', 417], ['Belgium E40', 530], ['Aachen A4', 780],
+  ['Frankfurt A3', 1120], ['Passau', 1700], ['ERT Steyregg', 1830],
+  ['Vienna', 2040], ['Budapest', 2300], ['Belgrade', 2700], ['Sofia', 2960], ['Istanbul', 3200]
 ];
 
 function journeyDriverDistances(cutoffDate = '9999-12-31') {
@@ -477,10 +465,10 @@ function journeyDriverDistances(cutoffDate = '9999-12-31') {
 function stopJourneyPlayback() {
   if (journeyPlaybackTimer) clearInterval(journeyPlaybackTimer);
   journeyPlaybackTimer = null;
-  if ($('journeyPlay')) $('journeyPlay').textContent = '▶ Play 2-minute journey';
+  if ($('journeyPlay')) $('journeyPlay').textContent = '▶ Play journey';
 }
 
-function buildJourneyTimeline(endDate, frameCount = 121) {
+function buildJourneyTimeline(endDate, frameCount = 241) {
   const startMs = Date.parse('2022-01-01T12:00:00Z');
   const endMs = Math.max(startMs, Date.parse(`${endDate}T12:00:00Z`));
   return Array.from({ length: frameCount }, (_, index) => {
@@ -493,35 +481,6 @@ function journeyCutoffDate() {
   return journeyTimelineDates[Number($('journeyDateSlider').value)] || journeyTimelineDates.at(-1) || '9999-12-31';
 }
 
-function updateJourneyLabels() {
-  if (!journeyMap || !journeyDriverMarkers.size) return;
-  const zoom = journeyMap.getZoom();
-  const bounds = journeyMap.getSize();
-  const visible = [];
-  const markers = [...journeyDriverMarkers.entries()].sort(([a], [b]) => {
-    if (a === journeySelectedKey) return -1;
-    if (b === journeySelectedKey) return 1;
-    const rank = key => { let hash = Math.floor(journeyLabelSeed * 100000); for (const char of key) hash = (Math.imul(hash, 31) + char.charCodeAt(0)) | 0; return hash >>> 0; };
-    return rank(a) - rank(b);
-  });
-  const maxLabels = zoom <= 5 ? 10 : zoom === 6 ? 25 : zoom === 7 ? 55 : Infinity;
-  for (const [key, marker] of markers) {
-    const point = journeyMap.latLngToContainerPoint(marker.getLatLng());
-    const tooltip = marker.getTooltip();
-    const text = tooltip?.getContent() || '';
-    const width = Math.min(190, Math.max(75, String(text).length * 7 + 16));
-    const car = journeyCarPhotos.has(key);
-    const box = { left: point.x - width / 2 - 6, right: point.x + width / 2 + 6, top: point.y + (car ? 5 : 7), bottom: point.y + (car ? 5 : 7) + 27 };
-    const inView = box.right > 0 && box.left < bounds.x && box.bottom > 0 && box.top < bounds.y;
-    const selected = key === journeySelectedKey;
-    const overlaps = visible.some(placed => box.left < placed.right && box.right > placed.left && box.top < placed.bottom && box.bottom > placed.top);
-    if (inView && (selected || (visible.length < maxLabels && !overlaps))) {
-      marker.openTooltip();
-      visible.push(box);
-    } else marker.closeTooltip();
-  }
-}
-
 function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   if (!window.L || !journeyMap) return;
   const cutoffDate = journeyCutoffDate();
@@ -531,7 +490,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const latest = cutoffDate === journeyTimelineDates.at(-1);
   $('journeyDateLabel').textContent = latest ? `Latest · ${dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`))}` : dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
   $('journeyMapTitle').textContent = `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
-  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the route.`;
+  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the illustrated route.`;
   $('journeyMapCopy').textContent = `Combined distance from every recorded class and official event since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
 
   journeyMapLayers.clearLayers();
@@ -548,34 +507,73 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const nextMilestone = journeyMilestoneData.find(([, km]) => km > selected.km);
   $('journeyMilestones').innerHTML = journeyMilestoneData.map(([name, km]) => `<span class="${selected.km >= km ? 'reached' : nextMilestone?.[0] === name ? 'next' : ''}">${selected.km >= km ? '✓ ' : ''}${escapeHtml(name)} <small>${fmt.format(kmToMiles(km))} miles</small></span>`).join('');
 
-  const driverLimit = Number($('journeyDriverLimit').value);
-  const displayedDrivers = driverLimit ? drivers.slice(0, driverLimit) : drivers.slice();
-  if (!displayedDrivers.some(driver => driver.driverKey === journeySelectedKey) && drivers.some(driver => driver.driverKey === journeySelectedKey)) {
+  const displayedDrivers = journeySelectedKeys.size ? drivers.filter(driver => journeySelectedKeys.has(driver.driverKey)) : drivers;
+  if (!journeySelectedKeys.size && !displayedDrivers.some(driver => driver.driverKey === journeySelectedKey) && drivers.some(driver => driver.driverKey === journeySelectedKey)) {
     displayedDrivers.push(drivers.find(driver => driver.driverKey === journeySelectedKey));
   }
 
+  // Keep every eligible pin clickable. Reserve permanent names for labels that fit the map.
+  const occupied = new Set();
+  const mapWidth = journeyMap.getSize().x;
+  const mapHeight = journeyMap.getSize().y;
+  const candidates = displayedDrivers.slice().sort((left, right) => {
+    if (left.driverKey === journeySelectedKey) return -1;
+    if (right.driverKey === journeySelectedKey) return 1;
+    return ((hashJourneyKey(left.driverKey) + journeyLabelsSeed) % 7919) - ((hashJourneyKey(right.driverKey) + journeyLabelsSeed) % 7919);
+  });
+  const visibleLabels = new Set();
+  const cellWidth = journeyMap.getZoom() < 6 ? 125 : 105;
+  const cellHeight = journeyMap.getZoom() < 6 ? 58 : 44;
+  for (const driver of candidates) {
+    const xy = journeyMap.latLngToContainerPoint(journeyRouteAt(driver.km).point);
+    if (xy.x < 0 || xy.x > mapWidth || xy.y < 0 || xy.y > mapHeight) continue;
+    const cell = `${Math.floor(xy.x / cellWidth)},${Math.floor(xy.y / cellHeight)}`;
+    if (!occupied.has(cell) || driver.driverKey === journeySelectedKey) {
+      occupied.add(cell);
+      visibleLabels.add(driver.driverKey);
+    }
+  }
   for (const driver of displayedDrivers) {
     const route = journeyRouteAt(driver.km);
     const selectedDriver = driver.driverKey === journeySelectedKey;
-    const carPhoto = journeyCarPhotos.get(driver.driverKey);
-    const icon = window.L.divIcon({ className: 'journey-driver-icon', html: carPhoto ? `<img class="journey-car-photo" src="${escapeHtml(carPhoto)}" alt="">` : `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: carPhoto ? [48, 42] : [18, 24], iconAnchor: carPhoto ? [24, 38] : [9, 21] });
+    const icon = window.L.divIcon({ className: 'journey-driver-icon', html: `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: [18, 24], iconAnchor: [9, 21] });
     const classText = driver.classes.map(cls => classLabels[cls] || cls).join(', ');
     const lastEvent = driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : '';
     const popup = `<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(kmToMiles(driver.km))} miles</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${escapeHtml(classText)}</span>${lastEvent}</div>`;
     const marker = window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 1000 : 0 })
-      .bindTooltip(escapeHtml(driver.name), { direction: 'bottom', offset: [0, carPhoto ? 6 : 6], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` })
+      .bindTooltip(`<b>${fmt.format(kmToMiles(driver.km))} miles</b><br>${escapeHtml(driver.name)}`, { permanent: visibleLabels.has(driver.driverKey), direction: 'bottom', offset: [0, 12], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` })
       .bindPopup(popup).addTo(journeyMapLayers);
     journeyDriverMarkers.set(driver.driverKey, marker);
   }
   window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
   window.L.circleMarker(journeyRoadRoute.at(-1), { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Istanbul, Türkiye', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
   if (resetView) journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
-  updateJourneyLabels();
   if (focusDriver && journeyDriverMarkers.has(journeySelectedKey)) {
     const marker = journeyDriverMarkers.get(journeySelectedKey);
     journeyMap.setView(marker.getLatLng(), Math.max(journeyMap.getZoom(), 8));
     marker.openPopup();
   }
+}
+
+function hashJourneyKey(value) {
+  let hash = 0;
+  for (const char of value) hash = (hash * 31 + char.charCodeAt(0)) >>> 0;
+  return hash;
+}
+
+function renderJourneyDriverChecklist() {
+  const query = $('journeyPickerSearch').value.trim().toLowerCase();
+  const drivers = state.data.drivers.filter(driver => !journeyExcludedDrivers.has(driver.k) && driver.n.toLowerCase().includes(query)).sort((a, b) => a.n.localeCompare(b.n));
+  $('journeyDriverChecklist').innerHTML = drivers.map(driver => `<label><input type="checkbox" value="${escapeHtml(driver.k)}" ${journeySelectedKeys.has(driver.k) ? 'checked' : ''}> ${escapeHtml(driver.n)}</label>`).join('');
+  $('journeyDriverSummary').textContent = journeySelectedKeys.size ? `Playback drivers (${journeySelectedKeys.size} selected)` : 'Choose playback drivers (all)';
+}
+
+function selectedJourneyStart() {
+  const choice = $('journeyPlaybackStart').value;
+  if (choice === 'chosen') return $('journeyStartDate').value || '2022-01-01';
+  if (choice === '2022' || !journeySelectedKeys.size) return '2022-01-01';
+  return state.data.raceResults.filter(run => journeySelectedKeys.has(run[1]))
+    .map(run => state.data.raceById[run[0]]?.d).filter(date => date && date >= '2022-01-01').sort()[0] || '2022-01-01';
 }
 
 function selectJourneyDriver() {
@@ -595,12 +593,13 @@ function toggleJourneyPlayback() {
     return;
   }
   const slider = $('journeyDateSlider');
-  if (Number(slider.value) >= Number(slider.max)) {
-    slider.value = '0';
-    renderJourneyMap();
-  }
+  const start = selectedJourneyStart();
+  const startIndex = journeyTimelineDates.findIndex(date => date >= start);
+  slider.value = String(Math.max(0, startIndex));
+  renderJourneyMap();
   $('journeyPlay').textContent = '❚❚ Pause';
-  const frameInterval = journeyPlaybackDurationMs / Math.max(1, journeyTimelineDates.length - 1);
+  const duration = Number($('journeySpeed').value);
+  const frameInterval = duration === 86400000 ? 1000 * Math.max(1, (Date.parse(journeyTimelineDates.at(-1)) - Date.parse(start)) / 86400000) / Math.max(1, journeyTimelineDates.length - 1 - Number(slider.value)) : duration / Math.max(1, journeyTimelineDates.length - 1 - Number(slider.value));
   journeyPlaybackTimer = setInterval(() => {
     const next = Number(slider.value) + 1;
     if (next > Number(slider.max)) {
@@ -621,6 +620,9 @@ function openJourneyMap(driverKey) {
   slider.value = slider.max;
   $('journeyDriverOptions').innerHTML = state.data.drivers.filter(driver => !journeyExcludedDrivers.has(driver.k)).sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.n)}"></option>`).join('');
   $('journeyDriverSearch').value = state.data.driverByKey[driverKey] || '';
+  journeyLabelsSeed = Math.floor(Math.random() * 7919);
+  renderJourneyDriverChecklist();
+  $('journeyStartDate').max = latestDate;
   $('journeyMapOverlay').hidden = false;
   stopJourneyPlayback();
   requestAnimationFrame(() => {
@@ -630,9 +632,9 @@ function openJourneyMap(driverKey) {
     }
     if (!journeyMap) {
       journeyMap = window.L.map('journeyMap', { zoomControl: true });
-      journeyMap.on('zoomend moveend resize', updateJourneyLabels);
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
+      journeyMap.on('zoomend', () => renderJourneyMap());
     }
     renderJourneyMap({ resetView: true });
     setTimeout(() => journeyMap.invalidateSize(), 50);
@@ -1043,7 +1045,22 @@ async function init() {
       stopJourneyPlayback();
       renderJourneyMap();
     });
-    $('journeyDriverLimit').addEventListener('change', () => renderJourneyMap());
+    $('journeyDriverChecklist').addEventListener('change', event => {
+      if (event.target.type !== 'checkbox') return;
+      if (event.target.checked) journeySelectedKeys.add(event.target.value);
+      else journeySelectedKeys.delete(event.target.value);
+      renderJourneyDriverChecklist(); renderJourneyMap();
+    });
+    $('journeyPickerSearch').addEventListener('input', renderJourneyDriverChecklist);
+    $('journeySelectAll').addEventListener('click', () => { journeySelectedKeys.clear(); renderJourneyDriverChecklist(); renderJourneyMap(); });
+    $('journeySelectNone').addEventListener('click', () => { journeySelectedKeys.clear(); renderJourneyDriverChecklist(); renderJourneyMap(); });
+    $('journeyPlaybackStart').addEventListener('change', () => { $('journeyStartDate').disabled = $('journeyPlaybackStart').value !== 'chosen'; });
+    $('journeyFullscreen').addEventListener('click', () => {
+      journeyMapFullscreen = !journeyMapFullscreen;
+      $('journeyMapOverlay').classList.toggle('fullscreen', journeyMapFullscreen);
+      $('journeyFullscreen').textContent = journeyMapFullscreen ? 'Exit full screen' : 'Full screen';
+      setTimeout(() => journeyMap?.invalidateSize(), 80);
+    });
     $('journeyPlay').addEventListener('click', toggleJourneyPlayback);
     $('closeDriverProfile').addEventListener('click', () => $('driverDialog').close());
     $('driverDialog').addEventListener('click', event => {
