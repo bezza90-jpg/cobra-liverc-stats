@@ -293,3 +293,9 @@ footer a { color: #85e391; }
 .journey-map-overlay.fullscreen { padding:0; }
 .journey-map-overlay.fullscreen .journey-map-shell { width:100vw; max-width:none; height:100vh; max-height:none; border-radius:0; overflow:auto; }
 .journey-map-overlay.fullscreen .journey-map { height:calc(100vh - 310px); min-height:350px; }
+
+.journey-race-standings { display:flex; gap:8px; overflow-x:auto; margin:7px 0 12px; padding-bottom:6px; }
+.journey-race-standings[hidden] { display:none; }
+.journey-race-standings span { flex:0 0 auto; padding:7px 10px; border:1px solid #b9dec2; border-radius:8px; background:#f2faf3; font-size:.8rem; white-space:nowrap; }
+.journey-race-standings strong { margin-left:6px; color:#067b14; }
+.journey-map-controls button:disabled { opacity:.5; cursor:not-allowed; }
