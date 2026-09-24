@@ -1,0 +1,22 @@
+COBRA QUICK UPLOAD — podium images and tracker button
+====================================================
+
+This package has 15 website/code files. The 501 illustrated podium pictures
+are made automatically by the GitHub workflow, so they are not in this ZIP.
+
+1. Extract COBRA-Quick-GitHub-Upload.zip on your computer.
+2. In your cobra-liverc-stats GitHub repository, go to the TOP LEVEL
+   (where public, scripts and package.json already appear).
+3. Click Add file > Upload files. Drag the public, scripts and .github folders
+   FROM INSIDE the extracted folder into the upload area together.
+   If Windows hides .github, turn on View > Show > Hidden items.
+4. Make sure GitHub lists paths such as public/assets/app.js,
+   scripts/build-podium-defaults.mjs and .github/workflows/update-stats.yml.
+   Do not drag the ZIP file or the containing folder.
+5. Click Commit changes once. Wait until Actions > Update and publish COBRA
+   statistics is green, then refresh the COBRA site.
+
+The workflow generates the podium pictures automatically during this upload
+and at its scheduled 6 pm UK refresh. If GitHub asks to overwrite existing
+files, the files with matching paths in this update should replace them.
+Do not upload the large COBRA-Podium-Tracker-Update.zip as well.

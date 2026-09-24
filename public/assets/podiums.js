@@ -8,6 +8,7 @@ let events = [];
 let activeEventId = '';
 let driverByKey = new Map();
 let podiumPhotoByRaceId = new Map();
+let podiumPhotoOverrides = new Map();
 let podiumWebAppUrl = '';
 
 function eventFinals(eventId) {
@@ -38,13 +39,17 @@ function podiumRow(result) {
 function finalCard([raceId, race]) {
   const photoName = `${race.e}-${raceId}-podium.jpg`;
   const approvedPhoto = podiumPhotoByRaceId.get(String(raceId));
-  const originalPhotoUrl = approvedPhoto?.imageUrl || `../podium-photos/${encodeURIComponent(photoName)}`;
-  const photoUrl = approvedPhoto ? resizedDriveImage(originalPhotoUrl, 900) : originalPhotoUrl;
-  const fullPhotoUrl = approvedPhoto ? resizedDriveImage(originalPhotoUrl, 2400) : originalPhotoUrl;
-  const photoSrcset = approvedPhoto
+  const override = podiumPhotoOverrides.get(String(raceId));
+  const replacement = typeof override?.image === 'string' && /^podium-photos\/[a-zA-Z0-9-]+\.(?:jpg|jpeg|png|webp)$/.test(override.image)
+    ? new URL(`../${override.image}`, import.meta.url).href : '';
+  const originalPhotoUrl = replacement || approvedPhoto?.imageUrl || `../podium-photos/${encodeURIComponent(photoName)}`;
+  const photoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 900) : originalPhotoUrl;
+  const fullPhotoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 2400) : originalPhotoUrl;
+  const fallbackUrl = `../podium-defaults/${encodeURIComponent(raceId)}.svg`;
+  const photoSrcset = approvedPhoto && !replacement
     ? `${resizedDriveImage(originalPhotoUrl, 480)} 480w, ${resizedDriveImage(originalPhotoUrl, 900)} 900w, ${resizedDriveImage(originalPhotoUrl, 1400)} 1400w`
     : '';
-  const originalUrl = approvedPhoto?.viewUrl || photoUrl;
+  const originalUrl = replacement || approvedPhoto?.viewUrl || photoUrl;
   const photoTitle = `${race.c} ${race.n} podium`;
   const caption = approvedPhoto?.caption || '';
   const uploadUrl = podiumUploadUrl(race.e, raceId);
@@ -53,7 +58,7 @@ function finalCard([raceId, race]) {
     ? rows.map(podiumRow).join('')
     : '<tr><td colspan="4" class="podium-no-results">No classified top-three result is available.</td></tr>';
   return `<article class="podium-card">
-    <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
+    <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-fallback-image="${escapeHtml(fallbackUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
       <img src="${escapeHtml(photoUrl)}"${photoSrcset ? ` srcset="${escapeHtml(photoSrcset)}" sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 1100px) 50vw, 520px"` : ''} alt="${escapeHtml(photoTitle)}" loading="lazy" decoding="async">
       <button class="podium-photo-expand" type="button">Enlarge photo</button>
       <div class="podium-placeholder">
@@ -97,14 +102,22 @@ function renderEvent(eventId, updateAddress = true) {
   document.querySelectorAll('.podium-photo img').forEach(image => {
     const markLoaded = () => image.closest('.podium-photo').classList.add('has-photo');
     const markFailed = () => {
-      image.closest('.podium-photo').querySelector('.podium-photo-expand')?.remove();
-      image.remove();
+      const photo = image.closest('.podium-photo');
+      if (!image.dataset.fallbackAttempted) {
+        image.dataset.fallbackAttempted = 'true';
+        image.removeAttribute('srcset');
+        image.src = photo.dataset.fallbackImage;
+        photo.dataset.fullImage = photo.dataset.fallbackImage;
+        photo.dataset.originalImage = photo.dataset.fallbackImage;
+        photo.dataset.photoCaption = 'Illustrated podium. Upload an official photograph to replace it.';
+      } else {
+        photo.querySelector('.podium-photo-expand')?.remove();
+        image.remove();
+      }
     };
+    image.addEventListener('load', markLoaded);
+    image.addEventListener('error', markFailed);
     if (image.complete) image.naturalWidth ? markLoaded() : markFailed();
-    else {
-      image.addEventListener('load', markLoaded, { once: true });
-      image.addEventListener('error', markFailed, { once: true });
-    }
   });
   document.querySelectorAll('[data-event-id]').forEach(button => button.setAttribute('aria-current', String(button.dataset.eventId) === activeEventId ? 'true' : 'false'));
   if (updateAddress) {
@@ -149,6 +162,13 @@ async function loadPodiumPhotos() {
   });
   if (!payload?.ok) throw new Error(payload?.error || 'The podium photograph feed could not be loaded.');
   podiumPhotoByRaceId = new Map((payload.photos || []).map(photo => [String(photo.raceId), photo]));
+}
+
+async function loadPodiumOverrides() {
+  const response = await fetch('../data/podium-photo-overrides.json', { cache: 'no-store' });
+  if (!response.ok) return;
+  const changes = await response.json();
+  if (changes && typeof changes === 'object' && !Array.isArray(changes)) podiumPhotoOverrides = new Map(Object.entries(changes));
 }
 
 function openPhoto(photo) {
@@ -202,7 +222,8 @@ async function init() {
   try {
     const [response] = await Promise.all([
       fetch('../data/dashboard.json', { cache: 'no-store' }),
-      loadPodiumPhotos().catch(error => console.warn(error.message))
+      loadPodiumPhotos().catch(error => console.warn(error.message)),
+      loadPodiumOverrides().catch(error => console.warn(error.message))
     ]);
     if (!response.ok) throw new Error(`Unable to load statistics (${response.status})`);
     data = await response.json();
