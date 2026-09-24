@@ -81,6 +81,7 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .journey-map-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .journey-map-legend i,.journey-driver-icon i { display: block; width: 14px; height: 14px; background: #17211a; border: 2px solid #fff; border-radius: 50% 50% 50% 0; box-shadow: 0 1px 4px rgba(0,0,0,.45); transform: rotate(-45deg); }
 .journey-map-legend i.selected,.journey-driver-icon i.selected { width: 18px; height: 18px; background: var(--green); }
+.journey-driver-icon.car-avatar img { display:block; width:66px; height:50px; object-fit:contain; filter:drop-shadow(0 2px 3px rgba(0,0,0,.6)); }
 .journey-driver-label { padding: 3px 6px !important; color: #fff !important; background: #17211a !important; border: 0 !important; box-shadow: 0 2px 7px rgba(0,0,0,.28) !important; font-size: 11px; font-weight: 800; }
 .journey-driver-label.selected { background: var(--green-dark) !important; font-size: 12px; }
 .journey-driver-label::before { border-top-color: #17211a !important; }
@@ -299,3 +300,41 @@ footer a { color: #85e391; }
 .journey-race-standings span { flex:0 0 auto; padding:7px 10px; border:1px solid #b9dec2; border-radius:8px; background:#f2faf3; font-size:.8rem; white-space:nowrap; }
 .journey-race-standings strong { margin-left:6px; color:#067b14; }
 .journey-map-controls button:disabled { opacity:.5; cursor:not-allowed; }
+.journey-map-toolbar { display:flex; align-items:center; gap:12px; margin:8px 0; }
+.journey-map-toolbar button { min-height:38px; padding:8px 14px; color:#fff; background:#067b14; border:0; border-radius:6px; font-weight:800; cursor:pointer; }
+.journey-map-toolbar span { color:#52615a; font-size:.8rem; }
+
+/* On a phone, show the map before the longer playback form. The panel scrolls
+   within the available iframe height instead of overflowing the Wix page. */
+@media (max-width:700px) {
+  .driver-dialog { box-sizing:border-box; width:100%; max-width:100%; height:100vh; height:100dvh; max-height:100dvh; margin:0; overflow-y:auto; border-radius:0; }
+  .driver-dialog .dialog-shell { padding:20px 14px 30px; }
+  #driverProfileName { max-width:100%; padding-right:44px; overflow-wrap:anywhere; font-size:clamp(1.5rem,7vw,2rem); line-height:1.18; }
+  .journey-map-overlay,.journey-map-overlay.fullscreen { display:block; padding:0; overflow:hidden; }
+  .journey-map-overlay[hidden] { display:none; }
+  .journey-map-shell,.journey-map-overlay.fullscreen .journey-map-shell {
+    box-sizing:border-box; display:flex; flex-direction:column; gap:8px;
+    width:100%; height:100vh; height:100dvh; max-height:none;
+    padding:12px 12px 20px; overflow-y:auto; overscroll-behavior:contain;
+    border-radius:0; box-shadow:none;
+  }
+  .journey-map-shell h3 { margin:0; padding-right:36px; font-size:clamp(1.15rem,5vw,1.6rem); line-height:1.2; }
+  .journey-map-shell > .eyebrow { flex:none; margin:2px 44px 0 0; }
+  .journey-map-copy { display:none; }
+  .journey-map-close { position:sticky; top:0; align-self:flex-end; margin-bottom:-42px; }
+  .journey-map,.journey-map-overlay.fullscreen .journey-map {
+    order:2; flex:none; height:45vh; height:45dvh; min-height:230px; max-height:430px; margin:2px 0 0;
+  }
+  .journey-map-toolbar { order:1; flex:none; margin:0; justify-content:space-between; }
+  .journey-map-toolbar span { font-size:.7rem; text-align:right; }
+  .journey-race-standings { order:3; flex:none; margin:0; }
+  .journey-map-controls { order:4; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; margin:3px 0; align-items:end; }
+  .journey-map-controls > label,.journey-map-controls > details { min-width:0; }
+  .journey-map-controls > label:first-child,.journey-map-controls > .journey-driver-picker,.journey-map-controls > .journey-timeline { grid-column:1/-1; }
+  .journey-map-controls input[type=date],.journey-map-controls select,.journey-map-controls input[type=search] { min-width:0; font-size:16px; }
+  .journey-map-controls button { width:100%; min-width:0; white-space:normal; min-height:44px; }
+  .journey-driver-picker-inner { position:relative; top:auto; width:100%; max-width:none; box-shadow:none; }
+  .journey-milestones { order:5; flex:none; margin-bottom:0; }
+  .journey-map-legend { order:6; flex:none; margin-top:0; }
+  .journey-driver-icon.car-avatar-mobile img { width:84px; height:62px; }
+}

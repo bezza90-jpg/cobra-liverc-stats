@@ -6,12 +6,22 @@ let journeyMapLayers = null;
 let journeyDriverMarkers = new Map();
 let journeySelectedKey = '';
 let journeyTimelineDates = [];
+let journeyTimelineWeights = [];
 let journeyPlaybackTimer = null;
+let journeyPlaybackHasStarted = false;
+let journeyFollowSelected = true;
 let journeySelectedKeys = new Set();
 let journeyLabelsSeed = 0;
 let journeyMapFullscreen = false;
 let journeyPlaybackDurationMs = 120000;
 let journeyRaceElapsedDays = 0;
+let mattCarAvatarReady = false;
+const mattCarAvatar = new Image();
+mattCarAvatar.onload = () => {
+  mattCarAvatarReady = true;
+  if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
+};
+mattCarAvatar.src = new URL('./matt-hodges-car.png', import.meta.url).href;
 const $ = id => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -145,11 +155,12 @@ function ensureEnhancedMarkup() {
         <div class="journey-map-controls">
           <label>Find a driver<input type="search" id="journeyDriverSearch" list="journeyDriverOptions" placeholder="Start typing a name…"><datalist id="journeyDriverOptions"></datalist></label>
           <details class="journey-driver-picker" id="journeyDriverPicker"><summary id="journeyDriverSummary">Choose playback drivers (all)</summary><div class="journey-driver-picker-inner"><input id="journeyPickerSearch" type="search" placeholder="Search drivers" aria-label="Search playback drivers"><div class="journey-driver-picker-actions"><button type="button" id="journeySelectAll">All</button><button type="button" id="journeySelectNone">Clear</button></div><div id="journeyDriverChecklist" class="journey-driver-checklist"></div></div></details>
-          <label>Playback mode<select id="journeyPlaybackMode"><option value="calendar">Calendar journey</option><option value="race">Race selected drivers</option></select></label><button type="button" id="journeyPlay">▶ Play journey</button><button type="button" id="journeyFullscreen">Full screen</button><label>Playback start<select id="journeyPlaybackStart"><option value="earliest">Earliest selected record</option><option value="2022">1 January 2022</option><option value="chosen">Chosen date</option></select></label><label>Choose start date<input type="date" id="journeyStartDate" min="2022-01-01" disabled></label><label>Playback duration<select id="journeySpeed"><option value="60000">1 minute</option><option value="120000" selected>2 minutes</option><option value="300000">5 minutes</option><option value="600000">10 minutes</option><option value="86400000">1 day per second</option></select></label>
+          <label>Playback mode<select id="journeyPlaybackMode"><option value="calendar">Calendar journey</option><option value="race">Race selected drivers</option></select></label><button type="button" id="journeyPlay">▶ Play journey</button><button type="button" id="journeyFullscreen">Full screen</button><label>Playback start<select id="journeyPlaybackStart"><option value="earliest">Earliest selected record</option><option value="2022">1 January 2022</option><option value="chosen">Chosen date</option></select></label><label>Choose start date<input type="date" id="journeyStartDate" min="2022-01-01" disabled></label><label>Playback duration<select id="journeySpeed">${Array.from({ length: 15 }, (_, index) => `<option value="${(index + 1) * 60000}"${index === 1 ? ' selected' : ''}>${index + 1} ${index === 0 ? 'minute' : 'minutes'}</option>`).join('')}<option value="86400000">1 day per second</option></select></label>
           <label class="journey-timeline">Journey date <strong id="journeyDateLabel">Latest</strong><input type="range" id="journeyDateSlider" min="0" max="0" value="0" step="1" aria-label="Journey date from January 2022 to the latest result"></label>
         </div>
         <div class="journey-race-standings" id="journeyRaceStandings" hidden aria-live="off"></div>
         <div class="journey-milestones" id="journeyMilestones" aria-label="Journey milestones"></div>
+        <div class="journey-map-toolbar"><button type="button" id="journeyRefocus">⌖ Refocus on driver</button><span id="journeyFollowStatus">Following selected driver</span></div>
         <div class="journey-map" id="journeyMap"></div>
         <div class="journey-map-legend"><span><i class="selected"></i> Selected driver</span><span><i></i> Other drivers</span><span>Route: Cardiff → Eurotunnel → Belgium E40 → Germany A4/A3 → ERT Steyregg → Istanbul</span></div>
       </div>
@@ -483,6 +494,25 @@ function buildJourneyTimeline(endDate, frameCount = 241) {
   });
 }
 
+// Summer months between racing seasons pass four times as quickly. The
+// duration chosen in the menu still describes the whole selected journey.
+function journeyWeightedDays(from, to) {
+  let days = 0;
+  for (let time = Date.parse(`${from}T12:00:00Z`); time < Date.parse(`${to}T12:00:00Z`); time += 86400000) {
+    const month = new Date(time).getUTCMonth();
+    days += month >= 3 && month <= 7 ? .25 : 1;
+  }
+  return days;
+}
+
+function buildJourneyWeights(dates) {
+  const weights = [0];
+  for (let index = 1; index < dates.length; index++) {
+    weights.push(weights.at(-1) + journeyWeightedDays(dates[index - 1], dates[index]));
+  }
+  return weights;
+}
+
 function journeyCutoffDate() {
   return journeyTimelineDates[Number($('journeyDateSlider').value)] || journeyTimelineDates.at(-1) || '9999-12-31';
 }
@@ -508,6 +538,7 @@ function journeyRaceMode() {
 
 function updateJourneyMode() {
   stopJourneyPlayback();
+  journeyPlaybackHasStarted = false;
   const race = journeyRaceMode();
   $('journeyPlaybackStart').disabled = race;
   $('journeyStartDate').disabled = race || $('journeyPlaybackStart').value !== 'chosen';
@@ -534,6 +565,11 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const activeKey = raceMode && !journeySelectedKeys.has(journeySelectedKey) ? [...journeySelectedKeys][0] : journeySelectedKey;
   const selectedName = state.data.driverByKey[activeKey] || 'Selected driver';
   const selected = drivers.find(driver => driver.driverKey === activeKey) || { driverKey: activeKey, name: selectedName, km: 0, laps: 0, runs: 0, events: 0, classes: [], lastDate: '', lastEvent: '' };
+  if (journeyFollowSelected || focusDriver) {
+    const point = journeyRouteAt(selected.km).point;
+    if (focusDriver && journeyMap.getZoom() < 7) journeyMap.setView(point, 7, { animate: false });
+    else if (journeyMap.getCenter().distanceTo(window.L.latLng(point)) > 150) journeyMap.panTo(point, { animate: false });
+  }
   const latest = cutoffDate === journeyTimelineDates.at(-1);
   $('journeyDateLabel').textContent = raceMode ? `${journeyRaceElapsedDays} career days elapsed` : latest ? `Latest · ${dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`))}` : dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
   $('journeyMapTitle').textContent = raceMode ? `Race: ${journeySelectedKeys.size} drivers · ${journeyRaceElapsedDays} career days` : `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
@@ -592,22 +628,29 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   for (const driver of displayedDrivers) {
     const route = journeyRouteAt(driver.km);
     const selectedDriver = driver.driverKey === activeKey;
-    const icon = window.L.divIcon({ className: 'journey-driver-icon', html: `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: [18, 24], iconAnchor: [9, 21] });
+    const isMattCar = mattCarAvatarReady && [driver.driverKey, driver.name].some(value => /^(?:MATTHEW|MATT)HODGES$/.test(String(value || '').replace(/[^a-z]/gi, '').toUpperCase()));
+    const mobileCar = isMattCar && window.matchMedia('(max-width: 700px)').matches;
+    const icon = window.L.divIcon(isMattCar
+      ? { className: `journey-driver-icon car-avatar${mobileCar ? ' car-avatar-mobile' : ''}`, html: `<img src="${mattCarAvatar.src}" alt="">`, iconSize: mobileCar ? [84, 62] : [66, 50], iconAnchor: mobileCar ? [42, 54] : [33, 43] }
+      : { className: 'journey-driver-icon', html: `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: [18, 24], iconAnchor: [9, 21] });
     const classText = driver.classes.map(cls => classLabels[cls] || cls).join(', ');
     const lastEvent = driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : '';
     const popup = `<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(kmToMiles(driver.km))} miles</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${escapeHtml(classText)}</span>${lastEvent}</div>`;
     const marker = window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 1000 : 0 })
       .bindTooltip(`<b>${fmt.format(kmToMiles(driver.km))} miles</b><br>${escapeHtml(driver.name)}`, { permanent: visibleLabels.has(driver.driverKey), direction: 'bottom', offset: [0, 12], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` })
       .bindPopup(popup).addTo(journeyMapLayers);
+    marker.on('click', () => {
+      journeySelectedKey = driver.driverKey;
+      $('journeyDriverSearch').value = driver.name;
+      journeyFollowSelected = true;
+      $('journeyFollowStatus').textContent = 'Following selected driver';
+      renderJourneyMap({ focusDriver: true });
+      journeyDriverMarkers.get(driver.driverKey)?.openPopup();
+    });
     journeyDriverMarkers.set(driver.driverKey, marker);
   }
   window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
   window.L.circleMarker(journeyRoadRoute.at(-1), { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Istanbul, Türkiye', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
-  if (focusDriver && journeyDriverMarkers.has(journeySelectedKey)) {
-    const marker = journeyDriverMarkers.get(journeySelectedKey);
-    journeyMap.setView(marker.getLatLng(), Math.max(journeyMap.getZoom(), 8));
-    marker.openPopup();
-  }
 }
 
 function hashJourneyKey(value) {
@@ -640,6 +683,8 @@ function selectJourneyDriver() {
   if (!driver) return;
   journeySelectedKey = driver.k;
   $('journeyDriverSearch').value = driver.n;
+  journeyFollowSelected = true;
+  $('journeyFollowStatus').textContent = 'Following selected driver';
   renderJourneyMap({ focusDriver: true });
 }
 
@@ -652,27 +697,44 @@ function toggleJourneyPlayback() {
   const raceMode = journeyRaceMode();
   const start = raceMode ? '2022-01-01' : selectedJourneyStart();
   const startIndex = raceMode ? 0 : journeyTimelineDates.findIndex(date => date >= start);
-  slider.value = String(Math.max(0, startIndex));
+  const configuredStart = Math.max(0, startIndex);
+  if (!journeyPlaybackHasStarted || Number(slider.value) >= Number(slider.max)) slider.value = String(configuredStart);
+  journeyPlaybackHasStarted = true;
   renderJourneyMap();
   $('journeyPlay').textContent = '❚❚ Pause';
   const duration = Number($('journeySpeed').value);
-  const raceDays = raceMode ? journeyRaceStarts().days : 0;
-  const frameInterval = duration === 86400000 ? 1000 * (raceMode ? raceDays : Math.max(1, (Date.parse(journeyTimelineDates.at(-1)) - Date.parse(start)) / 86400000)) / Math.max(1, Number(slider.max) - Number(slider.value)) : duration / Math.max(1, Number(slider.max) - Number(slider.value));
+  const weights = raceMode ? Array.from({ length: Number(slider.max) + 1 }, (_, index) => index * journeyRaceStarts().days / Number(slider.max)) : journeyTimelineWeights;
+  const last = Number(slider.max);
+  const current = Number(slider.value);
+  const origin = Math.min(configuredStart, current);
+  const fullWeight = Math.max(.001, weights[last] - weights[origin]);
+  const remainingWeight = Math.max(0, weights[last] - weights[current]);
+  const fullDuration = duration === 86400000 ? 1000 * fullWeight : duration;
+  const remainingDuration = fullDuration * remainingWeight / fullWeight;
+  const startedAt = performance.now();
+  if (!remainingDuration) { stopJourneyPlayback(); journeyPlaybackHasStarted = false; return; }
   journeyPlaybackTimer = setInterval(() => {
-    const next = Number(slider.value) + 1;
-    if (next > Number(slider.max)) {
-      stopJourneyPlayback();
-      return;
+    const progress = Math.min(1, (performance.now() - startedAt) / remainingDuration);
+    const targetWeight = weights[current] + remainingWeight * progress;
+    let next = Number(slider.value);
+    while (next < last && weights[next + 1] <= targetWeight) next++;
+    if (progress === 1) next = last;
+    if (next !== Number(slider.value)) {
+      slider.value = String(next);
+      renderJourneyMap();
     }
-    slider.value = String(next);
-    renderJourneyMap();
-  }, frameInterval);
+    if (progress === 1) {
+      stopJourneyPlayback();
+      journeyPlaybackHasStarted = false;
+    }
+  }, 100);
 }
 
 function openJourneyMap(driverKey) {
   journeySelectedKey = driverKey;
   const latestDate = state.data.meta.latestEventDate || Object.values(state.data.raceById).map(race => race.d).sort().at(-1) || '2022-01-01';
   journeyTimelineDates = buildJourneyTimeline(latestDate);
+  journeyTimelineWeights = buildJourneyWeights(journeyTimelineDates);
   const slider = $('journeyDateSlider');
   slider.max = String(Math.max(0, journeyTimelineDates.length - 1));
   slider.value = slider.max;
@@ -684,6 +746,10 @@ function openJourneyMap(driverKey) {
   $('journeyPlaybackMode').value = 'calendar';
   $('journeyPlaybackStart').disabled = false;
   $('journeyMapOverlay').hidden = false;
+  journeyFollowSelected = true;
+  journeyPlaybackHasStarted = false;
+  $('journeyFollowStatus').textContent = 'Following selected driver';
+  $('journeyMapOverlay').querySelector('.journey-map-shell').scrollTop = 0;
   stopJourneyPlayback();
   requestAnimationFrame(() => {
     if (!window.L) {
@@ -696,9 +762,16 @@ function openJourneyMap(driverKey) {
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
       journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
       journeyMap.on('zoomend', () => renderJourneyMap());
+      journeyMap.on('dragstart', () => {
+        journeyFollowSelected = false;
+        $('journeyFollowStatus').textContent = 'Map moved · tap Refocus to follow';
+      });
     }
     renderJourneyMap({ resetView: false });
-    setTimeout(() => { journeyMap.invalidateSize(); renderJourneyMap(); }, 50);
+    setTimeout(() => {
+      journeyMap.invalidateSize();
+      renderJourneyMap({ focusDriver: true });
+    }, 50);
   });
 }
 
@@ -1104,7 +1177,13 @@ async function init() {
     });
     $('journeyDateSlider').addEventListener('input', () => {
       stopJourneyPlayback();
+      journeyPlaybackHasStarted = true;
       renderJourneyMap();
+    });
+    $('journeyRefocus').addEventListener('click', () => {
+      journeyFollowSelected = true;
+      $('journeyFollowStatus').textContent = 'Following selected driver';
+      renderJourneyMap({ focusDriver: true });
     });
     $('journeyDriverChecklist').addEventListener('change', event => {
       if (event.target.type !== 'checkbox') return;
@@ -1116,7 +1195,19 @@ async function init() {
     $('journeySelectAll').addEventListener('click', () => { journeySelectedKeys.clear(); renderJourneyDriverChecklist(); updateJourneyMode(); });
     $('journeySelectNone').addEventListener('click', () => { journeySelectedKeys.clear(); renderJourneyDriverChecklist(); updateJourneyMode(); });
     $('journeyPlaybackMode').addEventListener('change', updateJourneyMode);
-    $('journeyPlaybackStart').addEventListener('change', () => { $('journeyStartDate').disabled = $('journeyPlaybackStart').value !== 'chosen'; });
+    $('journeyPlaybackStart').addEventListener('change', () => {
+      $('journeyStartDate').disabled = $('journeyPlaybackStart').value !== 'chosen';
+      stopJourneyPlayback();
+      journeyPlaybackHasStarted = false;
+    });
+    $('journeyStartDate').addEventListener('change', () => { stopJourneyPlayback(); journeyPlaybackHasStarted = false; });
+    $('journeySpeed').addEventListener('change', () => {
+      journeyPlaybackDurationMs = Number($('journeySpeed').value);
+      if (journeyPlaybackTimer) {
+        stopJourneyPlayback();
+        toggleJourneyPlayback();
+      }
+    });
     $('journeyFullscreen').addEventListener('click', () => {
       journeyMapFullscreen = !journeyMapFullscreen;
       $('journeyMapOverlay').classList.toggle('fullscreen', journeyMapFullscreen);
