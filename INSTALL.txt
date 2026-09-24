@@ -1,12 +1,12 @@
-COBRA distance tracker — mobile layout and playback update
+COBRA distance tracker — window scrolling update
 
-Extract this ZIP and replace these four files in your existing cobra-liverc-stats GitHub repository at their exact paths:
+Extract this ZIP and replace these four files in your existing cobra-liverc-stats GitHub repository, preserving these exact paths:
 
 public/index.html
 public/assets/app.js
 public/assets/styles.css
 public/assets/matt-hodges-car.png
 
-Keep all other files. Commit the replacements, wait for the GitHub Action to show success, then refresh the page on your phone. If Safari keeps showing an old copy, close the tab and reopen the page or use a private tab.
+Leave the other repository files alone. Commit the replacements, wait for the GitHub Action to show success, then reload the Wix page (or use a private tab if the older version remains cached).
 
-Included: compact phone controls and menus, Matt's car avatar, selected driver following and a Refocus button, replay from a chosen slider position, 1–15 minute playback durations, and four-times-faster April–August travel within the chosen total duration.
+The distance tracker now stays within the available window and scrolls its own white information panel instead of scrolling the page behind. On desktop, the mouse wheel over the map scrolls the information; use the map's + and - controls to zoom. This package includes the previous mobile layout, Matt's car avatar, driver following, replay from a chosen slider point, and round-by-round movement.
