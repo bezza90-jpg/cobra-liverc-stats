@@ -1,4 +1,4 @@
-import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-simrace1';
+import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-simrace2';
 
 const state = { data: null, profileKey: '' };
 let journeyMap = null;
@@ -556,7 +556,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     ? [...journeySelectedKeys].map(key => drivers.find(driver => driver.driverKey === key) || {
         driverKey: key, name: state.data.driverByKey[key] || key, km: 0, laps: 0, runs: 0,
         events: 0, classes: [], lastDate: '', lastEvent: ''
-      }))
+      })
     : drivers;
   if (!journeySelectedKeys.size && !displayedDrivers.some(driver => driver.driverKey === journeySelectedKey) && drivers.some(driver => driver.driverKey === journeySelectedKey)) {
     displayedDrivers.push(drivers.find(driver => driver.driverKey === journeySelectedKey));
