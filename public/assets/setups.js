@@ -28,7 +28,8 @@ function podiumLink(setup) {
 function safeDrivePreview(value) {
   try {
     const url = new URL(value);
-    return url.protocol === 'https:' && url.hostname === 'drive.google.com' ? url.href : '';
+    const local = url.origin === window.location.origin && /^\/(?:.*\/)?setup-files\/[a-zA-Z0-9-]+\.(?:pdf|jpg|jpeg|png|webp)$/.test(url.pathname);
+    return url.protocol === 'https:' && (url.hostname === 'drive.google.com' || local) ? url.href : '';
   } catch {
     return '';
   }
@@ -106,6 +107,31 @@ function loadApprovedSetups(url) {
   });
 }
 
+async function loadSetupOverrides() {
+  const response = await fetch('../data/setup-overrides.json', { cache: 'no-store' });
+  if (!response.ok) return {};
+  const value = await response.json();
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+}
+
+function applySetupOverrides(items, changes) {
+  const editable = ['driverName', 'brand', 'model', 'className', 'eventName', 'notes'];
+  return items.flatMap(original => {
+    const override = changes[original.id];
+    if (!override || typeof override !== 'object') return [original];
+    if (override.hidden === true) return [];
+    const setup = { ...original };
+    for (const key of editable) if (typeof override[key] === 'string') setup[key] = override[key];
+    if (typeof override.file === 'string' && /^setup-files\/[a-zA-Z0-9-]{1,80}\.(?:pdf|jpg|jpeg|png|webp|doc|docx|xls|xlsx|csv|txt)$/.test(override.file)) {
+      const url = new URL(`../${override.file}`, import.meta.url);
+      setup.viewUrl = url.href;
+      setup.previewUrl = /\.(?:pdf|jpg|jpeg|png|webp)$/.test(override.file) ? url.href : '';
+      setup.fileName = typeof override.fileName === 'string' ? override.fileName : setup.fileName;
+    }
+    return [setup];
+  });
+}
+
 function openUpload() {
   if (!validAppsScriptUrl(config?.appsScriptUrl)) {
     $('setupUploadUnavailable').hidden = false;
@@ -153,7 +179,8 @@ async function init() {
     eventById = new Map(dashboard.events.map(event => [String(event.i), event]));
 
     if (validAppsScriptUrl(config.appsScriptUrl)) {
-      setups = await loadApprovedSetups(config.appsScriptUrl);
+      const [approved, changes] = await Promise.all([loadApprovedSetups(config.appsScriptUrl), loadSetupOverrides()]);
+      setups = applySetupOverrides(approved, changes);
     } else {
       $('setupConnectionNotice').hidden = false;
       $('setupConnectionNotice').textContent = 'The page is ready. Complete the one-time Google Drive connection to enable submissions and published setups.';
