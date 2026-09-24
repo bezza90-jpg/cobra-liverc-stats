@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const readJson = async relative => JSON.parse(await readFile(path.join(root, relative), 'utf8'));
-const [events, entries, eventResults, races, raceResults, dashboard, championships, videos, indexHtml, swordHtml, clubHtml, podiumsHtml, appJs, championshipJs, podiumsJs, youtubeJs, styles] = await Promise.all([
+const [events, entries, eventResults, races, raceResults, dashboard, championships, videos, indexHtml, swordHtml, clubHtml, podiumsHtml, appJs, journeyRouteJs, championshipJs, podiumsJs, youtubeJs, styles] = await Promise.all([
   readJson('data/raw/events.json'), readJson('data/raw/entries.json'), readJson('data/raw/event-results.json'),
   readJson('data/raw/races.json'), readJson('data/raw/race-results.json'), readJson('public/data/dashboard.json'), readJson('public/data/championships.json'), readJson('public/data/videos.json'),
   readFile(path.join(root, 'public/index.html'), 'utf8'),
@@ -12,6 +12,7 @@ const [events, entries, eventResults, races, raceResults, dashboard, championshi
   readFile(path.join(root, 'public/club/index.html'), 'utf8'),
   readFile(path.join(root, 'public/podiums/index.html'), 'utf8'),
   readFile(path.join(root, 'public/assets/app.js'), 'utf8'),
+  readFile(path.join(root, 'public/assets/journey-route.js'), 'utf8'),
   readFile(path.join(root, 'public/assets/championship.js'), 'utf8'),
   readFile(path.join(root, 'public/assets/podiums.js'), 'utf8'),
   readFile(path.join(root, 'scripts/update-youtube.mjs'), 'utf8'),
@@ -59,9 +60,10 @@ if (!podiumsHtml.includes('../data/dashboard.json') && !podiumsJs.includes('../d
 if (!podiumsJs.includes("-podium.jpg") || !podiumsJs.includes('raceTopThree')) errors.push('Podium photo naming or top-three result logic is missing.');
 if (!podiumsHtml.includes('Complete archive from 2022') || podiumsJs.includes('setUTCFullYear')) errors.push('Podium gallery is not configured for the complete archive.');
 if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Podium Gallery'))) errors.push('Podium Gallery navigation is missing from one or more pages.');
-if (!indexHtml.includes('Distance') || !appJs.includes('totalLaps(runs) * 0.15')) errors.push('Driver-profile distance calculation is missing.');
+if (!indexHtml.includes('Distance') || !appJs.includes('totalLaps(runs) * 0.15') || !appJs.includes('kmToMiles') || !appJs.includes('miles')) errors.push('Driver-profile distance calculation or miles conversion is missing.');
 if (!indexHtml.includes('id="leaderboardMetric"') || !appJs.includes('leaderboardMetrics')) errors.push('Rankable driver-record metrics are missing.');
-if (!indexHtml.includes('id="driverConsistencyDetails"') || !appJs.includes('Runs at 95%+')) errors.push('Driver consistency breakdown is missing.');
+if (!indexHtml.includes('id="driverConsistencyDetails"') || !appJs.includes('Runs at 95%+') || !appJs.includes('isCompleteConsistencyRun')) errors.push('Driver consistency breakdown is missing.');
+if (!appJs.includes('openJourneyMap') || !appJs.includes('journeyDriverDistances') || !appJs.includes("race.d < '2022-01-01'") || !appJs.includes('toggleJourneyPlayback') || !appJs.includes('id="journeySpeed"') || !appJs.includes('length: 15') || !appJs.includes('buildJourneyTimeline') || !appJs.includes('journeyMilestoneData') || !appJs.includes('journeyDriverSearch') || !appJs.includes('journeyDriverPicker') || !appJs.includes("journeyExcludedDrivers = new Set(['SIMON-NOTLEY'])") || !appJs.includes('Istanbul, Türkiye') || !appJs.includes('openstreetmap.org') || !journeyRouteJs.includes('4521.6') || !journeyRouteJs.includes('Istanbul') || !styles.includes('.journey-map-overlay') || !styles.includes('.journey-milestones')) errors.push('Lifetime Cardiff-to-Istanbul journey map, driver selection, route or adjustable playback is missing.');
 if (!indexHtml.includes('id="raceVideoLink"') || !appJs.includes('data/videos.json')) errors.push('YouTube race links are missing.');
 if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Race Videos'))) errors.push('The permanent YouTube channel button is missing from one or more pages.');
 if (videos.meta?.fromDate !== '2025-01-01' || !youtubeJs.includes("channelHandle = 'Bezza90'") || !youtubeJs.includes('/\\bCOBRA\\b/i')) errors.push('YouTube matching rules are invalid.');

@@ -26,6 +26,7 @@ const mattCarAvatar = new Image();
 mattCarAvatar.onload = () => {
   mattCarAvatarReady = true;
   if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
+  if (state.profileKey === 'MATTHEW-HODGES') renderProfileAvatar(state.profileKey);
 };
 mattCarAvatar.src = new URL('./matt-hodges-car.png', import.meta.url).href;
 async function loadJourneyAvatars() {
@@ -43,6 +44,7 @@ async function loadJourneyAvatars() {
         if (journeyAvatarImages !== next) return;
         next.set(key, image);
         if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
+        if (state.profileKey === key) renderProfileAvatar(key);
       };
       const assetUrl = new URL(`../${path}`, import.meta.url);
       assetUrl.searchParams.set('v', String(Date.now()));
@@ -55,6 +57,17 @@ async function loadJourneyAvatars() {
   }
 }
 const $ = id => document.getElementById(id);
+function renderProfileAvatar(driverKey) {
+  const frame = $('driverProfileAvatar');
+  if (!frame) return;
+  const image = journeyAvatarImages.get(driverKey) || (!journeyAvatarManifestReady && driverKey === 'MATTHEW-HODGES' && mattCarAvatarReady ? mattCarAvatar : null);
+  frame.hidden = !image;
+  if (image) {
+    const photo = frame.querySelector('img');
+    photo.src = image.src;
+    photo.alt = `${state.data?.driverByKey?.[driverKey] || 'Driver'} car avatar`;
+  }
+}
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
@@ -159,8 +172,11 @@ function ensureEnhancedMarkup() {
       <dialog class="driver-dialog" id="driverDialog" aria-labelledby="driverProfileName">
         <div class="dialog-shell">
           <button type="button" class="dialog-close" id="closeDriverProfile" aria-label="Close driver profile">×</button>
-          <p class="eyebrow">Driver profile</p><h2 id="driverProfileName">Driver</h2>
-          <p class="profile-context" id="driverProfileContext"></p>
+          <div class="driver-profile-header">
+            <div><p class="eyebrow">Driver profile</p><h2 id="driverProfileName">Driver</h2>
+              <p class="profile-context" id="driverProfileContext"></p></div>
+            <div class="driver-profile-avatar" id="driverProfileAvatar" hidden><img alt=""></div>
+          </div>
           <div class="profile-stats" id="driverProfileStats"></div>
           <section class="profile-section"><h3>Class breakdown</h3><div class="table-wrap compact"><table>
             <thead><tr><th>Class</th><th>Entries</th><th>Runs</th><th>Laps</th><th>Distance</th><th>Track time</th><th>Finals</th><th>Avg overall</th><th>Best</th><th>Top 5</th><th>Podiums</th><th>Overall wins</th><th>Race wins</th><th>TQs</th><th>Performance</th><th>Fastest lap</th><th>Avg consistency</th></tr></thead>
@@ -897,7 +913,6 @@ function openJourneyMap(driverKey) {
   $('journeyPlaybackStart').disabled = false;
   $('driverDialog').classList.add('journey-open');
   $('journeyMapOverlay').hidden = false;
-  loadJourneyAvatars();
   journeyFollowSelected = true;
   journeyPlaybackHasStarted = false;
   $('journeyFollowStatus').textContent = 'Following selected driver';
@@ -1018,6 +1033,7 @@ function driverProfile(driverKey) {
   const toLabel = to ? dateFmt.format(new Date(`${to}T12:00:00Z`)) : 'Latest result';
   $('driverProfileName').textContent = `${driver.n}${driver.j ? ' — Junior' : ''}`;
   $('driverProfileContext').textContent = `${fromLabel} to ${toLabel} · ${typeLabel} · ${classLabel}`;
+  renderProfileAvatar(driverKey);
   $('driverProfileStats').innerHTML = [
     profileStat(uniqueEvents.size, 'Events attended'),
     profileStat(eligibleEventIds.size ? `${Math.round(100 * uniqueEvents.size / eligibleEventIds.size)}%` : '—', 'Attendance rate'),
@@ -1265,6 +1281,7 @@ async function init() {
     data.eventById = Object.fromEntries(data.events.map(event => [event.i, event]));
     data.driverByKey = Object.fromEntries(data.drivers.map(driver => [driver.k, driver.n]));
     state.data = data;
+    loadJourneyAvatars();
     $('eventTotal').textContent = fmt.format(data.meta.eventCount);
     $('driverTotal').textContent = fmt.format(data.meta.driverCount);
     $('raceTotal').textContent = fmt.format(data.meta.raceCount);
@@ -1430,11 +1447,13 @@ async function init() {
     const params = new URLSearchParams(window.location.search);
     const requestedDriver = params.get('driver');
     const requestedMap = params.get('map');
-    if (requestedMap && data.driverByKey[requestedMap]) {
+    const trackerDriver = requestedMap && data.driverByKey[requestedMap] ? requestedMap
+      : params.get('tracker') === '1' ? (data.driverByKey['MATTHEW-HODGES'] ? 'MATTHEW-HODGES' : data.drivers.find(row => !journeyExcludedDrivers.has(row.k))?.k) : '';
+    if (trackerDriver) {
       const selected = (params.get('raceDrivers') || '').split(',').filter(key => data.driverByKey[key] && !journeyExcludedDrivers.has(key));
       journeySelectedKeys = new Set(selected);
-      driverProfile(requestedMap);
-      openJourneyMap(requestedMap);
+      driverProfile(trackerDriver);
+      openJourneyMap(trackerDriver);
       renderJourneyDriverChecklist();
     } else if (requestedDriver && data.driverByKey[requestedDriver]) driverProfile(requestedDriver);
   } catch (error) {
