@@ -1,4 +1,4 @@
-import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-simrace2';
+import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
 
 const state = { data: null, profileKey: '' };
 let journeyMap = null;
@@ -524,6 +524,8 @@ function updateJourneyMode() {
 
 function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   if (!window.L || !journeyMap) return;
+  // Leaflet needs an initial centre and zoom before projecting driver positions.
+  if (resetView) journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
   const raceMode = journeyRaceMode();
   const cutoffDate = journeyCutoffDate();
   const raceProgress = raceMode ? journeyRaceStarts() : null;
@@ -601,7 +603,6 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   }
   window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
   window.L.circleMarker(journeyRoadRoute.at(-1), { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Istanbul, Türkiye', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
-  if (resetView) journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
   if (focusDriver && journeyDriverMarkers.has(journeySelectedKey)) {
     const marker = journeyDriverMarkers.get(journeySelectedKey);
     journeyMap.setView(marker.getLatLng(), Math.max(journeyMap.getZoom(), 8));
@@ -693,10 +694,11 @@ function openJourneyMap(driverKey) {
       journeyMap = window.L.map('journeyMap', { zoomControl: true });
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
+      journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
       journeyMap.on('zoomend', () => renderJourneyMap());
     }
-    renderJourneyMap({ resetView: true });
-    setTimeout(() => journeyMap.invalidateSize(), 50);
+    renderJourneyMap({ resetView: false });
+    setTimeout(() => { journeyMap.invalidateSize(); renderJourneyMap(); }, 50);
   });
 }
 
