@@ -701,12 +701,11 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const selected = drivers.find(driver => driver.driverKey === activeKey) || { driverKey: activeKey, name: selectedName, km: 0, laps: 0, runs: 0, events: 0, classes: [], lastDate: '', lastEvent: '' };
   if (journeyFollowSelected || focusDriver) {
     const point = journeyRouteAt(selected.km).point;
-    if (focusDriver && journeyMap.getZoom() < 7) journeyMap.setView(point, 7, { animate: false });
+    if (focusDriver && journeyMap.getZoom() < 8) journeyMap.setView(point, 8, { animate: false });
     else if (journeyMap.getCenter().distanceTo(window.L.latLng(point)) > 150) journeyMap.panTo(point, { animate: false });
   }
-  const latest = Number($('journeyDateSlider').value) === journeyTimelineDates.length - 1;
   const displayDate = dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
-  $('journeyDateLabel').textContent = raceMode ? `Race checkpoint ${Number($('journeyDateSlider').value) + 1} of ${journeyRaceTimeline.length}` : latest ? `Latest · ${displayDate}` : `${displayDate}${cutoff.round ? ` · ${cutoff.round}` : ''}`;
+  $('journeyDateLabel').textContent = raceMode ? `Checkpoint ${Number($('journeyDateSlider').value) + 1} / ${journeyRaceTimeline.length}` : displayDate;
   $('journeyMapTitle').textContent = raceMode ? `Race: ${journeySelectedKeys.size} drivers · ${Math.floor(journeyRaceElapsedDays)} career days` : `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
   const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the illustrated route.`;
   $('journeyMapCopy').textContent = raceMode ? `All selected drivers set off from Cardiff together. Their miles advance round by round from each driver's first recorded COBRA run in 2022 or later. All classes count.` : `Combined distance from every recorded practice, qualifying and final round since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
@@ -842,7 +841,9 @@ function toggleJourneyPlayback() {
   const last = Number(slider.max);
   const current = Math.max(0, Math.min(last, journeyPlaybackPosition ?? Number(slider.value)));
   journeyPlaybackHasStarted = true;
-  renderJourneyMap();
+  journeyFollowSelected = true;
+  $('journeyFollowStatus').textContent = 'Following selected driver';
+  renderJourneyMap({ focusDriver: true });
   $('journeyPlay').textContent = '❚❚ Pause';
   const duration = Number($('journeySpeed').value);
   const origin = Math.min(configuredStart, current);
