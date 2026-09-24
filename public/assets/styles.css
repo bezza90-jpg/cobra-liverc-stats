@@ -104,6 +104,8 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .results-nav { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 22px; }
 .results-nav a { padding: 8px 12px; color: #dce9df; border: 1px solid rgba(255,255,255,.18); border-radius: 5px; font-size: .78rem; font-weight: 800; text-decoration: none; }
 .results-nav a:hover, .results-nav a[aria-current="page"] { color: #071109; background: #fff; }
+.results-nav .tracker-nav-button { color:#07250d; background:#c8f3ce; border-color:#c8f3ce; }
+.results-nav .tracker-nav-button:hover { background:#fff; border-color:#fff; }
 .championship-hero .hero-copy { padding-top: 38px; }
 .season-selector { position: relative; z-index: 1; display: inline-flex; margin: 0 12px 12px 0; align-items: center; gap: 10px; color: #dce9df; }
 .season-selector select { min-width: 170px; height: 40px; color: #0c1b10; background: #fff; border-color: #fff; font-weight: 850; }
@@ -144,6 +146,37 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .podium-photo { position: relative; display: grid; aspect-ratio: 16 / 10; place-items: center; overflow: hidden; color: #fff; background: radial-gradient(circle at 70% 20%, #0d7e1c, #101713 62%); }
 .podium-photo::after { content: ""; position: absolute; width: 180px; height: 180px; right: -70px; top: -85px; border: 36px solid rgba(255,255,255,.07); border-radius: 50%; }
 .podium-photo img { position: absolute; z-index: 2; width: 100%; height: 100%; object-fit: cover; }
+.podium-photo.has-photo { cursor: zoom-in; }
+.podium-photo-expand { position: absolute; z-index: 3; right: 12px; bottom: 12px; padding: 9px 13px; background: rgba(7, 24, 12, .84); }
+.podium-photo:not(.has-photo) .podium-photo-expand { display: none; }
+.podium-lightbox[hidden] { display: none; }
+.podium-lightbox {
+  position: fixed; z-index: 10000; inset: 0; display: grid; place-items: center;
+  width: 100%; height: 100vh; height: 100dvh; padding: 16px;
+  background: rgba(0, 0, 0, .97); color: #fff;
+}
+.podium-lightbox-inner { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 0; }
+.podium-lightbox-inner img { display: block; max-width: 100%; max-height: calc(100% - 90px); min-height: 0; object-fit: contain; }
+.podium-lightbox-copy { display: flex; align-items: center; justify-content: space-between; gap: 18px; width: min(900px, 100%); padding: 14px 0; }
+.podium-lightbox-copy p { margin: 4px 0 0; color: #d4e3d9; }
+.podium-lightbox-copy a { flex: none; color: #fff; }
+.podium-lightbox-close { position: absolute; z-index: 2; top: max(12px, env(safe-area-inset-top)); right: max(12px, env(safe-area-inset-right)); width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 32px; line-height: 1; }
+body.podium-lightbox-open { overflow: hidden; }
+.driver-profile-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-width: 0; }
+.driver-profile-header > div:first-child { min-width: 0; }
+.driver-profile-avatar[hidden] { display: none; }
+.driver-profile-avatar { flex: 0 0 auto; width: min(240px, 32%); min-height: 105px; display: grid; place-items: center; padding: 8px; background: #f3f7f4; border: 1px solid #dfe6e1; border-radius: 12px; }
+.driver-profile-avatar img { display: block; width: 100%; max-height: 140px; object-fit: contain; }
+@media (max-width: 700px) {
+  .driver-profile-header { align-items: flex-start; }
+  .driver-profile-avatar { width: min(120px, 34%); min-height: 74px; padding: 4px; }
+  .driver-profile-avatar img { max-height: 88px; }
+}
+@media (max-width: 800px) {
+  .podium-lightbox { padding: calc(54px + env(safe-area-inset-top)) 10px calc(10px + env(safe-area-inset-bottom)); }
+  .podium-lightbox-inner img { flex: 1; max-height: none; width: 100%; }
+  .podium-lightbox-copy { flex: none; flex-wrap: wrap; padding: 8px 4px; font-size: .86rem; }
+}
 .podium-placeholder { position: relative; z-index: 1; display: grid; max-width: 90%; padding: 22px; place-items: center; text-align: center; }
 .podium-placeholder strong { margin-top: 8px; font-size: 1.05rem; }
 .podium-placeholder small { margin-top: 9px; color: #c6d5ca; line-height: 1.45; }
