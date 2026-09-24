@@ -1,0 +1,702 @@
+{
+  "MIKE-DRISCOLL": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "HARRY-DAVIS": {
+    "name": "Kyosho",
+    "slug": "kyosho"
+  },
+  "DAVE-CLUTTERBUCK": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "MATT-WOODIWISS": {
+    "name": "Yokomo",
+    "slug": "yokomo"
+  },
+  "AINSLEY-EVANS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "DYLAN-PAGE": {
+    "name": "Yokomo",
+    "slug": "yokomo"
+  },
+  "FRAN-BRAVERY": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "ED-SCOTT": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "TIM-BRAVERY": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "MARTIN-THOMAS": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "ALISTAIR-MUNRO": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "MARK-GREENWOOD": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "NEIL-SMITH": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "LEO-NOTLEY": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "RUSS-WILLIAMS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "MATTHEW-HODGES": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "RUSSELL-THOMAS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "KEVIN-GREENWAY": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "RICHARD-HARRISON": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "JAMIE-DAVIES": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "GARETH-MANNING": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "DAVID-DAWSON": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "CAERON-JENKINS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "JON-PUZEY": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "GREG-PARKER": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "MARTYN-PRICE": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "DALE-PRESTON": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "CARL-TURNER": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "MIKE-HYSIAK": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "CHRISTOPHER-BAKER": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "JOHN-HAMILTON": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ROY-DAVIES": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "STEVE-CURTIS-RICH": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "ADAM-MCBRIDE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "NATHAN-NOTLEY": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "CHRIS-LEONARD": {
+    "name": "R1 Wurks",
+    "slug": "r1-wurks"
+  },
+  "STEVEN-GRIFFITHS": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "SIMON-FISHER": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "JON-TUCKER": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "MARK-GIAQUINTO": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "ROGER-MILLS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "MARTIN-PITMAN": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "IAN-TOWNSEND": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "STEWART-WOODEND": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "COLIN-COURT": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "BRUCE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "STUART-CARLING": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ROYSTON-STEWART": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "SEB-FISHER": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "NOAH-MCBRIDE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "BEN-EVANS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "COHEN-MANNING": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "MARCIA-DAVIS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "WILLIAM-WOODIWISS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ISOBEL-NOTLEY": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "FINLEY-OLDFIELD": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ISLA-WILLIAMS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "DANNY-HARRIS": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "HAIDEN-HICKS": {
+    "name": "Kyosho",
+    "slug": "kyosho"
+  },
+  "DANIEL-GRIFFITHS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "GEORGE-BRAY": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "NATASHA-VENN": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "BOBTECH": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "GRAHAM-THOMAS": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "MARK-HICKS": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "JON-PAISLEY": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "JAMIE-STONE": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "SPENCER-FARLEY": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "MATT-SUMPTER": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "SIMON-COOPER": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "CHRIS-GUNTER": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "CRAIG-HARRIS": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "MARTYN-HADLEY": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "SCOTT-BOWKETT": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ANDREW-BARRASS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "CERI-YOUNG": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "JOHN-MORDEN": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "JUSTIN-WHITEHOUSE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "KEATON-BARRASS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "CHRIS-YOUNG": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "DAVE-ELMES": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "TOM-JENKINS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "GREG-LANE": {
+    "name": "Agama",
+    "slug": "agama"
+  },
+  "MATT-OSLAND-JONES": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "SHAUN-OGDEN": {
+    "name": "Yokomo",
+    "slug": "yokomo"
+  },
+  "DANE-WINTERSON": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "GARETH-CAPPER": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "RICH-WHITEFOOT": {
+    "name": "Tamiya",
+    "slug": "tamiya"
+  },
+  "ASHLEY-GIBBONS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "GIOVANNI-PANZECA": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "RICHARD-MEACHAM": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "ANDY-GRIFFITHS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ROB-WEST": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "LEE-MARSON": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "ABEL-STONE": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "LEO-MAGGS": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "IAN-PEAKMAN": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "CHRIS-BODEN": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "LIAM-TOOLE": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "OLLY-FROST": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "SIMON-WHITE": {
+    "name": "Kyosho",
+    "slug": "kyosho"
+  },
+  "GERAINT-MAYES": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "JAMES-MAGGS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "KEMAL-HADIMLI": {
+    "name": "Pr",
+    "slug": "pr"
+  },
+  "JOHN-TOOLE": {
+    "name": "Yokomo",
+    "slug": "yokomo"
+  },
+  "MATT-MEAD": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "AARON-SKINNER": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "GRAEME-MCFARLANE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ANDY-MOUNTFORD": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "DAN-PULLEY": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "JUSTIN-WALSH": {
+    "name": "Yokomo",
+    "slug": "yokomo"
+  },
+  "MATT-ALCOCK": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "MARK-WILLIAMSON": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "DEWI-JONES": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "ANDREW-MORGANS": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "TONY-BISHOP": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "PHIL-VICKERS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "SIMON-FREEMAN": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "MATTY-DRISCOLL": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "MARK-COX": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "LUCA-DAWSON": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ROSS-DAWSON": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "PETE-DURDAN": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "ADAM-BEDFORD": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "STEVE-POLLINGER": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "MICHAEL-DURRANT": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "LUKE-WESTWOOD": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "STEVE-IRELAND": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "CARL-O-CONNOR": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "LEE-GROVES": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "BEN-TURNER": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "PAUL-ROSE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "DARREN-WILBY": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "NICOLE-BRAVERY": {
+    "name": "Yokomo",
+    "slug": "yokomo"
+  },
+  "DANIEL-HURRELL": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "CHRIS-GREEN": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "JOE-WARRENDER": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "THOMAS-GRIFFITHS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "PETE-BELSTEN": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "STEVE-WARRENDER": {
+    "name": "Pr",
+    "slug": "pr"
+  },
+  "PAUL-DAVIES": {
+    "name": "Yokomo",
+    "slug": "yokomo"
+  },
+  "IAN-BROOKING": {
+    "name": "Tamiya",
+    "slug": "tamiya"
+  },
+  "TREV-ROBINSON": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "FINN-MULCAHY": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "EWAN-MULCAHY": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "SIMON-NOTLEY": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "AVA-WARRENDER": {
+    "name": "Pr",
+    "slug": "pr"
+  },
+  "PAUL-WEBB": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "ROBYN-DURDAN": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "RICHARD-TURNER": {
+    "name": "Sworkz",
+    "slug": "sworkz"
+  },
+  "DAVE-ALLEN": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ADAM-POWER": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "MARK-HYSIAK": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "ADAM-BREESE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "JAMES-LAIRD": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "BRUCE-LEE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "RUSSELL-LEE": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "CHRIS-LOVELL": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "STEVE-HEMMINGS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "CARSON-GUPPY": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "COLIN-DAVIES": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "STEVE-ASHTON": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "NATHAN-POWNEY": {
+    "name": "Tlr",
+    "slug": "tlr"
+  },
+  "CRAIG-SMITH": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "BEN-BILLING": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "WILLEM-STEENKAMP": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "GAVIN-GALLAGHER": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "KEITH-HALSEY": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "IEUAN-PAYNE": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "HUNTER-TUTTON": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "RIFF-LOCK": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "HEATH-LOCK": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "DANIEL-WILLIAMS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "TALLAN-RICHARDS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "CLIVE-MALAND": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  }
+}
