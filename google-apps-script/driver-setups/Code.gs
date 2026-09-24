@@ -6,11 +6,12 @@ const COBRA = Object.freeze({
   podiumFolderName: 'COBRA Podium Photo Submissions',
   maxFileBytes: 8 * 1024 * 1024,
   podiumMaxFileBytes: 8 * 1024 * 1024,
+  podiumOriginalMaxFileBytes: 6 * 1024 * 1024,
   allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'txt'],
   brands: ['Team Associated', 'Schumacher', 'XRAY', 'TLR', 'PR Racing', 'Yokomo', 'R1 Wurks', 'Kyosho', 'Serpent', 'Mugen Seiki', 'Tamiya', 'LC Racing', 'Tekno RC', 'Sworkz', 'Other'],
   classes: ['2WD', '4WD', 'Vintage', 'Truck'],
   headers: ['Submission ID', 'Submitted At', 'Status', 'Driver Name', 'Driver Key', 'Manufacturer', 'Car Model', 'Class', 'Event ID', 'Event Name', 'Event Date', 'Notes', 'Original Filename', 'Stored Filename', 'MIME Type', 'File Size', 'Drive File ID', 'Public View URL', 'Public Preview URL', 'Reviewed At'],
-  podiumHeaders: ['Submission ID', 'Submitted At', 'Status', 'Uploader Name', 'Event ID', 'Event Name', 'Event Date', 'Race ID', 'Class', 'Final', 'Caption', 'Original Filename', 'Stored Filename', 'MIME Type', 'File Size', 'Drive File ID', 'Public Image URL', 'Public View URL', 'Reviewed At']
+  podiumHeaders: ['Submission ID', 'Submitted At', 'Status', 'Uploader Name', 'Event ID', 'Event Name', 'Event Date', 'Race ID', 'Class', 'Final', 'Caption', 'Original Filename', 'Original Stored Filename', 'Original MIME Type', 'Original File Size', 'Original Drive File ID', 'Crop Stored Filename', 'Crop File Size', 'Crop Drive File ID', 'Review Token', 'Review / Re-crop URL', 'Public Image URL', 'Public View URL', 'Reviewed At']
 });
 
 function doGet(e) {
@@ -19,8 +20,9 @@ function doGet(e) {
   if (action === 'podium-list') return approvedPodiumResponse_(e);
 
   const page = String((e && e.parameter && e.parameter.page) || '').toLowerCase();
-  const fileName = page === 'podiums' ? 'PodiumUpload' : 'Upload';
-  const title = page === 'podiums' ? 'Upload a COBRA podium photograph' : 'Upload a COBRA driver setup';
+  const isPodiumReview = page === 'podium-review';
+  const fileName = isPodiumReview ? 'PodiumReview' : page === 'podiums' ? 'PodiumUpload' : 'Upload';
+  const title = isPodiumReview ? 'Review a COBRA podium photograph' : page === 'podiums' ? 'Upload a COBRA podium photograph' : 'Upload a COBRA driver setup';
 
   return HtmlService.createHtmlOutputFromFile(fileName)
     .setTitle(title)
@@ -72,7 +74,7 @@ function setupProject() {
 
   let podiumSheet = spreadsheet.getSheetByName(COBRA.podiumSheetName);
   if (!podiumSheet) podiumSheet = spreadsheet.insertSheet(COBRA.podiumSheetName);
-  if (podiumSheet.getLastRow() === 0) podiumSheet.getRange(1, 1, 1, COBRA.podiumHeaders.length).setValues([COBRA.podiumHeaders]);
+  podiumSheet.getRange(1, 1, 1, COBRA.podiumHeaders.length).setValues([COBRA.podiumHeaders]);
   podiumSheet.setFrozenRows(1);
   podiumSheet.getRange(1, 1, 1, COBRA.podiumHeaders.length).setBackground('#067b14').setFontColor('#ffffff').setFontWeight('bold');
   podiumSheet.getRange('C2:C').setDataValidation(SpreadsheetApp.newDataValidation().requireValueInList(['Pending', 'Approved', 'Rejected', 'Superseded'], true).setAllowInvalid(false).build());
@@ -80,6 +82,7 @@ function setupProject() {
   podiumSheet.setColumnWidth(4, 170);
   podiumSheet.setColumnWidth(6, 260);
   podiumSheet.setColumnWidth(11, 320);
+  podiumSheet.setColumnWidth(21, 220);
 
   ScriptApp.getProjectTriggers()
     .filter(trigger => trigger.getHandlerFunction() === 'onSubmissionStatusEdit')
@@ -117,6 +120,7 @@ function getPodiumFormOptions() {
   return {
     token: token,
     maxFileBytes: COBRA.podiumMaxFileBytes,
+    originalMaxFileBytes: COBRA.podiumOriginalMaxFileBytes,
     events: (source.events || [])
       .filter(event => finalsByEvent[String(event.i)] && finalsByEvent[String(event.i)].length)
       .slice()
@@ -144,27 +148,98 @@ function submitPodiumPhoto(payload) {
   if (!event || !race || !race.f || String(race.e) !== eventId) throw new Error('The selected final could not be verified. Refresh the form and try again.');
 
   const originalFilename = cleanFilename_(payload.fileName || 'podium-photo.jpg');
-  const base64 = String(payload.fileBase64 || '').replace(/^data:[^;]+;base64,/, '');
-  if (!base64) throw new Error('Please choose and crop a photograph.');
-  const bytes = Utilities.base64Decode(base64);
-  if (!bytes.length || bytes.length > COBRA.podiumMaxFileBytes) throw new Error('The cropped photograph is too large.');
+  const cropBase64 = String(payload.fileBase64 || '').replace(/^data:[^;]+;base64,/, '');
+  const originalBase64 = String(payload.originalBase64 || '').replace(/^data:[^;]+;base64,/, '');
+  if (!cropBase64 || !originalBase64) throw new Error('Please choose and crop a photograph.');
+  const cropBytes = Utilities.base64Decode(cropBase64);
+  const originalBytes = Utilities.base64Decode(originalBase64);
+  if (!cropBytes.length || cropBytes.length > COBRA.podiumMaxFileBytes) throw new Error('The cropped photograph is too large.');
+  if (!originalBytes.length || originalBytes.length > COBRA.podiumOriginalMaxFileBytes) throw new Error('The retained original photograph is too large.');
 
   const submissionId = Utilities.getUuid();
-  const storedFilename = `${submissionId}-${eventId}-${raceId}-podium.jpg`;
+  const originalStoredFilename = `${submissionId}-${eventId}-${raceId}-original.jpg`;
+  const cropStoredFilename = `${submissionId}-${eventId}-${raceId}-podium.jpg`;
   const mimeType = 'image/jpeg';
-  const blob = Utilities.newBlob(bytes, mimeType, storedFilename);
   const folder = DriveApp.getFolderById(PropertiesService.getScriptProperties().getProperty('PODIUM_FOLDER_ID'));
   cache.remove(tokenKey);
-  const file = folder.createFile(blob).setDescription(`Pending COBRA podium photograph for ${event.n} — ${race.c} ${race.n}`);
+  const originalFile = folder.createFile(Utilities.newBlob(originalBytes, mimeType, originalStoredFilename))
+    .setDescription(`Private uncropped COBRA podium original for ${event.n} — ${race.c} ${race.n}`);
+  const cropFile = folder.createFile(Utilities.newBlob(cropBytes, mimeType, cropStoredFilename))
+    .setDescription(`Pending COBRA podium photograph for ${event.n} — ${race.c} ${race.n}`);
+  const reviewToken = Utilities.getUuid();
+  const serviceUrl = ScriptApp.getService().getUrl();
+  const reviewUrl = serviceUrl ? `${serviceUrl}?page=podium-review&token=${encodeURIComponent(reviewToken)}` : '';
   const sheet = podiumSubmissionSheet_();
   sheet.appendRow([
     submissionId, new Date(), 'Pending', safeSheetText_(uploaderName), eventId, safeSheetText_(event.n), event.d,
     raceId, safeSheetText_(race.c), safeSheetText_(race.n), safeSheetText_(caption), safeSheetText_(originalFilename),
-    storedFilename, mimeType, bytes.length, file.getId(), '', '', ''
+    originalStoredFilename, mimeType, originalBytes.length, originalFile.getId(), cropStoredFilename, cropBytes.length,
+    cropFile.getId(), reviewToken, reviewUrl, '', '', ''
   ]);
   const row = sheet.getLastRow();
   sheet.getRange(row, 1, 1, COBRA.podiumHeaders.length).setVerticalAlignment('top').setWrap(true);
   return { ok: true, submissionId: submissionId, message: 'Thank you. The podium photograph has been submitted to COBRA for approval.' };
+}
+
+function getPodiumReview(reviewToken) {
+  assertPodiumConfigured_();
+  const record = podiumReviewRecord_(reviewToken);
+  const row = record.values;
+  const originalFileId = String(row[15] || '');
+  if (!originalFileId) throw new Error('The retained original photograph could not be found.');
+  const blob = DriveApp.getFileById(originalFileId).getBlob();
+  return {
+    token: String(row[19]),
+    submissionId: String(row[0]),
+    status: String(row[2]),
+    uploaderName: String(row[3]),
+    eventName: String(row[5]),
+    eventDate: String(row[6]),
+    className: String(row[8]),
+    finalName: String(row[9]),
+    caption: String(row[10] || ''),
+    originalDataUrl: `data:${blob.getContentType() || 'image/jpeg'};base64,${Utilities.base64Encode(blob.getBytes())}`,
+    maxFileBytes: COBRA.podiumMaxFileBytes
+  };
+}
+
+function savePodiumRecrop(payload) {
+  assertPodiumConfigured_();
+  if (!payload) throw new Error('The corrected crop was not received.');
+  const record = podiumReviewRecord_(payload.token);
+  const row = record.values;
+  const cropBase64 = String(payload.fileBase64 || '').replace(/^data:[^;]+;base64,/, '');
+  if (!cropBase64) throw new Error('The corrected crop was not received.');
+  const cropBytes = Utilities.base64Decode(cropBase64);
+  if (!cropBytes.length || cropBytes.length > COBRA.podiumMaxFileBytes) throw new Error('The corrected crop is too large.');
+
+  const oldCropFileId = String(row[18] || '');
+  if (oldCropFileId) {
+    const oldCropFile = DriveApp.getFileById(oldCropFileId);
+    oldCropFile.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
+    oldCropFile.setDescription(`Replaced private COBRA podium crop for ${row[5]} — ${row[8]} ${row[9]}`);
+  }
+
+  const cropStoredFilename = `${row[0]}-${row[4]}-${row[7]}-podium-recrop-${Date.now()}.jpg`;
+  const folder = DriveApp.getFolderById(PropertiesService.getScriptProperties().getProperty('PODIUM_FOLDER_ID'));
+  const cropFile = folder.createFile(Utilities.newBlob(cropBytes, 'image/jpeg', cropStoredFilename))
+    .setDescription(`Pending corrected COBRA podium photograph for ${row[5]} — ${row[8]} ${row[9]}`);
+  record.sheet.getRange(record.rowNumber, 3).setValue('Pending');
+  record.sheet.getRange(record.rowNumber, 17, 1, 8).setValues([[
+    cropStoredFilename, cropBytes.length, cropFile.getId(), row[19], row[20], '', '', ''
+  ]]);
+  return { ok: true, message: 'The corrected crop has been saved privately. Return to the approval sheet and set its Status to Approved when you are happy with it.' };
+}
+
+function podiumReviewRecord_(reviewToken) {
+  const token = String(reviewToken || '').trim();
+  if (!/^[0-9a-f-]{30,40}$/i.test(token)) throw new Error('This review link is invalid.');
+  const sheet = podiumSubmissionSheet_();
+  if (sheet.getLastRow() < 2) throw new Error('This podium submission could not be found.');
+  const values = sheet.getRange(2, 1, sheet.getLastRow() - 1, COBRA.podiumHeaders.length).getValues();
+  const index = values.findIndex(row => String(row[19]) === token);
+  if (index === -1) throw new Error('This podium submission could not be found.');
+  return { sheet: sheet, rowNumber: index + 2, values: values[index] };
 }
 
 function getFormOptions() {
@@ -262,7 +337,7 @@ function onSubmissionStatusEdit(e) {
 
 function updatePodiumPhotoStatus_(sheet, rowNumber, status) {
   const row = sheet.getRange(rowNumber, 1, 1, COBRA.podiumHeaders.length).getValues()[0];
-  const fileId = String(row[15] || '');
+  const fileId = String(row[18] || '');
   if (!fileId) return;
   const file = DriveApp.getFileById(fileId);
 
@@ -271,7 +346,7 @@ function updatePodiumPhotoStatus_(sheet, rowNumber, status) {
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     try { file.setSecurityUpdateEnabled(false); } catch (error) { console.log(error.message); }
     file.setDescription(`Approved COBRA podium photograph for ${row[5]} — ${row[8]} ${row[9]}`);
-    sheet.getRange(rowNumber, 17, 1, 3).setValues([[
+    sheet.getRange(rowNumber, 22, 1, 3).setValues([[
       `https://drive.google.com/thumbnail?id=${fileId}&sz=w2400`,
       `https://drive.google.com/file/d/${fileId}/view`,
       new Date()
@@ -279,7 +354,7 @@ function updatePodiumPhotoStatus_(sheet, rowNumber, status) {
   } else {
     file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
     file.setDescription(`${status || 'Pending'} COBRA podium photograph for ${row[5]} — ${row[8]} ${row[9]}`);
-    sheet.getRange(rowNumber, 17, 1, 3).clearContent();
+    sheet.getRange(rowNumber, 22, 1, 3).clearContent();
   }
 }
 
@@ -289,14 +364,14 @@ function supersedePreviousPodiumPhotos_(sheet, currentRow, eventId, raceId) {
   values.forEach((row, index) => {
     const rowNumber = index + 2;
     if (rowNumber === currentRow || String(row[2]) !== 'Approved' || String(row[4]) !== eventId || String(row[7]) !== raceId) return;
-    const oldFileId = String(row[15] || '');
+    const oldFileId = String(row[18] || '');
     if (oldFileId) {
       const oldFile = DriveApp.getFileById(oldFileId);
       oldFile.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
       oldFile.setDescription(`Superseded COBRA podium photograph for ${row[5]} — ${row[8]} ${row[9]}`);
     }
     sheet.getRange(rowNumber, 3).setValue('Superseded');
-    sheet.getRange(rowNumber, 17, 1, 3).clearContent();
+    sheet.getRange(rowNumber, 22, 1, 3).clearContent();
   });
 }
 
@@ -354,7 +429,7 @@ function approvedPodiumPhotos_() {
   const sheet = podiumSubmissionSheet_();
   if (sheet.getLastRow() < 2) return [];
   const values = sheet.getRange(2, 1, sheet.getLastRow() - 1, COBRA.podiumHeaders.length).getValues();
-  return values.filter(row => String(row[2]).trim() === 'Approved' && row[16] && row[17]).map(row => ({
+  return values.filter(row => String(row[2]).trim() === 'Approved' && row[21] && row[22]).map(row => ({
     id: String(row[0]),
     submittedAt: isoDate_(row[1]),
     uploaderName: String(row[3]),
@@ -365,9 +440,9 @@ function approvedPodiumPhotos_() {
     className: String(row[8]),
     finalName: String(row[9]),
     caption: String(row[10] || ''),
-    imageUrl: String(row[16]),
-    viewUrl: String(row[17]),
-    reviewedAt: isoDate_(row[18])
+    imageUrl: String(row[21]),
+    viewUrl: String(row[22]),
+    reviewedAt: isoDate_(row[23])
   }));
 }
 

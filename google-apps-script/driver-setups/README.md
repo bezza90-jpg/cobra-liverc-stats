@@ -9,14 +9,15 @@ This Google Apps Script handles both Driver Setup sheets and Podium Gallery phot
 3. Replace the contents of `Code.gs` with this folder's `Code.gs`.
 4. Add an HTML file named `Upload` and replace its contents with `Upload.html`.
 5. Add another HTML file named `PodiumUpload` and replace its contents with `PodiumUpload.html`.
-6. Save the project.
-7. Select `setupProject` in the function list and click **Run**.
-8. Approve the requested Google permissions.
-9. Open the execution log and save the displayed spreadsheet and both folder links.
-10. Click **Deploy → New deployment → Web app**.
-11. Set **Execute as** to `Me` and **Who has access** to `Anyone`.
-12. Deploy and copy the URL ending in `/exec`.
-13. Paste that URL into both `public/data/setups-config.json` and `public/data/podiums-config.json` as the `webAppUrl` value.
+6. Add a third HTML file named `PodiumReview` and replace its contents with `PodiumReview.html`.
+7. Save the project.
+8. Select `setupProject` in the function list and click **Run**.
+9. Approve the requested Google permissions.
+10. Open the execution log and save the displayed spreadsheet and both folder links.
+11. Click **Deploy → New deployment → Web app**.
+12. Set **Execute as** to `Me` and **Who has access** to `Anyone`.
+13. Deploy and copy the URL ending in `/exec`.
+14. Paste that URL into both `public/data/setups-config.json` and `public/data/podiums-config.json` as the `webAppUrl` value.
 
 For an existing deployment, update the files, run `setupProject` once, then use **Deploy → Manage deployments → Edit → New version → Deploy**. The existing `/exec` address does not change.
 
@@ -26,4 +27,4 @@ Open the generated `COBRA Driver Setup Approvals` spreadsheet. Change the submis
 
 The Driver Setups public page is at `/setups/`. The Podium Gallery upload form is opened from the gallery's upload buttons. A submitted photograph is cropped to 16:10 in the browser before upload; the editor supports drag, zoom, rotation and two-finger pinch zoom on phones.
 
-The spreadsheet's `Podium Photos` tab is the podium approval queue. Approving a row publishes the photograph to its exact event and final. Approving a replacement for the same final automatically supersedes the earlier photograph.
+The spreadsheet's `Podium Photos` tab is the podium approval queue. Every submission keeps a private, reduced high-resolution original as well as the proposed 16:10 crop. Use the row's **Review / Re-crop URL** to restore the original, reposition, zoom or rotate it, and save a corrected crop. The corrected item returns to `Pending`. Approving the row publishes only the crop to its exact event and final. Approving a replacement for the same final automatically supersedes the earlier photograph.

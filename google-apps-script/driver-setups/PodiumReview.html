@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <style>
+    :root { --green:#08a31a; --green-dark:#067b14; --ink:#111714; --muted:#637069; --line:#dfe6e1; --wash:#f3f7f4; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:22px; color:var(--ink); background:var(--wash); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { display:grid; gap:16px; max-width:1000px; margin:auto; }
+    h1 { margin:0; font-size:clamp(1.65rem,4vw,2.6rem); }
+    .meta,.status { padding:15px 17px; background:#fff; border:1px solid var(--line); border-radius:10px; line-height:1.55; }
+    .meta strong { display:block; color:var(--green-dark); font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; }
+    .meta p { margin:4px 0 0; }
+    .editor { display:grid; gap:12px; padding:14px; background:#111714; border-radius:12px; }
+    .editor canvas { display:block; width:100%; aspect-ratio:16/10; border-radius:8px; background:#263029; cursor:grab; touch-action:none; }
+    .editor canvas:active { cursor:grabbing; }
+    .controls { display:grid; grid-template-columns:1fr auto auto auto; gap:9px; align-items:center; }
+    label { display:grid; gap:7px; color:#fff; font-size:.76rem; font-weight:850; letter-spacing:.045em; text-transform:uppercase; }
+    input[type=range] { width:100%; height:32px; padding:0; accent-color:var(--green); }
+    button { min-height:46px; padding:10px 16px; color:#fff; background:var(--green-dark); border:0; border-radius:8px; font:inherit; font-weight:850; cursor:pointer; }
+    button:hover { background:var(--green); }
+    button.secondary { color:#142018; background:#e8efea; }
+    button.secondary:hover { background:#d5e3d8; }
+    button:disabled { cursor:wait; opacity:.58; }
+    .hint { margin:0; color:#c6d5ca; font-size:.8rem; line-height:1.5; }
+    .status { color:#315039; background:#eef8f0; border-color:#bfe2c5; border-left:4px solid var(--green); }
+    .status.error { color:#711b1b; background:#fff1f1; border-color:#e9bcbc; border-left-color:#b51d1d; }
+    [hidden] { display:none !important; }
+    @media(max-width:650px){body{padding:12px}.controls{grid-template-columns:1fr 1fr 1fr}.controls label{grid-column:1/-1}}
+  </style>
+</head>
+<body>
+  <main>
+    <div>
+      <p style="margin:0;color:#067b14;font-weight:850;letter-spacing:.08em;text-transform:uppercase">Private COBRA review</p>
+      <h1>Review and re-crop podium photograph</h1>
+    </div>
+    <div id="loading" class="status">Loading the private original photograph…</div>
+    <section id="review" hidden>
+      <div class="meta">
+        <strong id="eventName"></strong>
+        <p id="finalName"></p>
+        <p id="uploader"></p>
+      </div>
+      <div class="editor">
+        <canvas id="cropCanvas" width="2400" height="1500" aria-label="Corrected podium photograph crop"></canvas>
+        <div class="controls">
+          <label>Zoom<input id="zoom" type="range" min="1" max="3" step="0.01" value="1"></label>
+          <button id="rotateLeft" class="secondary" type="button">↶ Rotate</button>
+          <button id="rotateRight" class="secondary" type="button">Rotate ↷</button>
+          <button id="resetCrop" class="secondary" type="button">Reset</button>
+        </div>
+        <p class="hint">Drag to reposition. Use the slider, mouse wheel or two fingers to zoom. The preview is exactly what will appear in the gallery.</p>
+      </div>
+      <button id="saveCrop" type="button">Save corrected crop</button>
+    </section>
+    <div id="status" class="status" hidden aria-live="polite"></div>
+  </main>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const canvas = $('cropCanvas');
+    const context = canvas.getContext('2d');
+    let reviewToken = '';
+    let reviewData = null;
+    let sourceImage = null;
+    let rotation = 0;
+    let zoom = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+    const pointers = new Map();
+    let dragStart = null;
+    let pinchStart = null;
+
+    function showError(error) {
+      $('loading').hidden = true;
+      $('status').hidden = false;
+      $('status').classList.add('error');
+      $('status').textContent = error && error.message ? error.message : String(error || 'Something went wrong.');
+      $('saveCrop').disabled = false;
+      $('saveCrop').textContent = 'Save corrected crop';
+    }
+
+    function imageDimensions() {
+      const sideways = Math.abs(rotation % 180) === 90;
+      return { width:sideways ? sourceImage.naturalHeight : sourceImage.naturalWidth, height:sideways ? sourceImage.naturalWidth : sourceImage.naturalHeight };
+    }
+
+    function drawingScale() {
+      const dimensions = imageDimensions();
+      return Math.max(canvas.width / dimensions.width, canvas.height / dimensions.height) * zoom;
+    }
+
+    function clampOffsets() {
+      if (!sourceImage) return;
+      const dimensions = imageDimensions();
+      const scale = drawingScale();
+      const maximumX = Math.max(0, (dimensions.width * scale - canvas.width) / 2);
+      const maximumY = Math.max(0, (dimensions.height * scale - canvas.height) / 2);
+      offsetX = Math.max(-maximumX, Math.min(maximumX, offsetX));
+      offsetY = Math.max(-maximumY, Math.min(maximumY, offsetY));
+    }
+
+    function drawCrop() {
+      context.fillStyle = '#263029';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      if (!sourceImage) return;
+      clampOffsets();
+      const scale = drawingScale();
+      context.save();
+      context.translate(canvas.width / 2 + offsetX, canvas.height / 2 + offsetY);
+      context.rotate(rotation * Math.PI / 180);
+      context.drawImage(sourceImage, -sourceImage.naturalWidth * scale / 2, -sourceImage.naturalHeight * scale / 2, sourceImage.naturalWidth * scale, sourceImage.naturalHeight * scale);
+      context.restore();
+    }
+
+    function resetCrop() {
+      rotation = 0; zoom = 1; offsetX = 0; offsetY = 0;
+      $('zoom').value = '1';
+      drawCrop();
+    }
+
+    function canvasPoint(event) {
+      const rectangle = canvas.getBoundingClientRect();
+      return { x:(event.clientX - rectangle.left) * canvas.width / rectangle.width, y:(event.clientY - rectangle.top) * canvas.height / rectangle.height };
+    }
+
+    function pointerDistance() {
+      const values = [...pointers.values()];
+      return values.length < 2 ? 0 : Math.hypot(values[0].x - values[1].x, values[0].y - values[1].y);
+    }
+
+    canvas.addEventListener('pointerdown', event => {
+      if (!sourceImage) return;
+      canvas.setPointerCapture(event.pointerId);
+      const point = canvasPoint(event);
+      pointers.set(event.pointerId, point);
+      if (pointers.size === 1) dragStart = { point, offsetX, offsetY };
+      if (pointers.size === 2) pinchStart = { distance:pointerDistance(), zoom };
+    });
+
+    canvas.addEventListener('pointermove', event => {
+      if (!pointers.has(event.pointerId) || !sourceImage) return;
+      const point = canvasPoint(event);
+      pointers.set(event.pointerId, point);
+      if (pointers.size === 1 && dragStart) {
+        offsetX = dragStart.offsetX + point.x - dragStart.point.x;
+        offsetY = dragStart.offsetY + point.y - dragStart.point.y;
+      } else if (pointers.size >= 2 && pinchStart && pinchStart.distance) {
+        zoom = Math.max(1, Math.min(3, pinchStart.zoom * pointerDistance() / pinchStart.distance));
+        $('zoom').value = String(zoom);
+      }
+      drawCrop();
+    });
+
+    function endPointer(event) {
+      pointers.delete(event.pointerId);
+      dragStart = null;
+      pinchStart = null;
+      if (pointers.size === 1) {
+        const point = [...pointers.values()][0];
+        dragStart = { point, offsetX, offsetY };
+      }
+    }
+
+    canvas.addEventListener('pointerup', endPointer);
+    canvas.addEventListener('pointercancel', endPointer);
+    canvas.addEventListener('wheel', event => {
+      if (!sourceImage) return;
+      event.preventDefault();
+      zoom = Math.max(1, Math.min(3, zoom * (event.deltaY < 0 ? 1.08 : .92)));
+      $('zoom').value = String(zoom);
+      drawCrop();
+    }, { passive:false });
+    $('zoom').addEventListener('input', event => { zoom = Number(event.target.value); drawCrop(); });
+    $('rotateLeft').addEventListener('click', () => { rotation = (rotation - 90) % 360; offsetX = 0; offsetY = 0; drawCrop(); });
+    $('rotateRight').addEventListener('click', () => { rotation = (rotation + 90) % 360; offsetX = 0; offsetY = 0; drawCrop(); });
+    $('resetCrop').addEventListener('click', resetCrop);
+
+    function loadReview(data) {
+      reviewData = data;
+      $('eventName').textContent = `${data.eventName} — ${data.eventDate}`;
+      $('finalName').textContent = `${data.className} — ${data.finalName}`;
+      $('uploader').textContent = `Submitted by ${data.uploaderName}${data.caption ? ` · ${data.caption}` : ''}`;
+      const image = new Image();
+      image.onerror = () => showError(new Error('The retained original photograph could not be opened.'));
+      image.onload = () => {
+        sourceImage = image;
+        $('loading').hidden = true;
+        $('review').hidden = false;
+        resetCrop();
+      };
+      image.src = data.originalDataUrl;
+    }
+
+    function croppedBlob() {
+      return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('The corrected crop could not be created.')), 'image/jpeg', .9));
+    }
+
+    function blobBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('The corrected crop could not be prepared.'));
+        reader.onload = () => resolve(String(reader.result).split(',')[1]);
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    $('saveCrop').addEventListener('click', async () => {
+      if (!sourceImage) return;
+      $('saveCrop').disabled = true;
+      $('saveCrop').textContent = 'Saving corrected crop…';
+      $('status').hidden = false;
+      $('status').classList.remove('error');
+      $('status').textContent = 'Saving the corrected crop privately…';
+      try {
+        const blob = await croppedBlob();
+        if (blob.size > reviewData.maxFileBytes) throw new Error('The corrected crop is unexpectedly large.');
+        google.script.run.withSuccessHandler(result => {
+          $('status').textContent = result.message;
+          $('saveCrop').disabled = false;
+          $('saveCrop').textContent = 'Save another correction';
+        }).withFailureHandler(showError).savePodiumRecrop({ token:reviewToken, fileBase64:await blobBase64(blob) });
+      } catch (error) { showError(error); }
+    });
+
+    google.script.url.getLocation(location => {
+      reviewToken = String((location.parameter || {}).token || '');
+      if (!reviewToken) return showError(new Error('This review link is missing its private token.'));
+      google.script.run.withSuccessHandler(loadReview).withFailureHandler(showError).getPodiumReview(reviewToken);
+    });
+  </script>
+</body>
+</html>
