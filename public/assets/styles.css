@@ -88,6 +88,8 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .journey-driver-label.selected { background: var(--green-dark) !important; font-size: 12px; }
 .journey-driver-label::before { border-top-color: #17211a !important; }
 .journey-driver-label.selected::before { border-top-color: var(--green-dark) !important; }
+.journey-driver-label.leaflet-tooltip-bottom::before { border-bottom-color: #17211a !important; }
+.journey-driver-label.selected.leaflet-tooltip-bottom::before { border-bottom-color: var(--green-dark) !important; }
 .journey-driver-popup { display: grid; min-width: 190px; gap: 4px; color: #344039; }
 .journey-driver-popup b { color: var(--ink); font-size: 1rem; }
 .journey-driver-popup strong { color: var(--green-dark); font-size: 1.2rem; }

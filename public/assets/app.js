@@ -4,6 +4,7 @@ const state = { data: null, profileKey: '' };
 let journeyMap = null;
 let journeyMapLayers = null;
 let journeyDriverMarkers = new Map();
+let journeyLabelSeed = Math.random();
 let journeySelectedKey = '';
 let journeyTimelineDates = [];
 let journeyPlaybackTimer = null;
@@ -492,6 +493,35 @@ function journeyCutoffDate() {
   return journeyTimelineDates[Number($('journeyDateSlider').value)] || journeyTimelineDates.at(-1) || '9999-12-31';
 }
 
+function updateJourneyLabels() {
+  if (!journeyMap || !journeyDriverMarkers.size) return;
+  const zoom = journeyMap.getZoom();
+  const bounds = journeyMap.getSize();
+  const visible = [];
+  const markers = [...journeyDriverMarkers.entries()].sort(([a], [b]) => {
+    if (a === journeySelectedKey) return -1;
+    if (b === journeySelectedKey) return 1;
+    const rank = key => { let hash = Math.floor(journeyLabelSeed * 100000); for (const char of key) hash = (Math.imul(hash, 31) + char.charCodeAt(0)) | 0; return hash >>> 0; };
+    return rank(a) - rank(b);
+  });
+  const maxLabels = zoom <= 5 ? 10 : zoom === 6 ? 25 : zoom === 7 ? 55 : Infinity;
+  for (const [key, marker] of markers) {
+    const point = journeyMap.latLngToContainerPoint(marker.getLatLng());
+    const tooltip = marker.getTooltip();
+    const text = tooltip?.getContent() || '';
+    const width = Math.min(190, Math.max(75, String(text).length * 7 + 16));
+    const car = journeyCarPhotos.has(key);
+    const box = { left: point.x - width / 2 - 6, right: point.x + width / 2 + 6, top: point.y + (car ? 5 : 7), bottom: point.y + (car ? 5 : 7) + 27 };
+    const inView = box.right > 0 && box.left < bounds.x && box.bottom > 0 && box.top < bounds.y;
+    const selected = key === journeySelectedKey;
+    const overlaps = visible.some(placed => box.left < placed.right && box.right > placed.left && box.top < placed.bottom && box.bottom > placed.top);
+    if (inView && (selected || (visible.length < maxLabels && !overlaps))) {
+      marker.openTooltip();
+      visible.push(box);
+    } else marker.closeTooltip();
+  }
+}
+
 function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   if (!window.L || !journeyMap) return;
   const cutoffDate = journeyCutoffDate();
@@ -533,13 +563,14 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     const lastEvent = driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : '';
     const popup = `<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(kmToMiles(driver.km))} miles</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${escapeHtml(classText)}</span>${lastEvent}</div>`;
     const marker = window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 1000 : 0 })
-      .bindTooltip(escapeHtml(driver.name), { permanent: true, direction: 'top', offset: [0, -18], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` })
+      .bindTooltip(escapeHtml(driver.name), { direction: 'bottom', offset: [0, carPhoto ? 6 : 6], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` })
       .bindPopup(popup).addTo(journeyMapLayers);
     journeyDriverMarkers.set(driver.driverKey, marker);
   }
   window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
   window.L.circleMarker(journeyRoadRoute.at(-1), { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Istanbul, Türkiye', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
   if (resetView) journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
+  updateJourneyLabels();
   if (focusDriver && journeyDriverMarkers.has(journeySelectedKey)) {
     const marker = journeyDriverMarkers.get(journeySelectedKey);
     journeyMap.setView(marker.getLatLng(), Math.max(journeyMap.getZoom(), 8));
@@ -599,6 +630,7 @@ function openJourneyMap(driverKey) {
     }
     if (!journeyMap) {
       journeyMap = window.L.map('journeyMap', { zoomControl: true });
+      journeyMap.on('zoomend moveend resize', updateJourneyLabels);
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
     }
