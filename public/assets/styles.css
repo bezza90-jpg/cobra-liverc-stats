@@ -338,3 +338,30 @@ footer a { color: #85e391; }
   .journey-map-legend { order:6; flex:none; margin-top:0; }
   .journey-driver-icon.car-avatar-mobile img { width:84px; height:62px; }
 }
+
+/* Compact phone layout. Keep input text at 16px to prevent iOS zooming in
+   when a menu opens, while reducing the surrounding labels and padding. */
+@media (max-width:700px) {
+  .journey-map-shell,.journey-map-overlay.fullscreen .journey-map-shell { gap:6px; padding:10px 10px 16px; }
+  .journey-map-shell > .eyebrow { margin:0 42px 0 0; font-size:.62rem; }
+  .journey-map-shell h3 { padding-right:36px; font-size:clamp(1.08rem,4.5vw,1.35rem); }
+  .journey-map-close { width:36px; height:36px; margin-bottom:-36px; font-size:1.35rem; }
+  .journey-map-toolbar { gap:6px; }
+  .journey-map-toolbar button { min-height:40px; padding:7px 10px; font-size:.75rem; }
+  .journey-map-toolbar span { max-width:45%; font-size:.68rem; line-height:1.2; }
+  .journey-map-controls { gap:7px 8px; margin:2px 0; }
+  .journey-map-controls label { gap:3px; font-size:.62rem; letter-spacing:.035em; }
+  .journey-map-controls input[type=search],.journey-map-controls select,.journey-map-controls input[type=date] {
+    box-sizing:border-box; width:100%; height:42px; min-height:42px;
+    padding:5px 8px; font-size:16px; line-height:1.2;
+  }
+  .journey-driver-picker { min-width:0; }
+  .journey-driver-picker summary { display:flex; align-items:center; min-height:42px; padding:6px 9px; font-size:.76rem; }
+  .journey-map-controls button { min-height:42px; padding:7px 8px; font-size:.76rem; line-height:1.15; }
+  .journey-driver-picker-actions button { min-height:40px; }
+  .journey-driver-checklist label { min-height:40px; padding:7px 6px; }
+  .journey-timeline strong { font-size:.71rem; }
+  .journey-timeline input[type=range] { min-height:34px; margin:0; }
+  .journey-milestones span { padding:4px 7px; font-size:.64rem; }
+  .journey-map-legend { font-size:.68rem; line-height:1.35; }
+}
