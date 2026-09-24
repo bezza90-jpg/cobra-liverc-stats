@@ -69,6 +69,9 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .journey-map-controls select { width: 100%; min-height: 40px; padding: 8px 10px; color: var(--ink); background: #fff; border: 1px solid #b9c5bd; border-radius: 6px; text-transform: none; }
 .journey-map-controls button { min-height: 40px; padding: 9px 15px; color: #fff; background: var(--green-dark); border: 1px solid var(--green-dark); border-radius: 6px; font-size: .78rem; font-weight: 900; white-space: nowrap; }
 .journey-map-controls button:hover { background: var(--green); border-color: var(--green); }
+.journey-car-upload { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 9px 13px; color: #067b14; background: #edf8ef; border: 1px solid #9dd7a5; border-radius: 6px; font-size: .78rem; font-weight: 850; text-align: center; text-decoration: none; }
+.journey-car-upload:hover { background: #d9f4de; }
+.journey-car-photo { display:block; width:48px; height:42px; object-fit:contain; filter:drop-shadow(0 2px 3px rgba(0,0,0,.7)); }
 .journey-timeline strong { margin-left: 5px; color: var(--green-dark); font-size: .75rem; letter-spacing: 0; text-transform: none; }
 .journey-timeline input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; }
 .journey-milestones { display: flex; max-width: 100%; margin: 0 0 10px; gap: 5px; overflow-x: auto; padding: 1px 1px 6px; scrollbar-width: thin; }
