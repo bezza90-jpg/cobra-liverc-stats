@@ -1,4 +1,8 @@
-# Adding COBRA podium photographs
+# Manually adding COBRA podium photographs
+
+The preferred method is the **Upload podium photo** button in the Podium Gallery. It includes event/final selection, 16:10 crop and zoom, Google Drive storage, and a moderated Google Sheet approval queue.
+
+This folder remains available as a manual fallback. A locally stored image is used only when there is no approved Google Drive photograph for that final.
 
 Each final uses one group podium photograph. You do not need to edit any code.
 
@@ -8,6 +12,6 @@ Each final uses one group podium photograph. You do not need to edit any code.
 4. In GitHub, open `public/podium-photos`, choose **Add file → Upload files**, and upload the JPG.
 5. Commit the upload directly to `main`. GitHub Actions will publish it automatically.
 
-For a replacement, upload a new photograph with exactly the same filename. Landscape JPG images around 1600 × 1000 pixels and below 2 MB work best.
+For a replacement, upload a new photograph with exactly the same filename. Landscape JPG images around 2400 × 1500 pixels and below 3 MB work best.
 
 The filename contains the LiveRC event ID and race ID, which permanently links the photograph to the correct event and final.

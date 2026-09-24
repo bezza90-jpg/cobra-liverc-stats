@@ -2,7 +2,7 @@
 
 This repository hosts the public COBRA statistics dashboard and refreshes it from the public COBRA LiveRC archive. It contains the complete verified history from 1 January 2022 and is designed for embedding in the Wix Harmony site.
 
-It also includes a Podium Gallery at `/podiums/`. The newest event opens automatically, with the complete official archive from 2022 grouped by year and event. Every final displays its official top three and links to the complete LiveRC result.
+It also includes a Podium Gallery at `/podiums/`. The newest event opens automatically, with the complete official archive from 2022 grouped by year and event. Every final displays its official top three and links to the complete LiveRC result. Podium photographs can be submitted through a mobile-friendly crop/zoom editor, held privately in Google Drive for approval, and published by changing their Google Sheet status to `Approved`. Tapping a published photograph opens a high-resolution full-screen viewer.
 
 The standalone Driver Setups & Tips library is published at `/setups/`. It uses Google Drive for files and a Google Sheet as a moderated approval queue. Its Google Apps Script backend and setup instructions are in `google-apps-script/driver-setups/`; the deployed web-app URL belongs in `public/data/setups-config.json`. Approved event-specific setups link back to LiveRC and automatically show an event-podium link when the named driver finished in the top three of a final.
 
@@ -23,7 +23,7 @@ Video-title rules:
 - Include `Qual 1`, `Qual 2`, and so on, or identify the final.
 - Include `4WD`, `Junior`, `Trucks` or `Vintage` when applicable. If no class is included, the video is treated as 2WD.
 
-To add a podium photograph, follow `public/podium-photos/README.md`. Photographs are connected to a final through a predictable LiveRC event-and-race filename, so no code changes are needed.
+The Google Apps Script backend in `google-apps-script/driver-setups/` handles both setup sheets and podium photographs. Its deployed URL belongs in both `public/data/setups-config.json` and `public/data/podiums-config.json`. The manual GitHub photo method described in `public/podium-photos/README.md` remains as a fallback.
 
 It also publishes automatically calculated championship tables at `/sword/` and `/club/`, with a selector covering every September-to-April season present in the archive. Both use overall final positions, award 100 points for first then reduce by one point per position, add one TQ bonus point, and count up to the best four rounds. DNS and DNF entries retain the points for their published overall position. The highest dropped score breaks a points tie; if that remains equal, the championship position is tied. The Club 2021/22 season is labelled as a partial archive because the retained LiveRC history begins in January 2022.
 

@@ -1,6 +1,6 @@
-# COBRA Driver Setups Google backend
+# COBRA Driver Setups and Podium Photos Google backend
 
-This Google Apps Script stores public submissions in Google Drive and records their details in a Google Sheet. Files remain private until the Status cell is changed from `Pending` to `Approved`.
+This Google Apps Script handles both Driver Setup sheets and Podium Gallery photographs. It stores submissions in separate Google Drive folders and records them in separate tabs in the same approval spreadsheet. Files remain private until the relevant Status cell is changed from `Pending` to `Approved`.
 
 ## One-time setup
 
@@ -8,17 +8,22 @@ This Google Apps Script stores public submissions in Google Drive and records th
 2. Create a new project named `COBRA Driver Setups`.
 3. Replace the contents of `Code.gs` with this folder's `Code.gs`.
 4. Add an HTML file named `Upload` and replace its contents with `Upload.html`.
-5. Save the project.
-6. Select `setupProject` in the function list and click **Run**.
-7. Approve the requested Google permissions.
-8. Open the execution log and save the displayed spreadsheet and folder links.
-9. Click **Deploy → New deployment → Web app**.
-10. Set **Execute as** to `Me` and **Who has access** to `Anyone`.
-11. Deploy and copy the URL ending in `/exec`.
-12. Paste that URL into `public/data/setups-config.json` as the `appsScriptUrl` value.
+5. Add another HTML file named `PodiumUpload` and replace its contents with `PodiumUpload.html`.
+6. Save the project.
+7. Select `setupProject` in the function list and click **Run**.
+8. Approve the requested Google permissions.
+9. Open the execution log and save the displayed spreadsheet and both folder links.
+10. Click **Deploy → New deployment → Web app**.
+11. Set **Execute as** to `Me` and **Who has access** to `Anyone`.
+12. Deploy and copy the URL ending in `/exec`.
+13. Paste that URL into both `public/data/setups-config.json` and `public/data/podiums-config.json` as the `webAppUrl` value.
+
+For an existing deployment, update the files, run `setupProject` once, then use **Deploy → Manage deployments → Edit → New version → Deploy**. The existing `/exec` address does not change.
 
 ## Approving a submission
 
 Open the generated `COBRA Driver Setup Approvals` spreadsheet. Change the submission's Status cell from `Pending` to `Approved`. The installed edit trigger makes that individual file viewable and publishes it in the library. Set it to `Rejected` to return the file to private status and remove it from the public library.
 
-The public page is at `public/setups/index.html` and is intended to be published at `/setups/`.
+The Driver Setups public page is at `/setups/`. The Podium Gallery upload form is opened from the gallery's upload buttons. A submitted photograph is cropped to 16:10 in the browser before upload; the editor supports drag, zoom, rotation and two-finger pinch zoom on phones.
+
+The spreadsheet's `Podium Photos` tab is the podium approval queue. Approving a row publishes the photograph to its exact event and final. Approving a replacement for the same final automatically supersedes the earlier photograph.
