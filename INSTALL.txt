@@ -1,0 +1,12 @@
+COBRA distance tracker update — 24 September 2026
+
+Extract this ZIP. In your existing cobra-liverc-stats GitHub repository, replace these four files using the same paths:
+
+public/index.html
+public/assets/app.js
+public/assets/styles.css
+public/assets/matt-hodges-car.png
+
+Keep the rest of your repository. Commit the changes, wait for GitHub Actions to finish successfully, and refresh the Wix page (a private/incognito tab can avoid stale cached files). The new menu should show 1–15 minutes and the map should show a Refocus on driver button. The car avatar file must be in public/assets exactly as shown.
+
+Behaviour: Play starts from the selected starting date initially; after moving the date slider, Play resumes from that slider position. A chosen duration covers the entire original playback range; after scrubbing, the remaining journey takes the proportional remainder. April–August advance four times faster than other months while the total remains the chosen duration. In race mode, time remains a consistent number of career days for every driver.
