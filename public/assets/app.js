@@ -1430,13 +1430,11 @@ async function init() {
     const params = new URLSearchParams(window.location.search);
     const requestedDriver = params.get('driver');
     const requestedMap = params.get('map');
-    const trackerDriver = requestedMap && data.driverByKey[requestedMap] ? requestedMap
-      : params.get('tracker') === '1' ? (data.driverByKey['MATTHEW-HODGES'] ? 'MATTHEW-HODGES' : data.drivers.find(row => !journeyExcludedDrivers.has(row.k))?.k) : '';
-    if (trackerDriver) {
+    if (requestedMap && data.driverByKey[requestedMap]) {
       const selected = (params.get('raceDrivers') || '').split(',').filter(key => data.driverByKey[key] && !journeyExcludedDrivers.has(key));
       journeySelectedKeys = new Set(selected);
-      driverProfile(trackerDriver);
-      openJourneyMap(trackerDriver);
+      driverProfile(requestedMap);
+      openJourneyMap(requestedMap);
       renderJourneyDriverChecklist();
     } else if (requestedDriver && data.driverByKey[requestedDriver]) driverProfile(requestedDriver);
   } catch (error) {

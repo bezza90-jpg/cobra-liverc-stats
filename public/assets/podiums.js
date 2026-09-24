@@ -45,7 +45,6 @@ function finalCard([raceId, race]) {
   const originalPhotoUrl = replacement || approvedPhoto?.imageUrl || `../podium-photos/${encodeURIComponent(photoName)}`;
   const photoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 900) : originalPhotoUrl;
   const fullPhotoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 2400) : originalPhotoUrl;
-  const fallbackUrl = `../podium-defaults/${encodeURIComponent(raceId)}.svg`;
   const photoSrcset = approvedPhoto && !replacement
     ? `${resizedDriveImage(originalPhotoUrl, 480)} 480w, ${resizedDriveImage(originalPhotoUrl, 900)} 900w, ${resizedDriveImage(originalPhotoUrl, 1400)} 1400w`
     : '';
@@ -58,7 +57,7 @@ function finalCard([raceId, race]) {
     ? rows.map(podiumRow).join('')
     : '<tr><td colspan="4" class="podium-no-results">No classified top-three result is available.</td></tr>';
   return `<article class="podium-card">
-    <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-fallback-image="${escapeHtml(fallbackUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
+    <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
       <img src="${escapeHtml(photoUrl)}"${photoSrcset ? ` srcset="${escapeHtml(photoSrcset)}" sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 1100px) 50vw, 520px"` : ''} alt="${escapeHtml(photoTitle)}" loading="lazy" decoding="async">
       <button class="podium-photo-expand" type="button">Enlarge photo</button>
       <div class="podium-placeholder">
@@ -102,22 +101,14 @@ function renderEvent(eventId, updateAddress = true) {
   document.querySelectorAll('.podium-photo img').forEach(image => {
     const markLoaded = () => image.closest('.podium-photo').classList.add('has-photo');
     const markFailed = () => {
-      const photo = image.closest('.podium-photo');
-      if (!image.dataset.fallbackAttempted) {
-        image.dataset.fallbackAttempted = 'true';
-        image.removeAttribute('srcset');
-        image.src = photo.dataset.fallbackImage;
-        photo.dataset.fullImage = photo.dataset.fallbackImage;
-        photo.dataset.originalImage = photo.dataset.fallbackImage;
-        photo.dataset.photoCaption = 'Illustrated podium. Upload an official photograph to replace it.';
-      } else {
-        photo.querySelector('.podium-photo-expand')?.remove();
-        image.remove();
-      }
+      image.closest('.podium-photo').querySelector('.podium-photo-expand')?.remove();
+      image.remove();
     };
-    image.addEventListener('load', markLoaded);
-    image.addEventListener('error', markFailed);
     if (image.complete) image.naturalWidth ? markLoaded() : markFailed();
+    else {
+      image.addEventListener('load', markLoaded, { once: true });
+      image.addEventListener('error', markFailed, { once: true });
+    }
   });
   document.querySelectorAll('[data-event-id]').forEach(button => button.setAttribute('aria-current', String(button.dataset.eventId) === activeEventId ? 'true' : 'false'));
   if (updateAddress) {

@@ -104,8 +104,6 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .results-nav { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 22px; }
 .results-nav a { padding: 8px 12px; color: #dce9df; border: 1px solid rgba(255,255,255,.18); border-radius: 5px; font-size: .78rem; font-weight: 800; text-decoration: none; }
 .results-nav a:hover, .results-nav a[aria-current="page"] { color: #071109; background: #fff; }
-.results-nav .tracker-nav-button { color:#07250d; background:#c8f3ce; border-color:#c8f3ce; }
-.results-nav .tracker-nav-button:hover { background:#fff; border-color:#fff; }
 .championship-hero .hero-copy { padding-top: 38px; }
 .season-selector { position: relative; z-index: 1; display: inline-flex; margin: 0 12px 12px 0; align-items: center; gap: 10px; color: #dce9df; }
 .season-selector select { min-width: 170px; height: 40px; color: #0c1b10; background: #fff; border-color: #fff; font-weight: 850; }
