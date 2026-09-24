@@ -39,12 +39,14 @@ function podiumRow(result) {
   return `<tr class="podium-place podium-place-${position}"><td><span aria-hidden="true">${medal}</span> ${position}</td><td>${escapeHtml(driverByKey.get(result[1]) || result[1])}</td><td>${escapeHtml(result[3] || '—')}</td><td>${escapeHtml(result[5] || '—')}</td></tr>`;
 }
 
-function podiumIllustration(rows, photoName) {
+function podiumIllustration(rows, photoName, className) {
   const places = [2, 1, 3].map(place => {
     const row = rows.find(result => Number(result[2]) === place);
     const key = String(row?.[1] || '');
     const name = driverByKey.get(key) || key || 'Awaiting result';
-    const avatar = carAvatars[key];
+    const entry = carAvatars[key];
+    const avatar = typeof entry === 'string' ? entry : entry && typeof entry === 'object'
+      ? entry[className] || entry.default || '' : '';
     const chassis = livercChassis[key];
     const manufacturer = String(chassis?.name || driverManufacturers[key] || '').trim();
     const slug = String(chassis?.slug || manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
@@ -68,10 +70,11 @@ function finalCard([raceId, race]) {
   const photoName = `${race.e}-${raceId}-podium.jpg`;
   const approvedPhoto = podiumPhotoByRaceId.get(String(raceId));
   const override = podiumPhotoOverrides.get(String(raceId));
+  const hidePhoto = override?.hidden === true;
   const replacement = typeof override?.image === 'string' && /^podium-photos\/[a-zA-Z0-9-]+\.(?:jpg|jpeg|png|webp)$/.test(override.image)
     ? new URL(`../${override.image}`, import.meta.url).href : '';
   const originalPhotoUrl = replacement || approvedPhoto?.imageUrl || `../podium-photos/${encodeURIComponent(photoName)}`;
-  const photoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 900) : originalPhotoUrl;
+  const photoUrl = hidePhoto ? '' : approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 900) : originalPhotoUrl;
   const fullPhotoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 2400) : originalPhotoUrl;
   const photoSrcset = approvedPhoto && !replacement
     ? `${resizedDriveImage(originalPhotoUrl, 480)} 480w, ${resizedDriveImage(originalPhotoUrl, 900)} 900w, ${resizedDriveImage(originalPhotoUrl, 1400)} 1400w`
@@ -86,9 +89,8 @@ function finalCard([raceId, race]) {
     : '<tr><td colspan="4" class="podium-no-results">No classified top-three result is available.</td></tr>';
   return `<article class="podium-card">
     <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
-      <img src="${escapeHtml(photoUrl)}"${photoSrcset ? ` srcset="${escapeHtml(photoSrcset)}" sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 1100px) 50vw, 520px"` : ''} alt="${escapeHtml(photoTitle)}" loading="lazy" decoding="async">
-      <button class="podium-photo-expand" type="button">Enlarge photo</button>
-      ${podiumIllustration(rows, photoName)}
+      ${hidePhoto ? '' : `<img src="${escapeHtml(photoUrl)}"${photoSrcset ? ` srcset="${escapeHtml(photoSrcset)}" sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 1100px) 50vw, 520px"` : ''} alt="${escapeHtml(photoTitle)}" loading="lazy" decoding="async"><button class="podium-photo-expand" type="button">Enlarge photo</button>`}
+      ${podiumIllustration(rows, photoName, race.c)}
     </div>
     <div class="podium-card-copy">
       <p class="podium-class">${escapeHtml(race.c)}</p>

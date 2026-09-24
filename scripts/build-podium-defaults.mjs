@@ -34,15 +34,17 @@ const inlineImage = async relative => {
   } catch (error) { if (error.code === 'ENOENT') return ''; throw error; }
 };
 const embedded = new Map();
-async function driverArt(key) {
-  if (embedded.has(key)) return embedded.get(key);
-  const avatar = String(avatars[key] || '');
+async function driverArt(key, className) {
+  const cacheKey = `${key}|${className}`;
+  if (embedded.has(cacheKey)) return embedded.get(cacheKey);
+  const entry = avatars[key];
+  const avatar = typeof entry === 'string' ? entry : String(entry?.[className] || entry?.default || '');
   const manufacturer = String(liveRcChassis[key]?.name || manufacturers[key] || '').trim();
   const slug = String(liveRcChassis[key]?.slug || manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
   const carImage = avatar && await inlineImage(avatar);
   const image = carImage || (slug && await inlineImage(`assets/manufacturers/${slug}.png`)) || (!manufacturer && await inlineImage('assets/cobra-logo.png')) || '';
   const value = { image, label: manufacturer || 'COBRA', avatar: !!carImage };
-  embedded.set(key, value);
+  embedded.set(cacheKey, value);
   return value;
 }
 const output = path.join(publicRoot, 'podium-defaults');
@@ -56,7 +58,7 @@ for (const [raceId, race] of Object.entries(dashboard.raceById)) {
     const row = top.find(item => Number(item[2]) === place);
     const key = row ? String(row[1]) : '';
     const name = row ? names.get(key) || key : 'Awaiting result';
-    return { place, name, art: key ? await driverArt(key) : { image: '', label: 'NO RESULT YET' } };
+    return { place, name, art: key ? await driverArt(key, race.c) : { image: '', label: 'NO RESULT YET' } };
   }));
   const cards = columns.map(({ place, name, art }, index) => {
     const x = 34 + index * 389;

@@ -22,6 +22,12 @@ let journeyRaceElapsedDays = 0;
 let mattCarAvatarReady = false;
 let journeyAvatarManifestReady = false;
 let journeyAvatarImages = new Map();
+const avatarClassOrder = ['default', '2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Trucks', 'Vintage', 'Junior Racers'];
+function availableAvatarPath(entry) {
+  const path = typeof entry === 'string' ? entry : entry && typeof entry === 'object'
+    ? avatarClassOrder.map(cls => entry[cls]).find(Boolean) : '';
+  return typeof path === 'string' && /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(path) ? path : '';
+}
 const mattCarAvatar = new Image();
 mattCarAvatar.onload = () => {
   mattCarAvatarReady = true;
@@ -37,8 +43,9 @@ async function loadJourneyAvatars() {
     const next = new Map();
     journeyAvatarImages = next;
     journeyAvatarManifestReady = true;
-    for (const [key, path] of Object.entries(manifest)) {
-      if (!/^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(path)) continue;
+    for (const [key, entry] of Object.entries(manifest)) {
+      const path = availableAvatarPath(entry);
+      if (!path) continue;
       const image = new Image();
       image.onload = () => {
         if (journeyAvatarImages !== next) return;

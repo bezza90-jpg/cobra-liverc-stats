@@ -1,7 +1,1 @@
-COBRA podium and map update
-
-At the repository top level, choose Add file > Upload files on GitHub. Drag the public and scripts folders from this ZIP into the upload area. Keep the folder paths shown, then commit. Wait for the green Update and publish COBRA statistics workflow and refresh the site.
-
-Podiums show 2nd on the left, 1st tallest in the middle, and 3rd on the right. LiveRC heat-sheet chassis brands are gathered during the statistics refresh; existing driver car avatars continue to take priority. If no chassis is listed, the COBRA logo is shown. The map uses Leaflet's built-in wheel zoom.
-
-Do not replace your existing public/data files or approved podium photographs.
+Upload at the TOP LEVEL of GitHub (Add file > Upload files). Extract this ZIP and drag its public and scripts folders into the upload area; confirm paths remain public/assets/app.js and scripts/build-podium-defaults.mjs. Commit and wait for the green Actions build. The latest Club Day 20 September 2026 2WD A-Main (race 7072625) will show its illustrated podium. The Google-approved test photo stays in Drive but will not appear on the site. This data file contains that single photo override: if you already have other podium-photo-overrides.json entries on GitHub, merge 7072625: {"hidden":true} into them instead of replacing them. The avatar manifest and images are NOT included: publish these later using the desktop manager's export feature.
