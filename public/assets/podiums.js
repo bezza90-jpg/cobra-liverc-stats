@@ -10,6 +10,8 @@ let driverByKey = new Map();
 let podiumPhotoByRaceId = new Map();
 let podiumPhotoOverrides = new Map();
 let podiumWebAppUrl = '';
+let carAvatars = {};
+let driverManufacturers = {};
 
 function eventFinals(eventId) {
   return Object.entries(data.raceById)
@@ -36,6 +38,30 @@ function podiumRow(result) {
   return `<tr class="podium-place podium-place-${position}"><td><span aria-hidden="true">${medal}</span> ${position}</td><td>${escapeHtml(driverByKey.get(result[1]) || result[1])}</td><td>${escapeHtml(result[3] || '—')}</td><td>${escapeHtml(result[5] || '—')}</td></tr>`;
 }
 
+function podiumIllustration(rows, photoName) {
+  const places = [1, 2, 3].map(place => {
+    const row = rows.find(result => Number(result[2]) === place);
+    const key = String(row?.[1] || '');
+    const name = driverByKey.get(key) || key || 'Awaiting result';
+    const avatar = carAvatars[key];
+    const manufacturer = String(driverManufacturers[key] || '').trim();
+    const slug = manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    const validAvatar = typeof avatar === 'string' && /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(avatar);
+    const source = validAvatar ? `../${avatar}` : slug ? `../assets/manufacturers/${slug}.png` : '../assets/cobra-logo.png';
+    const fallback = manufacturer || 'COBRA';
+    return `<div class="podium-illustration-place podium-illustration-${place}">
+      <span class="podium-illustration-rank">${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'}</span>
+      <div class="podium-illustration-art"><img src="${escapeHtml(source)}" alt="${escapeHtml(validAvatar ? `${name} car` : manufacturer ? `${manufacturer} chassis logo` : 'COBRA club logo')}" loading="lazy"><span hidden>${escapeHtml(fallback)}</span></div>
+      <strong>${escapeHtml(name)}</strong>
+    </div>`;
+  }).join('');
+  return `<div class="podium-placeholder podium-illustration" aria-label="Illustrated podium showing the first three drivers">
+    <div class="podium-illustration-title">COBRA PODIUM</div>
+    <div class="podium-illustration-places">${places}</div>
+    <small>Official photo: <code>${escapeHtml(photoName)}</code></small>
+  </div>`;
+}
+
 function finalCard([raceId, race]) {
   const photoName = `${race.e}-${raceId}-podium.jpg`;
   const approvedPhoto = podiumPhotoByRaceId.get(String(raceId));
@@ -45,7 +71,6 @@ function finalCard([raceId, race]) {
   const originalPhotoUrl = replacement || approvedPhoto?.imageUrl || `../podium-photos/${encodeURIComponent(photoName)}`;
   const photoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 900) : originalPhotoUrl;
   const fullPhotoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 2400) : originalPhotoUrl;
-  const fallbackUrl = `../podium-defaults/${encodeURIComponent(raceId)}.svg`;
   const photoSrcset = approvedPhoto && !replacement
     ? `${resizedDriveImage(originalPhotoUrl, 480)} 480w, ${resizedDriveImage(originalPhotoUrl, 900)} 900w, ${resizedDriveImage(originalPhotoUrl, 1400)} 1400w`
     : '';
@@ -58,14 +83,10 @@ function finalCard([raceId, race]) {
     ? rows.map(podiumRow).join('')
     : '<tr><td colspan="4" class="podium-no-results">No classified top-three result is available.</td></tr>';
   return `<article class="podium-card">
-    <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-fallback-image="${escapeHtml(fallbackUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
+    <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
       <img src="${escapeHtml(photoUrl)}"${photoSrcset ? ` srcset="${escapeHtml(photoSrcset)}" sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 1100px) 50vw, 520px"` : ''} alt="${escapeHtml(photoTitle)}" loading="lazy" decoding="async">
       <button class="podium-photo-expand" type="button">Enlarge photo</button>
-      <div class="podium-placeholder">
-        <span class="podium-icon" aria-hidden="true">🏆</span>
-        <strong>Podium photograph coming soon</strong>
-        <small>Upload as <code>${escapeHtml(photoName)}</code></small>
-      </div>
+      ${podiumIllustration(rows, photoName)}
     </div>
     <div class="podium-card-copy">
       <p class="podium-class">${escapeHtml(race.c)}</p>
@@ -99,25 +120,21 @@ function renderEvent(eventId, updateAddress = true) {
   $('eventResultsLink').href = event.u;
   $('eventSelect').value = activeEventId;
   $('finalsGrid').innerHTML = finals.length ? finals.map(finalCard).join('') : '<div class="panel empty-state">No finals were found for this event.</div>';
-  document.querySelectorAll('.podium-photo img').forEach(image => {
+  document.querySelectorAll('.podium-photo > img').forEach(image => {
     const markLoaded = () => image.closest('.podium-photo').classList.add('has-photo');
     const markFailed = () => {
       const photo = image.closest('.podium-photo');
-      if (!image.dataset.fallbackAttempted) {
-        image.dataset.fallbackAttempted = 'true';
-        image.removeAttribute('srcset');
-        image.src = photo.dataset.fallbackImage;
-        photo.dataset.fullImage = photo.dataset.fallbackImage;
-        photo.dataset.originalImage = photo.dataset.fallbackImage;
-        photo.dataset.photoCaption = 'Illustrated podium. Upload an official photograph to replace it.';
-      } else {
-        photo.querySelector('.podium-photo-expand')?.remove();
-        image.remove();
-      }
+      photo.querySelector('.podium-photo-expand')?.remove();
+      image.remove();
     };
     image.addEventListener('load', markLoaded);
     image.addEventListener('error', markFailed);
     if (image.complete) image.naturalWidth ? markLoaded() : markFailed();
+  });
+  document.querySelectorAll('.podium-illustration-art img').forEach(image => {
+    const showLabel = () => { image.hidden = true; image.nextElementSibling.hidden = false; };
+    image.addEventListener('error', showLabel);
+    if (image.complete && !image.naturalWidth) showLabel();
   });
   document.querySelectorAll('[data-event-id]').forEach(button => button.setAttribute('aria-current', String(button.dataset.eventId) === activeEventId ? 'true' : 'false'));
   if (updateAddress) {
@@ -171,6 +188,17 @@ async function loadPodiumOverrides() {
   if (changes && typeof changes === 'object' && !Array.isArray(changes)) podiumPhotoOverrides = new Map(Object.entries(changes));
 }
 
+async function loadIllustrationData() {
+  const files = await Promise.all(['car-avatars.json', 'driver-manufacturers.json'].map(async name => {
+    try {
+      const response = await fetch(`../data/${name}`, { cache: 'no-store' });
+      return response.ok ? await response.json() : {};
+    } catch { return {}; }
+  }));
+  carAvatars = files[0] && typeof files[0] === 'object' ? files[0] : {};
+  driverManufacturers = files[1] && typeof files[1] === 'object' ? files[1] : {};
+}
+
 function openPhoto(photo) {
   if (!window.matchMedia('(max-width: 800px)').matches) {
     window.open(photo.dataset.fullImage, '_blank', 'noopener,noreferrer');
@@ -221,7 +249,8 @@ async function init() {
     const [response] = await Promise.all([
       fetch('../data/dashboard.json', { cache: 'no-store' }),
       loadPodiumPhotos().catch(error => console.warn(error.message)),
-      loadPodiumOverrides().catch(error => console.warn(error.message))
+      loadPodiumOverrides().catch(error => console.warn(error.message)),
+      loadIllustrationData()
     ]);
     if (!response.ok) throw new Error(`Unable to load statistics (${response.status})`);
     data = await response.json();
