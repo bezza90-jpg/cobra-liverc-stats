@@ -14,6 +14,19 @@ const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short
 const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
 const kmToMiles = km => Number((km * 0.621371).toFixed(1));
 const journeyExcludedDrivers = new Set(['SIMON-NOTLEY']);
+const journeyCarPhotos = new Map([['MATTHEW-HODGES', 'assets/matt-hodges-car.png']]);
+const carUploadUrl = 'https://script.google.com/macros/s/AKfycbxPp3_ULUwY5QfqoqqIVPWe1r7AHpJgVpIPKL6Uo85G9VM_-OvybGapd9Y87tIi04Kb5A/exec?page=car-upload';
+window.cobraCarPhotos = payload => {
+  if (!payload?.ok || !Array.isArray(payload.photos)) return;
+  for (const photo of payload.photos) {
+    if (/^[A-Z0-9-]+$/.test(photo.driverKey) && /^https:\/\/drive\.google\.com\/thumbnail\?id=[\w-]+&sz=w600$/.test(photo.imageUrl)) journeyCarPhotos.set(photo.driverKey, photo.imageUrl);
+  }
+  if (journeyMap && !$('journeyMapOverlay')?.hidden) renderJourneyMap();
+};
+const carPhotoScript = document.createElement('script');
+carPhotoScript.src = `https://script.google.com/macros/s/AKfycbxPp3_ULUwY5QfqoqqIVPWe1r7AHpJgVpIPKL6Uo85G9VM_-OvybGapd9Y87tIi04Kb5A/exec?action=car-list&callback=cobraCarPhotos`;
+carPhotoScript.async = true;
+document.head.append(carPhotoScript);
 const classLabels = {
   'Junior Racers': 'Juniors',
   '2-Wheel Drive Buggy': '2WD',
@@ -142,6 +155,7 @@ function ensureEnhancedMarkup() {
           <label>Find a driver<input type="search" id="journeyDriverSearch" list="journeyDriverOptions" placeholder="Start typing a name…"><datalist id="journeyDriverOptions"></datalist></label>
           <label>Drivers shown<select id="journeyDriverLimit"><option value="0">All drivers</option><option value="25">Top 25</option><option value="50">Top 50</option><option value="100">Top 100</option><option value="200">Top 200</option></select></label>
           <button type="button" id="journeyPlay">▶ Play 2-minute journey</button>
+          <a class="journey-car-upload" href="${carUploadUrl}" target="_blank" rel="noopener noreferrer">Upload your car photo</a>
           <label class="journey-timeline">Journey date <strong id="journeyDateLabel">Latest</strong><input type="range" id="journeyDateSlider" min="0" max="0" value="0" step="1" aria-label="Journey date from January 2022 to the latest result"></label>
         </div>
         <div class="journey-milestones" id="journeyMilestones" aria-label="Journey milestones"></div>
@@ -513,7 +527,8 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   for (const driver of displayedDrivers) {
     const route = journeyRouteAt(driver.km);
     const selectedDriver = driver.driverKey === journeySelectedKey;
-    const icon = window.L.divIcon({ className: 'journey-driver-icon', html: `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: [18, 24], iconAnchor: [9, 21] });
+    const carPhoto = journeyCarPhotos.get(driver.driverKey);
+    const icon = window.L.divIcon({ className: 'journey-driver-icon', html: carPhoto ? `<img class="journey-car-photo" src="${escapeHtml(carPhoto)}" alt="">` : `<i class="${selectedDriver ? 'selected' : ''}"></i>`, iconSize: carPhoto ? [48, 42] : [18, 24], iconAnchor: carPhoto ? [24, 38] : [9, 21] });
     const classText = driver.classes.map(cls => classLabels[cls] || cls).join(', ');
     const lastEvent = driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : '';
     const popup = `<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(kmToMiles(driver.km))} miles</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${escapeHtml(classText)}</span>${lastEvent}</div>`;
