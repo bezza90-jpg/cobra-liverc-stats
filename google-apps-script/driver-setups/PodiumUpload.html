@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base target="_top">
+  <style>
+    :root { --green:#08a31a; --green-dark:#067b14; --ink:#111714; --muted:#637069; --line:#dfe6e1; --wash:#f3f7f4; }
+    * { box-sizing:border-box; }
+    body { margin:0; padding:22px; color:var(--ink); background:var(--wash); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    form { display:grid; gap:16px; max-width:900px; margin:auto; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    label { display:grid; gap:7px; color:#344039; font-size:.76rem; font-weight:850; letter-spacing:.045em; text-transform:uppercase; }
+    input,select,textarea { width:100%; min-width:0; padding:0 12px; color:var(--ink); background:#fff; border:1px solid #bcc8c0; border-radius:8px; outline:none; font:inherit; }
+    input,select { height:46px; }
+    textarea { min-height:92px; padding-top:12px; resize:vertical; }
+    input:focus,select:focus,textarea:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(8,163,26,.13); }
+    input[type=file] { height:auto; padding:12px; }
+    input[type=range] { height:32px; padding:0; accent-color:var(--green-dark); }
+    .full { grid-column:1/-1; }
+    .hint { margin:0; color:var(--muted); font-size:.77rem; line-height:1.5; text-transform:none; letter-spacing:0; font-weight:500; }
+    .editor { display:grid; gap:12px; padding:14px; background:#111714; border-radius:12px; }
+    .editor canvas { display:block; width:100%; aspect-ratio:16/10; border-radius:8px; background:#263029; cursor:grab; touch-action:none; }
+    .editor canvas:active { cursor:grabbing; }
+    .editor-controls { display:grid; grid-template-columns:1fr auto auto auto; gap:9px; align-items:center; }
+    .editor-controls label { color:#fff; }
+    button { min-height:46px; padding:10px 16px; color:#fff; background:var(--green-dark); border:0; border-radius:8px; font:inherit; font-weight:850; cursor:pointer; }
+    button:hover { background:var(--green); }
+    button.secondary { color:#142018; background:#e8efea; }
+    button.secondary:hover { background:#d5e3d8; }
+    button:disabled { cursor:wait; opacity:.58; }
+    .consent { display:flex; align-items:flex-start; gap:9px; font-size:.78rem; line-height:1.45; text-transform:none; letter-spacing:0; }
+    .consent input { width:17px; height:17px; margin:2px 0 0; flex:0 0 auto; accent-color:var(--green); }
+    .status { padding:14px 16px; color:#315039; background:#eef8f0; border:1px solid #bfe2c5; border-left:4px solid var(--green); border-radius:8px; line-height:1.5; }
+    .status.error { color:#711b1b; background:#fff1f1; border-color:#e9bcbc; border-left-color:#b51d1d; }
+    .honeypot { position:absolute; left:-10000px; }
+    [hidden] { display:none !important; }
+    @media(max-width:650px){ body{padding:14px}.grid{grid-template-columns:1fr}.full{grid-column:auto}.editor-controls{grid-template-columns:1fr 1fr 1fr}.editor-controls label{grid-column:1/-1} }
+  </style>
+</head>
+<body>
+  <div id="loading" class="status">Loading COBRA events and finals…</div>
+  <form id="podiumForm" hidden>
+    <div class="grid">
+      <label>Uploader name
+        <input id="uploaderName" maxlength="80" autocomplete="name" required placeholder="Your name">
+      </label>
+      <label>COBRA event
+        <select id="eventId" required></select>
+      </label>
+      <label class="full">Class and final
+        <select id="raceId" required disabled><option value="">Choose an event first</option></select>
+      </label>
+      <label class="full">Podium photograph
+        <input id="photoFile" type="file" required accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp">
+        <span class="hint">Choose a JPG, PNG or WebP photograph. You will crop it to the gallery shape before uploading.</span>
+      </label>
+      <div id="editor" class="editor full" hidden>
+        <canvas id="cropCanvas" width="2400" height="1500" aria-label="Podium photograph crop preview"></canvas>
+        <div class="editor-controls">
+          <label>Zoom<input id="zoom" type="range" min="1" max="3" step="0.01" value="1"></label>
+          <button id="rotateLeft" class="secondary" type="button" aria-label="Rotate photograph left">↶ Rotate</button>
+          <button id="rotateRight" class="secondary" type="button" aria-label="Rotate photograph right">Rotate ↷</button>
+          <button id="resetCrop" class="secondary" type="button">Reset</button>
+        </div>
+        <p class="hint" style="color:#c6d5ca">Drag to reposition. Use the slider, mouse wheel or two fingers to zoom. The preview is exactly what will appear in the gallery.</p>
+      </div>
+      <label class="full">Photograph caption <span class="hint">Optional</span>
+        <textarea id="caption" maxlength="500" placeholder="Names, presentation details or anything useful to accompany the photograph…"></textarea>
+      </label>
+    </div>
+    <label class="consent"><input id="consent" type="checkbox" required> I confirm that I am entitled to share this photograph and agree to COBRA publishing it.</label>
+    <label class="honeypot">Website<input id="website" tabindex="-1" autocomplete="off"></label>
+    <button id="submitButton" type="submit">Submit podium photograph for approval</button>
+    <div id="status" class="status" hidden aria-live="polite"></div>
+  </form>
+
+  <script>
+    const $ = id => document.getElementById(id);
+    const canvas = $('cropCanvas');
+    const context = canvas.getContext('2d');
+    let options;
+    let requestedLocation = {};
+    let sourceImage = null;
+    let sourceFilename = '';
+    let rotation = 0;
+    let zoom = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+    const pointers = new Map();
+    let dragStart = null;
+    let pinchStart = null;
+
+    function escapeHtml(value) {
+      return String(value || '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+    }
+
+    function showError(error) {
+      const target = $('podiumForm').hidden ? $('loading') : $('status');
+      target.hidden = false;
+      target.classList.add('error');
+      target.textContent = error && error.message ? error.message : String(error || 'Something went wrong.');
+      $('submitButton').disabled = false;
+      $('submitButton').textContent = 'Submit podium photograph for approval';
+    }
+
+    function formatDate(value) {
+      return new Intl.DateTimeFormat('en-GB', { day:'numeric', month:'short', year:'numeric' }).format(new Date(`${value}T12:00:00Z`));
+    }
+
+    function initialise(data) {
+      options = data;
+      $('eventId').innerHTML = '<option value="">Choose event</option>' + data.events.map(event => `<option value="${escapeHtml(event.id)}">${escapeHtml(formatDate(event.date))} — ${escapeHtml(event.name)}</option>`).join('');
+      $('loading').hidden = true;
+      $('podiumForm').hidden = false;
+      applyRequestedLocation();
+    }
+
+    function populateFinals(selectedRaceId = '') {
+      const event = options.events.find(item => item.id === $('eventId').value);
+      const finals = event ? event.finals : [];
+      $('raceId').disabled = !finals.length;
+      $('raceId').innerHTML = '<option value="">Choose class and final</option>' + finals.map(final => `<option value="${escapeHtml(final.raceId)}">${escapeHtml(final.className)} — ${escapeHtml(final.finalName)}</option>`).join('');
+      if (selectedRaceId && finals.some(final => final.raceId === selectedRaceId)) $('raceId').value = selectedRaceId;
+    }
+
+    function applyRequestedLocation() {
+      if (!options) return;
+      const eventId = String(requestedLocation.eventId || '');
+      const raceId = String(requestedLocation.raceId || '');
+      if (eventId && options.events.some(event => event.id === eventId)) {
+        $('eventId').value = eventId;
+        populateFinals(raceId);
+      }
+    }
+
+    function imageDimensions() {
+      const sideways = Math.abs(rotation % 180) === 90;
+      return { width: sideways ? sourceImage.naturalHeight : sourceImage.naturalWidth, height: sideways ? sourceImage.naturalWidth : sourceImage.naturalHeight };
+    }
+
+    function drawingScale() {
+      const dimensions = imageDimensions();
+      return Math.max(canvas.width / dimensions.width, canvas.height / dimensions.height) * zoom;
+    }
+
+    function clampOffsets() {
+      if (!sourceImage) return;
+      const dimensions = imageDimensions();
+      const scale = drawingScale();
+      const maximumX = Math.max(0, (dimensions.width * scale - canvas.width) / 2);
+      const maximumY = Math.max(0, (dimensions.height * scale - canvas.height) / 2);
+      offsetX = Math.max(-maximumX, Math.min(maximumX, offsetX));
+      offsetY = Math.max(-maximumY, Math.min(maximumY, offsetY));
+    }
+
+    function drawCrop() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = '#263029';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      if (!sourceImage) return;
+      clampOffsets();
+      const scale = drawingScale();
+      context.save();
+      context.translate(canvas.width / 2 + offsetX, canvas.height / 2 + offsetY);
+      context.rotate(rotation * Math.PI / 180);
+      context.drawImage(sourceImage, -sourceImage.naturalWidth * scale / 2, -sourceImage.naturalHeight * scale / 2, sourceImage.naturalWidth * scale, sourceImage.naturalHeight * scale);
+      context.restore();
+    }
+
+    function resetCrop() {
+      rotation = 0;
+      zoom = 1;
+      offsetX = 0;
+      offsetY = 0;
+      $('zoom').value = '1';
+      drawCrop();
+    }
+
+    function canvasPoint(event) {
+      const rectangle = canvas.getBoundingClientRect();
+      return { x:(event.clientX - rectangle.left) * canvas.width / rectangle.width, y:(event.clientY - rectangle.top) * canvas.height / rectangle.height };
+    }
+
+    function pointerDistance() {
+      const values = [...pointers.values()];
+      return values.length < 2 ? 0 : Math.hypot(values[0].x - values[1].x, values[0].y - values[1].y);
+    }
+
+    canvas.addEventListener('pointerdown', event => {
+      if (!sourceImage) return;
+      canvas.setPointerCapture(event.pointerId);
+      const point = canvasPoint(event);
+      pointers.set(event.pointerId, point);
+      if (pointers.size === 1) dragStart = { point, offsetX, offsetY };
+      if (pointers.size === 2) pinchStart = { distance:pointerDistance(), zoom };
+    });
+
+    canvas.addEventListener('pointermove', event => {
+      if (!pointers.has(event.pointerId) || !sourceImage) return;
+      const point = canvasPoint(event);
+      pointers.set(event.pointerId, point);
+      if (pointers.size === 1 && dragStart) {
+        offsetX = dragStart.offsetX + point.x - dragStart.point.x;
+        offsetY = dragStart.offsetY + point.y - dragStart.point.y;
+      } else if (pointers.size >= 2 && pinchStart && pinchStart.distance) {
+        zoom = Math.max(1, Math.min(3, pinchStart.zoom * pointerDistance() / pinchStart.distance));
+        $('zoom').value = String(zoom);
+      }
+      drawCrop();
+    });
+
+    function endPointer(event) {
+      pointers.delete(event.pointerId);
+      dragStart = null;
+      pinchStart = null;
+      if (pointers.size === 1) {
+        const point = [...pointers.values()][0];
+        dragStart = { point, offsetX, offsetY };
+      }
+    }
+
+    canvas.addEventListener('pointerup', endPointer);
+    canvas.addEventListener('pointercancel', endPointer);
+    canvas.addEventListener('wheel', event => {
+      if (!sourceImage) return;
+      event.preventDefault();
+      zoom = Math.max(1, Math.min(3, zoom * (event.deltaY < 0 ? 1.08 : .92)));
+      $('zoom').value = String(zoom);
+      drawCrop();
+    }, { passive:false });
+
+    $('zoom').addEventListener('input', event => { zoom = Number(event.target.value); drawCrop(); });
+    $('rotateLeft').addEventListener('click', () => { rotation = (rotation - 90) % 360; offsetX = 0; offsetY = 0; drawCrop(); });
+    $('rotateRight').addEventListener('click', () => { rotation = (rotation + 90) % 360; offsetX = 0; offsetY = 0; drawCrop(); });
+    $('resetCrop').addEventListener('click', resetCrop);
+    $('eventId').addEventListener('change', () => populateFinals());
+
+    $('photoFile').addEventListener('change', event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return showError(new Error('Please choose a JPG, PNG or WebP photograph.'));
+      if (file.size > 25 * 1024 * 1024) return showError(new Error('Please choose an original photograph below 25 MB.'));
+      const reader = new FileReader();
+      reader.onerror = () => showError(new Error('The photograph could not be read.'));
+      reader.onload = () => {
+        const image = new Image();
+        image.onerror = () => showError(new Error('The photograph could not be opened.'));
+        image.onload = () => {
+          sourceImage = image;
+          sourceFilename = file.name;
+          $('editor').hidden = false;
+          resetCrop();
+        };
+        image.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function croppedBlob() {
+      return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('The cropped photograph could not be created.')), 'image/jpeg', .9));
+    }
+
+    function blobBase64(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onerror = () => reject(new Error('The cropped photograph could not be prepared.'));
+        reader.onload = () => resolve(String(reader.result).split(',')[1]);
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    $('podiumForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!sourceImage) return showError(new Error('Please choose and crop a photograph.'));
+      $('submitButton').disabled = true;
+      $('submitButton').textContent = 'Uploading…';
+      $('status').hidden = false;
+      $('status').classList.remove('error');
+      $('status').textContent = 'Preparing and uploading the cropped photograph securely to COBRA…';
+      try {
+        const blob = await croppedBlob();
+        if (blob.size > options.maxFileBytes) throw new Error('The cropped photograph is unexpectedly large. Try another image.');
+        const payload = {
+          token: options.token,
+          uploaderName: $('uploaderName').value,
+          eventId: $('eventId').value,
+          raceId: $('raceId').value,
+          caption: $('caption').value,
+          website: $('website').value,
+          fileName: sourceFilename || 'podium-photo.jpg',
+          fileBase64: await blobBase64(blob)
+        };
+        google.script.run.withSuccessHandler(result => {
+          $('status').hidden = false;
+          $('status').classList.remove('error');
+          $('status').textContent = result.message;
+          $('podiumForm').reset();
+          sourceImage = null;
+          sourceFilename = '';
+          $('editor').hidden = true;
+          populateFinals();
+          $('submitButton').disabled = false;
+          $('submitButton').textContent = 'Submit another podium photograph';
+          google.script.run.withSuccessHandler(data => { options.token = data.token; }).withFailureHandler(showError).getPodiumFormOptions();
+        }).withFailureHandler(showError).submitPodiumPhoto(payload);
+      } catch (error) {
+        showError(error);
+      }
+    });
+
+    google.script.url.getLocation(location => { requestedLocation = location.parameter || {}; applyRequestedLocation(); });
+    google.script.run.withSuccessHandler(initialise).withFailureHandler(showError).getPodiumFormOptions();
+  </script>
+</body>
+</html>

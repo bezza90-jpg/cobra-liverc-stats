@@ -135,6 +135,22 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .podium-photo { position: relative; display: grid; aspect-ratio: 16 / 10; place-items: center; overflow: hidden; color: #fff; background: radial-gradient(circle at 70% 20%, #0d7e1c, #101713 62%); }
 .podium-photo::after { content: ""; position: absolute; width: 180px; height: 180px; right: -70px; top: -85px; border: 36px solid rgba(255,255,255,.07); border-radius: 50%; }
 .podium-photo img { position: absolute; z-index: 2; width: 100%; height: 100%; object-fit: cover; }
+.podium-photo-expand { position: absolute; z-index: 3; display: none; right: 12px; bottom: 12px; min-height: 38px; padding: 8px 12px; color: #fff; background: rgba(8,20,12,.82); border: 1px solid rgba(255,255,255,.5); border-radius: 999px; font: inherit; font-size: .72rem; font-weight: 850; cursor: pointer; backdrop-filter: blur(6px); }
+.podium-photo.has-photo { cursor: zoom-in; }
+.podium-photo.has-photo .podium-photo-expand { display: block; }
+.podium-upload-final { margin-left: 8px; }
+.podium-lightbox { position: fixed; z-index: 1000; inset: 0; display: grid; width: 100vw; height: 100dvh; padding: 28px; place-items: center; background: rgba(3,10,6,.94); }
+.podium-lightbox:fullscreen { width: 100vw; height: 100vh; padding: 0; background: #030a06; }
+.podium-lightbox:fullscreen .podium-lightbox-inner { width: 100vw; max-width: none; height: 100vh; max-height: none; border: 0; border-radius: 0; }
+.podium-lightbox:fullscreen img { height: calc(100vh - 82px); max-height: none; }
+.podium-lightbox[hidden] { display: none; }
+.podium-lightbox-inner { display: grid; width: min(1500px, 96vw); max-height: 94vh; overflow: hidden; background: #0d1510; border: 1px solid rgba(255,255,255,.2); border-radius: 14px; box-shadow: 0 24px 80px rgba(0,0,0,.55); }
+.podium-lightbox img { display: block; width: 100%; max-height: calc(94vh - 82px); object-fit: contain; background: #050806; }
+.podium-lightbox-copy { display: flex; min-height: 72px; padding: 14px 18px; align-items: center; justify-content: space-between; gap: 18px; color: #fff; }
+.podium-lightbox-copy p { margin: 4px 0 0; color: #c6d5ca; font-size: .82rem; }
+.podium-lightbox-copy a { flex: 0 0 auto; color: #fff; font-size: .78rem; font-weight: 850; }
+.podium-lightbox-close { position: fixed; z-index: 1001; top: 16px; right: 18px; width: 46px; height: 46px; padding: 0; color: #fff; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.35); border-radius: 50%; font-size: 2rem; line-height: 1; cursor: pointer; }
+body.podium-lightbox-open { overflow: hidden; }
 .podium-placeholder { position: relative; z-index: 1; display: grid; max-width: 90%; padding: 22px; place-items: center; text-align: center; }
 .podium-placeholder strong { margin-top: 8px; font-size: 1.05rem; }
 .podium-placeholder small { margin-top: 9px; color: #c6d5ca; line-height: 1.45; }
@@ -153,6 +169,7 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .podium-place-3 { background: #fff4eb; }
 .podium-no-results { padding: 20px !important; color: var(--muted); text-align: center !important; }
 .podium-race-link { margin-top: 14px; }
+@media(max-width:650px){.podium-lightbox{padding:8px}.podium-lightbox-inner{width:100%;max-height:96vh}.podium-lightbox img{max-height:calc(96vh - 110px)}.podium-lightbox-copy{align-items:flex-start;flex-direction:column}.podium-lightbox-close{top:8px;right:8px}}
 .setup-main { padding: 28px 0 50px; }
 .setup-hero .hero-copy { padding-bottom: 18px; }
 .setup-upload-hero { margin-left: 0; color: #055f10; cursor: pointer; }

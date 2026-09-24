@@ -24,6 +24,7 @@
     <p class="update-schedule">Results update automatically each day at 18:00 UK time.</p>
     <a class="archive-link" href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">Event Results</a>
     <a class="archive-link youtube-channel-link" href="https://www.youtube.com/@Bezza90/videos" target="_blank" rel="noopener">Race Videos ▶</a>
+    <a class="archive-link podium-upload-link" id="podiumUploadLink" href="#" target="_blank" rel="noopener" hidden>Upload podium photo</a>
   </header>
 
   <main class="podium-main">
@@ -48,6 +49,20 @@
       </section>
     </div>
   </main>
+
+  <div class="podium-lightbox" id="podiumLightbox" role="dialog" aria-modal="true" aria-labelledby="podiumLightboxTitle" hidden>
+    <button class="podium-lightbox-close" id="podiumLightboxClose" type="button" aria-label="Close enlarged photograph">×</button>
+    <div class="podium-lightbox-inner">
+      <img id="podiumLightboxImage" alt="">
+      <div class="podium-lightbox-copy">
+        <div>
+          <strong id="podiumLightboxTitle"></strong>
+          <p id="podiumLightboxCaption"></p>
+        </div>
+        <a id="podiumLightboxOriginal" href="#" target="_blank" rel="noopener">Open full resolution ↗</a>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <span>COBRA — Cardiff Off Road Buggy Racing Association</span>
