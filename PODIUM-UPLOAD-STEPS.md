@@ -6,9 +6,10 @@
 2. Replace `Code.gs` with `google-apps-script/driver-setups/Code.gs` from this package.
 3. Leave the existing `Upload` HTML file in place.
 4. Add a new HTML file named exactly `PodiumUpload` and paste in `google-apps-script/driver-setups/PodiumUpload.html`.
-5. Save all files.
-6. Select `setupProject` and click **Run** once. This creates the private podium-photo folder, adds the `Podium Photos` approval tab and refreshes the edit trigger.
-7. Choose **Deploy → Manage deployments**, edit the current web app, select **New version**, and deploy. Keep the same `/exec` URL.
+5. Add another HTML file named exactly `PodiumReview` and paste in `google-apps-script/driver-setups/PodiumReview.html`.
+6. Save all files.
+7. Select `setupProject` and click **Run** once. This creates the private podium-photo folder, adds the `Podium Photos` approval tab and refreshes the edit trigger.
+8. Choose **Deploy → Manage deployments**, edit the current web app, select **New version**, and deploy. Keep the same `/exec` URL.
 
 ## 2. Update GitHub
 
@@ -25,8 +26,9 @@ The gallery will show an **Upload podium photo** button and an upload link on ea
 1. A contributor chooses the event/final, selects a photograph, crops it to 16:10, and submits it.
 2. Open the existing **COBRA Driver Setup Approvals** Google Sheet.
 3. Open the `Podium Photos` tab.
-4. Change its Status from `Pending` to `Approved`.
-5. Refresh the Podium Gallery. The photograph will appear on its final.
+4. Open the row's **Review / Re-crop URL** if the framing needs correcting. The private original can be repositioned, zoomed and rotated; saving creates a new private crop.
+5. Change its Status from `Pending` to `Approved`.
+6. Refresh the Podium Gallery. The photograph will appear on its final.
 
 Tapping a published photograph opens the 2400 px image in a full-screen viewer. Phones use native fullscreen where the browser permits it and a full-viewport viewer otherwise.
 

@@ -259,6 +259,19 @@
       return new Promise((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('The cropped photograph could not be created.')), 'image/jpeg', .9));
     }
 
+    function retainedOriginalBlob() {
+      const maximumDimension = 3600;
+      const scale = Math.min(1, maximumDimension / Math.max(sourceImage.naturalWidth, sourceImage.naturalHeight));
+      const originalCanvas = document.createElement('canvas');
+      originalCanvas.width = Math.max(1, Math.round(sourceImage.naturalWidth * scale));
+      originalCanvas.height = Math.max(1, Math.round(sourceImage.naturalHeight * scale));
+      const originalContext = originalCanvas.getContext('2d');
+      originalContext.fillStyle = '#ffffff';
+      originalContext.fillRect(0, 0, originalCanvas.width, originalCanvas.height);
+      originalContext.drawImage(sourceImage, 0, 0, originalCanvas.width, originalCanvas.height);
+      return new Promise((resolve, reject) => originalCanvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('The private original photograph could not be prepared.')), 'image/jpeg', .88));
+    }
+
     function blobBase64(blob) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -277,8 +290,9 @@
       $('status').classList.remove('error');
       $('status').textContent = 'Preparing and uploading the cropped photograph securely to COBRA…';
       try {
-        const blob = await croppedBlob();
+        const [blob, originalBlob] = await Promise.all([croppedBlob(), retainedOriginalBlob()]);
         if (blob.size > options.maxFileBytes) throw new Error('The cropped photograph is unexpectedly large. Try another image.');
+        if (originalBlob.size > options.originalMaxFileBytes) throw new Error('The retained original is unexpectedly large. Try another image.');
         const payload = {
           token: options.token,
           uploaderName: $('uploaderName').value,
@@ -287,7 +301,8 @@
           caption: $('caption').value,
           website: $('website').value,
           fileName: sourceFilename || 'podium-photo.jpg',
-          fileBase64: await blobBase64(blob)
+          fileBase64: await blobBase64(blob),
+          originalBase64: await blobBase64(originalBlob)
         };
         google.script.run.withSuccessHandler(result => {
           $('status').hidden = false;
