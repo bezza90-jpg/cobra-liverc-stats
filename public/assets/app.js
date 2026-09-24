@@ -925,7 +925,22 @@ function openJourneyMap(driverKey) {
       return;
     }
     if (!journeyMap) {
-      journeyMap = window.L.map('journeyMap', { zoomControl: true, scrollWheelZoom: true });
+      journeyMap = window.L.map('journeyMap', { zoomControl: true, scrollWheelZoom: false, zoomSnap: .5 });
+      // Capture wheel gestures inside the embedded map before the scrolling
+      // dialog (or its Wix parent) can treat them as page scrolling.
+      const mapElement = journeyMap.getContainer();
+      let accumulatedWheel = 0;
+      mapElement.addEventListener('wheel', event => {
+        event.preventDefault();
+        event.stopPropagation();
+        const delta = event.deltaY * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? mapElement.clientHeight : 1);
+        if (Math.sign(delta) !== Math.sign(accumulatedWheel)) accumulatedWheel = 0;
+        accumulatedWheel += delta;
+        if (Math.abs(accumulatedWheel) < 25) return;
+        const direction = Math.sign(accumulatedWheel);
+        accumulatedWheel = 0;
+        journeyMap.setZoomAround(journeyMap.mouseEventToContainerPoint(event), journeyMap.getZoom() - direction * .5, { animate: false });
+      }, { passive: false, capture: true });
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
       journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
