@@ -66,9 +66,6 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .driver-dialog.journey-open { box-sizing:border-box; inset:0; width:100%; max-width:100%; height:100vh; height:100dvh; max-height:100dvh; margin:0; overflow:hidden; border-radius:0; }
 .journey-map-overlay { box-sizing:border-box; height:100vh; height:100dvh; overflow:hidden; overscroll-behavior:contain; }
 .journey-map-shell { box-sizing:border-box; max-height:calc(100vh - 32px); max-height:calc(100dvh - 32px); overflow-y:auto; overscroll-behavior:contain; scrollbar-gutter:stable; }
-@media (min-width: 801px) {
-  .journey-map-overlay:not(.fullscreen) .journey-map { height: clamp(260px, calc(100dvh - 560px), 520px); }
-}
 .journey-map-shell h3 { margin: 0; padding-right: 48px; font-size: clamp(1.35rem,3vw,2rem); }
 .journey-map-copy { margin: 8px 50px 14px 0; color: var(--muted); }
 .journey-map-close { z-index: 1001; }
