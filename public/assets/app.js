@@ -136,6 +136,7 @@ function filters() {
 function ensureEnhancedMarkup() {
   $('divisionFilter')?.closest('label')?.remove();
   if (!$('resultsNavigation')) document.querySelector('.brand')?.insertAdjacentHTML('afterend', '<nav class="results-nav" id="resultsNavigation" aria-label="Results pages"><a href="./" aria-current="page">Race Stats</a><a href="sword/">SWORD Championship</a><a href="club/">Club Series</a><a href="podiums/">Podium Gallery</a></nav>');
+  if (!$('resultsNavigation')?.querySelector('.tracker-nav-button')) $('resultsNavigation')?.insertAdjacentHTML('beforeend', '<a class="tracker-nav-button" href="?tracker=1">Driver Distance Tracker</a>');
   if ($('eventTypeFilter')) $('eventTypeFilter').innerHTML = '<option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option>';
   if ($('classFilter')) $('classFilter').innerHTML = '<option value="senior">All senior classes</option>';
   if (!$('liveRcArchiveLink')) $('updateSchedule')?.insertAdjacentHTML('afterend', '<a class="archive-link" id="liveRcArchiveLink" href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">Event Results</a>');
