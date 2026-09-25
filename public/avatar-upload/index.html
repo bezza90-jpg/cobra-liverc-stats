@@ -23,12 +23,8 @@
         <p>A photo facing left is fine. Tick <strong>Flip horizontally</strong> below and COBRA will turn it around when preparing the avatar. Background removal happens after approval; the original remains private.</p>
       </div>
       <form id="avatarForm" method="post" enctype="application/x-www-form-urlencoded" novalidate>
-        <label for="driverSearch">Driver name</label>
-        <div class="avatar-driver-picker">
-          <input id="driverSearch" type="search" autocomplete="off" placeholder="Type part of your name" role="combobox" aria-autocomplete="list" aria-controls="driverMatches" aria-expanded="false" required>
-          <div id="driverMatches" class="avatar-driver-results" role="listbox" hidden></div>
-        </div>
-        <span class="avatar-upload-hint">Type part of a first name or surname, then choose your name from the matches.</span>
+        <label for="driverSearch">Find your name</label><input id="driverSearch" type="search" autocomplete="off" placeholder="Start typing to filter drivers">
+        <label for="driverKey">Driver name</label><select id="driverKey" required><option value="">Loading drivers…</option></select>
         <label for="className">Class shown in the photo</label><select id="className" required><option value="">Choose class</option><option value="2-Wheel Drive Buggy">2WD</option><option value="4-Wheel Drive Buggy">4WD</option><option value="Vintage">Vintage</option><option value="Trucks">Trucks</option><option value="Junior Racers">Junior</option></select>
         <label for="carPhoto">Photo of your car</label><input id="carPhoto" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" required>
         <span class="avatar-upload-hint">JPG, PNG or WebP, up to 6 MB. Clear side views work best.</span>
@@ -43,6 +39,6 @@
     </section>
   </main>
   <footer><span>COBRA · Cardiff Off Road Buggy Racing Association</span><a href="../">Back to race statistics</a></footer>
-  <script type="module" src="../assets/avatar-upload.js?v=20260925-avatar-upload2"></script>
+  <script type="module" src="../assets/avatar-upload.js?v=20260925-avatar-upload1"></script>
 </body>
 </html>
