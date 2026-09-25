@@ -25,7 +25,6 @@
     <p class="update-schedule">Results update automatically each day at 18:00 UK time.</p>
     <a class="archive-link" href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">Event Results</a>
     <a class="archive-link youtube-channel-link" href="https://www.youtube.com/@Bezza90/videos" target="_blank" rel="noopener">Race Videos ▶</a>
-    <a class="archive-link podium-upload-link" id="podiumUploadLink" href="#" target="_blank" rel="noopener" hidden>Upload podium photo</a>
   </header>
 
   <main class="podium-main">
@@ -44,7 +43,10 @@
             <h2 id="eventTitle">Loading event…</h2>
             <p id="eventMeta" class="podium-event-meta"></p>
           </div>
-          <a class="event-link" id="eventResultsLink" href="#" target="_blank" rel="noopener">View full event results ↗</a>
+          <div class="podium-heading-actions">
+            <a class="event-link podium-upload-link" id="podiumUploadLink" href="#" target="_blank" rel="noopener" hidden>Upload podium photo</a>
+            <a class="event-link" id="eventResultsLink" href="#" target="_blank" rel="noopener">View full event results ↗</a>
+          </div>
         </div>
         <div id="finalsGrid" class="podium-grid"></div>
       </section>
@@ -69,6 +71,6 @@
     <span>COBRA — Cardiff Off Road Buggy Racing Association</span>
     <a href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">View source results on LiveRC</a>
   </footer>
-  <script type="module" src="../assets/podiums.js?v=20260925-classavatars1"></script>
+  <script type="module" src="../assets/podiums.js?v=20260925-singleupload1"></script>
 </body>
 </html>
