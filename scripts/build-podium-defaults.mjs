@@ -63,7 +63,7 @@ for (const [raceId, race] of Object.entries(dashboard.raceById)) {
   const cards = columns.map(({ place, name, art }, index) => {
     const x = 34 + index * 389;
     const accent = ({ 1: '#f7ce67', 2: '#cbd5db', 3: '#dca882' })[place];
-    const height = ({ 1: 445, 2: 395, 3: 345 })[place];
+    const height = ({ 1: 445, 2: 395, 3: 395 })[place];
     const y = 625 - height;
     const graphic = art.image
       ? `<image xlink:href="${art.image}" x="${x + 35}" y="${y + 95}" width="318" height="170" preserveAspectRatio="xMidYMid meet"/>`

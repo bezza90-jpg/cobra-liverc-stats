@@ -159,7 +159,8 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .podium-illustration-places { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; align-items: end; }
 .podium-illustration-place { display:flex; flex-direction:column; justify-content:space-between; min-width: 0; min-height:clamp(105px,16vw,165px); padding: 8px 5px; background: rgba(255, 255, 255, .96); border-top: 4px solid #d4dbe0; border-radius: 8px 8px 3px 3px; color: #14231a; text-align:center; }
 .podium-illustration-1 { min-height:clamp(155px,22vw,225px); border-color: #f0c44e; }
-.podium-illustration-2 { min-height:clamp(130px,19vw,195px); border-color: #cbd5db; }
+.podium-illustration-2, .podium-illustration-3 { height:clamp(130px,19vw,195px); min-height:clamp(130px,19vw,195px); }
+.podium-illustration-2 { border-color: #cbd5db; }
 .podium-illustration-3 { border-color: #cd966b; }
 .podium-illustration-rank { display: block; font-size: .82rem; font-weight: 900; }
 .podium-illustration-art { display: grid; height: clamp(48px, 9vw, 115px); place-items: center; margin: 4px 0; }
@@ -168,7 +169,7 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .podium-illustration-art span { font-size: clamp(.62rem, 1.2vw, .8rem); font-weight: 900; overflow-wrap: anywhere; }
 .podium-illustration-place strong { display: block; margin: 0; font-size: clamp(.62rem, 1.3vw, .83rem); line-height: 1.15; overflow-wrap: anywhere; }
 .podium-illustration > small { margin: 0; font-size: clamp(.55rem, 1vw, .72rem); }
-@media (max-width: 520px) { .podium-illustration { padding: 7px; } .podium-illustration-places { gap: 4px; } .podium-illustration-place { padding: 5px 2px; min-height:90px; } .podium-illustration-2 { min-height:115px; } .podium-illustration-1 { min-height:140px; } .podium-illustration-art { height: 48px; } }
+@media (max-width: 520px) { .podium-illustration { padding: 7px; } .podium-illustration-places { gap: 4px; } .podium-illustration-place { padding: 5px 2px; min-height:90px; } .podium-illustration-2, .podium-illustration-3 { height:115px; min-height:115px; } .podium-illustration-1 { min-height:140px; } .podium-illustration-art { height: 48px; } }
 .podium-lightbox[hidden] { display: none; }
 .podium-lightbox {
   position: fixed; z-index: 10000; inset: 0; display: grid; place-items: center;
