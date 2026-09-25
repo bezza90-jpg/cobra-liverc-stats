@@ -1,34 +1,30 @@
-COBRA current event, About and briefing update
-============================================
+COBRA current event, About team and briefing update
+===================================================
 
-WHAT IS IN THE BUNDLES
-- COBRA-GitHub-Pages-Update.zip: only changed site files (11 files), arranged as the CONTENTS of your repository's public/ folder. No generated results or existing photo libraries are included.
-- COBRA-Site-Manager-Update.zip: three changed admin Python files and the same new public files, arranged relative to the folder containing admin/ and public/. Extract over your existing manager folder after making a copy of it.
+BUNDLES
+- COBRA-GitHub-Pages-Update.zip: only 11 changed site files arranged as the CONTENTS of your repository's public/ folder.
+- COBRA-Site-Manager-Update.zip: three updated admin files and the new public files, arranged relative to the folder containing admin/ and public/.
 - COBRA-Club-Guest-Briefing.txt and COBRA-SWORD-Guest-Briefing.txt: separate Wix email drafts.
 
 PUBLISH SITE
 1. Extract COBRA-GitHub-Pages-Update.zip on your computer.
-2. On GitHub open the repository cobra-liverc-stats, then the existing public/ folder.
-3. Choose Add file > Upload files, and drag the CONTENTS of the extracted site bundle into GitHub. Keep about/, briefing/, schedule/, event/, assets/ and data/ as shown. Do not upload an extra nested public/ folder.
-4. Commit the upload, then let GitHub Actions / Pages finish. The update contains fewer than 100 files.
-5. Visit https://bezza90-jpg.github.io/cobra-liverc-stats/event/ and https://bezza90-jpg.github.io/cobra-liverc-stats/about/ .
+2. In GitHub open the cobra-liverc-stats repository and its existing public/ folder.
+3. Choose Add file > Upload files. Drag the CONTENTS of the extracted bundle into public/. Keep about/, briefing/, schedule/, event/, assets/ and data/ in their correct places. Do not create an extra nested public/ folder.
+4. Commit and let GitHub Pages deploy. This bundle is under GitHub's 100-file web upload limit.
+5. Check https://bezza90-jpg.github.io/cobra-liverc-stats/event/ and https://bezza90-jpg.github.io/cobra-liverc-stats/about/ .
 
-SET EVENT DETAILS AND TIMES
-1. Extract COBRA-Site-Manager-Update.zip into your existing COBRA Site Manager folder. Keep the admin/ and public/ folder layout.
-2. Open the desktop manager. The Current event tab lets you enter the title, date (YYYY-MM-DD), club/SWORD type, venue, LiveRC results URL and event ID. Save.
-3. In the same tab choose Club or SWORD, enter each timing, Save this schedule, then repeat for the other schedule. Blank times show 'To be confirmed'.
-4. Export the GitHub upload ZIP in the manager. Upload its public/ contents into the GitHub repository public/ folder. This export includes all manager-managed site files; review changes if you have newer changes made directly in GitHub.
-5. Add your event ID from the LiveRC event URL if you want the Current Event page to open that precise podium event; otherwise the podium link opens the gallery home.
+UPDATE THE PRIVATE SITE MANAGER
+1. Make a copy of your existing Site Manager folder. Extract COBRA-Site-Manager-Update.zip over the original, keeping the admin/ and public/ layout.
+2. In the About team tab, select Person 1–5. Add a portrait, name, role and brief introduction. Save profile. The checkbox can hide a person later if you want three tiles.
+3. In Current event, set the title, date (YYYY-MM-DD), Club/SWORD type, venue, official results URL and LiveRC event ID. The event ID links directly to that event's podiums.
+4. Set Club and SWORD schedule times separately and save each. Blank times show 'To be confirmed'.
+5. Create the GitHub upload ZIP from the manager and upload its public/ contents into the repository public/ folder. This manager export also contains your existing manager-managed files; check for newer edits made directly in GitHub before overwriting those.
 
-ABOUT PHOTOS
-- In the manager's About photos tab, select one of five spaces, choose a photo and caption, then export the site ZIP to publish it. Local photos take priority over approved online submissions. Clear a local photo to show the latest approved website submission instead.
-- Public About photo uploads need one separate Google Apps Script deployment. The files for that service are in the Site Manager bundle under google-apps-script/about-photos/Code.gs and Review.html.
-- Create a new Apps Script project. Replace Code.gs with the supplied file. Add an HTML file named Review and paste Review.html into it. Run setupAboutProject once and grant permission. The execution log shows the private approval sheet and folder.
-- Deploy as Web app: Execute as Me; access Anyone. Copy the /exec URL into public/data/about-gallery.json as webAppUrl. Publish that edited JSON file to GitHub. You will receive review emails at the account that ran setupAboutProject. Approving shares only that photo; pending originals stay private.
-- Until this service is connected, the website photo submission button is disabled with an explanatory message. Manager photo editing works immediately.
+ABOUT PAGE IMAGES
+The five About portraits and bios are changed only in your private manager; visitors cannot upload About photos. The setup and podium gallery upload forms are untouched. Portraits are resized to 1600 x 1200 pixels or less and saved as compressed JPEG for the site.
 
 WIX EMAIL
-Use the Club email draft for Club events and SWORD draft for SWORD events. Replace bracketed fields before sending. Wix Events supports event emails and event guest email campaigns. The links in the drafts point to the GitHub Pages site.
+Use the Club draft for Club meetings and the SWORD draft for SWORD meetings. Replace the bracketed timing and event details before sending. The drafts link to the GitHub site.
 
-IMPORTANT
-The site does not claim an exact BRCA rule number or that first aid must be self-administered, as the current handbook wording was not independently available. Please confirm venue facility locations, marshal vest requirements and the SWORD schedule before announcing them as final. This update does not change Wix booking.
+SAFETY
+The briefing does not claim an exact BRCA rule number or that first aid must be self-administered, as current handbook wording was not independently available. Please confirm the precise venue facility locations and marshalling requirements before treating them as final. Wix bookings are unaffected.
