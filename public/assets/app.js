@@ -809,7 +809,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     });
     journeyDriverMarkers.set(driver.driverKey, marker);
   }
-  window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right', pane: 'journeySiteLabels' }).addTo(journeyMapLayers);
+  window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
   window.L.circleMarker(journeyRoadRoute.at(-1), { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Istanbul, Türkiye', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
 }
 
@@ -933,10 +933,6 @@ function openJourneyMap(driverKey) {
     }
     if (!journeyMap) {
       journeyMap = window.L.map('journeyMap', { zoomControl: true, scrollWheelZoom: true, wheelPxPerZoomLevel: 80, zoomSnap: .5 });
-      // Keep the start label behind car markers (markerPane is z-index 600).
-      const siteLabelsPane = journeyMap.createPane('journeySiteLabels');
-      siteLabelsPane.style.zIndex = '550';
-      siteLabelsPane.style.pointerEvents = 'none';
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
       journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });

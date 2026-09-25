@@ -2,60 +2,14 @@ const $ = id => document.getElementById(id);
 const status = message => { $('avatarStatus').textContent = message; };
 let drivers = [];
 let previewUrl = '';
-let selectedDriver = null;
-let activeMatch = -1;
-
-function closeMatches() {
-  $('driverMatches').hidden = true;
-  $('driverSearch').setAttribute('aria-expanded', 'false');
-  $('driverSearch').removeAttribute('aria-activedescendant');
-  activeMatch = -1;
-}
-
-function chooseDriver(driver) {
-  selectedDriver = driver;
-  $('driverSearch').value = driver.n;
-  $('driverSearch').setCustomValidity('');
-  closeMatches();
-}
-
-function highlightMatch(index) {
-  const buttons = [...$('driverMatches').querySelectorAll('button')];
-  if (!buttons.length) return;
-  activeMatch = Math.max(0, Math.min(index, buttons.length - 1));
-  buttons.forEach((button, position) => button.setAttribute('aria-selected', String(position === activeMatch)));
-  $('driverSearch').setAttribute('aria-activedescendant', buttons[activeMatch].id);
-  buttons[activeMatch].scrollIntoView({ block: 'nearest' });
-}
 
 function renderDrivers() {
+  const selected = $('driverKey').value;
   const query = $('driverSearch').value.trim().toLocaleLowerCase();
-  const matches = query ? drivers.filter(driver => driver.n.toLocaleLowerCase().includes(query)).slice(0, 15) : [];
-  $('driverMatches').replaceChildren();
-  if (!drivers.length || !query || (selectedDriver && selectedDriver.n === $('driverSearch').value)) {
-    closeMatches();
-    return;
-  }
-  if (!matches.length) {
-    const message = document.createElement('p');
-    message.textContent = 'No matching driver. Try a different part of the name.';
-    $('driverMatches').append(message);
-  }
-  matches.forEach((driver, index) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.id = `avatarDriverMatch${index}`;
-    button.role = 'option';
-    button.setAttribute('aria-selected', 'false');
-    button.textContent = driver.n;
-    button.addEventListener('pointerdown', event => event.preventDefault());
-    button.addEventListener('click', () => chooseDriver(driver));
-    $('driverMatches').append(button);
-  });
-  activeMatch = -1;
-  $('driverSearch').removeAttribute('aria-activedescendant');
-  $('driverMatches').hidden = false;
-  $('driverSearch').setAttribute('aria-expanded', 'true');
+  const matches = drivers.filter(driver => driver.n.toLocaleLowerCase().includes(query));
+  $('driverKey').replaceChildren(new Option(query && !matches.length ? 'No matching driver' : 'Choose your name', ''));
+  for (const driver of matches) $('driverKey').add(new Option(driver.n, driver.k));
+  if (matches.some(driver => driver.k === selected)) $('driverKey').value = selected;
 }
 
 async function initialise() {
@@ -76,35 +30,15 @@ async function initialise() {
     }
     $('avatarForm').action = endpoint;
     $('submitAvatar').disabled = false;
-    $('driverSearch').setCustomValidity('Choose your name from the matching list.');
+    renderDrivers();
     status('Choose your driver, class and car photo.');
   } catch (error) {
-    $('driverSearch').placeholder = 'Drivers unavailable';
+    $('driverKey').replaceChildren(new Option('Drivers unavailable', ''));
     status(error.message);
   }
 }
 
-$('driverSearch').addEventListener('input', () => {
-  selectedDriver = null;
-  $('driverSearch').setCustomValidity('Choose your name from the matching list.');
-  const exact = drivers.filter(driver => driver.n.toLocaleLowerCase() === $('driverSearch').value.trim().toLocaleLowerCase());
-  if (exact.length === 1) chooseDriver(exact[0]);
-  else renderDrivers();
-});
-$('driverSearch').addEventListener('focus', renderDrivers);
-$('driverSearch').addEventListener('blur', () => setTimeout(closeMatches, 150));
-$('driverSearch').addEventListener('keydown', event => {
-  if (event.key === 'Escape') { closeMatches(); return; }
-  const buttons = [...$('driverMatches').querySelectorAll('button')];
-  if ($('driverMatches').hidden || !buttons.length) return;
-  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-    event.preventDefault();
-    highlightMatch(event.key === 'ArrowDown' ? activeMatch + 1 : activeMatch < 0 ? buttons.length - 1 : activeMatch - 1);
-  } else if (event.key === 'Enter') {
-    event.preventDefault();
-    buttons[activeMatch < 0 ? 0 : activeMatch].click();
-  }
-});
+$('driverSearch').addEventListener('input', renderDrivers);
 $('carPhoto').addEventListener('change', () => {
   if (previewUrl) URL.revokeObjectURL(previewUrl);
   const file = $('carPhoto').files[0];
@@ -118,7 +52,6 @@ $('flipPhoto').addEventListener('change', () => $('previewImage').classList.togg
 $('avatarForm').addEventListener('submit', event => {
   event.preventDefault();
   if (!$('avatarForm').reportValidity()) return;
-  if (!selectedDriver) { $('driverSearch').focus(); status('Choose your name from the matching list.'); return; }
   const photo = $('carPhoto').files[0];
   if (!photo || !/^image\/(?:jpeg|png|webp)$/.test(photo.type) || photo.size > 6_000_000) {
     status('Choose a JPG, PNG or WebP photo smaller than 6 MB.');
@@ -129,7 +62,7 @@ $('avatarForm').addEventListener('submit', event => {
   const reader = new FileReader();
   reader.onerror = () => { $('submitAvatar').disabled = false; status('The photo could not be read. Please try again.'); };
   reader.onload = () => {
-    $('submittedDriverKey').value = selectedDriver.k;
+    $('submittedDriverKey').value = $('driverKey').value;
     $('submittedClassName').value = $('className').value;
     $('submittedFlip').value = $('flipPhoto').checked ? 'yes' : 'no';
     $('submittedFileName').value = photo.name.slice(0, 140);

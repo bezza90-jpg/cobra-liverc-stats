@@ -1,6 +1,10 @@
 {
   "BRUCE": "assets/car-avatars/BRUCE.png",
-  "MATTHEW-HODGES": "assets/matt-hodges-car.png",
+  "MATTHEW-HODGES": {
+    "default": "assets/matt-hodges-car.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/MATTHEW-HODGES-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/MATTHEW-HODGES-4WD.png"
+  },
   "MIKE-DRISCOLL": "assets/car-avatars/MIKE-DRISCOLL.png",
   "STEVE-CURTIS-RICH": "assets/car-avatars/STEVE-CURTIS-RICH.png"
 }
