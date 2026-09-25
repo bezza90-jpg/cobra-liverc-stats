@@ -1,0 +1,56 @@
+COBRA car avatars: email review, automatic class assignment
+========================================================
+
+ONE-TIME GOOGLE SETUP
+1. At script.google.com create a NEW Apps Script project called COBRA Car Avatars.
+   This project is separate from your working Driver Setups Apps Script. Do not
+   overwrite your current Code.gs there.
+2. Open COBRA-Car-Avatars-Apps-Script.zip. Paste Code.gs into the new project's
+   Code.gs. Click + next to Files > HTML, name it Review, and paste Review.html
+   into it. Save both files.
+3. In the new Code.gs, find configureAvatarProject near the top. Replace the
+   TWO quoted placeholders with your existing COBRA approvals spreadsheet URL
+   and the email address where you want private review links.
+4. Select configureAvatarProject in the function menu, click Run and authorize.
+   This adds a new Car Avatar Approvals tab to your existing spreadsheet and
+   creates a private Drive folder for original car photos.
+5. Deploy > New deployment > Web app. Set Execute as: Me and Who has access:
+   Anyone. Click Deploy and copy the web app URL ending in /exec. If Google
+   displays a permission warning, authorize your own new project.
+
+ONE-TIME GITHUB UPLOAD
+6. Extract COBRA-Car-Avatars-GitHub.zip. In the extracted public/data folder,
+   open avatar-upload-config.json in Notepad. Between the quotes for webAppUrl,
+   paste the copied /exec URL. Save the file.
+7. Open the cobra-liverc-stats repository at its TOP LEVEL on GitHub. Choose
+   Add file > Upload files. Drag the extracted public, scripts and .github
+   FOLDERS to that root. GitHub should show paths like:
+     public/avatar-upload/index.html
+     public/data/avatar-upload-config.json
+     scripts/sync-approved-avatars.py
+     .github/workflows/update-stats.yml
+   Commit and wait for the GitHub Actions update to succeed. If GitHub limits
+   the number of files, upload each folder separately at the repository root.
+   Keep the .github folder's dot in its name.
+
+USE
+8. On the website, click Upload car avatar, choose driver, class and a photo.
+   You receive an email with an Open photo editor and approve link. Drag, zoom,
+   rotate or flip the photo and click Approve this car avatar.
+9. Wait for the scheduled 6 pm UK site refresh, or use Refresh results and
+   podiums now in your desktop manager to run it sooner. The workflow removes
+   the background and assigns a transparent image automatically for that
+   driver's class. Reopen the same email link to change the crop and approve
+   again; a later refresh updates the image.
+
+To reject a submission, change its sheet Status to Rejected. Only approved
+photos are published. No driver account is required. The first background
+removal can add a few minutes to the GitHub job while its free model downloads.
+
+DESKTOP MANAGER
+If you use the manager, extract COBRA-Car-Avatars-Manager-Patch.zip into your
+existing extracted manager folder, merging folders and replacing matching
+files. Keep your private admin/backups folder. The manager's next upload ZIP
+will include the new upload page and its configuration. Before exporting from
+an older manager snapshot, update its public/data/car-avatars.json and
+public/assets/car-avatars from GitHub so you do not overwrite automatic images.
