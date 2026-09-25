@@ -65,12 +65,16 @@ def state():
 
 def prepare_avatar(photo_bytes):
     from PIL import Image, ImageOps
-    from rembg import new_session, remove
 
     with Image.open(io.BytesIO(photo_bytes)) as loaded:
-        original = ImageOps.exif_transpose(loaded).convert("RGB")
+        original = ImageOps.exif_transpose(loaded).convert("RGBA")
     original.thumbnail((1800, 1800), Image.Resampling.LANCZOS)
-    cutout = remove(original, session=new_session("u2netp")).convert("RGBA")
+    if original.getchannel("A").getextrema()[0] < 255:
+        # Preserve the cutout explicitly reviewed and approved in the browser.
+        cutout = original
+    else:
+        from rembg import new_session, remove
+        cutout = remove(original.convert("RGB"), session=new_session("u2netp")).convert("RGBA")
     bbox = cutout.getchannel("A").getbbox()
     if not bbox:
         raise ValueError("No foreground car was found in the reviewed photograph.")

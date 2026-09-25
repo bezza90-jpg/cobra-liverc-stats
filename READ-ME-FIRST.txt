@@ -1,1 +1,68 @@
-At the TOP LEVEL of your GitHub cobra-liverc-stats repository, choose Add file > Upload files, then drag the extracted public and scripts folders in. Confirm GitHub shows public/assets/styles.css and scripts/build-podium-defaults.mjs before committing. This is a targeted update: second and third podiums are equal height below first on the gallery, and the generator will use the same heights for all illustrated podium images on the next successful update workflow run. No setup photos, avatars or site data are in this ZIP.
+COBRA AVATAR REVIEW: WHOLE PHOTO + BACKGROUND REMOVAL
+
+1. GITHUB - UPLOAD THESE FIRST
+Open the root of bezza90-jpg/cobra-liverc-stats (where README.md, public and
+scripts are shown). Use Add file > Upload files. Drag ONLY the public and
+scripts folders from this ZIP onto that upload screen and commit.
+There are only four files inside those folders. Wait for the workflow to
+finish successfully before testing the new background removal button.
+Do not open public first and then drag public into it.
+
+2. GOOGLE APPS SCRIPT
+Open the separate COBRA Car Avatars project.
+Replace ALL the contents of Code.gs with this package's
+  google-apps-script/car-avatars/Code.gs
+Replace ALL the contents of Review.html with this package's
+  google-apps-script/car-avatars/Review.html
+Open the downloaded files with Notepad to copy their text.
+Save, then Deploy > Manage deployments > select existing deployment >
+pencil > Version: New version > Deploy.
+Do not rerun setup and do not create a different deployment URL.
+The saved folder, spreadsheet and email settings stay in place.
+
+3. PRIVATE SITE MANAGER
+Close the manager. Copy the public, scripts and google-apps-script folders
+from this ZIP into your existing private Site Manager folder, where folders
+with these same names already exist. Merge folders and replace the matching
+files. This prevents an older manager export undoing these changes.
+
+4. USE THE EDITOR
+Reopen the existing email's review link. You do not need to upload again.
+The entire original photo should now fit in the preview.
+- Fit whole photo: reset zoom, position and rotation to show the full photo.
+- Zoom: zoom out as well as in; drag to reposition.
+- Remove background: download the processing files on first use, then show
+  the cutout against a chequered transparency background.
+- Restore original: undo removal and return to the original photo.
+- Approve: save your adjusted photo/cutout for the next site refresh.
+Check the wheels, wing and aerial before approving; automatic cutouts can
+make mistakes. If unsuitable, restore the original or use your desktop tool.
+
+BACKGROUND REMOVAL
+Uses the free U2Net lightweight model locally in your browser, via ONNX
+Runtime Web 1.20.1. The review image is not sent to a background-removal API.
+The model is served by your GitHub site; runtime files come from jsDelivr.
+There is no API key or per-image payment. Initial downloads and processing
+can take longer on a phone. Keep the review page open while it works.
+If it fails to load, the original remains available for normal approval.
+The existing next-refresh removal remains for photos approved without a
+transparent cutout. Already-transparent approved PNGs are preserved.
+
+The review canvas is 1100 x 825 pixels; cutouts save as PNG, below 2 MB.
+Publishing trims/pads and optimises avatars for the podium and tracker.
+
+VALIDATION
+Passed local image-fit, rotation, transparency, restore, signed-byte upload,
+JPG/PNG approval and alpha-preserving publishing tests. The bundled model
+was executed successfully using native ONNX Runtime. Review UI was tested
+with an actual canvas and a simulated inference output, not a live browser.
+The Apps Script / browser WebAssembly / iPhone combination still requires
+checking after deployment. No live submission or email was sent in testing.
+
+SOURCES
+Model: https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2netp.onnx
+Model upstream: https://github.com/xuebinqin/U-2-Net
+Model license included at public/assets/avatar-tools/U2NET-LICENSE.txt
+Preprocessing reference: https://github.com/danielgatis/rembg/blob/main/rembg/sessions/u2netp.py
+Runtime: https://github.com/microsoft/onnxruntime (MIT)
+Runtime delivery: https://cdn.jsdelivr.net/npm/onnxruntime-web@1.20.1/dist/
