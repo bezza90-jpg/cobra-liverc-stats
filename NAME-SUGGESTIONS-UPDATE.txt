@@ -1,0 +1,6 @@
+COBRA car avatar: type-to-search driver names
+============================================
+
+1. Extract this ZIP. At the TOP LEVEL of your GitHub cobra-liverc-stats repository, choose Add file > Upload files and drag the extracted public FOLDER. Confirm the paths are public/avatar-upload/index.html, public/assets/avatar-upload.js and public/assets/styles.css. Commit and wait for the action to succeed.
+2. Refresh the car avatar upload page. Type part of your name (including a surname); a matching-name box appears immediately below the field. Click or tap your name. Arrow keys and Enter also work.
+3. If you use the desktop Site Manager, copy the same three public files into its existing public folder so its next export retains this update. Do not replace public/data/avatar-upload-config.json or redeploy Apps Script for this fix.
