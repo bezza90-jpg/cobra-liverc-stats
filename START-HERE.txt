@@ -1,1 +1,5 @@
-Upload at the TOP LEVEL of GitHub (Add file > Upload files). Extract this ZIP and drag its public and scripts folders into the upload area; confirm paths remain public/assets/app.js and scripts/build-podium-defaults.mjs. Commit and wait for the green Actions build. The latest Club Day 20 September 2026 2WD A-Main (race 7072625) will show its illustrated podium. The Google-approved test photo stays in Drive but will not appear on the site. This data file contains that single photo override: if you already have other podium-photo-overrides.json entries on GitHub, merge 7072625: {"hidden":true} into them instead of replacing them. The avatar manifest and images are NOT included: publish these later using the desktop manager's export feature.
+The House of Sport label now sits behind car markers on the driver distance tracker.
+
+GitHub: extract this ZIP, then upload its public folder at the repository TOP LEVEL (Add file > Upload files); check public/assets/app.js and public/index.html before committing. Wait for the green Actions run, then refresh the page.
+
+Desktop site manager: copy those same two files to the matching public paths in your extracted manager folder too, so a later manager export does not restore an older tracker script. No admin or data files are changed.
