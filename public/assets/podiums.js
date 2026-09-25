@@ -82,7 +82,6 @@ function finalCard([raceId, race]) {
   const originalUrl = replacement || approvedPhoto?.viewUrl || photoUrl;
   const photoTitle = `${race.c} ${race.n} podium`;
   const caption = approvedPhoto?.caption || '';
-  const uploadUrl = podiumUploadUrl(race.e, raceId);
   const rows = raceTopThree(raceId);
   const results = rows.length
     ? rows.map(podiumRow).join('')
@@ -100,7 +99,6 @@ function finalCard([raceId, race]) {
         <tbody>${results}</tbody>
       </table></div>
       <a class="event-link podium-race-link" href="${escapeHtml(race.u)}" target="_blank" rel="noopener">See all finishers on LiveRC ↗</a>
-      ${uploadUrl ? `<a class="event-link podium-race-link podium-upload-final" href="${escapeHtml(uploadUrl)}" target="_blank" rel="noopener">Upload photo</a>` : ''}
     </div>
   </article>`;
 }
@@ -122,6 +120,7 @@ function renderEvent(eventId, updateAddress = true) {
   $('eventTitle').textContent = event.n;
   $('eventMeta').textContent = `${formatDate(event.d)} · ${finals.length} ${finals.length === 1 ? 'final' : 'finals'}`;
   $('eventResultsLink').href = event.u;
+  if (podiumWebAppUrl) $('podiumUploadLink').href = podiumUploadUrl(activeEventId);
   $('eventSelect').value = activeEventId;
   $('finalsGrid').innerHTML = finals.length ? finals.map(finalCard).join('') : '<div class="panel empty-state">No finals were found for this event.</div>';
   document.querySelectorAll('.podium-photo > img').forEach(image => {
@@ -154,7 +153,7 @@ async function loadPodiumPhotos() {
   const config = await response.json();
   podiumWebAppUrl = String(config.webAppUrl || '').trim();
   if (!podiumWebAppUrl) throw new Error('Podium uploads are not configured.');
-  $('podiumUploadLink').href = podiumUploadUrl();
+  $('podiumUploadLink').href = podiumUploadUrl(activeEventId);
   $('podiumUploadLink').hidden = false;
   const url = new URL(podiumWebAppUrl);
   url.searchParams.set('action', 'podium-list');

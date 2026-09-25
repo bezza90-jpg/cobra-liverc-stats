@@ -1,0 +1,1 @@
+Extract this ZIP. At the TOP LEVEL of your cobra-liverc-stats GitHub repository, Add file > Upload files, then drag the extracted public FOLDER into the upload area. Check the three paths start with public/ before committing. No gallery final has its own Upload photo button; one upload link is in the event header. This package does not contain any site data or images.
