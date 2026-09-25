@@ -1,0 +1,18 @@
+{
+  "club": [
+    {"label":"Doors open / check in","time":""},
+    {"label":"Practice","time":""},
+    {"label":"Qualifying heats","time":""},
+    {"label":"Break","time":""},
+    {"label":"Finals","time":""},
+    {"label":"Awards / close","time":""}
+  ],
+  "sword": [
+    {"label":"Doors open / check in","time":""},
+    {"label":"Practice","time":""},
+    {"label":"Qualifying heats","time":""},
+    {"label":"Break","time":""},
+    {"label":"Finals","time":""},
+    {"label":"Awards / close","time":""}
+  ]
+}

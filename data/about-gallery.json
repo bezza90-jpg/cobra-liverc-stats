@@ -1,0 +1,10 @@
+{
+  "webAppUrl": "",
+  "slots": [
+    {"image": "", "caption": "Our track"},
+    {"image": "", "caption": "On the rostrum"},
+    {"image": "", "caption": "Race action"},
+    {"image": "", "caption": "In the pits"},
+    {"image": "", "caption": "The club"}
+  ]
+}
