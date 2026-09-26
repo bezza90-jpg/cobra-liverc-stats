@@ -1,5 +1,5 @@
 /* About and driver briefing pages share the site branding and remain readable on phones. */
-.info-hero .hero-copy { padding-bottom: 38px; }
+
 .info-hero .hero-copy > .eyebrow { color: #90e895; }
 .info-main { padding: 28px 0 56px; }
 .info-main h2 { margin: 0 0 14px; font-size: clamp(1.45rem, 3.5vw, 2.2rem); line-height: 1.16; }
@@ -17,7 +17,7 @@
 .briefing-section ul { margin: 0; padding-left: 1.35em; }
 .briefing-section li + li { margin-top: 10px; }
 @media (max-width: 700px) {
-  .info-hero .hero-copy { padding-top: 32px; }
+
   .info-grid { grid-template-columns: 1fr; }
   .briefing-contents { align-items: flex-start; flex-direction: column; }
   .briefing-highlight { padding: 16px; }
