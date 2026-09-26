@@ -6,7 +6,7 @@ on:
     - cron: "0 18 * * *"
       timezone: "Europe/London"
     # Sunday race afternoons, every 15 minutes. LiveRC calendar gates the expensive work.
-    - cron: "7,22,37,52 15-17 * * 0"
+    - cron: "7,22,37,52 15-18 * * 0"
       timezone: "Europe/London"
   push:
     branches: [main]
@@ -32,19 +32,19 @@ jobs:
 
       - name: Check whether COBRA is racing today
         id: race_day
-        if: github.event_name == 'schedule' && github.event.schedule == '7,22,37,52 15-17 * * 0'
+        if: github.event_name == 'schedule' && github.event.schedule == '7,22,37,52 15-18 * * 0'
         run: node scripts/check-race-day.mjs | tee /dev/stderr | tail -n 1 >> "$GITHUB_OUTPUT"
 
       - name: Set up Node.js
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Check LiveRC and rebuild statistics
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
-          if [[ "${{ github.event.schedule }}" == '7,22,37,52 15-17 * * 0' ]]; then
+          if [[ "${{ github.event.schedule }}" == '7,22,37,52 15-18 * * 0' ]]; then
             node scripts/update-liverc.mjs
           else
             npm run update
@@ -53,14 +53,14 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
       - name: Set up Python for approved car photos
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Check for new approved car photos
         id: car_photos
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0'
         run: echo "pending=$(python scripts/sync-approved-avatars.py --check)" >> "$GITHUB_OUTPUT"
 
       - name: Cache background removal model
@@ -77,17 +77,17 @@ jobs:
           python scripts/sync-approved-avatars.py
 
       - name: Rebuild illustrated podiums
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
           node scripts/sync-manufacturer-logos.mjs
           node scripts/build-podium-defaults.mjs
 
       - name: Validate dashboard data
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         run: npm run check
 
       - name: Save updated results
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
           if [[ -n "$(git status --porcelain data/raw public/data public/podium-defaults public/assets/manufacturers public/assets/car-avatars)" ]]; then
             git config user.name "COBRA statistics updater"
@@ -98,16 +98,16 @@ jobs:
           fi
 
       - name: Configure GitHub Pages
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/configure-pages@v5
 
       - name: Upload website
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
 
       - name: Deploy website
         id: deployment
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-17 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/deploy-pages@v4
