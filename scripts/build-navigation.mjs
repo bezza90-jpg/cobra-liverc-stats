@@ -1,11 +1,12 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-const pages = ['', 'sword/', 'club/', 'podiums/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/'];
+const pages = ['', 'sword/', 'club/', 'podiums/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/'];
 const links = [
   ['', 'Race Stats'], ['sword/', 'SWORD Championship'], ['club/', 'Club Series'],
   ['podiums/', 'Podium Gallery'], ['setups/', 'Setups & Tips'], ['https://www.cobracardiff.co.uk/event-list', 'Events'], ['event/', 'Current Event'],
   ['about/', 'About & location'], ['briefing/', 'Drivers Briefing'],
   ['?tracker=1', 'Driver Distance Tracker', 'tracker-nav-button'],
+  ['car-avatars/', 'Driver car avatars'],
   ['avatar-upload/', 'Upload car avatar', 'avatar-nav-button']
 ];
 const check = process.argv.includes('--check');

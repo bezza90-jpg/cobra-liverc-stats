@@ -30,6 +30,8 @@ Car avatars use a **separate Apps Script project**, configured by `public/data/a
 
 This repository includes the avatar upload page, configuration and publishing script, but **does not include the car-avatar Apps Script backend source**. Older instructions mention `Code.gs`, `Review.html` and ZIP packages from that separate project; those files are not available here. Maintain the existing deployed project or obtain its source before attempting to recreate it.
 
+The `/car-avatars/` gallery links to and from `/avatar-upload/`. It lists drivers with published avatars first, then other drivers, alphabetically within each group. Each available class image has its own card; older images without class information are labelled General car avatar. The gallery reads the published driver list and avatar manifest on each visit.
+
 Visitors choose their driver, class and photograph on `/avatar-upload/`. Review and approval happen in the separate service. The daily or manually triggered publishing workflow checks approved revisions, prepares transparent images, and updates `public/data/car-avatars.json` and `public/assets/car-avatars/`. Sunday afternoon race-only runs skip avatar processing.
 
 The publishing script preserves existing transparency or applies background removal as needed. Removing an approval from the service's approved list is reflected on a later sync. The review service itself has not been verified as part of this documentation cleanup.
