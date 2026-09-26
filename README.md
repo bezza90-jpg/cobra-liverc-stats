@@ -6,6 +6,8 @@ Race statistics, championship tables and race-day information for Cardiff Off Ro
 
 ## Guides
 
+- [Site rules and automation timings](docs/site-rules.md): update schedules, event rollover, approvals, caches and backups.
+
 - [Maintenance and publishing](docs/maintenance.md): where to edit content, local commands, automated updates and deployment.
 - [Back up the current GitHub version](docs/maintenance.md#backing-up-the-current-github-version): save a dated ZIP locally without including uncommitted edits.
 - [Statistics and scoring](docs/statistics.md): filters, leaderboard calculations, championships and import rules.
