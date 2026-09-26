@@ -28,3 +28,6 @@
 .briefing-schedule-links{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0!important}@media(max-width:540px){.briefing-schedule-links .info-action{width:100%}}
 
 .info-muted{color:#58675c;font-size:.92rem}
+
+.schedule-content{flex:1;min-width:0}.schedule-description{margin:5px 0 0;font-weight:400;line-height:1.5}.schedule-steps .schedule-time{flex:0 0 30%;overflow-wrap:anywhere}.schedule-steps li{align-items:flex-start}
+@media(max-width:600px){.schedule-steps li{flex-direction:column;gap:6px}.schedule-steps .schedule-time{flex:auto;text-align:left}}
