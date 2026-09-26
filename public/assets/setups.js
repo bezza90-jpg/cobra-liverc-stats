@@ -18,10 +18,7 @@ function podiumLink(setup) {
   if (!setup.eventId || !dashboard) return '';
   const driverKey = setup.driverKey || dashboard.drivers.find(driver => normaliseName(driver.n) === normaliseName(setup.driverName))?.k;
   if (!driverKey) return '';
-  const podiumRaceIds = new Set(Object.entries(dashboard.raceById)
-    .filter(([, race]) => race.f && String(race.e) === String(setup.eventId))
-    .map(([raceId]) => String(raceId)));
-  const hasPodium = dashboard.raceResults.some(result => podiumRaceIds.has(String(result[0])) && result[1] === driverKey && Number(result[2]) >= 1 && Number(result[2]) <= 3);
+  const hasPodium = dashboard.podiumDrivers[String(setup.eventId)]?.includes(driverKey);
   return hasPodium ? `../podiums/?event=${encodeURIComponent(setup.eventId)}` : '';
 }
 
@@ -168,33 +165,52 @@ async function init() {
     }
   });
 
+  const display = approved => {
+    setups = approved;
+    $('setupTotal').textContent = setups.length.toLocaleString('en-GB');
+    const selected = ['setupBrand', 'setupEvent'].map(id => [id, $(id).value]);
+    populateFilters();
+    for (const [id, value] of selected) if ([...$(id).options].some(option => option.value === value)) $(id).value = value;
+    render();
+  };
   try {
-    const [dashboardResponse, configResponse] = await Promise.all([
-      fetch('../data/dashboard.json', { cache: 'no-store' }),
-      fetch('../data/setups-config.json', { cache: 'no-store' })
-    ]);
-    if (!dashboardResponse.ok) throw new Error('Unable to load COBRA event data.');
-    dashboard = await dashboardResponse.json();
-    config = configResponse.ok ? await configResponse.json() : {};
-    eventById = new Map(dashboard.events.map(event => [String(event.i), event]));
-
-    if (validAppsScriptUrl(config.appsScriptUrl)) {
-      const [approved, changes] = await Promise.all([loadApprovedSetups(config.appsScriptUrl), loadSetupOverrides()]);
-      setups = applySetupOverrides(approved, changes);
-    } else {
+    const contextPromise = fetch('../data/setup-context.json', { cache: 'no-cache' }).then(async response => {
+      if (!response.ok) throw new Error('Unable to load COBRA event data.');
+      dashboard = await response.json();
+      eventById = new Map(dashboard.events.map(event => [String(event.i), event]));
+    });
+    const changesPromise = loadSetupOverrides();
+    const approvedPromise = fetch('../data/setups-config.json', { cache: 'no-cache' }).then(async response => {
+      config = response.ok ? await response.json() : {};
+      return validAppsScriptUrl(config.appsScriptUrl) ? loadApprovedSetups(config.appsScriptUrl) : [];
+    });
+    // Attach rejection handling immediately while context data loads.
+    const refreshed = approvedPromise.then(items => ({ items }), error => ({ error }));
+    const [, changes] = await Promise.all([contextPromise, changesPromise]);
+    let cached;
+    try {
+      const stored = JSON.parse(sessionStorage.getItem('cobra-approved-setups-v1'));
+      if (stored && Date.now() - stored.time < 15 * 60 * 1000 && Array.isArray(stored.items)) cached = stored.items;
+    } catch { /* Storage may be unavailable inside an embed. */ }
+    if (cached) display(applySetupOverrides(cached, changes));
+    const result = await refreshed;
+    if (result.error) {
+      if (!cached) throw result.error;
+      $('setupConnectionNotice').hidden = false;
+      $('setupConnectionNotice').textContent = 'Showing recently loaded setups. The latest updates are temporarily unavailable.';
+      return;
+    }
+    try { sessionStorage.setItem('cobra-approved-setups-v1', JSON.stringify({ time: Date.now(), items: result.items })); } catch {}
+    if (!validAppsScriptUrl(config.appsScriptUrl)) {
       $('setupConnectionNotice').hidden = false;
       $('setupConnectionNotice').textContent = 'The page is ready. Complete the one-time Google Drive connection to enable submissions and published setups.';
     }
-    $('setupTotal').textContent = setups.length.toLocaleString('en-GB');
-    populateFilters();
-    render();
+    const updated = applySetupOverrides(result.items, changes);
+    if (!cached || JSON.stringify(setups) !== JSON.stringify(updated)) display(updated);
   } catch (error) {
     $('setupConnectionNotice').hidden = false;
     $('setupConnectionNotice').textContent = error.message;
-    $('setupTotal').textContent = '0';
-    setups = [];
-    populateFilters();
-    render();
+    display([]);
   }
 }
 

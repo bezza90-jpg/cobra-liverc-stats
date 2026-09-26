@@ -72,3 +72,16 @@ const championshipData = Object.fromEntries(['meta', 'events', 'drivers', 'event
 const championshipOutput = path.join(root, 'public', 'data', 'championship-results.json');
 await writeFile(championshipOutput + '.tmp', JSON.stringify(championshipData) + '\n');
 await rename(championshipOutput + '.tmp', championshipOutput);
+
+// Setup cards only need event labels and whether a driver reached a final podium.
+const podiumDrivers = {};
+for (const [raceId, driverKey, position] of dashboard.raceResults) {
+  const race = dashboard.raceById[raceId];
+  if (!race?.f || Number(position) < 1 || Number(position) > 3) continue;
+  (podiumDrivers[race.e] ||= new Set()).add(driverKey);
+}
+const setupContext = { events: dashboard.events, drivers: dashboard.drivers,
+  podiumDrivers: Object.fromEntries(Object.entries(podiumDrivers).map(([event, drivers]) => [event, [...drivers]])) };
+const setupOutput = path.join(root, 'public', 'data', 'setup-context.json');
+await writeFile(setupOutput + '.tmp', JSON.stringify(setupContext) + '\n');
+await rename(setupOutput + '.tmp', setupOutput);
