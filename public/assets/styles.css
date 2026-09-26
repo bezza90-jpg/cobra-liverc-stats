@@ -124,6 +124,7 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .avatar-upload-panel input[type=search], .avatar-upload-panel input[type=file], .avatar-upload-panel select { width:100%; min-width:0; min-height:44px; padding:8px 11px; color:var(--ink); border:1px solid #b6c9bb; border-radius:7px; background:#fff; font:inherit; }
 .avatar-upload-hint { margin:0; color:#4b6553; font-size:.83rem; line-height:1.45; }
 .avatar-upload-preview { display:grid; min-height:165px; place-items:center; padding:10px; border:1px solid #d5e6d9; border-radius:10px; background:#edf6ef; }
+.avatar-upload-preview[hidden] { display:none; }
 .avatar-upload-preview img { max-width:100%; max-height:240px; object-fit:contain; }
 .avatar-upload-preview img.flipped { transform:scaleX(-1); }
 .avatar-flip { display:flex; align-items:flex-start; gap:9px; font-size:.88rem; line-height:1.5; }
