@@ -11,3 +11,8 @@
 .car-no-avatar { margin:0; color:#4b6553; font-size:.85rem; }
 .car-image-unavailable { min-height:100px; display:grid; place-items:center; font-size:.8rem; }
 @media(max-width:600px) { .car-driver { grid-template-columns:105px minmax(0,1fr); gap:10px; padding:10px; } .car-driver h3 { font-size:.8rem; } .car-image-card { flex-basis:145px; width:145px; } .car-image-card img { height:80px; } }
+
+.car-gallery-search { margin:24px 0 16px; }
+.car-gallery-search label { display:block; font-weight:800; margin-bottom:8px; }
+.car-gallery-search input { width:100%; max-width:480px; box-sizing:border-box; padding:12px; border:1px solid #aebeb2; border-radius:8px; font:inherit; }
+.car-gallery-search p { margin:8px 0; color:#4b6553; }
