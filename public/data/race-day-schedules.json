@@ -21,18 +21,18 @@
     },
     {
       "label": "Qualifying",
-      "time": "After controlled practice",
-      "description": "Qualifying follows controlled practice, normally after a 5-minute break."
+      "time": "Approx. 10:20",
+      "description": "Four qualifying rounds. Guide starts: round 1 10:20, round 2 11:25, round 3 12:30 and round 4 13:40. Based on the last three Club Days (8–10 heats); fewer heats can bring the day forward."
     },
     {
       "label": "Finals",
-      "time": "Normally 10 minutes after qualifying",
-      "description": "The usual 10-minute break after qualifying allows the finals to be sorted, listings to be printed and drivers to fit a number to their car."
+      "time": "Approx. 15:05",
+      "description": "Recent Club Days started finals between about 14:30 and 15:20. Allow time after qualifying for race control to arrange finals, print listings and issue car numbers. Follow the announced race order."
     },
     {
       "label": "Track pack-away",
-      "time": "After racing",
-      "description": "Any help to pack the track away is appreciated. Many hands make light work."
+      "time": "Racing finish approx. 16:10",
+      "description": "The last three Club Days finished racing between 15:20 and 16:25. Pack-away follows the final race; this is not a guaranteed leaving time. Any help is appreciated—many hands make light work."
     }
   ],
   "sword": [
@@ -52,13 +52,13 @@
     },
     {
       "label": "Qualifying",
-      "time": "After controlled practice",
-      "description": "With 12 heats, qualifying starts straight after controlled practice, as each round takes approximately 1 hour 20 minutes. With fewer heats, there is some flexibility in the timing."
+      "time": "Approx. 09:45",
+      "description": "Four qualifying rounds. Guide starts: round 1 09:45, round 2 11:05, round 3 12:25 and round 4 13:45. Based on the six rounds of 2025/26; 10–12 heats usually need about 1 hour 15 minutes to 1 hour 25 minutes per round. Smaller meetings can run differently."
     },
     {
       "label": "Finals",
-      "time": "Normally 10 minutes after qualifying",
-      "description": "The usual 10-minute break after qualifying allows the finals to be sorted, listings to be printed and drivers to fit a number to their car."
+      "time": "Approx. 15:15",
+      "description": "Recent SWORD finals began between about 14:40 and 15:30. Allow around 10–20 minutes after qualifying to arrange finals, print listings and fit car numbers; follow race control on the day."
     },
     {
       "label": "Awards and photographs",
@@ -67,8 +67,8 @@
     },
     {
       "label": "Track pack-away",
-      "time": "After racing",
-      "description": "Any help to pack the track away is appreciated. Many hands make light work."
+      "time": "Racing finish approx. 16:40",
+      "description": "For a typical 10–12-heat meeting, allow until around 16:20–17:00 for racing, then marshalling, awards and pack-away. Smaller meetings may finish earlier; delays can extend the day. Any help packing away is appreciated."
     }
   ]
 }
