@@ -38,7 +38,8 @@ async function driverArt(key, className) {
   const cacheKey = `${key}|${className}`;
   if (embedded.has(cacheKey)) return embedded.get(cacheKey);
   const entry = avatars[key];
-  const avatar = typeof entry === 'string' ? entry : String(entry?.[className] || entry?.default || '');
+  const avatar = typeof entry === 'string' ? entry : String(entry?.[className] || entry?.default ||
+    (entry && typeof entry === 'object' && Object.values(entry).filter(Boolean).length === 1 ? Object.values(entry).find(Boolean) : '') || '');
   const manufacturer = String(liveRcChassis[key]?.name || manufacturers[key] || '').trim();
   const slug = String(liveRcChassis[key]?.slug || manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
   const carImage = avatar && await inlineImage(avatar);

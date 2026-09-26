@@ -20,6 +20,7 @@ CLASS_SUFFIX = {
 KEY = re.compile(r"^[A-Z0-9_-]+$")
 ID = re.compile(r"^[0-9a-f-]{36}$", re.I)
 FILE_ID = re.compile(r"^[A-Za-z0-9_-]{10,}$")
+HIDDEN_DRIVER_KEYS = {"BOB-BOBTECH-GELSTHARP"}
 
 
 def read_json(path):
@@ -56,7 +57,7 @@ def state():
     for entry in records:
         key, cls = str(entry.get("driverKey", "")), str(entry.get("className", ""))
         ident, revision = str(entry.get("id", "")), str(entry.get("revision", ""))
-        if KEY.fullmatch(key) and cls in CLASS_SUFFIX and ID.fullmatch(ident) and FILE_ID.fullmatch(revision):
+        if key not in HIDDEN_DRIVER_KEYS and KEY.fullmatch(key) and cls in CLASS_SUFFIX and ID.fullmatch(ident) and FILE_ID.fullmatch(revision):
             pair = f"{key}|{cls}"
             current[pair] = revision
             photo_ids[pair] = ident

@@ -46,7 +46,7 @@ function podiumIllustration(rows, photoName, className) {
     const name = driverByKey.get(key) || key || 'Awaiting result';
     const entry = carAvatars[key];
     const avatar = typeof entry === 'string' ? entry : entry && typeof entry === 'object'
-      ? entry[className] || entry.default || '' : '';
+      ? entry[className] || entry.default || (Object.values(entry).filter(Boolean).length === 1 ? Object.values(entry).find(Boolean) : '') : '';
     const chassis = livercChassis[key];
     const manufacturer = String(chassis?.name || driverManufacturers[key] || '').trim();
     const slug = String(chassis?.slug || manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));

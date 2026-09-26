@@ -68,7 +68,7 @@ async function initialise() {
     ]);
     if (!dashboardResponse.ok || !configResponse.ok) throw new Error('The driver list or upload settings could not be loaded.');
     const [dashboard, config] = await Promise.all([dashboardResponse.json(), configResponse.json()]);
-    drivers = (dashboard.drivers || []).filter(driver => /^[A-Za-z0-9_-]+$/.test(String(driver.k)) && driver.n)
+    drivers = (dashboard.drivers || []).filter(driver => /^[A-Za-z0-9_-]+$/.test(String(driver.k)) && driver.n && driver.k !== 'BOB-BOBTECH-GELSTHARP')
       .map(driver => ({ k: String(driver.k), n: String(driver.n) }))
       .sort((a, b) => a.n.localeCompare(b.n, 'en-GB'));
     if (!drivers.length) throw new Error('No drivers are available yet.');
