@@ -79,7 +79,7 @@ const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
 const kmToMiles = km => Number((km * 0.621371).toFixed(1));
-const journeyExcludedDrivers = new Set(['SIMON-NOTLEY']);
+const journeyExcludedDrivers = new Set(['SIMON-NOTLEY', 'BOB-BOBTECH-GELSTHARP']);
 const classLabels = {
   'Junior Racers': 'Juniors',
   '2-Wheel Drive Buggy': '2WD',
@@ -809,7 +809,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     });
     journeyDriverMarkers.set(driver.driverKey, marker);
   }
-  window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right' }).addTo(journeyMapLayers);
+  window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right', pane: 'journeySiteLabels' }).addTo(journeyMapLayers);
   window.L.circleMarker(journeyRoadRoute.at(-1), { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Istanbul, Türkiye', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
 }
 
@@ -933,6 +933,10 @@ function openJourneyMap(driverKey) {
     }
     if (!journeyMap) {
       journeyMap = window.L.map('journeyMap', { zoomControl: true, scrollWheelZoom: true, wheelPxPerZoomLevel: 80, zoomSnap: .5 });
+      // Keep the start label behind car markers (markerPane is z-index 600).
+      const siteLabelsPane = journeyMap.createPane('journeySiteLabels');
+      siteLabelsPane.style.zIndex = '550';
+      siteLabelsPane.style.pointerEvents = 'none';
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(journeyMap);
       journeyMapLayers = window.L.layerGroup().addTo(journeyMap);
       journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
@@ -1301,7 +1305,7 @@ async function init() {
 
     for (const className of data.classes) $('classFilter').insertAdjacentHTML('beforeend', `<option value="${escapeHtml(className)}">${escapeHtml(classLabels[className] || className)}</option>`);
     $('classFilter').value = 'senior';
-    const driverOptions = data.drivers.slice().sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.k)}">${escapeHtml(driver.n)}${driver.j ? ' (Junior)' : ''}</option>`).join('');
+    const driverOptions = data.drivers.filter(driver => !journeyExcludedDrivers.has(driver.k)).sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.k)}">${escapeHtml(driver.n)}${driver.j ? ' (Junior)' : ''}</option>`).join('');
     $('driverA').insertAdjacentHTML('beforeend', driverOptions);
     $('driverB').insertAdjacentHTML('beforeend', driverOptions);
     renderLeaderboard();
@@ -1455,7 +1459,7 @@ async function init() {
     const params = new URLSearchParams(window.location.search);
     const requestedDriver = params.get('driver');
     const requestedMap = params.get('map');
-    const trackerDriver = requestedMap && data.driverByKey[requestedMap] ? requestedMap
+    const trackerDriver = requestedMap && data.driverByKey[requestedMap] && !journeyExcludedDrivers.has(requestedMap) ? requestedMap
       : params.get('tracker') === '1' ? (data.driverByKey['MATTHEW-HODGES'] ? 'MATTHEW-HODGES' : data.drivers.find(row => !journeyExcludedDrivers.has(row.k))?.k) : '';
     if (trackerDriver) {
       const selected = (params.get('raceDrivers') || '').split(',').filter(key => data.driverByKey[key] && !journeyExcludedDrivers.has(key));
