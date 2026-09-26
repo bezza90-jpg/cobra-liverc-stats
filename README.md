@@ -1,105 +1,57 @@
-# COBRA LiveRC statistics dashboard
+# COBRA website
 
-This repository hosts the public COBRA statistics dashboard and refreshes it from the public COBRA LiveRC archive. It contains the complete verified history from 1 January 2022 and is designed for embedding in the Wix Harmony site.
+Race statistics, championship tables and race-day information for Cardiff Off Road Buggy Racing Association. The site imports the public COBRA LiveRC archive from January 2022 and is published through GitHub Pages. Pages can also be embedded in Wix.
 
-It also includes a Podium Gallery at `/podiums/`. The newest event opens automatically, with the complete official archive from 2022 grouped by year and event. Every final displays its official top three and links to the complete LiveRC result. Podium photographs can be submitted through a mobile-friendly crop/zoom editor and held privately in Google Drive for approval. Each submission retains a private original and provides the administrator with a Review / Re-crop link before approval. Changing the Google Sheet status to `Approved` publishes only the finished crop. Tapping a published photograph opens a high-resolution full-screen viewer.
+**Start here:** edit the website in `public/`. This is the only folder published by GitHub Pages. Do not create another `public/` folder inside it.
 
-The standalone Driver Setups & Tips library is published at `/setups/`. It uses Google Drive for files and a Google Sheet as a moderated approval queue. Its Google Apps Script backend and setup instructions are in `google-apps-script/driver-setups/`; the deployed web-app URL belongs in `public/data/setups-config.json`. Approved event-specific setups link back to LiveRC and automatically show an event-podium link when the named driver finished in the top three of a final.
+## Guides
 
-Driver profiles use all available LiveRC run data to show completed laps, estimated distance raced at 150 metres per lap, time on track, fastest laps and consistency. The class breakdown also includes entries, runs, finals, finishing statistics, TQs and race wins.
+- [Maintenance and publishing](docs/maintenance.md): where to edit content, local commands, automated updates and deployment.
+- [Back up the current GitHub version](docs/maintenance.md#backing-up-the-current-github-version): save a dated ZIP locally without including uncommitted edits.
+- [Statistics and scoring](docs/statistics.md): filters, leaderboard calculations, championships and import rules.
+- [Uploads and approvals](docs/uploads.md): driver setups, podium photographs and car avatars.
+- [Google backend setup](google-apps-script/driver-setups/README.md): configure or update the shared setup/podium service.
+- [Archived update notes](docs/archive/README.md): historical instructions for old ZIP packages; not current setup guidance.
 
-Profiles also contain a class-by-class consistency breakdown with adjusted average, best run, factual consistency bands (98%+, 95–97.9%, 90–94.9% and below 90%) and the average gap between fastest and average lap.
+## Website pages
 
-The driver leaderboard can be re-ranked using the active date, event and class filters by average finish, performance, finals, total laps, distance, track time, runs, race wins, overall wins, podiums, TQs, finishing rates, consistency, number of 95%+ runs, fastest-to-average lap gap, fastest lap, qualifying average or average places gained from qualifying.
+Paths below are relative to the published site address (including the repository name for a GitHub project site).
 
-## YouTube race videos
+| Page | Path |
+| --- | --- |
+| Race statistics, profiles and comparisons | `/` |
+| Driver distance tracker | `/?tracker=1` |
+| SWORD Championship | `/sword/` |
+| Club Series | `/club/` |
+| Podium Gallery | `/podiums/` |
+| Driver Setups & Tips | `/setups/` |
+| Current Event | `/event/` |
+| About & location | `/about/` |
+| Driver Briefing | `/briefing/` |
+| Race Day Schedule | `/schedule/` |
+| Upload car avatar | `/avatar-upload/` |
 
-The daily update can index COBRA race videos from `https://www.youtube.com/@Bezza90` from 1 January 2025 onward. Add a repository Actions secret named `YOUTUBE_API_KEY` containing a free YouTube Data API v3 key. The updater then places a **Watch race video** link beside the matching LiveRC result.
+## Project layout
 
-Video-title rules:
+| Folder | Purpose |
+| --- | --- |
+| `public/` | Active HTML pages, assets and browser data |
+| `data/raw/` | Imported LiveRC records used to rebuild statistics |
+| `scripts/` | Data import, build, image processing and checks |
+| `.github/workflows/` | Automatic updates and GitHub Pages deployment |
+| `google-apps-script/driver-setups/` | Setup and podium upload backend source |
+| `docs/` | Current guides and archived update notes |
+| `outputs/` | Historical exports and superseded files; not published |
 
-- The title must contain `COBRA`.
-- Include the event date as `DDMMYY`.
-- Include `Qual 1`, `Qual 2`, and so on, or identify the final.
-- Include `4WD`, `Junior`, `Trucks` or `Vintage` when applicable. If no class is included, the video is treated as 2WD.
+## Working on the site
 
-The Google Apps Script backend in `google-apps-script/driver-setups/` handles both setup sheets and podium photographs. Its deployed URL belongs in both `public/data/setups-config.json` and `public/data/podiums-config.json`. The manual GitHub photo method described in `public/podium-photos/README.md` remains as a fallback.
+Use Node.js 20 or later with npm. No npm packages are needed for the build and checks.
 
-It also publishes automatically calculated championship tables at `/sword/` and `/club/`, with a selector covering every September-to-April season present in the archive. Both use overall final positions, award 100 points for first then reduce by one point per position, add one TQ bonus point, and count up to the best four rounds. DNS and DNF entries retain the points for their published overall position. The highest dropped score breaks a points tie; if that remains equal, the championship position is tied. The Club 2021/22 season is labelled as a partial archive because the retained LiveRC history begins in January 2022.
-
-## What it publishes
-
-- Searchable driver leaderboard.
-- Date and class filters.
-- LiveRC-style leaderboard buttons for 2WD, 4WD, Junior Racers, Trucks and Vintage; the top filter also retains the combined All Seniors view, which excludes Junior Racers results.
-- A header link opens the COBRA LiveRC event archive directly.
-- The default view is the rolling year ending at the latest imported event.
-- The default leaderboard requires ten final results, with options for any, 5, 10, 20 or 30 finals.
-- Clicking a leaderboard name opens a detailed driver profile with attendance, finishing, qualifying, performance, consistency, class and event history statistics.
-- Overall-final leaderboard with field-normalised performance, wins, podiums, top-five rate, average/best finish and all-run consistency.
-- Separate Adult / Open and Junior leaderboards; junior status comes from the LiveRC `Junior Racers` class.
-- Driver head-to-head comparisons using overall results and same-main finals only.
-- Specific-event comparison with laps/time, fastest lap, average lap and consistency.
-- Direct links to the selected LiveRC event and each exact final result page.
-- Event and race explorer for every practice, qualifying heat and final, with full result statistics and direct LiveRC links.
-- Expandable individual-race history inside every driver profile.
-
-Definitions:
-
-- **Leaderboard:** published overall final positions only. The adjustment grows with attendance: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. The same allowance applies to field-normalised performance and consistency. Attendance, finals, wins and podium totals are never reduced.
-- **Event head-to-head:** both drivers have a final overall result in the same class at the same event.
-- **Same-final head-to-head:** both drivers appear in the same main final; heats and practice are excluded.
-
-## GitHub setup
-
-1. Create a free GitHub account and a new **public** repository named `cobra-liverc-stats`.
-2. Upload the complete contents of this folder, including the `.github` folder.
-3. Open the repository's **Settings → Pages**.
-4. Under **Build and deployment**, choose **GitHub Actions** as the source.
-5. Open **Actions → Update and publish COBRA statistics → Run workflow**.
-6. When the workflow succeeds, GitHub Pages will provide the dashboard address.
-
-The workflow checks LiveRC daily at 18:00 UK time using the `Europe/London` timezone. It therefore remains at 18:00 through both BST and GMT. You can also run it manually at any time.
-
-## Wix Harmony setup
-
-1. Add a new Wix page called **Statistics**.
-2. Choose **+ Add → Elements → More Options → Embed**.
-3. Drag **Embed a site** onto the page.
-4. Open its settings and paste the GitHub Pages address.
-5. Stretch it to the available width and start with a height of about 1,400 px.
-6. Check desktop and mobile previews, then publish Wix.
-
-## Updating rules
-
-- Only events dated 1 January 2022 or later are considered.
-- Event names containing `test` or `testing` are ignored.
-- Future and zero-entry events are ignored.
-- An event is imported only when entry, qualifying, overall and race-result pages are available.
-- LiveRC event and race IDs prevent duplicate imports.
-- Event `449348` is deliberately excluded because it is an unfinished duplicate of completed event `450264`.
-- At most two new or changed events are processed in one run.
-
-## Manual commands
-
-These are optional; GitHub Actions runs them automatically.
-
-```bash
-npm run update
-npm run validate
+```sh
+npm run build
+npm run check
 ```
 
-The updater uses only Node.js built-in features, so there are no packages to install and no passwords or API keys to configure.
+The build regenerates dashboard data, the smaller championship dataset and shared navigation. The checks cover local page/asset links, literal data fetches, JavaScript syntax, navigation consistency, data integrity, championship equivalence and map loading/retry behaviour.
 
-## Files
-
-- `public/` — the website GitHub Pages publishes.
-- `public/data/dashboard.json` — compact browser-ready statistics.
-- `public/setups/` — standalone Driver Setups & Tips page.
-- `google-apps-script/driver-setups/` — Google Drive upload and approval backend.
-- `data/raw/` — source records used for rebuilding statistics.
-- `scripts/update-liverc.mjs` — checks LiveRC and imports eligible events.
-- `scripts/build-dashboard.mjs` — recalculates browser-ready statistics.
-- `.github/workflows/update-stats.yml` — automatic update and deployment.
-
-If LiveRC changes its HTML format, the validation stage fails before publishing corrupted data. The last good dashboard remains available.
+Preview `public/` through a local HTTP server; opening HTML directly from the filesystem will not support its data requests. See [maintenance](docs/maintenance.md) for publishing and external-service requirements.

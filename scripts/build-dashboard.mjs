@@ -66,3 +66,9 @@ const temporary = `${output}.tmp`;
 await writeFile(temporary, `${JSON.stringify(dashboard)}\n`);
 await rename(temporary, output);
 console.log(`Built dashboard: ${events.length} events, ${names.size} drivers, ${raceResults.length} race results.`);
+
+// Championship tables do not need individual runs, entries or race metadata.
+const championshipData = Object.fromEntries(['meta', 'events', 'drivers', 'eventResults'].map(key => [key, dashboard[key]]));
+const championshipOutput = path.join(root, 'public', 'data', 'championship-results.json');
+await writeFile(championshipOutput + '.tmp', JSON.stringify(championshipData) + '\n');
+await rename(championshipOutput + '.tmp', championshipOutput);
