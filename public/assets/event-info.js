@@ -25,9 +25,20 @@
       element('scheduleEvent').textContent = event.title || 'Check the current event for meeting details.';
       for (const entry of schedules[kind] || []) {
         const row = document.createElement('li');
+        const content = document.createElement('div');
+        content.className = 'schedule-content';
         const name = document.createElement('strong'); name.textContent = entry.label;
-        const time = document.createElement('span'); time.textContent = entry.time || 'To be confirmed';
-        row.append(name,time); element('scheduleSteps').append(row);
+        content.append(name);
+        if (entry.description) {
+          const description = document.createElement('p');
+          description.className = 'schedule-description';
+          description.textContent = entry.description;
+          content.append(description);
+        }
+        const time = document.createElement('span');
+        time.className = 'schedule-time';
+        time.textContent = entry.time || 'To be confirmed';
+        row.append(content,time); element('scheduleSteps').append(row);
       }
     }
   } catch (_) {

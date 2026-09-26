@@ -1,18 +1,74 @@
 {
   "club": [
-    {"label":"Doors open / check in","time":""},
-    {"label":"Practice","time":""},
-    {"label":"Qualifying heats","time":""},
-    {"label":"Break","time":""},
-    {"label":"Finals","time":""},
-    {"label":"Awards / close","time":""}
+    {
+      "label": "Doors open / check-in",
+      "time": "08:30",
+      "description": "Self check-in at race control. Tick your name off before practising."
+    },
+    {
+      "label": "Open practice",
+      "time": "Normally 08:30–09:30",
+      "description": "The track opens when the race director says, normally at 08:30. Open practice runs until 09:30."
+    },
+    {
+      "label": "Drivers’ briefing",
+      "time": "09:30"
+    },
+    {
+      "label": "Controlled practice",
+      "time": "After the briefing",
+      "description": "3-minute controlled practice following the drivers’ briefing."
+    },
+    {
+      "label": "Qualifying",
+      "time": "After controlled practice",
+      "description": "Qualifying follows controlled practice, normally after a 5-minute break."
+    },
+    {
+      "label": "Finals",
+      "time": "Normally 10 minutes after qualifying",
+      "description": "The usual 10-minute break after qualifying allows the finals to be sorted, listings to be printed and drivers to fit a number to their car."
+    },
+    {
+      "label": "Track pack-away",
+      "time": "After racing",
+      "description": "Any help to pack the track away is appreciated. Many hands make light work."
+    }
   ],
   "sword": [
-    {"label":"Doors open / check in","time":""},
-    {"label":"Practice","time":""},
-    {"label":"Qualifying heats","time":""},
-    {"label":"Break","time":""},
-    {"label":"Finals","time":""},
-    {"label":"Awards / close","time":""}
+    {
+      "label": "Doors open / check-in",
+      "time": "08:00",
+      "description": "Self check-in at race control. Tick your name off before practising."
+    },
+    {
+      "label": "Drivers’ briefing",
+      "time": "08:40"
+    },
+    {
+      "label": "Controlled practice",
+      "time": "Normally 08:50",
+      "description": "3-minute controlled practice. First practice on the line normally at 08:50. No open practice."
+    },
+    {
+      "label": "Qualifying",
+      "time": "After controlled practice",
+      "description": "With 12 heats, qualifying starts straight after controlled practice, as each round takes approximately 1 hour 20 minutes. With fewer heats, there is some flexibility in the timing."
+    },
+    {
+      "label": "Finals",
+      "time": "Normally 10 minutes after qualifying",
+      "description": "The usual 10-minute break after qualifying allows the finals to be sorted, listings to be printed and drivers to fit a number to their car."
+    },
+    {
+      "label": "Awards and photographs",
+      "time": "After marshalling",
+      "description": "Award boards for the top three in each final. We aim to take photographs of the top three once they have completed their marshalling duties."
+    },
+    {
+      "label": "Track pack-away",
+      "time": "After racing",
+      "description": "Any help to pack the track away is appreciated. Many hands make light work."
+    }
   ]
 }
