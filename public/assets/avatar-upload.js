@@ -62,13 +62,13 @@ function renderDrivers() {
 
 async function initialise() {
   try {
-    const [dashboardResponse, configResponse] = await Promise.all([
-      fetch('../data/dashboard.json', { cache: 'no-store' }),
+    const [directoryResponse, configResponse] = await Promise.all([
+      fetch('../data/driver-directory.json', { cache: 'no-cache' }),
       fetch('../data/avatar-upload-config.json', { cache: 'no-store' })
     ]);
-    if (!dashboardResponse.ok || !configResponse.ok) throw new Error('The driver list or upload settings could not be loaded.');
-    const [dashboard, config] = await Promise.all([dashboardResponse.json(), configResponse.json()]);
-    drivers = (dashboard.drivers || []).filter(driver => /^[A-Za-z0-9_-]+$/.test(String(driver.k)) && driver.n && driver.k !== 'BOB-BOBTECH-GELSTHARP')
+    if (!directoryResponse.ok || !configResponse.ok) throw new Error('The driver list or upload settings could not be loaded.');
+    const [directory, config] = await Promise.all([directoryResponse.json(), configResponse.json()]);
+    drivers = (directory.drivers || []).filter(driver => /^[A-Za-z0-9_-]+$/.test(String(driver.k)) && driver.n && driver.k !== 'BOB-BOBTECH-GELSTHARP')
       .map(driver => ({ k: String(driver.k), n: String(driver.n) }))
       .sort((a, b) => a.n.localeCompare(b.n, 'en-GB'));
     if (!drivers.length) throw new Error('No drivers are available yet.');
