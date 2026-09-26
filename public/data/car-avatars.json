@@ -17,5 +17,8 @@
     "Trucks": "assets/car-avatars/JAMIE-DAVIES-AUTO-TRUCKS.png",
     "2-Wheel Drive Buggy": "assets/car-avatars/JAMIE-DAVIES-AUTO-2WD.png",
     "4-Wheel Drive Buggy": "assets/car-avatars/JAMIE-DAVIES-AUTO-4WD.png"
+  },
+  "CHRIS-LEONARD": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-LEONARD-AUTO-2WD.png"
   }
 }
