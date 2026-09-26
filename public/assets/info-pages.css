@@ -33,3 +33,5 @@
 @media(max-width:600px){.schedule-steps li{flex-direction:column;gap:6px}.schedule-steps .schedule-time{flex:auto;text-align:left}}
 
 .schedule-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+.event-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}.event-heading h2{margin:0}.event-booking{flex-shrink:0}.event-booking[hidden]{display:none}@media(max-width:600px){.event-heading{align-items:flex-start;flex-direction:column;gap:12px}}

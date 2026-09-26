@@ -9,7 +9,7 @@
 | Statistics page | `public/index.html`, `public/assets/app.js` |
 | Main styling | `public/assets/styles.css` |
 | Shared navigation | `scripts/build-navigation.mjs`; then run `npm run build:navigation` |
-| Current event | `public/data/current-event.json` |
+| Current event | LiveRC calendar via `scripts/update-event-calendar.mjs`; venue in `public/data/current-event.json` |
 | Club and SWORD schedules | `public/data/race-day-schedules.json` |
 | About team names, roles and biographies | `public/data/about-team.json` |
 | About portraits | `public/assets/about/slot-1.jpg` through `slot-5.jpg`; create these when adding images |
@@ -18,7 +18,7 @@
 | Upload connections | See [uploads and approvals](uploads.md) |
 | Optional page artwork | `public/data/site-media.json` and `public/assets/site-images/` |
 
-For the current event, use `YYYY-MM-DD` for the date, `club` or `sword` for the type, and the LiveRC event ID for the podium link. Blank schedule times display “To be confirmed”. About profiles have a `visible` setting and an optional image path such as `assets/about/slot-1.jpg`.
+The current event title, date, type and links are selected from `public/data/event-calendar.json`, refreshed by the LiveRC updater. `current-event.json` supplies the venue. Each schedule selects the next meeting of its own type. Run `npm run update:calendar` to refresh just this calendar. A meeting remains current until its LiveRC Final Results summary contains finishing positions and all finals on its main-event lineups have a Complete status and result link; unknown or incomplete statuses do not advance it. Completion is checked during the existing daily and race-afternoon updates. Blank schedule times display “To be confirmed”. About profiles have a `visible` setting and an optional image path such as `assets/about/slot-1.jpg`.
 
 Generated files such as `public/data/dashboard.json` and `public/data/championship-results.json` are rebuilt from `data/raw/`. Make calculation changes in the scripts rather than editing generated values.
 
@@ -98,3 +98,7 @@ Embed the published page URL in a Wix website-embed element. Check desktop and m
 The private site manager is not included in this checkout. Before importing or exporting its files, compare them with this repository so it does not overwrite newer code, upload configuration or generated avatar images. Keep its active website files under the same `public/` layout.
 
 Historical ZIP-specific instructions are preserved in [the archive](archive/README.md). Historical site exports under `outputs/` are not active sources.
+
+### Event booking links
+
+The current-event Book in button uses a unique booking-page match by UK event date and Club/SWORD type. The updater reads the COBRA Wix event sitemap and structured event metadata, caching it in `data/raw/booking-calendar.json` for the day. Missing or ambiguous matches hide the event-specific button; All events remains available on the event, briefing and schedule pages. A failed booking refresh retains previously verified date-matched links. To force another refresh that day, clear the cache file’s `checkedDate` value and run `npm run update:calendar`.

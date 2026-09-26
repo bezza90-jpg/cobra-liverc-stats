@@ -1,0 +1,111 @@
+{
+  "sourceUrl": "https://cobracardiff.liverc.com/events/",
+  "events": [
+    {
+      "title": "Club Day 20th September 2026",
+      "date": "2026-09-20",
+      "type": "club",
+      "eventId": "518551",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518551",
+      "completed": true,
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day"
+    },
+    {
+      "title": "SWORD Round 6 EOS 2025/6",
+      "date": "2026-03-29",
+      "type": "sword",
+      "eventId": "499054",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=499054",
+      "completed": true,
+      "bookingUrl": ""
+    },
+    {
+      "title": "SWORD Round 1 EOS 2026/7",
+      "date": "2026-10-04",
+      "type": "sword",
+      "eventId": "518554",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-1"
+    },
+    {
+      "title": "Club Day 11th October 2026",
+      "date": "2026-10-11",
+      "type": "club",
+      "eventId": "518555",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-2"
+    },
+    {
+      "title": "SWORD Round 2 EOS 2026/7",
+      "date": "2026-11-01",
+      "type": "sword",
+      "eventId": "518556",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-2"
+    },
+    {
+      "title": "Club Day 29th November 2026",
+      "date": "2026-11-29",
+      "type": "club",
+      "eventId": "518557",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518557",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-3"
+    },
+    {
+      "title": "SWORD Round 3 EOS 2026/7",
+      "date": "2026-12-13",
+      "type": "sword",
+      "eventId": "518558",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518558",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-3"
+    },
+    {
+      "title": "Club Day 10th Janurary 2027",
+      "date": "2027-01-10",
+      "type": "club",
+      "eventId": "518559",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518559",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-4"
+    },
+    {
+      "title": "SWORD Round 4 EOS 2026/7",
+      "date": "2027-01-24",
+      "type": "sword",
+      "eventId": "518560",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518560",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-4"
+    },
+    {
+      "title": "Club Day 07th February 2027",
+      "date": "2027-02-07",
+      "type": "club",
+      "eventId": "518561",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518561",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-5"
+    },
+    {
+      "title": "SWORD Round 5 EOS 2026/7",
+      "date": "2027-02-21",
+      "type": "sword",
+      "eventId": "518562",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518562",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-5"
+    },
+    {
+      "title": "SWORD Round 6 EOS 2026/7",
+      "date": "2027-03-21",
+      "type": "sword",
+      "eventId": "518563",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518563",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-6"
+    },
+    {
+      "title": "Club Day 04th April 2027",
+      "date": "2027-04-04",
+      "type": "club",
+      "eventId": "518564",
+      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518564",
+      "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-7"
+    }
+  ]
+}

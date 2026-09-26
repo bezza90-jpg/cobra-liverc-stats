@@ -1,3 +1,4 @@
+import { updateEventCalendar } from './update-event-calendar.mjs';
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -130,7 +131,9 @@ const now = new Date();
 const today = new Intl.DateTimeFormat('en-CA', {
   timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit'
 }).format(now);
-const archive = parseArchive(await fetchText(`${BASE_URL}/events/`))
+const calendar = parseArchive(await fetchText(`${BASE_URL}/events/`));
+await updateEventCalendar(calendar);
+const archive = calendar
   .filter(event => eligible(event, today))
   .sort((a, b) => a.date.localeCompare(b.date));
 if (!archive.length) throw new Error('No eligible LiveRC events were found; refusing to replace existing data.');
