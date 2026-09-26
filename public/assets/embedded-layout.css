@@ -1,0 +1,4 @@
+/* Only the duplicate site header is hidden; direct GitHub visits retain it. */
+html.cobra-embedded .hero > .brand,
+html.cobra-embedded .hero > .results-nav { display: none; }
+html.cobra-embedded .hero > .hero-copy { padding-top: 0; padding-bottom: 0; }
