@@ -1,9 +1,39 @@
 {
   "slots": [
-    {"name":"","role":"","bio":"","image":"","visible":true},
-    {"name":"","role":"","bio":"","image":"","visible":true},
-    {"name":"","role":"","bio":"","image":"","visible":true},
-    {"name":"","role":"","bio":"","image":"","visible":true},
-    {"name":"","role":"","bio":"","image":"","visible":true}
+    {
+      "name": "Matt 'Beryl' Hodges",
+      "role": "",
+      "bio": "",
+      "image": "",
+      "visible": true
+    },
+    {
+      "name": "Paul 'Bruce' Curtis",
+      "role": "",
+      "bio": "",
+      "image": "",
+      "visible": true
+    },
+    {
+      "name": "Mike Driscol",
+      "role": "",
+      "bio": "",
+      "image": "",
+      "visible": true
+    },
+    {
+      "name": "Steve Curtis-Rich",
+      "role": "",
+      "bio": "",
+      "image": "",
+      "visible": true
+    },
+    {
+      "name": "Bob 'Bobtech' Gelstharp",
+      "role": "",
+      "bio": "",
+      "image": "",
+      "visible": true
+    }
   ]
 }
