@@ -721,25 +721,26 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   journeyRaceElapsedDays = raceMode ? journeyRaceTimeline[Number($('journeyDateSlider').value)] ?? 0 : 0;
   const drivers = journeyDriversAtPosition(raceMode).sort((a, b) => b.km - a.km);
   const activeKey = raceMode && !journeySelectedKeys.has(journeySelectedKey) ? [...journeySelectedKeys][0] : journeySelectedKey;
+  const allDriversView = !activeKey && !raceMode;
   const selectedName = state.data.driverByKey[activeKey] || 'Selected driver';
   const selected = drivers.find(driver => driver.driverKey === activeKey) || { driverKey: activeKey, name: selectedName, km: 0, laps: 0, runs: 0, events: 0, classes: [], lastDate: '', lastEvent: '' };
-  if (journeyFollowSelected || focusDriver) {
+  if (!allDriversView && (journeyFollowSelected || focusDriver)) {
     const point = journeyRouteAt(selected.km).point;
     if (focusDriver && journeyMap.getZoom() < 8) journeyMap.setView(point, 8, { animate: false });
     else if (journeyMap.getCenter().distanceTo(window.L.latLng(point)) > 150) journeyMap.panTo(point, { animate: false });
   }
   const displayDate = dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
   $('journeyDateLabel').textContent = raceMode ? `Checkpoint ${Number($('journeyDateSlider').value) + 1} / ${journeyRaceTimeline.length}` : displayDate;
-  $('journeyMapTitle').textContent = raceMode ? `Race: ${journeySelectedKeys.size} drivers · ${Math.floor(journeyRaceElapsedDays)} career days` : `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
+  $('journeyMapTitle').textContent = raceMode ? `Race: ${journeySelectedKeys.size} drivers · ${Math.floor(journeyRaceElapsedDays)} career days` : allDriversView ? `All drivers — ${drivers.length} on the route` : `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
   const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the illustrated route.`;
-  $('journeyMapCopy').textContent = raceMode ? `All selected drivers set off from Cardiff together. Their miles advance round by round from each driver's first recorded COBRA run in 2022 or later. All classes count.` : `Combined distance from every recorded practice, qualifying and final round since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
+  $('journeyMapCopy').textContent = raceMode ? `All selected drivers set off from Cardiff together. Their miles advance round by round from each driver's first recorded COBRA run in 2022 or later. All classes count.` : allDriversView ? 'Each pin shows a driver’s combined distance since January 2022. Click a car or pin to follow that driver, search by name, or play the journey through time.' : `Combined distance from every recorded practice, qualifying and final round since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
 
   journeyMapLayers.clearLayers();
   journeyDriverMarkers = new Map();
   journeyLastMotionKm = new Map();
   window.L.polyline(journeyRoadRoute, { color: '#6f7972', weight: 5, opacity: .65 }).addTo(journeyMapLayers);
   const selectedRoute = journeyRouteAt(selected.km);
-  journeyTravelledLine = window.L.polyline(selectedRoute.travelled, { color: '#08a31a', weight: 7, opacity: .9 }).addTo(journeyMapLayers);
+  journeyTravelledLine = allDriversView ? null : window.L.polyline(selectedRoute.travelled, { color: '#08a31a', weight: 7, opacity: .9 }).addTo(journeyMapLayers);
 
   for (const [name, km] of journeyMilestoneData) {
     const point = journeyRouteAt(km).point;
@@ -804,6 +805,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
       $('journeyDriverSearch').value = driver.name;
       journeyFollowSelected = true;
       $('journeyFollowStatus').textContent = 'Following selected driver';
+      $('journeyRefocus').textContent = '⌖ Refocus on driver';
       renderJourneyMap({ focusDriver: true });
       journeyDriverMarkers.get(driver.driverKey)?.openPopup();
     });
@@ -921,9 +923,10 @@ function openJourneyMap(driverKey) {
   $('journeyPlaybackStart').disabled = false;
   $('driverDialog').classList.add('journey-open');
   $('journeyMapOverlay').hidden = false;
-  journeyFollowSelected = true;
+  journeyFollowSelected = Boolean(driverKey);
   journeyPlaybackHasStarted = false;
-  $('journeyFollowStatus').textContent = 'Following selected driver';
+  $('journeyFollowStatus').textContent = driverKey ? 'Following selected driver' : 'Showing the full route';
+  $('journeyRefocus').textContent = driverKey ? '⌖ Refocus on driver' : '⌖ Show full route';
   $('journeyMapOverlay').querySelector('.journey-map-shell').scrollTop = 0;
   stopJourneyPlayback();
   requestAnimationFrame(() => {
@@ -949,7 +952,7 @@ function openJourneyMap(driverKey) {
     renderJourneyMap({ resetView: false });
     setTimeout(() => {
       journeyMap.invalidateSize();
-      renderJourneyMap({ focusDriver: true });
+      renderJourneyMap({ focusDriver: Boolean(driverKey) });
     }, 50);
   });
 }
@@ -1372,9 +1375,9 @@ async function init() {
       renderJourneyMap();
     });
     $('journeyRefocus').addEventListener('click', () => {
-      journeyFollowSelected = true;
-      $('journeyFollowStatus').textContent = 'Following selected driver';
-      renderJourneyMap({ focusDriver: true });
+      journeyFollowSelected = Boolean(journeySelectedKey);
+      $('journeyFollowStatus').textContent = journeySelectedKey ? 'Following selected driver' : 'Showing the full route';
+      renderJourneyMap({ resetView: !journeySelectedKey, focusDriver: Boolean(journeySelectedKey) });
     });
     $('journeyDriverChecklist').addEventListener('change', event => {
       if (event.target.type !== 'checkbox') return;
@@ -1421,7 +1424,8 @@ async function init() {
     });
     $('journeyStandalone').addEventListener('click', () => {
       const url = new URL(location.href);
-      url.searchParams.set('map', journeySelectedKey || state.profileKey);
+      if (journeySelectedKey) url.searchParams.set('map', journeySelectedKey);
+      else url.searchParams.delete('map');
       if (journeySelectedKeys.size) url.searchParams.set('raceDrivers', [...journeySelectedKeys].join(','));
       $('journeyStandalone').href = url.href;
     });
@@ -1459,12 +1463,19 @@ async function init() {
     const params = new URLSearchParams(window.location.search);
     const requestedDriver = params.get('driver');
     const requestedMap = params.get('map');
-    const trackerDriver = requestedMap && data.driverByKey[requestedMap] && !journeyExcludedDrivers.has(requestedMap) ? requestedMap
-      : params.get('tracker') === '1' ? (data.driverByKey['MATTHEW-HODGES'] ? 'MATTHEW-HODGES' : data.drivers.find(row => !journeyExcludedDrivers.has(row.k))?.k) : '';
-    if (trackerDriver) {
+    const trackerDriver = requestedMap && data.driverByKey[requestedMap] && !journeyExcludedDrivers.has(requestedMap) ? requestedMap : '';
+    if (trackerDriver || params.get('tracker') === '1') {
       const selected = (params.get('raceDrivers') || '').split(',').filter(key => data.driverByKey[key] && !journeyExcludedDrivers.has(key));
       journeySelectedKeys = new Set(selected);
-      driverProfile(trackerDriver);
+      if (trackerDriver) driverProfile(trackerDriver);
+      else {
+        $('driverProfileName').textContent = 'Driver Distance Tracker';
+        const dialog = $('driverDialog');
+        if (!dialog.open) {
+          if (typeof dialog.showModal === 'function') dialog.showModal();
+          else dialog.setAttribute('open', '');
+        }
+      }
       openJourneyMap(trackerDriver);
       renderJourneyDriverChecklist();
     } else if (requestedDriver && data.driverByKey[requestedDriver]) driverProfile(requestedDriver);
