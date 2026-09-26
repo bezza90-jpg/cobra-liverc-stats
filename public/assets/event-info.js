@@ -1,4 +1,4 @@
-import { nextMeeting } from './event-calendar.js';
+import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight';
 (async () => {
   'use strict';
   const element = id => document.getElementById(id);
@@ -58,3 +58,7 @@ import { nextMeeting } from './event-calendar.js';
     if (element('scheduleSteps')) element('scheduleSteps').textContent = 'Schedule unavailable; check your event booking.';
   }
 })();
+
+// Refresh a page left open overnight once the UK meeting date changes.
+const openedDate = londonDate();
+setInterval(() => { if (londonDate() !== openedDate) location.reload(); }, 30000);
