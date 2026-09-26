@@ -1,3 +1,5 @@
+> Historical snapshot — use the [current README](../../../README.md) for active setup and publishing instructions.
+
 # COBRA LiveRC statistics dashboard
 
 This repository hosts the public COBRA statistics dashboard and refreshes it from the public COBRA LiveRC archive. It contains the complete verified history from 1 January 2022 and is designed for embedding in the Wix Harmony site.

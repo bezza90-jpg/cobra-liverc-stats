@@ -1,3 +1,4 @@
+import { loadMap } from './load-map.js';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
 
 const state = { data: null, profileKey: '' };
@@ -904,7 +905,7 @@ function toggleJourneyPlayback() {
   journeyPlaybackTimer = requestAnimationFrame(animate);
 }
 
-function openJourneyMap(driverKey) {
+async function openJourneyMap(driverKey) {
   journeySelectedKey = driverKey;
   const latestDate = state.data.meta.latestEventDate || Object.values(state.data.raceById).map(race => race.d).sort().at(-1) || '2022-01-01';
   journeyRoundSlots = buildJourneyRoundSlots();
@@ -929,12 +930,17 @@ function openJourneyMap(driverKey) {
   $('journeyRefocus').textContent = driverKey ? '⌖ Refocus on driver' : '⌖ Show full route';
   $('journeyMapOverlay').querySelector('.journey-map-shell').scrollTop = 0;
   stopJourneyPlayback();
+  try {
+    if (!journeyMap) $('journeyMap').textContent = 'Loading road map…';
+    await loadMap();
+  } catch (error) {
+    $('journeyMap').textContent = error.message;
+    return;
+  }
+  if ($('journeyMapOverlay').hidden) return;
   requestAnimationFrame(() => {
-    if (!window.L) {
-      $('journeyMap').textContent = 'The road map could not be loaded. Please check the internet connection and try again.';
-      return;
-    }
     if (!journeyMap) {
+      $('journeyMap').textContent = '';
       journeyMap = window.L.map('journeyMap', { zoomControl: true, scrollWheelZoom: true, wheelPxPerZoomLevel: 80, zoomSnap: .5 });
       // Keep the start label behind car markers (markerPane is z-index 600).
       const siteLabelsPane = journeyMap.createPane('journeySiteLabels');

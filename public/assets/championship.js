@@ -161,7 +161,7 @@ async function init() {
   try {
     const championshipKey = document.body.dataset.championship;
     const [dataResponse, configResponse] = await Promise.all([
-      fetch('../data/dashboard.json', { cache: 'no-cache' }),
+      fetch('../data/championship-results.json', { cache: 'no-cache' }),
       fetch('../data/championships.json', { cache: 'no-cache' })
     ]);
     if (!dataResponse.ok || !configResponse.ok) throw new Error('Championship data could not be loaded.');

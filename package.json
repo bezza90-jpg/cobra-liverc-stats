@@ -6,9 +6,10 @@
   "description": "Automatically updated COBRA LiveRC statistics dashboard",
   "scripts": {
     "update": "node scripts/update-liverc.mjs && node scripts/update-youtube.mjs",
-    "build": "node scripts/build-dashboard.mjs",
+    "build": "node scripts/build-dashboard.mjs && npm run build:navigation",
     "validate": "node scripts/validate.mjs",
-    "check": "node --check public/assets/app.js && node --check public/assets/championship.js && node --check public/assets/podiums.js && node --check public/assets/setups.js && node --check scripts/update-liverc.mjs && node --check scripts/update-youtube.mjs && npm run validate"
+    "check": "node scripts/check-site.mjs && node scripts/build-navigation.mjs --check && npm run validate && node --test scripts/performance.test.mjs",
+    "build:navigation": "node scripts/build-navigation.mjs"
   },
   "engines": {
     "node": ">=20"

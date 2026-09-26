@@ -1,8 +1,10 @@
-# Manually adding COBRA podium photographs
+# Manual podium-photo fallback
+
+[Main README](../../README.md) · [Uploads and approvals](../../docs/uploads.md)
 
 The preferred method is the **Upload podium photo** button in the Podium Gallery. It includes event/final selection, 16:10 crop and zoom, Google Drive storage, and a moderated Google Sheet approval queue.
 
-This folder remains available as a manual fallback. A locally stored image is used only when there is no approved Google Drive photograph for that final.
+This folder remains available as a manual fallback. Normally the gallery uses an approved Google Drive photograph first, then a local image. Administrator hide/replacement settings in `public/data/podium-photo-overrides.json` take precedence over both.
 
 Each final uses one group podium photograph. You do not need to edit any code.
 

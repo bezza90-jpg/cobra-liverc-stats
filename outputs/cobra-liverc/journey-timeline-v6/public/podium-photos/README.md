@@ -1,3 +1,5 @@
+> Historical snapshot — use the [current README](../../../../../README.md) for active setup and publishing instructions.
+
 # Adding COBRA podium photographs
 
 Each final uses one group podium photograph. You do not need to edit any code.
