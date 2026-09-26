@@ -74,3 +74,19 @@ test('failed map request can be retried', async () => {
   nodes[3].onload();
   await retry;
 });
+
+
+test('setup context preserves final podium links for every event and driver', async () => {
+  const fullText = await read('public/data/dashboard.json');
+  const slimText = await read('public/data/setup-context.json');
+  const full = JSON.parse(fullText), slim = JSON.parse(slimText);
+  assert.deepEqual(slim.events, full.events);
+  assert.deepEqual(slim.drivers, full.drivers);
+  for (const event of full.events) {
+    const finals = new Set(Object.entries(full.raceById).filter(([, race]) => race.f && String(race.e) === String(event.i)).map(([id]) => id));
+    const expected = [...new Set(full.raceResults.filter(row => finals.has(String(row[0])) && Number(row[2]) >= 1 && Number(row[2]) <= 3).map(row => row[1]))].sort();
+    assert.deepEqual([...(slim.podiumDrivers[event.i] || [])].sort(), expected);
+  }
+  assert.ok(Buffer.byteLength(slimText) < Buffer.byteLength(fullText) / 10);
+  console.log('Setup data: ' + Buffer.byteLength(fullText) + ' -> ' + Buffer.byteLength(slimText) + ' bytes.');
+});
