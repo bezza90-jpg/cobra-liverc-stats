@@ -6,3 +6,6 @@
 .podium-illustration-place strong { grid-row:3; width:100%; align-self:center; text-align:center; }
 @media(max-width:520px) { .podium-illustration-place { height:170px; } .podium-illustration-1 { height:195px; } .podium-illustration-art { height:64px; } }
 .podium-illustration-1 .podium-illustration-art { bottom:70px; }
+
+/* A 240px minimum height must not make the 16:10 grid wider than a phone card. */
+.podium-photo { width:100%; min-width:0; grid-template-columns:minmax(0,1fr); }
