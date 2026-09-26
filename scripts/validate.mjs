@@ -56,7 +56,7 @@ for (const key of ['sword', 'club']) {
 }
 if (!swordHtml.includes('data-championship="sword"') || !clubHtml.includes('data-championship="club"')) errors.push('Championship page identity is missing.');
 if (!swordHtml.includes('id="seasonSelect"') || !clubHtml.includes('id="seasonSelect"')) errors.push('Championship season selectors are missing.');
-if (!podiumsHtml.includes('../data/dashboard.json') && !podiumsJs.includes('../data/dashboard.json')) errors.push('Podium gallery data link is missing.');
+if (!podiumsHtml.includes('../data/podium-results.json') && !podiumsJs.includes('../data/podium-results.json')) errors.push('Podium gallery data link is missing.');
 if (!podiumsJs.includes("-podium.jpg") || !podiumsJs.includes('raceTopThree')) errors.push('Podium photo naming or top-three result logic is missing.');
 if (!podiumsHtml.includes('Complete archive from 2022') || podiumsJs.includes('setUTCFullYear')) errors.push('Podium gallery is not configured for the complete archive.');
 if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Podium Gallery'))) errors.push('Podium Gallery navigation is missing from one or more pages.');

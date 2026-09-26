@@ -2,11 +2,16 @@
 const siteRoot = new URL('../', import.meta.url);
 const wixPages = new Map([
   ['', 'race-stats'],
-  ['sword/', 'sword-results'],
-  ['club/', 'club-series'],
-  ['podiums/', 'club-series-1'],
-  ['setups/', 'club-series-1-1'],
-  ['avatar-upload/', 'Upload-Car-Avatar'],
+  ['sword/', 'sword-tables'],
+  ['club/', 'club-series-tables'],
+  ['podiums/', 'Podium-Gallery'],
+  ['setups/', 'drivers-setups'],
+  ['avatar-upload/', 'upload-car-avatar'],
+  ['car-avatars/', 'driver-car-avatars'],
+  ['event/', 'current-event'],
+  ['briefing/', 'drivers-briefing'],
+  ['about/', 'about-cobra'],
+  ['schedule/', 'club-schedule'],
 ]);
 const embedded = window.self !== window.top;
 
@@ -18,8 +23,8 @@ function prepareLink(link) {
     // Menu links select a section. Preserve filters and event-specific links elsewhere.
     const menuLink = Boolean(link.closest('.results-nav'));
     const tracker = route === '' && destination.searchParams.get('tracker') === '1';
-    const wixPage = tracker ? 'DriverDistanceTracker' : wixPages.get(route);
-    if (wixPage && (menuLink || (!destination.search && !destination.hash))) {
+    const wixPage = tracker ? 'driver-distance-tracker' : route === 'schedule/' && destination.searchParams.get('type') === 'sword' ? 'sword-schedule' : wixPages.get(route);
+    if (wixPage && (menuLink || ((!destination.search || (tracker && [...destination.searchParams.keys()].every(key => key === 'tracker')) || (route === 'schedule/' && [...destination.searchParams.keys()].every(key => key === 'type'))) && !destination.hash))) {
       destination = new URL(wixPage, 'https://www.cobracardiff.co.uk/');
       link.href = destination.href;
     }

@@ -4,9 +4,9 @@ import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight
   const element = id => document.getElementById(id);
   try {
     const [eventResponse, scheduleResponse, calendarResponse] = await Promise.all([
-      fetch('../data/current-event.json', {cache:'no-store'}),
-      fetch('../data/race-day-schedules.json', {cache:'no-store'}),
-      fetch('../data/event-calendar.json', {cache:'no-store'})
+      fetch('../data/current-event.json', {cache:'no-cache'}),
+      fetch('../data/race-day-schedules.json', {cache:'no-cache'}),
+      fetch('../data/event-calendar.json', {cache:'no-cache'})
     ]);
     if (!eventResponse.ok || !scheduleResponse.ok || !calendarResponse.ok) throw Error('Event information unavailable');
     const settings = await eventResponse.json();
@@ -21,6 +21,7 @@ import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight
       element('eventType').textContent = event.type === 'sword' ? 'SWORD Championship' : event.type === 'club' ? 'COBRA Club Series' : 'Upcoming meeting';
       element('eventDate').textContent = event.date ? new Date(event.date + 'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}) : 'Next meeting to be announced';
       element('eventVenue').textContent = event.venue || 'Cardiff City House of Sport, Cardiff CF11 8AW';
+      if (element('eventDirections')) element('eventDirections').href = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(event.venue || 'Cardiff City House of Sport, Clos Parc Morganwg, Cardiff CF11 8AW');
       if (event.resultsUrl && /^https:\/\//.test(event.resultsUrl)) element('eventResults').href = event.resultsUrl;
       if (event.eventId) element('eventPodium').href = '../podiums/?event=' + encodeURIComponent(event.eventId);
       const booking = element('eventBooking');
