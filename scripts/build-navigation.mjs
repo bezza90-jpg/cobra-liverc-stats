@@ -13,7 +13,7 @@ for (const page of pages) {
   const file = fileURLToPath(new URL('../public/' + page + 'index.html', import.meta.url));
   const html = await readFile(file, 'utf8');
   const base = page ? '../' : './';
-  const anchors = links.map(([target, label, cls]) => '<a href="' + (target.startsWith('https://') ? target : base + target) + '"' + (cls ? ' class="' + cls + '"' : '') + (target === page ? ' aria-current="page"' : '') + '>' + label.replace('&', '&amp;') + '</a>').join('');
+  const anchors = links.map(([target, label, cls]) => '<a href="' + (target.startsWith('https://') ? target : base + target) + '"' + (target.startsWith('https://') ? ' target="_top"' : '') + (cls ? ' class="' + cls + '"' : '') + (target === page ? ' aria-current="page"' : '') + '>' + label.replace('&', '&amp;') + '</a>').join('');
   const nav = '<nav class="results-nav"' + (page ? '' : ' id="resultsNavigation"') + ' aria-label="COBRA pages">' + anchors + '</nav>';
   const existing = /<nav class="results-nav"[^>]*>[\s\S]*?<\/nav>/;
   const updated = existing.test(html) ? html.replace(existing, nav) : html.replace('<div class="hero-copy">', nav + '\n    <div class="hero-copy">');
