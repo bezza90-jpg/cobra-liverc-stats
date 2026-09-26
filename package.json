@@ -8,7 +8,7 @@
     "update": "node scripts/update-liverc.mjs && node scripts/update-youtube.mjs",
     "build": "node scripts/build-dashboard.mjs && npm run build:navigation",
     "validate": "node scripts/validate.mjs",
-    "check": "node scripts/check-site.mjs && node scripts/build-navigation.mjs --check && npm run validate && node --test scripts/performance.test.mjs && node --test scripts/event-calendar.test.mjs && node --test scripts/mobile-data.test.mjs",
+    "check": "node scripts/check-site.mjs && node scripts/build-navigation.mjs --check && npm run validate && node --test scripts/performance.test.mjs && node --test scripts/event-calendar.test.mjs && node --test scripts/mobile-data.test.mjs && node --test scripts/booking-destination.test.mjs",
     "build:navigation": "node scripts/build-navigation.mjs",
     "update:calendar": "node scripts/update-event-calendar.mjs"
   },
