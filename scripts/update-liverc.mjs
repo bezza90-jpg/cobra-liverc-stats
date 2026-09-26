@@ -39,20 +39,18 @@ async function importEvent(event) {
   console.log(`Checking ${event.date} — ${event.name} (${event.liveRcEventId})`);
   const eventHtml = await fetchText(event.sourceUrl);
   const index = parseEventIndex(eventHtml);
-  if (!index.entryList || !index.overall || !index.points || !index.races.length) {
-    console.log('Event is listed but its complete results are not yet available.');
+  if (!index.entryList || !index.races.length) {
+    console.log('Event is listed but no race results are available yet.');
     return null;
   }
 
   const [entryHtml, pointsHtml, overallHtml] = await Promise.all([
-    fetchText(index.entryList), fetchText(index.points), fetchText(index.overall)
+    fetchText(index.entryList), index.points ? fetchText(index.points) : '', index.overall ? fetchText(index.overall) : ''
   ]);
   const entryRows = parseEntryList(entryHtml);
-  const qualifyingRows = parseQualifyingPoints(pointsHtml);
-  const overallRows = parseOverall(overallHtml);
-  if (!entryRows.length || !qualifyingRows.length || !overallRows.length) {
-    throw new Error(`Required result tables were empty for event ${event.liveRcEventId}.`);
-  }
+  const qualifyingRows = pointsHtml ? parseQualifyingPoints(pointsHtml) : [];
+  const overallRows = overallHtml ? parseOverall(overallHtml) : [];
+  if (!entryRows.length) throw new Error(`Entry list was empty for event ${event.liveRcEventId}.`);
 
   const qualifyingMap = new Map(qualifyingRows.map(row => [`${row.className}|${driverKey(row.driverName)}`, row.qualifyingPosition]));
   const entries = entryRows.map(row => {
@@ -93,6 +91,7 @@ async function importEvent(event) {
     races.push({
       liveRcRaceId: raceLink.liveRcRaceId, liveRcEventId: event.liveRcEventId,
       eventDate: event.date, eventName: event.name, round: parsed.round,
+      durationSeconds: parsed.durationSeconds,
       raceName: parsed.raceName, className: parsed.className, mainLetter: parsed.mainLetter,
       isFinal: parsed.isFinal, sourceUrl: raceLink.sourceUrl
     });
@@ -110,7 +109,10 @@ async function importEvent(event) {
       });
     }
   }
-  if (!races.length || !raceResults.length) throw new Error(`No usable races were parsed for event ${event.liveRcEventId}.`);
+  if (!races.length || !raceResults.length) {
+    console.log('No completed races are available yet.');
+    return null;
+  }
 
   return {
     event: { ...event, raceCount: races.length, importedAt: new Date().toISOString() },
@@ -125,7 +127,9 @@ const data = {
 };
 
 const now = new Date();
-const today = now.toISOString().slice(0, 10);
+const today = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit'
+}).format(now);
 const archive = parseArchive(await fetchText(`${BASE_URL}/events/`))
   .filter(event => eligible(event, today))
   .sort((a, b) => a.date.localeCompare(b.date));
@@ -137,19 +141,23 @@ const candidates = archive.filter(event => {
   const existing = existingById.get(event.liveRcEventId);
   return !existing || existing.entries !== event.entries || existing.drivers !== event.drivers ||
     (event.date >= recentCutoff && event.liveRcEventId === archive.at(-1).liveRcEventId);
-}).slice(0, maxEvents);
+}).sort((a, b) => (b.date === today) - (a.date === today) || a.date.localeCompare(b.date)).slice(0, maxEvents);
 
 const processed = [];
 for (const candidate of candidates) {
   const imported = await importEvent(candidate);
   if (!imported) continue;
   const eventId = candidate.liveRcEventId;
-  data.events = replaceEventRows(data.events, eventId, [imported.event]);
   data.entries = replaceEventRows(data.entries, eventId, imported.entries);
-  data.qualifyingResults = replaceEventRows(data.qualifyingResults, eventId, imported.qualifyingResults);
-  data.eventResults = replaceEventRows(data.eventResults, eventId, imported.eventResults);
-  data.races = replaceEventRows(data.races, eventId, imported.races);
-  data.raceResults = replaceEventRows(data.raceResults, eventId, imported.raceResults);
+  if (imported.qualifyingResults.length) data.qualifyingResults = replaceEventRows(data.qualifyingResults, eventId, imported.qualifyingResults);
+  if (imported.eventResults.length) data.eventResults = replaceEventRows(data.eventResults, eventId, imported.eventResults);
+  // LiveRC can temporarily omit an earlier heat while a new one is being posted.
+  // Keep published races unless LiveRC returns a newer version of that race.
+  const raceIds = new Set(imported.races.map(race => race.liveRcRaceId));
+  data.races = [...data.races.filter(race => !raceIds.has(race.liveRcRaceId)), ...imported.races];
+  data.raceResults = [...data.raceResults.filter(result => !raceIds.has(result.liveRcRaceId)), ...imported.raceResults];
+  const raceCount = data.races.filter(race => race.liveRcEventId === eventId).length;
+  data.events = replaceEventRows(data.events, eventId, [{ ...imported.event, raceCount }]);
   processed.push({ eventId, name: candidate.name, date: candidate.date, races: imported.races.length });
 }
 
