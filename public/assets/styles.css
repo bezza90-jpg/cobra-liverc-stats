@@ -511,3 +511,11 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .podium-photo-expand { visibility:hidden; }
 .podium-photo.show-photo .podium-photo-expand { visibility:visible; }
 @media(hover:hover) and (pointer:fine) { .podium-photo.has-photo:hover .podium-photo-expand { visibility:visible; } }
+
+/* Equal space around artwork between rank and name. */
+.podium-illustration-place { display:grid; grid-template-rows:20px minmax(80px,1fr) 34px; height:190px; gap:8px; }
+.podium-illustration-1 { height:215px; }
+.podium-illustration-art { position:relative; align-self:stretch; height:auto; margin:0; transform:none; }
+.podium-illustration-art img { position:absolute; inset:8px 0; width:100%; height:calc(100% - 16px); margin:auto; }
+.podium-illustration-place strong { align-self:center; }
+@media(max-width:520px) { .podium-illustration-place { height:170px; } .podium-illustration-1 { height:195px; } }

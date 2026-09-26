@@ -9,6 +9,7 @@ let activeEventId = '';
 let driverByKey = new Map();
 let podiumPhotoByRaceId = new Map();
 let podiumPhotoOverrides = new Map();
+let podiumOverridesReady = false;
 let podiumWebAppUrl = '';
 let carAvatars = {};
 let driverManufacturers = {};
@@ -70,7 +71,7 @@ function finalCard([raceId, race]) {
   const photoName = `${race.e}-${raceId}-podium.jpg`;
   const approvedPhoto = podiumPhotoByRaceId.get(String(raceId));
   const override = podiumPhotoOverrides.get(String(raceId));
-  const hidePhoto = override?.hidden === true;
+  const hidePhoto = !podiumOverridesReady || override?.hidden === true;
   const replacement = typeof override?.image === 'string' && /^podium-photos\/[a-zA-Z0-9-]+\.(?:jpg|jpeg|png|webp)$/.test(override.image)
     ? new URL(`../${override.image}`, import.meta.url).href : '';
   const originalPhotoUrl = replacement || approvedPhoto?.imageUrl || `../podium-photos/${encodeURIComponent(photoName)}`;
@@ -257,11 +258,11 @@ function renderArchive() {
 
 async function init() {
   try {
-    const [response] = await Promise.all([
-      fetch('../data/podium-results.json', { cache: 'no-cache' }),
-      loadPodiumOverrides().catch(error => console.warn(error.message)),
+    const artworkReady = Promise.all([
+      loadPodiumOverrides().then(() => { podiumOverridesReady = true; }).catch(error => console.warn(error.message)),
       loadIllustrationData()
     ]);
+    const response = await fetch('../data/podium-results.json', { cache: 'no-cache' });
     if (!response.ok) throw new Error(`Unable to load statistics (${response.status})`);
     data = await response.json();
     driverByKey = new Map(data.drivers.map(driver => [driver.k, driver.n]));
@@ -272,6 +273,8 @@ async function init() {
     renderArchive();
     const requested = new URLSearchParams(window.location.search).get('event');
     renderEvent(events.some(event => String(event.i) === requested) ? requested : events[0]?.i, false);
+    await artworkReady;
+    renderEvent(activeEventId, false);
     loadPodiumPhotos().then(() => {
       // Preserve the selected event; only rebuild once the photographs arrive.
       renderEvent(activeEventId, false);
