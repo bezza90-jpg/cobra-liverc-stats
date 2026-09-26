@@ -85,3 +85,13 @@ const setupContext = { events: dashboard.events, drivers: dashboard.drivers,
 const setupOutput = path.join(root, 'public', 'data', 'setup-context.json');
 await writeFile(setupOutput + '.tmp', JSON.stringify(setupContext) + '\n');
 await rename(setupOutput + '.tmp', setupOutput);
+
+// The avatar directory needs names and keys, not every recorded race result.
+const directoryOutput = path.join(root, 'public', 'data', 'driver-directory.json');
+await writeFile(directoryOutput + '.tmp', JSON.stringify({drivers:dashboard.drivers.map(({k,n})=>({k,n}))}) + '\n');
+await rename(directoryOutput + '.tmp', directoryOutput);
+
+const podiumOutput = path.join(root, 'public', 'data', 'podium-results.json');
+const podiumData = {meta:dashboard.meta, drivers:dashboard.drivers.map(({k,n})=>({k,n})), events:dashboard.events, raceById:Object.fromEntries(Object.entries(dashboard.raceById).filter(([,race])=>race.f)), raceResults:dashboard.raceResults.filter(row=>dashboard.raceById[row[0]]?.f && Number(row[2])>=1 && Number(row[2])<=3)};
+await writeFile(podiumOutput + '.tmp', JSON.stringify(podiumData) + '\n');
+await rename(podiumOutput + '.tmp', podiumOutput);

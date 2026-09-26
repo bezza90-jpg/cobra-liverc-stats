@@ -1165,7 +1165,8 @@ function driverProfile(driverKey) {
   state.profileKey = driverKey;
   const dialog = $('driverDialog');
   if (!dialog.open) {
-    if (typeof dialog.showModal === 'function') dialog.showModal();
+    if (window.self !== window.top && (new URLSearchParams(location.search).get('tracker') === '1' || new URLSearchParams(location.search).has('map'))) dialog.show();
+    else if (typeof dialog.showModal === 'function') dialog.showModal();
     else dialog.setAttribute('open', '');
   }
 }
@@ -1478,9 +1479,14 @@ async function init() {
         $('driverProfileName').textContent = 'Driver Distance Tracker';
         const dialog = $('driverDialog');
         if (!dialog.open) {
-          if (typeof dialog.showModal === 'function') dialog.showModal();
+          if (window.self !== window.top && (new URLSearchParams(location.search).get('tracker') === '1' || new URLSearchParams(location.search).has('map'))) dialog.show();
+    else if (typeof dialog.showModal === 'function') dialog.showModal();
           else dialog.setAttribute('open', '');
         }
+      }
+      if (window.self !== window.top) {
+        document.body.classList.add('embedded-tracker-page');
+
       }
       openJourneyMap(trackerDriver);
       renderJourneyDriverChecklist();

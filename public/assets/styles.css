@@ -475,3 +475,39 @@ footer a { color: #85e391; }
   .journey-milestones span { padding:4px 7px; font-size:.64rem; }
   .journey-map-legend { font-size:.68rem; line-height:1.35; }
 }
+
+/* Keep the illustrated names inside their blocks at narrow widths. */
+.podium-illustration { box-sizing:border-box; position:relative; inset:auto; max-width:100%; min-height:240px; height:auto; gap:10px; text-align:center; }
+.podium-illustration-place { height:auto; min-height:150px; gap:5px; }
+.podium-illustration-1 { min-height:175px; }
+.podium-illustration-art { flex:none; min-height:0; }
+.podium-illustration-place strong { margin:0; font-size:clamp(.65rem,2.8vw,.83rem); line-height:1.2; }
+.podium-photo > img { opacity:0; pointer-events:none; object-fit:contain; background:#07180c; }
+.podium-photo.has-photo { cursor:pointer; }
+.podium-photo-expand { opacity:0; pointer-events:none; }
+.podium-photo.show-photo > img,.podium-photo.show-photo .podium-photo-expand { opacity:1; }
+.podium-photo.show-photo .podium-photo-expand { pointer-events:auto; }
+.podium-photo:focus-visible { outline:3px solid #08a31a; outline-offset:-3px; }
+@media(hover:hover) and (pointer:fine) {
+ .podium-photo.has-photo:hover > img,.podium-photo.has-photo:hover .podium-photo-expand { opacity:1; }
+ .podium-photo.has-photo:hover .podium-photo-expand { pointer-events:auto; }
+}
+/* Allow wheel/touch scrolling to reach the host page when the tall embed's
+   panel already fits its content or reaches its edge. */
+.journey-map-overlay,.journey-map-shell { overscroll-behavior-y:auto; }
+
+/* A dedicated Wix tracker is page content, not a modal over another page.
+   Natural document scrolling lets Wix carry the wheel past the iframe. */
+body.embedded-tracker-page > :not(#driverDialog):not(script) { display:none; }
+body.embedded-tracker-page #driverDialog { position:static; inset:auto; display:block; width:100%; max-width:none; height:auto; max-height:none; margin:0; padding:0; border:0; overflow:visible; }
+body.embedded-tracker-page #driverDialog > .dialog-shell { padding:0; }
+body.embedded-tracker-page .dialog-shell > :not(#journeyMapOverlay) { display:none; }
+body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) { position:static; height:auto; max-height:none; padding:0; overflow:visible; }
+body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-shell { width:100%; height:auto; max-height:none; overflow:visible; border-radius:0; }
+body.embedded-tracker-page #closeJourneyMap { display:none; }
+
+.podium-photo { min-height:240px; }
+
+.podium-photo-expand { visibility:hidden; }
+.podium-photo.show-photo .podium-photo-expand { visibility:visible; }
+@media(hover:hover) and (pointer:fine) { .podium-photo.has-photo:hover .podium-photo-expand { visibility:visible; } }

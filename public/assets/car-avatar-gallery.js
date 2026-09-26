@@ -13,7 +13,7 @@ function element(tag, className, text) {
 async function initialise() {
   const status = document.getElementById('galleryStatus');
   try {
-    const responses = await Promise.all([fetch('../data/dashboard.json', { cache: 'no-store' }), fetch('../data/car-avatars.json', { cache: 'no-store' })]);
+    const responses = await Promise.all([fetch('../data/driver-directory.json', { cache: 'no-cache' }), fetch('../data/car-avatars.json', { cache: 'no-cache' })]);
     if (responses.some(response => !response.ok)) throw new Error('Unable to load the driver gallery. Please refresh to try again.');
     const [dashboard, manifest] = await Promise.all(responses.map(response => response.json()));
     if (!Array.isArray(dashboard.drivers) || !manifest || typeof manifest !== 'object') throw new Error('The driver gallery is unavailable. Please try again later.');

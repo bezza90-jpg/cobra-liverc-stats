@@ -59,10 +59,10 @@ function podiumIllustration(rows, photoName, className) {
       <strong>${escapeHtml(name)}</strong>
     </div>`;
   }).join('');
-  return `<div class="podium-placeholder podium-illustration" aria-label="Illustrated podium showing the first three drivers">
+  return `<div class="podium-illustration" aria-label="Illustrated podium showing the first three drivers">
     <div class="podium-illustration-title">COBRA PODIUM</div>
     <div class="podium-illustration-places">${places}</div>
-    <small>Official photo: <code>${escapeHtml(photoName)}</code></small>
+    <small>Race podium</small>
   </div>`;
 }
 
@@ -123,7 +123,15 @@ function renderEvent(eventId, updateAddress = true) {
   $('eventSelect').value = activeEventId;
   $('finalsGrid').innerHTML = finals.length ? finals.map(finalCard).join('') : '<div class="panel empty-state">No finals were found for this event.</div>';
   document.querySelectorAll('.podium-photo > img').forEach(image => {
-    const markLoaded = () => image.closest('.podium-photo').classList.add('has-photo');
+    const markLoaded = () => {
+      const photo = image.closest('.podium-photo');
+      photo.classList.add('has-photo');
+      photo.querySelector('.podium-illustration > small').textContent = 'Hover or tap to see rostrum photo';
+      photo.tabIndex = 0;
+      photo.setAttribute('role', 'button');
+      photo.setAttribute('aria-label', 'Show rostrum photo: ' + photo.dataset.photoTitle);
+      photo.setAttribute('aria-pressed', 'false');
+    };
     const markFailed = () => {
       const photo = image.closest('.podium-photo');
       photo.querySelector('.podium-photo-expand')?.remove();
@@ -147,7 +155,7 @@ function renderEvent(eventId, updateAddress = true) {
 }
 
 async function loadPodiumPhotos() {
-  const response = await fetch('../data/podiums-config.json', { cache: 'no-store' });
+  const response = await fetch('../data/podiums-config.json', { cache: 'no-cache' });
   if (!response.ok) throw new Error('Podium uploads are not configured.');
   const config = await response.json();
   podiumWebAppUrl = String(config.webAppUrl || '').trim();
@@ -184,7 +192,7 @@ async function loadPodiumPhotos() {
 }
 
 async function loadPodiumOverrides() {
-  const response = await fetch('../data/podium-photo-overrides.json', { cache: 'no-store' });
+  const response = await fetch('../data/podium-photo-overrides.json', { cache: 'no-cache' });
   if (!response.ok) return;
   const changes = await response.json();
   if (changes && typeof changes === 'object' && !Array.isArray(changes)) podiumPhotoOverrides = new Map(Object.entries(changes));
@@ -193,7 +201,7 @@ async function loadPodiumOverrides() {
 async function loadIllustrationData() {
   const files = await Promise.all(['car-avatars.json', 'driver-manufacturers.json', 'liverc-chassis.json'].map(async name => {
     try {
-      const response = await fetch(`../data/${name}`, { cache: 'no-store' });
+      const response = await fetch(`../data/${name}`, { cache: 'no-cache' });
       return response.ok ? await response.json() : {};
     } catch { return {}; }
   }));
@@ -250,8 +258,7 @@ function renderArchive() {
 async function init() {
   try {
     const [response] = await Promise.all([
-      fetch('../data/dashboard.json', { cache: 'no-store' }),
-      loadPodiumPhotos().catch(error => console.warn(error.message)),
+      fetch('../data/podium-results.json', { cache: 'no-cache' }),
       loadPodiumOverrides().catch(error => console.warn(error.message)),
       loadIllustrationData()
     ]);
@@ -265,6 +272,10 @@ async function init() {
     renderArchive();
     const requested = new URLSearchParams(window.location.search).get('event');
     renderEvent(events.some(event => String(event.i) === requested) ? requested : events[0]?.i, false);
+    loadPodiumPhotos().then(() => {
+      // Preserve the selected event; only rebuild once the photographs arrive.
+      renderEvent(activeEventId, false);
+    }).catch(error => console.warn(error.message));
   } catch (error) {
     $('eventTitle').textContent = 'Gallery unavailable';
     $('eventMeta').textContent = error.message;
@@ -274,7 +285,16 @@ async function init() {
 
 $('finalsGrid').addEventListener('click', event => {
   const photo = event.target.closest('.podium-photo.has-photo');
-  if (photo) openPhoto(photo);
+  if (!photo) return;
+  if (event.target.closest('.podium-photo-expand')) { openPhoto(photo); return; }
+  const shown = photo.classList.toggle('show-photo');
+  photo.setAttribute('aria-pressed', String(shown));
+});
+$('finalsGrid').addEventListener('keydown', event => {
+  if ((event.key === 'Enter' || event.key === ' ') && event.target.matches('.podium-photo.has-photo')) {
+    event.preventDefault();
+    event.target.click();
+  }
 });
 $('podiumLightboxClose').addEventListener('click', closePhoto);
 $('podiumLightbox').addEventListener('click', event => { if (event.target === $('podiumLightbox')) closePhoto(); });
