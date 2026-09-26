@@ -70,7 +70,7 @@ const journeyChecks = [
   ['playback controls', appJs.includes('toggleJourneyPlayback') && appJs.includes('id="journeySpeed"') && appJs.includes('length: 15')],
   ['race timeline', appJs.includes('buildJourneyTimeline') && appJs.includes('journeyMilestoneData')],
   ['driver selection', appJs.includes('journeyDriverSearch') && appJs.includes('journeyDriverPicker')],
-  ['excluded test driver', appJs.includes("journeyExcludedDrivers = new Set(['SIMON-NOTLEY'])")],
+  ['excluded test driver', /journeyExcludedDrivers\s*=\s*new Set\(\[[^\]]*['"]SIMON-NOTLEY['"]/.test(appJs)],
   ['destination and map tiles', appJs.includes('Istanbul, Türkiye') && appJs.includes('openstreetmap.org')],
   ['ERT Steyregg route', journeyRouteJs.includes('ERT Steyregg') && journeyRouteJs.includes('Istanbul') && /export const journeyRoadDistanceKm\s*=\s*\d+(?:\.\d+)?\s*;/.test(journeyRouteJs)],
   ['map styling', styles.includes('.journey-map-overlay') && styles.includes('.journey-milestones')]
