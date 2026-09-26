@@ -12,6 +12,7 @@ let podiumPhotoOverrides = new Map();
 let podiumOverridesReady = false;
 let podiumWebAppUrl = '';
 let carAvatars = {};
+let illustrationsReady = false;
 let driverManufacturers = {};
 let livercChassis = {};
 
@@ -56,7 +57,7 @@ function podiumIllustration(rows, photoName, className) {
     const fallback = manufacturer || 'COBRA';
     return `<div class="podium-illustration-place podium-illustration-${place}">
       <span class="podium-illustration-rank">${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'}</span>
-      <div class="podium-illustration-art"><img src="${escapeHtml(source)}" alt="${escapeHtml(validAvatar ? `${name} car` : manufacturer ? `${manufacturer} chassis logo` : 'COBRA club logo')}" loading="lazy"><span hidden>${escapeHtml(fallback)}</span></div>
+      <div class="podium-illustration-art">${illustrationsReady ? `<img src="${escapeHtml(source)}" alt="${escapeHtml(validAvatar ? `${name} car` : manufacturer ? `${manufacturer} chassis logo` : 'COBRA club logo')}" loading="lazy">` : ''}<span hidden>${escapeHtml(fallback)}</span></div>
       <strong>${escapeHtml(name)}</strong>
     </div>`;
   }).join('');
@@ -209,6 +210,7 @@ async function loadIllustrationData() {
   carAvatars = files[0] && typeof files[0] === 'object' ? files[0] : {};
   driverManufacturers = files[1] && typeof files[1] === 'object' ? files[1] : {};
   livercChassis = files[2] && typeof files[2] === 'object' ? files[2] : {};
+  illustrationsReady = true;
 }
 
 function openPhoto(photo) {
