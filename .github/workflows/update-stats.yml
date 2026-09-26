@@ -37,6 +37,28 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
+      - name: Set up Python for approved car photos
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check for new approved car photos
+        id: car_photos
+        run: echo "pending=$(python scripts/sync-approved-avatars.py --check)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache background removal model
+        if: steps.car_photos.outputs.pending == 'yes'
+        uses: actions/cache@v4
+        with:
+          path: ~/.rembg/models
+          key: cobra-car-avatar-u2netp-v1
+
+      - name: Prepare approved car avatars
+        if: steps.car_photos.outputs.pending == 'yes'
+        run: |
+          python -m pip install "rembg[cpu]" pillow
+          python scripts/sync-approved-avatars.py
+
       - name: Rebuild illustrated podiums
         run: |
           node scripts/sync-manufacturer-logos.mjs
@@ -47,10 +69,10 @@ jobs:
 
       - name: Save updated results
         run: |
-          if [[ -n "$(git status --porcelain data/raw public/data public/podium-defaults public/assets/manufacturers)" ]]; then
+          if [[ -n "$(git status --porcelain data/raw public/data public/podium-defaults public/assets/manufacturers public/assets/car-avatars)" ]]; then
             git config user.name "COBRA statistics updater"
             git config user.email "actions@users.noreply.github.com"
-            git add data/raw public/data public/podium-defaults public/assets/manufacturers
+            git add data/raw public/data public/podium-defaults public/assets/manufacturers public/assets/car-avatars
             git commit -m "Update LiveRC statistics"
             git push
           fi
