@@ -23,6 +23,16 @@
   },
   "JON-PAISLEY": {
     "2-Wheel Drive Buggy": "assets/car-avatars/JON-PAISLEY-AUTO-2WD.png",
-    "4-Wheel Drive Buggy": "assets/car-avatars/JON-PAISLEY-AUTO-4WD.png"
+    "4-Wheel Drive Buggy": "assets/car-avatars/JON-PAISLEY-AUTO-4WD.png",
+    "Vintage": "assets/car-avatars/JON-PAISLEY-AUTO-VINTAGE.png"
+  },
+  "ROY-DAVIES": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/ROY-DAVIES-AUTO-2WD.png"
+  },
+  "SIMON-FISHER": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/SIMON-FISHER-AUTO-2WD.png"
+  },
+  "SEB-FISHER": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/SEB-FISHER-AUTO-2WD.png"
   }
 }
