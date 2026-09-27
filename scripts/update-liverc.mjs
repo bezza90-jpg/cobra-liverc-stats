@@ -1,4 +1,6 @@
 import { updateEventCalendar } from './update-event-calendar.mjs';
+import { parseReplay } from './lib/replay-parser.mjs';
+import { mkdir } from 'node:fs/promises';
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -87,7 +89,8 @@ async function importEvent(event) {
   for (let indexNumber = 0; indexNumber < index.races.length; indexNumber += 1) {
     const raceLink = index.races[indexNumber];
     if (indexNumber) await pause(140);
-    const parsed = parseRace(await fetchText(raceLink.sourceUrl));
+    const raceHtml = await fetchText(raceLink.sourceUrl);
+    const parsed = parseRace(raceHtml);
     if (!parsed.className || !parsed.results.length) continue;
     races.push({
       liveRcRaceId: raceLink.liveRcRaceId, liveRcEventId: event.liveRcEventId,
@@ -96,6 +99,11 @@ async function importEvent(event) {
       raceName: parsed.raceName, className: parsed.className, mainLetter: parsed.mainLetter,
       isFinal: parsed.isFinal, sourceUrl: raceLink.sourceUrl
     });
+    try {
+      const replay=parseReplay(raceHtml,races.at(-1));
+      const folder=path.join(root,'public/virtual-race-replay/races');await mkdir(folder,{recursive:true});
+      await writeFile(path.join(folder,replay.id+'.json'),JSON.stringify(replay));
+    } catch(error) { console.warn('Replay unavailable for '+raceLink.liveRcRaceId+': '+error.message); }
     for (const result of parsed.results) {
       const key = driverKey(result.driverName);
       raceResults.push({
@@ -176,4 +184,5 @@ await Promise.all([
 ]);
 
 await import('./build-dashboard.mjs');
+await import('./build-replay-catalog.mjs');
 console.log(processed.length ? `Imported/refreshed ${processed.length} event(s).` : 'No new completed events; check timestamp updated.');

@@ -8,6 +8,7 @@ const wixPages = new Map([
   ['setups/', 'drivers-setups'],
   ['avatar-upload/', 'upload-car-avatar'],
   ['car-avatars/', 'driver-car-avatars'],
+  ['virtual-race-replay/', 'virtual-race-replay'],
   ['event/', 'current-event'],
   ['briefing/', 'drivers-briefing'],
   ['about/', 'about-cobra'],

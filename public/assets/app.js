@@ -169,7 +169,7 @@ function ensureEnhancedMarkup() {
         <div class="race-explorer-controls">
           <label>Event<select id="raceEvent"></select></label><label>Individual race<select id="raceSelection"></select></label>
           <a class="event-link" id="raceEventLink" href="#" target="_blank" rel="noopener">Open event results ↗</a>
-          <a class="event-link" id="raceResultLink" href="#" target="_blank" rel="noopener">Open this race ↗</a><a class="event-link video-link" id="raceVideoLink" href="#" target="_blank" rel="noopener" hidden>Watch race video ▶</a>
+          <a class="event-link" id="raceResultLink" href="#" target="_blank" rel="noopener">Open this race ↗</a><a class="event-link" id="raceReplayLink" href="#" target="_blank" rel="noopener">Virtual race replay ▶</a><a class="event-link video-link" id="raceVideoLink" href="#" target="_blank" rel="noopener" hidden>Watch race video ▶</a>
         </div>
         <h3 class="race-result-title" id="raceResultTitle">Select a race</h3>
         <div class="table-wrap compact"><table><thead><tr><th>Pos</th><th>Driver</th><th>Qualifying</th><th>Laps / time</th><th>Behind</th><th>Fastest lap</th><th>Average lap</th><th>Consistency</th></tr></thead><tbody id="raceExplorerResults"></tbody></table></div>
@@ -401,6 +401,7 @@ function renderRaceExplorer(raceId) {
     $('raceResultTitle').textContent = 'No races match these filters';
     body.innerHTML = '<tr><td colspan="8">Choose a different event or class.</td></tr>';
     $('raceResultLink').hidden = true;
+    $('raceReplayLink').hidden = true;
     $('raceVideoLink').hidden = true;
     return;
   }
@@ -408,6 +409,8 @@ function renderRaceExplorer(raceId) {
   $('raceResultTitle').textContent = `${event?.n || ''} — ${race.n}`;
   $('raceEventLink').href = event?.u || '#';
   $('raceEventLink').hidden = !event?.u;
+  $('raceReplayLink').href = './virtual-race-replay/?race='+encodeURIComponent(raceId)+'&event='+encodeURIComponent(race.e);
+  $('raceReplayLink').hidden = false;
   $('raceResultLink').href = race.u || '#';
   $('raceResultLink').hidden = !race.u;
   const video = data.videos.find(item => item.raceId === raceId);

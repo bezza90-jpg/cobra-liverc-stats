@@ -1,0 +1,2 @@
+import assert from 'node:assert/strict';import {paceMap} from '../public/virtual-race-replay/pace.js';
+const p=Array.from({length:601},(_,i)=>{const t=i/600*Math.PI*2;return{x:500*Math.cos(t),y:100*Math.sin(t)}});const f=paceMap(p);assert.equal(f(0),0);assert.equal(f(1),1);let last=0;for(let i=1;i<=10000;i++){const v=f(i/10000);assert(v>=last);assert((v-last)*10000<=1.65001);last=v;}console.log('Pacing: monotonic, exact loop endpoints, speed cap preserved.');
