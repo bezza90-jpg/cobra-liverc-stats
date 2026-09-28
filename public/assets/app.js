@@ -176,6 +176,9 @@ function ensureEnhancedMarkup() {
       </section>`);
   }
 
+  // Older generated pages already contain the explorer but predate its replay link.
+  if (!$('raceReplayLink')) $('raceResultLink')?.insertAdjacentHTML('afterend', '<a class="event-link" id="raceReplayLink" href="#" target="_blank" rel="noopener">Virtual race replay ▶</a>');
+
   if (!$('driverDialog')) {
     document.querySelector('footer')?.insertAdjacentHTML('beforebegin', `
       <dialog class="driver-dialog" id="driverDialog" aria-labelledby="driverProfileName">
