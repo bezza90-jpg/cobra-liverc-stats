@@ -65,6 +65,7 @@ for(const file of readdirSync(new URL('races/',base))){
  const race=JSON.parse(readFileSync(new URL('races/'+file,base)));races++;
  for(const raw of race.drivers){
   const d=prepare(raw);drivers++;if(race.isFinal){d.startFraction=.2+.03*(raw.number-1);for(const pace of maps){assert(Math.abs(visualFraction(d,0,pace)-d.startFraction)<1e-10);assert(visualFraction(d,.01,pace)>d.startFraction);}}
+  else for(const pace of maps){assert.equal(visualFraction(d,0,pace),0,`${file}: heat must start at the loop`);assert(visualFraction(d,.001,pace)>0,`${file}: all heat cars must move immediately`);assert(Math.abs(visualFraction(d,d.laps[0].seconds/2,pace)-pace(.5))<1e-10,`${file}: first lap uses the driver's recorded time`);}
   assert(Math.abs(d.total-d.officialTime)<=.02,`${file}: result total mismatch`);
   let sum=0;
   for(let i=0;i<d.laps.length;i++){
@@ -73,7 +74,7 @@ for(const file of readdirSync(new URL('races/',base))){
    assert(positionAt(d,sum-1e-6).progress<i+1);
    for(const pace of maps){assert.equal(visualFraction(d,sum,pace),0);assert(visualFraction(d,sum-1e-6,pace)>.9999);}
   }
-  if(d.laps[0].seconds<d.typical*.5){shortOpenings++;for(const pace of maps){const start=visualFraction(d,0,pace),later=visualFraction(d,.001,pace);assert(start>0);assert((later-start)/.001<=2.50001/d.typical);}}
+  if(!race.isFinal&&d.laps[0].seconds<d.typical*.5){shortOpenings++;for(const pace of maps)assert.equal(visualFraction(d,0,pace),0,'Seeking back restores the simultaneous loop start');}
  }
 }
-console.log(`Verified ${crossings} recorded crossings in ${races} replays / ${drivers} driver records, on all ${maps.length} route variants. ${shortOpenings} short opening records use an approach to the line.`);
+console.log(`Verified ${crossings} recorded crossings in ${races} replays / ${drivers} driver records, on all ${maps.length} route variants. All heat cars start together, including ${shortOpenings} short opening records.`);
