@@ -1,0 +1,51 @@
+/* The public Wix header, with local assets and no iframe boot dependency. */
+.cobra-site-header,.cobra-site-header *,.cobra-site-footer,.cobra-site-footer *{box-sizing:border-box}
+.cobra-site-header{position:relative;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;max-width:none;margin:0;padding:0 16px 0 6px;min-height:72px;background:#fff;color:#111;font:16px/1.4 Arial,Helvetica,sans-serif;border:0;border-radius:0}
+.cobra-site-header{overflow:visible;flex-wrap:nowrap}
+.cobra-site-header::before,.cobra-site-header::after{content:none;display:none}
+.cobra-site-header a{color:#111;text-decoration:none;font-weight:400;letter-spacing:normal;white-space:nowrap;align-self:auto;margin:0}
+.cobra-site-header a:hover,.cobra-site-header a:focus-visible{text-decoration:underline}
+.cobra-site-header .cobra-site-logo{flex:0 1 271px;display:block;min-width:160px}
+.cobra-site-header .cobra-site-logo img{display:block;width:100%;height:auto;max-height:69px;object-fit:contain}
+.cobra-site-header .cobra-book-in{display:block;background:#008700;color:#fff;border-radius:40px;padding:12px 32px;text-align:center;min-width:130px}
+.cobra-site-header .cobra-gpw-logo{flex:0 0 99px;display:block}
+.cobra-site-header .cobra-gpw-logo img{display:block;width:99px;height:59px;object-fit:contain}
+.cobra-mobile-menu{flex:1;min-width:0;border:0;padding:0;margin:0}
+.cobra-mobile-menu>summary{display:none}
+.cobra-site-menu{display:flex;align-items:center;justify-content:space-evenly;gap:8px;margin:0;padding:0}
+.cobra-site-menu>a,.cobra-menu-group>summary{padding:18px 8px;cursor:pointer;list-style:none;color:#111;font-weight:400;white-space:nowrap}
+.cobra-menu-group{position:relative;margin:0;padding:0;border:0}
+.cobra-menu-group>summary::-webkit-details-marker,.cobra-mobile-menu>summary::-webkit-details-marker{display:none}
+.cobra-menu-group>summary::after{content:'⌄';font-size:12px;margin-left:3px}
+.cobra-menu-group>div{position:absolute;top:100%;left:0;min-width:230px;background:#fff;padding:8px 0;box-shadow:0 5px 15px #0002;border:1px solid #e2e9e2;border-radius:0}
+.cobra-menu-group:last-child>div{left:auto;right:0}
+.cobra-menu-group>div>a{display:block;padding:12px 18px}
+.cobra-menu-group>div>a:hover,.cobra-menu-group>div>a:focus-visible{background:#eff8ef;color:#007c12}
+.cobra-site-header :focus-visible{outline:3px solid #138b18;outline-offset:2px}
+body:has(.cobra-site-header) .results-nav,body:has(.cobra-site-header) .hero>.brand{display:none}
+body:has(.cobra-site-header) .hero>.hero-copy{padding-top:0}
+.cobra-site-footer{display:block;width:100%;max-width:none;background:#07140a;color:#fff;font:14px/1.6 Arial,Helvetica,sans-serif;padding:32px clamp(20px,5vw,80px);margin:30px 0 0;border:0}
+.cobra-site-footer img{max-width:65vw;object-fit:contain;height:auto}
+.cobra-site-footer p{color:#fff;margin:12px 0}
+.cobra-site-footer nav{display:flex;flex-wrap:wrap;gap:24px;margin:16px 0}
+.cobra-site-footer a{color:#fff}
+html:not(.cobra-embedded) body:has(.cobra-site-footer)>footer:not(.cobra-site-footer){display:none}
+html.cobra-embedded .cobra-site-header,html.cobra-embedded .cobra-site-footer{display:none}
+body.embedded-tracker-page>.cobra-site-header,body.embedded-tracker-page>.cobra-site-footer{display:flex}
+html.cobra-embedded body.embedded-tracker-page>.cobra-site-header,html.cobra-embedded body.embedded-tracker-page>.cobra-site-footer{display:none}
+@media(min-width:1051px){.cobra-mobile-menu:not([open])>.cobra-site-menu{display:flex}.cobra-mobile-menu::details-content{display:contents}}
+@media(max-width:1050px){
+ .cobra-site-header{gap:12px;min-height:70px;padding:4px 12px}
+ .cobra-site-header .cobra-site-logo{flex-basis:220px;min-width:115px}
+ .cobra-site-header .cobra-book-in{min-width:90px;padding:10px 18px;font-size:14px}
+ .cobra-mobile-menu{flex:0 0 auto;margin-left:auto;order:4}
+ .cobra-mobile-menu>summary{display:block;cursor:pointer;padding:10px;font-size:22px;list-style:none}
+ .cobra-mobile-menu>summary span{font-size:14px}
+ .cobra-mobile-menu:not([open])>.cobra-site-menu{display:none}
+ .cobra-site-menu{position:absolute;top:100%;right:0;left:0;display:block;background:#fff;padding:12px;box-shadow:0 6px 12px #0002;max-height:80dvh;overflow:auto}
+ .cobra-site-menu>a,.cobra-menu-group>summary{display:block;padding:14px}
+ .cobra-menu-group>div{position:static;box-shadow:none;border:0;padding:0 12px}
+ .cobra-site-header .cobra-gpw-logo{flex-basis:75px}
+ .cobra-site-header .cobra-gpw-logo img{width:75px;height:45px}
+}
+@media(max-width:480px){.cobra-site-header{gap:6px;padding:4px 8px}.cobra-site-header .cobra-site-logo{flex-basis:145px}.cobra-site-header .cobra-book-in{min-width:65px;padding:9px 12px}.cobra-site-header .cobra-gpw-logo{flex-basis:58px}.cobra-site-header .cobra-gpw-logo img{width:58px;height:40px}.cobra-mobile-menu>summary{padding:8px}.cobra-mobile-menu>summary span{display:none}}

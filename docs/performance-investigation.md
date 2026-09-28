@@ -35,3 +35,11 @@ The configured category is Essential; there is no evidence that the user must ac
 Root mechanism is established; attribution of each second within Wix startup is not. A browser network/performance trace would be needed to separate Wix script downloads, component data and main-thread work. The robust way to eliminate this dependency is to serve the interactive pages directly with matching COBRA navigation, rather than nesting them in Wix's HTML component; that is an architectural change, not a caching adjustment. No such navigation/hosting change was made during this investigation.
 
 Public source inspected: https://static.parastorage.com/services/editor-react-components/dist/_wix_d14decac-site-components/client/component-e81a1c4b-8b8c-4a7e-9f2d-1a3b4c5d6e7f-D7kWoUiv.js
+
+## Direct-page migration preparation — 28 September 2026
+
+Added a local, responsive copy of the existing Wix white navigation ribbon, with the original COBRA and Grand Prix of Wales assets and menu groups. All feature pages and generated chart pages receive the shared header and footer. Embedded pages hide these to preserve Wix fallback pages. Driver Distance Tracker supports a direct full-page view with navigation retained.
+
+The proposed hostname is racehub.cobracardiff.co.uk. Existing www and apex DNS remain unchanged. Custom-domain cutover and Wix link integration are separate deployment steps and must be verified before declaring migration complete. docs/wix-racehub-navigation.html is the exact prepared Wix Head/All pages/Load once/Essential snippet; it has not yet been enabled. It changes only known feature links, preserves query/hash state and existing page appearance, and leaves Wix pages available for direct fallback visits.
+
+Rollback: disable the Wix Custom Code snippet, restore any changed Pages custom-domain setting to the recorded original, and remove only the newly added racehub CNAME if required. Preserve current race data when reverting implementation commits. Pre-change bundle, source zip, DNS observations and Wix published revision reference are in Z:\Data\Documents\RC Racing\COBRA\Website Backups\2026-09-28-before-racehub.

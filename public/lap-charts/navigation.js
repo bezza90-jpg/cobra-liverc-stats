@@ -1,5 +1,5 @@
 const root = new URL('../', import.meta.url);
-const header = document.querySelector('header');
+const header = document.querySelector('body > header:not(.cobra-site-header)');
 const home = header.querySelector('a');
 const logo = document.createElement('img');
 logo.src = new URL('assets/cobra-logo.png', root).href;

@@ -1,5 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { addSiteShell } from './site-shell.mjs';
 const pages = ['', 'sword/', 'club/', 'podiums/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/', 'virtual-race-replay/', 'website-guides/'];
 const links = [
   ['', 'Race Stats'], ['sword/', 'SWORD Championship'], ['club/', 'Club Series'],
@@ -23,6 +24,7 @@ for (const page of pages) {
   if (page !== 'website-guides/' && updated.includes('</footer>') && !updated.includes('class="website-guides-link"')) {
     updated = updated.replace('</footer>', '<a class="website-guides-link" href="' + base + 'website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>');
   }
+  updated = addSiteShell(updated, base);
   if (updated === html) continue;
   if (check) throw new Error('Navigation is out of date in ' + page + 'index.html; run npm run build:navigation.');
   await writeFile(file, updated);

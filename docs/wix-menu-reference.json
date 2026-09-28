@@ -1,0 +1,116 @@
+[
+  {
+    "label": "Home",
+    "links": [
+      {
+        "label": "Home",
+        "url": "https://www.cobracardiff.co.uk/"
+      }
+    ]
+  },
+  {
+    "label": "Events",
+    "links": [
+      {
+        "label": "Current event",
+        "url": "https://www.cobracardiff.co.uk/current-event"
+      },
+      {
+        "label": "Events & booking",
+        "url": "https://www.cobracardiff.co.uk/event-list"
+      }
+    ]
+  },
+  {
+    "label": "Race Day",
+    "links": [
+      {
+        "label": "Club race schedule",
+        "url": "https://www.cobracardiff.co.uk/club-schedule"
+      },
+      {
+        "label": "Drivers briefing",
+        "url": "https://www.cobracardiff.co.uk/drivers-briefing"
+      },
+      {
+        "label": "SWORD race schedule",
+        "url": "https://www.cobracardiff.co.uk/sword-schedule"
+      }
+    ]
+  },
+  {
+    "label": "Results",
+    "links": [
+      {
+        "label": "Club Series",
+        "url": "https://www.cobracardiff.co.uk/club-series-tables"
+      },
+      {
+        "label": "SWORD Championship",
+        "url": "https://www.cobracardiff.co.uk/sword-tables"
+      },
+      {
+        "label": "Podium gallery",
+        "url": "https://www.cobracardiff.co.uk/Podium-Gallery"
+      },
+      {
+        "label": "Race statistics",
+        "url": "https://www.cobracardiff.co.uk/race-stats"
+      },
+      {
+        "label": "Virtual Race Replay",
+        "url": "https://www.cobracardiff.co.uk/virtual-race-replay"
+      }
+    ]
+  },
+  {
+    "label": "COBRA Data",
+    "links": [
+      {
+        "label": "Driver car avatars",
+        "url": "https://www.cobracardiff.co.uk/driver-car-avatars"
+      },
+      {
+        "label": "Driver distance tracker",
+        "url": "https://www.cobracardiff.co.uk/driver-distance-tracker"
+      },
+      {
+        "label": "Setups & tips",
+        "url": "https://www.cobracardiff.co.uk/drivers-setups"
+      },
+      {
+        "label": "Upload car avatar",
+        "url": "https://www.cobracardiff.co.uk/upload-car-avatar"
+      },
+      {
+        "label": "Virtual Race Replay",
+        "url": "https://www.cobracardiff.co.uk/virtual-race-replay"
+      }
+    ]
+  },
+  {
+    "label": "About COBRA",
+    "links": [
+      {
+        "label": "About & location",
+        "url": "https://www.cobracardiff.co.uk/about-cobra"
+      },
+      {
+        "label": "Club news",
+        "url": "https://www.cobracardiff.co.uk/club-news"
+      },
+      {
+        "label": "Media",
+        "url": "https://www.cobracardiff.co.uk/media"
+      },
+      {
+        "label": "Track gallery",
+        "url": "https://www.cobracardiff.co.uk/track-gallery"
+      },
+      {
+        "label": "Help & Website Guides",
+        "url": "https://www.cobracardiff.co.uk/website-guides"
+      }
+    ]
+  }
+]
