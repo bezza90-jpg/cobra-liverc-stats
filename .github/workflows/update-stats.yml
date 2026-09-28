@@ -38,6 +38,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
         with:
+          # Queued manager publishes must build the current branch, not the
+          # triggering commit from before an earlier job saved generated data.
+          ref: main
           fetch-depth: 0
 
       - name: Check whether COBRA is racing today
