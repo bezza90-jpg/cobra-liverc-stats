@@ -698,5 +698,13 @@
   "CLIVE-MALAND": {
     "name": "Schumacher",
     "slug": "schumacher"
+  },
+  "PAUL-CURTIS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "BOB-GELSTHARP": {
+    "name": "Schumacher",
+    "slug": "schumacher"
   }
 }
