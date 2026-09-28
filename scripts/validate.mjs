@@ -19,6 +19,7 @@ const [events, entries, eventResults, races, raceResults, dashboard, championshi
   readFile(path.join(root, 'public/assets/styles.css'), 'utf8')
 ]);
 
+const statisticsDataJs = appJs.includes("from './statistics-data.js'") ? await readFile(path.join(root, 'public/assets/statistics-data.js'), 'utf8') : '';
 const errors = [];
 const unique = (rows, key, label) => {
   const values = new Set();
@@ -48,7 +49,7 @@ if (!raceResults.some(row => row.position === 1)) errors.push('No race winners w
 const raceField = new Map();
 for (const row of raceResults) raceField.set(row.liveRcRaceId, (raceField.get(row.liveRcRaceId) || 0) + 1);
 if (![...raceField.values()].some(count => count >= 2)) errors.push('No race is suitable for head-to-head comparison.');
-if (!indexHtml.includes('data/dashboard.json') && !appJs.includes('data/dashboard.json')) errors.push('The dashboard data file is not referenced by the website.');
+if (!indexHtml.includes('data/dashboard.json') && !statisticsDataJs.includes('data/dashboard.json')) errors.push('The dashboard data file is not referenced by the website.');
 if (!indexHtml.includes('assets/styles.css') || !indexHtml.includes('assets/app.js')) errors.push('Website asset links are missing.');
 for (const key of ['sword', 'club']) {
   const config = championships[key];
@@ -77,7 +78,7 @@ const journeyChecks = [
 ];
 const missingJourney = journeyChecks.filter(([, valid]) => !valid).map(([name]) => name);
 if (missingJourney.length) errors.push(`Cardiff-to-Istanbul journey map is missing: ${missingJourney.join(', ')}.`);
-if (!indexHtml.includes('id="raceVideoLink"') || !appJs.includes('data/videos.json')) errors.push('YouTube race links are missing.');
+if (!indexHtml.includes('id="raceVideoLink"') || !statisticsDataJs.includes('data/videos.json')) errors.push('YouTube race links are missing.');
 if (![indexHtml, swordHtml, clubHtml, podiumsHtml].every(html => html.includes('Race Videos'))) errors.push('The permanent YouTube channel button is missing from one or more pages.');
 if (videos.meta?.fromDate !== '2025-01-01' || !youtubeJs.includes("channelHandle = 'Bezza90'") || !youtubeJs.includes('/\\bCOBRA\\b/i')) errors.push('YouTube matching rules are invalid.');
 if (!championshipJs.includes('highestDrop') || !championshipJs.includes('qualifyingPosition')) errors.push('Championship tie-break or TQ scoring logic is missing.');
