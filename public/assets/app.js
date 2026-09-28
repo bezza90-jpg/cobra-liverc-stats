@@ -1,4 +1,5 @@
 import {createAvatarLoader} from './avatar-loader.js';
+import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
 import { loadMap } from './load-map.js';
@@ -1274,14 +1275,16 @@ function refresh() {
 
 async function init() {
   try {
-    const [response, videoResponse] = await Promise.all([
-      fetch('data/dashboard.json', { cache: 'no-cache' }),
-      fetch('data/videos.json', { cache: 'no-cache' })
-    ]);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    const videoData = videoResponse.ok ? await videoResponse.json() : { videos: [] };
-    data.videos = videoData.videos || [];
+    const { data, videosReady } = await loadStatisticsData();
+    data.videos = [];
+    videosReady.then(videos => {
+      data.videos = videos;
+      const video = videos.find(item => item.raceId === $('raceSelection').value);
+      $('raceVideoLink').href = video?.url || '#';
+      $('raceVideoLink').textContent = video ? `Watch ${video.round || 'race'} video ▶` : 'Watch race video ▶';
+      $('raceVideoLink').hidden = !video;
+      if ($('driverDialog').open && state.profileKey) driverProfile(state.profileKey);
+    });
     data.eventById = Object.fromEntries(data.events.map(event => [event.i, event]));
     data.driverByKey = Object.fromEntries(data.drivers.map(driver => [driver.k, driver.n]));
     data.raceResults.forEach(row => { row[5] = fastestLapText(row[5]); row[6] = averageLapText(row[6]); });
