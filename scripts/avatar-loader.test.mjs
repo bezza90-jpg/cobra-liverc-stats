@@ -20,3 +20,15 @@ test('missing cars and untrusted paths do not trigger image requests',async()=>{
 test('failed image does not cause request storms during map animation',async()=>{
   const {loader,images}=fixture();const a=loader.load('A');await settle();images[0].onerror();assert.equal(await a,null);for(let i=0;i<20;i++)await loader.load('A');assert.equal(images.length,1);
 });
+test('profiles load all class cars without adding the fallback as an extra car',async()=>{
+ const {loader,images,requests}=fixture({A:{default:'assets/car-avatars/A.png','2-Wheel Drive Buggy':'assets/car-avatars/A-2WD.png','4-Wheel Drive Buggy':'assets/car-avatars/A-4WD.png'}});
+ const all=loader.loadAll('A'); await settle();
+ assert.equal(images.length,2); images.forEach(image=>image.onload());
+ assert.deepEqual((await all).map(car=>car.className),['2-Wheel Drive Buggy','4-Wheel Drive Buggy']);
+ assert.equal(await loader.loadAll('A'),await all); assert.equal(requests.length,2);
+});
+test('profile omits failed images and supports a single legacy car',async()=>{
+ const {loader,images}=fixture();const all=loader.loadAll('A');await settle();images[0].onload();
+ assert.equal((await all).length,1);
+ const missing=loader.loadAll('B');await settle();images[1].onerror();assert.deepEqual(await missing,[]);
+});

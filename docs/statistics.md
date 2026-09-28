@@ -4,6 +4,10 @@
 
 ## Statistics and profiles
 
+Profiles show every uploaded class car in the same fixed avatar area used for a single car. The default image is a fallback when no class images exist. Display-only cropping removes fully transparent margins; original PNGs are unchanged. Two-car layouts allocate widths by the visible image proportions so cars have comparable displayed heights.
+
+The distance tracker's default field contains racers with a recorded race within the last two calendar years, measured from the viewer's current date. No percentage sampling is applied. Explicit driver searches and selections can still show historical racers; historical distances and records are preserved. Desktop fullscreen uses compact controls and gives remaining height to the map.
+
 The event/race explorer, including lap charts and driver comparison controls, appears above the driver leaderboard. A sticky “Jump to driver leaderboard” link remains available while scrolling through the explorer and charts. The statistics page includes a searchable leaderboard, driver profiles, head-to-head comparisons and an event/race explorer with LiveRC links. Profiles include activity totals, qualifying and finishing results, class breakdowns, consistency and race history.
 
 The default date range is the rolling year ending at the latest imported event. The default leaderboard requires ten finals; the selector also offers 1, 5, 20 and 30. Filters include event type and class. “All senior classes” excludes Junior Racers results.
