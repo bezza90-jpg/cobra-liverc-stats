@@ -49,11 +49,12 @@ window.addEventListener('resize', hidePreview);
 async function initialise() {
   const status = document.getElementById('galleryStatus');
   try {
+    const revisionRequest = fetch('../data/car-avatar-source-revisions.json', { cache: 'no-cache' }).then(response => response.ok ? response.json() : {}).catch(() => ({}));
     const responses = await Promise.all([fetch('../data/driver-directory.json', { cache: 'no-cache' }), fetch('../data/car-avatars.json', { cache: 'no-cache' })]);
     if (responses.some(response => !response.ok)) throw new Error('Unable to load the driver gallery. Please refresh to try again.');
     const [dashboard, manifest] = await Promise.all(responses.map(response => response.json()));
     // Images retain their filename when re-reviewed; a revision prevents stale cutouts.
-    const revisions = await fetch('../data/car-avatar-source-revisions.json', { cache: 'no-cache' }).then(response => response.ok ? response.json() : {}).catch(() => ({}));
+    const revisions = await revisionRequest;
     if (!Array.isArray(dashboard.drivers) || !manifest || typeof manifest !== 'object') throw new Error('The driver gallery is unavailable. Please try again later.');
     const drivers = dashboard.drivers.filter(driver => /^[A-Za-z0-9_-]+$/.test(String(driver.k)) && driver.n && driver.k !== 'BOB-BOBTECH-GELSTHARP')
       .map(driver => ({ ...driver, images: imagesFor(manifest[driver.k]) }))
@@ -80,6 +81,8 @@ async function initialise() {
             const figure = element('figure', 'car-image-card');
             const image = element('img');
             const revision = revisions[driver.k + '|' + className];
+            image.loading = 'lazy';
+            image.decoding = 'async';
             image.src = '../' + path + (revision ? '?v=' + encodeURIComponent(revision) : '');
             image.alt = driver.n + ' — ' + label;
             image.loading = 'lazy';
