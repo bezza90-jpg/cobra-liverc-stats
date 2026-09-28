@@ -1,4 +1,7 @@
 /* The public Wix header, with local assets and no iframe boot dependency. */
+/* Reserve the scrollbar before asynchronous content arrives so the header does not resize. */
+html:not(.cobra-embedded){scrollbar-gutter:stable}
+@supports not (scrollbar-gutter:stable){html:not(.cobra-embedded){overflow-y:scroll}}
 .cobra-site-header,.cobra-site-header *,.cobra-site-footer,.cobra-site-footer *{box-sizing:border-box}
 .cobra-site-header{position:relative;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;max-width:none;margin:0;padding:0 16px 0 6px;min-height:72px;background:#fff;color:#111;font:16px/1.4 Arial,Helvetica,sans-serif;border:0;border-radius:0}
 .cobra-site-header{overflow:visible;flex-wrap:nowrap}
