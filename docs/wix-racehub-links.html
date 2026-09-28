@@ -1,0 +1,51 @@
+<!-- Wix Custom Code: Head, all pages, load once, Essential. Enable only after HTTPS is ready. -->
+<link rel="preconnect" href="https://racehub.cobracardiff.co.uk">
+<script>
+(() => {
+  const routes = {
+    '/current-event':'event/', '/club-schedule':'schedule/', '/sword-schedule':'schedule/?type=sword',
+    '/drivers-briefing':'briefing/', '/club-series-tables':'club/', '/sword-tables':'sword/',
+    '/podium-gallery':'podiums/', '/race-stats':'', '/virtual-race-replay':'virtual-race-replay/',
+    '/driver-car-avatars':'car-avatars/', '/driver-distance-tracker':'?tracker=1',
+    '/drivers-setups':'setups/', '/upload-car-avatar':'avatar-upload/', '/about-cobra':'about/',
+    '/website-guides':'website-guides/'
+  };
+  const root = 'https://racehub.cobracardiff.co.uk/';
+  const target = href => {
+    const url = new URL(href, location.href);
+    if (!['www.cobracardiff.co.uk','cobracardiff.co.uk'].includes(url.hostname)) return null;
+    const path = url.pathname.replace(/\/$/,'').toLowerCase();
+    if (!Object.hasOwn(routes,path)) return null;
+    const next = new URL(routes[path],root);
+    for (const [key,value] of url.searchParams) if (key !== 'v') next.searchParams.append(key,value);
+    next.hash = url.hash;
+    return next.href;
+  };
+  const prepare = a => {
+    if (a.hasAttribute('download')) return;
+    const next = target(a.href);
+    if (next && a.href !== next) { a.href = next; a.target = '_self'; }
+  };
+  const scan = node => {
+    if (node.nodeType !== 1) return;
+    if (node.matches('a[href]')) prepare(node);
+    node.querySelectorAll('a[href]').forEach(prepare);
+  };
+  new MutationObserver(records => records.forEach(record => {
+    if (record.type === 'attributes') prepare(record.target);
+    else record.addedNodes.forEach(scan);
+  })).observe(document.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['href']});
+  scan(document.documentElement);
+  document.addEventListener('click', event => {
+    const a = event.target.closest?.('a[href]');
+    if (!a || a.hasAttribute('download')) return;
+    prepare(a);
+    if (!a.href.startsWith(root)) return;
+    // Keep Wix's SPA router from intercepting these ordinary external links.
+    event.stopImmediatePropagation();
+    if (event.button === 0 && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey && a.target !== '_blank') {
+      event.preventDefault(); location.assign(a.href);
+    }
+  },true);
+})();
+</script>

@@ -49,3 +49,22 @@ html.cobra-embedded body.embedded-tracker-page>.cobra-site-header,html.cobra-emb
  .cobra-site-header .cobra-gpw-logo img{width:75px;height:45px}
 }
 @media(max-width:480px){.cobra-site-header{gap:6px;padding:4px 8px}.cobra-site-header .cobra-site-logo{flex-basis:145px}.cobra-site-header .cobra-book-in{min-width:65px;padding:9px 12px}.cobra-site-header .cobra-gpw-logo{flex-basis:58px}.cobra-site-header .cobra-gpw-logo img{width:58px;height:40px}.cobra-mobile-menu>summary{padding:8px}.cobra-mobile-menu>summary span{display:none}}
+
+/* Match the Wix header's centred 1920px design canvas and proportional sizing. */
+.cobra-site-header{display:block!important;min-height:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+.cobra-header-inner{position:relative;width:100%;max-width:1920px;margin:0 auto;container-type:inline-size;aspect-ratio:1905/110.96875}
+@media(min-width:1051px){
+ .cobra-site-header .cobra-site-logo{position:absolute;left:.43963%;top:.357cqw;width:21.4198%;min-width:0}
+ .cobra-site-header .cobra-site-logo img{width:100%;height:auto;max-height:none}
+ .cobra-site-header .cobra-book-in{position:absolute;left:22.8863%;top:.94566cqw;width:12.1194%;height:3.56135cqw;min-width:0;padding:0;display:flex;align-items:center;justify-content:center;font-size:1.25cqw;line-height:1.6;background:#008700}
+ .cobra-mobile-menu{position:absolute;left:36.2549%;top:.5815cqw;width:51.3091%;margin:0;padding:.94862cqw;}
+ .cobra-site-menu{justify-content:flex-start;gap:1.2648cqw;}
+ .cobra-site-menu>a,.cobra-menu-group>summary{font-size:1.25cqw;line-height:1.6;padding:.1581cqw .6324cqw;}
+ .cobra-menu-group>summary::after{display:inline-block;font-size:inherit;width:.6324cqw;height:.395cqw;margin-left:.1581cqw;content:'';background:currentColor;clip-path:polygon(0 0,50% 85%,100% 0,100% 20%,50% 100%,0 20%);vertical-align:middle}
+ .cobra-site-header .cobra-gpw-logo{position:absolute;left:88.9879%;top:.357cqw;width:7.8494%;}
+ .cobra-site-header .cobra-gpw-logo img{width:100%;height:auto}
+}
+@media(max-width:1050px){.cobra-header-inner{display:flex;align-items:center;gap:12px;padding:4px 12px;min-height:70px;aspect-ratio:auto}.cobra-site-header .cobra-site-logo{flex-basis:220px}}
+@media(max-width:480px){.cobra-header-inner{gap:6px;padding:4px 8px}.cobra-site-header .cobra-site-logo{flex-basis:145px}}
+.cobra-site-header .cobra-site-logo img{border:0;border-radius:0;padding:0;margin:0}
+@media(min-width:1051px){.cobra-site-header .cobra-site-logo img{height:5.4593cqw;object-fit:contain}}

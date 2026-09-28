@@ -49,3 +49,122 @@
   },true);
 })();
 </script>
+
+<style>
+/* The public Wix header, with local assets and no iframe boot dependency. */
+.cobra-site-header,.cobra-site-header *,.cobra-site-footer,.cobra-site-footer *{box-sizing:border-box}
+.cobra-site-header{position:relative;z-index:1000;display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;max-width:none;margin:0;padding:0 16px 0 6px;min-height:72px;background:#fff;color:#111;font:16px/1.4 Arial,Helvetica,sans-serif;border:0;border-radius:0}
+.cobra-site-header{overflow:visible;flex-wrap:nowrap}
+.cobra-site-header::before,.cobra-site-header::after{content:none;display:none}
+.cobra-site-header a{color:#111;text-decoration:none;font-weight:400;letter-spacing:normal;white-space:nowrap;align-self:auto;margin:0}
+.cobra-site-header a:hover,.cobra-site-header a:focus-visible{text-decoration:underline}
+.cobra-site-header .cobra-site-logo{flex:0 1 271px;display:block;min-width:160px}
+.cobra-site-header .cobra-site-logo img{display:block;width:100%;height:auto;max-height:69px;object-fit:contain}
+.cobra-site-header .cobra-book-in{display:block;background:#008700;color:#fff;border-radius:40px;padding:12px 32px;text-align:center;min-width:130px}
+.cobra-site-header .cobra-gpw-logo{flex:0 0 99px;display:block}
+.cobra-site-header .cobra-gpw-logo img{display:block;width:99px;height:59px;object-fit:contain}
+.cobra-mobile-menu{flex:1;min-width:0;border:0;padding:0;margin:0}
+.cobra-mobile-menu>summary{display:none}
+.cobra-site-menu{display:flex;align-items:center;justify-content:space-evenly;gap:8px;margin:0;padding:0}
+.cobra-site-menu>a,.cobra-menu-group>summary{padding:18px 8px;cursor:pointer;list-style:none;color:#111;font-weight:400;white-space:nowrap}
+.cobra-menu-group{position:relative;margin:0;padding:0;border:0}
+.cobra-menu-group>summary::-webkit-details-marker,.cobra-mobile-menu>summary::-webkit-details-marker{display:none}
+.cobra-menu-group>summary::after{content:'⌄';font-size:12px;margin-left:3px}
+.cobra-menu-group>div{position:absolute;top:100%;left:0;min-width:230px;background:#fff;padding:8px 0;box-shadow:0 5px 15px #0002;border:1px solid #e2e9e2;border-radius:0}
+.cobra-menu-group:last-child>div{left:auto;right:0}
+.cobra-menu-group>div>a{display:block;padding:12px 18px}
+.cobra-menu-group>div>a:hover,.cobra-menu-group>div>a:focus-visible{background:#eff8ef;color:#007c12}
+.cobra-site-header :focus-visible{outline:3px solid #138b18;outline-offset:2px}
+body:has(.cobra-site-header) .results-nav,body:has(.cobra-site-header) .hero>.brand{display:none}
+body:has(.cobra-site-header) .hero>.hero-copy{padding-top:0}
+.cobra-site-footer{display:block;width:100%;max-width:none;background:#07140a;color:#fff;font:14px/1.6 Arial,Helvetica,sans-serif;padding:32px clamp(20px,5vw,80px);margin:30px 0 0;border:0}
+.cobra-site-footer img{max-width:65vw;object-fit:contain;height:auto}
+.cobra-site-footer p{color:#fff;margin:12px 0}
+.cobra-site-footer nav{display:flex;flex-wrap:wrap;gap:24px;margin:16px 0}
+.cobra-site-footer a{color:#fff}
+html:not(.cobra-embedded) body:has(.cobra-site-footer)>footer:not(.cobra-site-footer){display:none}
+html.cobra-embedded .cobra-site-header,html.cobra-embedded .cobra-site-footer{display:none}
+body.embedded-tracker-page>.cobra-site-header,body.embedded-tracker-page>.cobra-site-footer{display:flex}
+html.cobra-embedded body.embedded-tracker-page>.cobra-site-header,html.cobra-embedded body.embedded-tracker-page>.cobra-site-footer{display:none}
+@media(min-width:1051px){.cobra-mobile-menu:not([open])>.cobra-site-menu{display:flex}.cobra-mobile-menu::details-content{display:contents}}
+@media(max-width:1050px){
+ .cobra-site-header{gap:12px;min-height:70px;padding:4px 12px}
+ .cobra-site-header .cobra-site-logo{flex-basis:220px;min-width:115px}
+ .cobra-site-header .cobra-book-in{min-width:90px;padding:10px 18px;font-size:14px}
+ .cobra-mobile-menu{flex:0 0 auto;margin-left:auto;order:4}
+ .cobra-mobile-menu>summary{display:block;cursor:pointer;padding:10px;font-size:22px;list-style:none}
+ .cobra-mobile-menu>summary span{font-size:14px}
+ .cobra-mobile-menu:not([open])>.cobra-site-menu{display:none}
+ .cobra-site-menu{position:absolute;top:100%;right:0;left:0;display:block;background:#fff;padding:12px;box-shadow:0 6px 12px #0002;max-height:80dvh;overflow:auto}
+ .cobra-site-menu>a,.cobra-menu-group>summary{display:block;padding:14px}
+ .cobra-menu-group>div{position:static;box-shadow:none;border:0;padding:0 12px}
+ .cobra-site-header .cobra-gpw-logo{flex-basis:75px}
+ .cobra-site-header .cobra-gpw-logo img{width:75px;height:45px}
+}
+@media(max-width:480px){.cobra-site-header{gap:6px;padding:4px 8px}.cobra-site-header .cobra-site-logo{flex-basis:145px}.cobra-site-header .cobra-book-in{min-width:65px;padding:9px 12px}.cobra-site-header .cobra-gpw-logo{flex-basis:58px}.cobra-site-header .cobra-gpw-logo img{width:58px;height:40px}.cobra-mobile-menu>summary{padding:8px}.cobra-mobile-menu>summary span{display:none}}
+
+/* Match the Wix header's centred 1920px design canvas and proportional sizing. */
+.cobra-site-header{display:block!important;min-height:0;padding:0;font-family:Arial,Helvetica,sans-serif}
+.cobra-header-inner{position:relative;width:100%;max-width:1920px;margin:0 auto;container-type:inline-size;aspect-ratio:1905/110.96875}
+@media(min-width:1051px){
+ .cobra-site-header .cobra-site-logo{position:absolute;left:.43963%;top:.357cqw;width:21.4198%;min-width:0}
+ .cobra-site-header .cobra-site-logo img{width:100%;height:auto;max-height:none}
+ .cobra-site-header .cobra-book-in{position:absolute;left:22.8863%;top:.94566cqw;width:12.1194%;height:3.56135cqw;min-width:0;padding:0;display:flex;align-items:center;justify-content:center;font-size:1.25cqw;line-height:1.6;background:#008700}
+ .cobra-mobile-menu{position:absolute;left:36.2549%;top:.5815cqw;width:51.3091%;margin:0;padding:.94862cqw;}
+ .cobra-site-menu{justify-content:flex-start;gap:1.2648cqw;}
+ .cobra-site-menu>a,.cobra-menu-group>summary{font-size:1.25cqw;line-height:1.6;padding:.1581cqw .6324cqw;}
+ .cobra-menu-group>summary::after{display:inline-block;font-size:inherit;width:.6324cqw;height:.395cqw;margin-left:.1581cqw;content:'';background:currentColor;clip-path:polygon(0 0,50% 85%,100% 0,100% 20%,50% 100%,0 20%);vertical-align:middle}
+ .cobra-site-header .cobra-gpw-logo{position:absolute;left:88.9879%;top:.357cqw;width:7.8494%;}
+ .cobra-site-header .cobra-gpw-logo img{width:100%;height:auto}
+}
+@media(max-width:1050px){.cobra-header-inner{display:flex;align-items:center;gap:12px;padding:4px 12px;min-height:70px;aspect-ratio:auto}.cobra-site-header .cobra-site-logo{flex-basis:220px}}
+@media(max-width:480px){.cobra-header-inner{gap:6px;padding:4px 8px}.cobra-site-header .cobra-site-logo{flex-basis:145px}}
+.cobra-site-header .cobra-site-logo img{border:0;border-radius:0;padding:0;margin:0}
+@media(min-width:1051px){.cobra-site-header .cobra-site-logo img{height:5.4593cqw;object-fit:contain}}
+
+/* The original Wix header is retained for instant rollback. */
+header[data-cobra-original-header]{display:none!important}
+</style>
+<script>
+(()=>{
+if (window.self !== window.top) document.documentElement.classList.add('cobra-embedded');
+function initSiteHeader(shell = document.querySelector('.cobra-site-header')) {
+if (!shell || shell.dataset.initialized) return;
+shell.dataset.initialized = 'true';
+  const mobile = shell.querySelector('.cobra-mobile-menu');
+  const groups = [...shell.querySelectorAll('.cobra-menu-group')];
+  const desktop = matchMedia('(min-width:1051px)');
+  const sync = () => { mobile.open = desktop.matches; groups.forEach(group => { group.open = false; }); };
+  sync();
+  desktop.addEventListener('change', sync);
+  groups.forEach(group => group.addEventListener('toggle', () => {
+    if (group.open) groups.filter(other => other !== group).forEach(other => { other.open = false; });
+  }));
+  document.addEventListener('click', event => {
+    if (!shell.contains(event.target)) { groups.forEach(group => { group.open = false; }); if (!desktop.matches) mobile.open = false; }
+  });
+  shell.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {
+      const group = event.target.closest('.cobra-menu-group');
+      if (group?.open) { group.open = false; group.querySelector('summary').focus(); }
+      else if (!desktop.matches) { mobile.open = false; mobile.querySelector('summary').focus(); }
+    }
+  });
+}
+
+initSiteHeader();
+
+const markup="<!-- cobra-shell:start --><header class=\"cobra-site-header\"><div class=\"cobra-header-inner\"><a class=\"cobra-site-logo\" href=\"https://www.cobracardiff.co.uk/\" aria-label=\"COBRA home\"><img src=\"https://racehub.cobracardiff.co.uk/assets/cobra-header-logo.png\" width=\"271\" height=\"69\" alt=\"COBRA\" fetchpriority=\"high\"></a><a class=\"cobra-book-in\" href=\"https://racehub.cobracardiff.co.uk/book-in/\">Book In</a><details class=\"cobra-mobile-menu\"><summary aria-label=\"Open site menu\">☰ <span>Menu</span></summary><nav class=\"cobra-site-menu\" aria-label=\"Site\"><a href=\"https://www.cobracardiff.co.uk/\">Home</a><details class=\"cobra-menu-group\"><summary>Events</summary><div><a href=\"https://racehub.cobracardiff.co.uk/event/\">Current event</a><a href=\"https://www.cobracardiff.co.uk/event-list\">Events &amp; booking</a></div></details><details class=\"cobra-menu-group\"><summary>Race Day</summary><div><a href=\"https://racehub.cobracardiff.co.uk/schedule/\">Club race schedule</a><a href=\"https://racehub.cobracardiff.co.uk/briefing/\">Drivers briefing</a><a href=\"https://racehub.cobracardiff.co.uk/schedule/?type=sword\">SWORD race schedule</a></div></details><details class=\"cobra-menu-group\"><summary>Results</summary><div><a href=\"https://racehub.cobracardiff.co.uk/club/\">Club Series</a><a href=\"https://racehub.cobracardiff.co.uk/sword/\">SWORD Championship</a><a href=\"https://racehub.cobracardiff.co.uk/podiums/\">Podium gallery</a><a href=\"https://racehub.cobracardiff.co.uk/\">Race statistics</a><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/\">Virtual Race Replay</a></div></details><details class=\"cobra-menu-group\"><summary>COBRA Data</summary><div><a href=\"https://racehub.cobracardiff.co.uk/car-avatars/\">Driver car avatars</a><a href=\"https://racehub.cobracardiff.co.uk/?tracker=1\">Driver distance tracker</a><a href=\"https://racehub.cobracardiff.co.uk/setups/\">Setups &amp; tips</a><a href=\"https://racehub.cobracardiff.co.uk/avatar-upload/\">Upload car avatar</a><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/\">Virtual Race Replay</a></div></details><details class=\"cobra-menu-group\"><summary>About COBRA</summary><div><a href=\"https://racehub.cobracardiff.co.uk/about/\">About &amp; location</a><a href=\"https://www.cobracardiff.co.uk/club-news\">Club news</a><a href=\"https://www.cobracardiff.co.uk/media\">Media</a><a href=\"https://www.cobracardiff.co.uk/track-gallery\">Track gallery</a><a href=\"https://racehub.cobracardiff.co.uk/website-guides/\">Help &amp; Website Guides</a></div></details></nav></details><a class=\"cobra-gpw-logo\" href=\"https://www.cobracardiff.co.uk/grand-prix-wales\"><img src=\"https://racehub.cobracardiff.co.uk/assets/gpw-logo.webp\" width=\"99\" height=\"59\" alt=\"Grand Prix of Wales event logo\"></a></div></header><!-- cobra-shell:end -->";
+const install=()=>{
+ const original=document.querySelector('header:not(.cobra-site-header)');
+ if(!original || original.hasAttribute('data-cobra-original-header')) return;
+ const template=document.createElement('template');template.innerHTML=markup;
+ const replacement=template.content.querySelector('.cobra-site-header');
+ replacement.style.gridArea=getComputedStyle(original).gridArea;
+ original.before(replacement);original.setAttribute('data-cobra-original-header','');
+ initSiteHeader(replacement);
+};
+new MutationObserver(install).observe(document.documentElement,{subtree:true,childList:true});
+install();
+})();
+</script>
