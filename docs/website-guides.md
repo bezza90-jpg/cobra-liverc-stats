@@ -57,3 +57,5 @@ Statistics avatar loading now uses the published image revision instead of a per
 Three new tours: full public website tour (152s), Race, compare and replay (75s), and Discover your racing story (91s). Each has separate 1920×1080 desktop and 1080×1920 mobile exports. Under 768px, the player selects the vertical version; otherwise widescreen. Both formats remain downloadable. Resize changes apply after playback ends, or immediately before playback starts; active viewing is never restarted. Original nine quick guides remain vertical.
 
 Tours retain COBRA bumpers and approved Mixkit A Game soundtrack, shorten menu to 3s, use brief crossfades, include actual moving Virtual Replay footage and mobile data close-ups. Captures were checked for loaded images before use.
+
+Bumper revision: matched the supplied Virtual Race Replay reference with a plain dark background, large centred COBRA logo, Website Features Showcase opening title, and a closing logo with cobracardiff.co.uk. All six MP4s and their posters were replaced; video URLs are versioned so returning visitors receive the corrected files. First and last encoded frames inspected, not just the source artwork.
