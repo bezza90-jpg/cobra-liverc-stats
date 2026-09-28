@@ -1,2 +1,5 @@
 # Local GitHub snapshots: do not commit ZIP backups back to the repository.
 /backups/
+
+# Generated during deployment; keep social images out of Git history.
+/public/lap-charts/share/

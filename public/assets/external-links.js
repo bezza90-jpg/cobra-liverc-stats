@@ -17,7 +17,7 @@ const wixPages = new Map([
 const embedded = window.self !== window.top;
 
 function prepareLink(link) {
-  if (link.hasAttribute('download')) return;
+  if (link.hasAttribute('download') || (link.classList.contains('lap-chart-open') && link.target === '_blank')) return;
   let destination = new URL(link.href, location.href);
   if (embedded && destination.origin === siteRoot.origin && destination.pathname.startsWith(siteRoot.pathname)) {
     const route = destination.pathname.slice(siteRoot.pathname.length).replace(/index\.html$/, '');

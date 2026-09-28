@@ -38,3 +38,15 @@ SWORD and Club tables offer the seasons present in the archive, using September-
 The [LiveRC updater](../scripts/update-liverc.mjs) imports events dated 1 January 2022 onward. It ignores test/testing events, future events and events with no entries, and checks the required entry, qualifying, overall and race-result data. LiveRC IDs identify records and prevent duplicate imports.
 
 Event `449348` is explicitly excluded as an unfinished duplicate of `450264`. At most two eligible new or changed events are processed in each run. The archive reflects the imported source records; it should not be treated as a guarantee that every historical meeting is available.
+
+## Lap charts and sharing (28 September 2026)
+
+Statistics race explorer and Virtual Race Replay display a race-position chart, driver comparison checkboxes and individual lap-time charts stacked vertically with names on the left. They use recorded replay race JSON, without estimating missing laps. Lap 1 includes the starting crossing and can be shorter than a full lap. Position charts show recorded position by lap number, not synchronized elapsed time. Missing laps break lines.
+
+Individual charts share one time scale within the race. Driver selection overlays lap times; new-tab comparison links preserve the selection. Desktop hover/keyboard focus enlarges charts. Mobile users can scroll charts horizontally or open the full chart. Exact data tables provide an accessible alternative.
+
+Facebook buttons open a sharing composer; nothing is posted automatically. Each race and driver has a generated public HTML page and 1200×630 JPEG Open Graph image. Comparison links retain selection via query parameters; Facebook previews the whole-race overview for a comparison, not a custom selection image. Facebook controls its own preview cache.
+
+The publish workflow runs scripts/build-chart-shares.mjs after validating and saving refreshed race data, before uploading the site. Generated public/lap-charts/share files are deployment artifacts, not committed media. The renderer uses pinned @napi-rs/canvas 0.1.100 and enforces a 650 MB image budget.
+
+Selected comparisons can open Virtual Replay with repeated `compare` parameters. Only selected cars and standings rows are shown; full-race timing, grid placement, positions and gaps remain intact. Play, pause and seeking work normally. Show all drivers restores the full field.
