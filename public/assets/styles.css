@@ -523,3 +523,8 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .podium-illustration-1 .podium-illustration-art { bottom:70px; }
 
 .results-nav .replay-nav-button{background:#b4ff63;color:#102407;font-weight:800}
+
+/* Keep the archive leaderboard reachable while browsing race charts. */
+.race-explorer .leaderboard-jump{position:sticky;top:12px;z-index:6;display:table;max-width:100%;margin:0 0 20px auto;padding:12px 16px;border:2px solid #a3f329;border-radius:8px;background:#0a1710;color:#a3f329;font-size:.9rem;font-weight:750;line-height:1.4;text-decoration:none;box-shadow:0 4px 14px #0003}
+.race-explorer .leaderboard-jump:hover,.race-explorer .leaderboard-jump:focus-visible{background:#a3f329;color:#0a1710;outline:2px solid #0a1710;outline-offset:3px}
+#driverLeaderboard{scroll-margin-top:20px}
