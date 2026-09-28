@@ -40,7 +40,10 @@ mattCarAvatar.onload = () => {
 mattCarAvatar.src = new URL('./matt-hodges-car.png', import.meta.url).href;
 async function loadJourneyAvatars() {
   try {
-    const response = await fetch(new URL('../data/car-avatars.json', import.meta.url), { cache: 'no-store' });
+    const [response, revisions] = await Promise.all([
+      fetch(new URL('../data/car-avatars.json', import.meta.url), { cache: 'no-cache' }),
+      fetch(new URL('../data/car-avatar-source-revisions.json', import.meta.url), { cache: 'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
+    ]);
     if (!response.ok) throw new Error('Avatar list is unavailable');
     const manifest = await response.json();
     const next = new Map();
@@ -57,7 +60,9 @@ async function loadJourneyAvatars() {
         if (state.profileKey === key) renderProfileAvatar(key);
       };
       const assetUrl = new URL(`../${path}`, import.meta.url);
-      assetUrl.searchParams.set('v', String(Date.now()));
+      const className = typeof entry === 'string' ? 'default' : Object.keys(entry).find(cls => entry[cls] === path);
+      const revision = revisions[key + '|' + className];
+      if (revision) assetUrl.searchParams.set('v', String(revision));
       image.src = assetUrl.href;
     }
     if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
