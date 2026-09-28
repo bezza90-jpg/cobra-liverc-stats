@@ -37,5 +37,11 @@
   },
   "MATT-WOODIWISS": {
     "2-Wheel Drive Buggy": "assets/car-avatars/MATT-WOODIWISS-AUTO-2WD.png"
+  },
+  "DALE-PRESTON": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/DALE-PRESTON-AUTO-2WD.png"
+  },
+  "MARK-GIAQUINTO": {
+    "4-Wheel Drive Buggy": "assets/car-avatars/MARK-GIAQUINTO-AUTO-4WD.png"
   }
 }
