@@ -4,7 +4,12 @@ import argparse
 import base64
 import io
 import json
+import os
 import re
+import sys
+import time
+from datetime import datetime, timezone
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -13,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CONFIG = ROOT / "public/data/avatar-upload-config.json"
 MANIFEST = ROOT / "public/data/car-avatars.json"
 REVISIONS = ROOT / "public/data/car-avatar-source-revisions.json"
+REPORT = ROOT / "public/data/car-avatar-processing.json"
 CLASS_SUFFIX = {
     "2-Wheel Drive Buggy": "2WD", "4-Wheel Drive Buggy": "4WD", "Vintage": "VINTAGE",
     "Trucks": "TRUCKS", "Junior Racers": "JUNIORS"
@@ -34,8 +40,17 @@ def read_json(path):
 def request_jsonp(url, params):
     query = urllib.parse.urlencode({**params, "callback": "cobraAvatarSync"})
     request = urllib.request.Request(f"{url}?{query}", headers={"User-Agent": "COBRA-avatar-sync/1.0"})
-    with urllib.request.urlopen(request, timeout=50) as response:
-        body = response.read(5_000_001).decode("utf-8")
+    for attempt in range(4):
+        try:
+            with urllib.request.urlopen(request, timeout=50) as response:
+                raw = response.read(5_000_001)
+            if len(raw) > 5_000_000:
+                raise ValueError('The approval feed exceeds the size limit.')
+            body = raw.decode('utf-8')
+            break
+        except (urllib.error.URLError, TimeoutError):
+            if attempt == 3: raise
+            time.sleep(2 ** attempt)
     match = re.fullmatch(r"cobraAvatarSync\((\{.*\})\);?\s*", body, flags=re.S)
     if not match:
         raise ValueError("The avatar approval response was incomplete.")
@@ -52,12 +67,17 @@ def state():
     if not re.fullmatch(r"https://script\.google\.com/macros/s/[A-Za-z0-9_-]+/exec", url):
         raise ValueError("The avatar upload web app URL is invalid.")
     records = request_jsonp(url, {"action": "list"}).get("avatars", [])
+    if not isinstance(records, list):
+        raise ValueError('Invalid approval list; existing published avatars are preserved.')
     current = {}
     photo_ids = {}
     for entry in records:
+        if not isinstance(entry, dict): raise ValueError('Malformed avatar record; aborting safely.')
         key, cls = str(entry.get("driverKey", "")), str(entry.get("className", ""))
         ident, revision = str(entry.get("id", "")), str(entry.get("revision", ""))
-        if key not in HIDDEN_DRIVER_KEYS and KEY.fullmatch(key) and cls in CLASS_SUFFIX and ID.fullmatch(ident) and FILE_ID.fullmatch(revision):
+        if not (KEY.fullmatch(key) and cls in CLASS_SUFFIX and ID.fullmatch(ident) and FILE_ID.fullmatch(revision)):
+            raise ValueError('Invalid approved avatar record; existing assets are preserved.')
+        if key not in HIDDEN_DRIVER_KEYS:
             pair = f"{key}|{cls}"
             current[pair] = revision
             photo_ids[pair] = ident
@@ -70,6 +90,11 @@ def prepare_avatar(photo_bytes):
     with Image.open(io.BytesIO(photo_bytes)) as loaded:
         original = ImageOps.exif_transpose(loaded).convert("RGBA")
     original.thumbnail((1800, 1800), Image.Resampling.LANCZOS)
+    # The review canvas can pad an unprocessed rectangular photo with transparency.
+    # Only transparency INSIDE the foreground bounds indicates an actual cutout.
+    bounds = original.getchannel('A').getbbox()
+    if not bounds: raise ValueError('The reviewed photograph is fully transparent.')
+    original = original.crop(bounds)
     if original.getchannel("A").getextrema()[0] < 255:
         # Preserve the cutout explicitly reviewed and approved in the browser.
         cutout = original
@@ -95,25 +120,50 @@ def prepare_avatar(photo_bytes):
     return blob.getvalue()
 
 
-def publish():
+def needs_processing(current, previous, photo_ids, retry_id=''):
+    manifest = read_json(MANIFEST)
+    if retry_id and retry_id not in photo_ids.values():
+        raise ValueError('Retry submission is not in the current approved feed.')
+    if current != previous or retry_id: return True
+    for pair in current:
+        key, cls = pair.split('|', 1)
+        entry = manifest.get(key, {})
+        path = entry.get(cls, '') if isinstance(entry, dict) else ''
+        if not path or not (ROOT / 'public' / path).is_file(): return True
+    return False
+
+
+def publish(retry_id=''):
     url, current, previous, photo_ids = state()
     if not url:
         print("Avatar approvals are not configured; skipping.")
         return
     manifest = read_json(MANIFEST)
+    if retry_id and retry_id not in photo_ids.values():
+        raise ValueError('Retry submission is not in the current approved feed.')
+    failures = {}
     changes = 0
     for pair, revision in current.items():
-        if previous.get(pair) == revision:
+        existing = manifest.get(pair.split('|', 1)[0], {})
+        assigned = existing.get(pair.split('|', 1)[1], '') if isinstance(existing, dict) else ''
+        if previous.get(pair) == revision and photo_ids[pair] != retry_id and assigned and (ROOT / 'public' / assigned).is_file():
             continue
         driver_key, cls = pair.split("|", 1)
         ident = photo_ids[pair]
-        photo = request_jsonp(url, {"action": "image", "id": ident})
-        if str(photo.get("id")) != ident:
-            raise ValueError("The approved photo ID did not match its listing.")
-        decoded = base64.b64decode(photo["base64"], validate=True)
-        if not decoded or len(decoded) > 3_000_000:
-            raise ValueError("The approved photo is too large.")
-        avatar_bytes = prepare_avatar(decoded)
+        try:
+            photo = request_jsonp(url, {"action": "image", "id": ident})
+            if str(photo.get("id")) != ident or (photo.get('revision') and photo['revision'] != revision):
+                raise ValueError("The approved photo changed during processing. Retry the refresh.")
+            decoded = base64.b64decode(photo["base64"], validate=True)
+            if not decoded or len(decoded) > 3_000_000:
+                raise ValueError("The approved photo is too large.")
+            avatar_bytes = prepare_avatar(decoded)
+        except Exception as error:
+            # Keep the previous avatar and continue other submissions. Do not leak URLs/tokens.
+            message = str(error) if isinstance(error, ValueError) else type(error).__name__ + ' while downloading or removing the background; see workflow log.'
+            failures[pair] = {'id': ident, 'revision': revision, 'error': message[:300]}
+            print(f'::warning::Avatar {ident}: {message[:300]}', file=sys.stderr)
+            continue
         relative = f"assets/car-avatars/{driver_key}-AUTO-{CLASS_SUFFIX[cls]}.png"
         target = ROOT / "public" / relative
         target.parent.mkdir(parents=True, exist_ok=True)
@@ -143,14 +193,18 @@ def publish():
         MANIFEST.write_text(json.dumps(manifest, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         REVISIONS.write_text(json.dumps(previous, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Approved avatar assignments updated: {changes}.")
+    REPORT.write_text(json.dumps({'checkedAt': datetime.now(timezone.utc).isoformat(), 'updated': changes, 'failures': failures}, indent=2) + '\n', encoding='utf-8')
+    if failures:
+        print(f'::warning::{len(failures)} avatar(s) need attention. Successful avatars can still deploy.', file=sys.stderr)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
+    parser.add_argument('--retry-id', default=os.environ.get('COBRA_AVATAR_SUBMISSION', ''))
     args = parser.parse_args()
     if args.check:
-        url, current, previous, _ = state()
-        print("yes" if url and current != previous else "no")
+        url, current, previous, photo_ids = state()
+        print("yes" if url and needs_processing(current, previous, photo_ids, args.retry_id) else "no")
     else:
-        publish()
+        publish(args.retry_id)

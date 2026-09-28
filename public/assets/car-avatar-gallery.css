@@ -16,3 +16,9 @@
 .car-gallery-search label { display:block; font-weight:800; margin-bottom:8px; }
 .car-gallery-search input { width:100%; max-width:480px; box-sizing:border-box; padding:12px; border:1px solid #aebeb2; border-radius:8px; font:inherit; }
 .car-gallery-search p { margin:8px 0; color:#4b6553; }
+.car-avatar-zoom { display:block; width:100%; padding:0; border:0; background:transparent; border-radius:6px; cursor:zoom-in; }
+.car-avatar-zoom:focus-visible { outline:3px solid #067b14; outline-offset:3px; }
+.car-avatar-preview { position:fixed; z-index:10000; width:min(460px,calc(100vw - 24px)); max-height:calc(100vh - 24px); box-sizing:border-box; padding:16px; border:1px solid #8bae94; border-radius:14px; background:#f5faf5; box-shadow:0 12px 42px #082c3c40; pointer-events:none; }
+.car-avatar-preview[hidden] { display:none; }
+.car-avatar-preview img { display:block; width:100%; height:min(310px,calc(100vh - 110px)); object-fit:contain; }
+.car-avatar-preview p { margin:10px 0 0; font-size:.9rem; font-weight:700; text-align:center; color:#173b23; }
