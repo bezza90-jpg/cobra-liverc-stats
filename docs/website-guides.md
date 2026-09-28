@@ -65,3 +65,5 @@ Final timing correction: rebuilt all six showcase exports from clean scenes to r
 Desktop capture correction: all three widescreen tours now use desktop captures for schedule, club standings, Simon Fisher, podiums and historical replay. Confirmed images and data loaded before capture. Mobile exports retain their mobile views and close-ups. Timings and music unchanged.
 
 Virtual Replay now has separate Fullscreen track and Fullscreen timings buttons. Mobile users can swipe left/right between panels with a 280ms slide, or use the Track/Timings buttons. Playback controls and clock remain shared; closing restores the original page. Reduced-motion preferences disable sliding. Where browser fullscreen is unavailable, the replay fills its available page viewport.
+
+All six full/mixed showcase exports include a 16-second fullscreen replay demonstration before the closing logo. Desktop uses desktop views; Reels use mobile views with a sideways panel transition. New durations: full 172.5s, mix one 96.5s, mix two 113.5s.
