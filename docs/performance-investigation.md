@@ -14,3 +14,5 @@ Unit tests cover no startup downloads, single-driver image loading, request dedu
 
 ## Follow-up
 Large original PNGs still exist; smaller display derivatives could reduce map/gallery download size further. Keep originals for enlarged viewing, and generate derivatives automatically during publication before adopting them. Wix shell performance requires separate browser/network profiling; do not claim the complete site-delay issue is solved by this change.
+
+Video startup: guides previously used preload=none for every video. Nearby videos now receive a preload hint through IntersectionObserver (200px margin); off-screen videos remain untouched. Explicit data-saving mode disables automatic preloading. Pointer/focus can prepare a video. A loading message covers buffering waits. Local browser test showed 2.28 seconds buffered in the featured video before playback, with all eleven other videos still at zero buffered seconds. Hosting returned HTTP 206 for a 64KB range in 0.18 seconds in one unthrottled sample. Mobile browsers may choose to ignore preload hints.
