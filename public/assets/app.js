@@ -1,3 +1,4 @@
+import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {renderLapCharts} from './lap-charts.js';
 import { loadMap } from './load-map.js';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
@@ -436,7 +437,7 @@ function renderRaceExplorer(raceId) {
   body.innerHTML = rows.length ? rows.map(row => `
     <tr><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>
     <td>${row[8] ? `P${row[8]}` : '—'}</td><td>${escapeHtml(row[3] || '—')}</td><td>${escapeHtml(row[4] || '—')}</td>
-    <td>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td></tr>`).join('') : '<tr><td colspan="8">No results were recorded for this race.</td></tr>';
+    <td class="fastest-lap">${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td></tr>`).join('') : '<tr><td colspan="8">No results were recorded for this race.</td></tr>';
 }
 
 function updateRaceSelection(preserve = true) {
@@ -1320,6 +1321,7 @@ async function init() {
     data.videos = videoData.videos || [];
     data.eventById = Object.fromEntries(data.events.map(event => [event.i, event]));
     data.driverByKey = Object.fromEntries(data.drivers.map(driver => [driver.k, driver.n]));
+    data.raceResults.forEach(row => { row[5] = fastestLapText(row[5]); row[6] = averageLapText(row[6]); });
     state.data = data;
     loadJourneyAvatars();
     $('eventTotal').textContent = fmt.format(data.meta.eventCount);

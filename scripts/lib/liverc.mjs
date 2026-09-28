@@ -1,3 +1,4 @@
+import {averageLapText, fastestLapText} from '../../public/assets/lap-result-format.js';
 const BASE_URL = 'https://cobracardiff.liverc.com';
 
 function decodeHtml(value = '') {
@@ -224,8 +225,8 @@ export function parseRace(html) {
       qualifyingPosition: Number(record.Qual) || null,
       lapsTime: record['Laps/Time'] || '',
       behind: record.Behind || '',
-      fastestLap: record['Fastest Lap'] || '',
-      averageLap: record['Avg Lap'] || '',
+      fastestLap: fastestLapText(record['Fastest Lap']),
+      averageLap: averageLapText(record['Avg Lap']),
       consistency: record.Consistency || ''
     })).filter(result => result.driverName)
   };

@@ -1,3 +1,4 @@
+import {averageLapText, fastestLapText} from '../public/assets/lap-result-format.js';
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -58,7 +59,7 @@ const dashboard = {
   }]).filter(([, race]) => race.c)),
   raceResults: raceResults.map(row => [
     row.liveRcRaceId, row.driverKey, row.position, row.lapsTime || '', row.behind || '',
-    row.fastestLap || '', row.averageLap || '', row.consistency || '', row.qualifyingPosition || null
+    fastestLapText(row.fastestLap), averageLapText(row.averageLap), row.consistency || '', row.qualifyingPosition || null
   ])
 };
 

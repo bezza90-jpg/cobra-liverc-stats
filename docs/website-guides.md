@@ -42,3 +42,10 @@ and replaced in both the public media and the existing Google Drive file.
 
 The help page now includes three additional 25-second vertical Reels with electronic music and English captions: 07 Lap Times & Race Positions, 08 Compare Drivers, and 09 Replay Selected Drivers. Each card contains a quick written guide, feature links and an MP4 download. These demonstrate the published site, including lap data, selection-preserving links, Facebook sharing and filtered replay controls. Comparison link previews show the race overview; timing-based movement between crossings is estimated.
 
+
+## Required capture checks
+
+For every future video, wait for each live page to finish loading before advancing or capturing. Confirm that visible images have loaded, charts contain data, and replay track/car graphics are present. Inspect the resulting screenshot or recorded segment for missing assets, blank placeholders and loading indicators before using it. Reopen and recheck a page if the browser is closed or navigation is interrupted. Preserve the established COBRA opening and closing bumper style across portrait and landscape exports.
+
+### 28 September review
+Replaced the Simon Fisher scene in Meet the COBRA Drivers after confirming the live car image loaded. Replaced the existing Drive video in place. Corrected repeated average lap values and labelled fastest-lap lap numbers, including older concatenated values; fastest-lap results use bold purple.
