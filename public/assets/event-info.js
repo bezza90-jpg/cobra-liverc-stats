@@ -5,15 +5,15 @@ import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight
   try {
     const [eventResponse, scheduleResponse, calendarResponse] = await Promise.all([
       fetch('../data/current-event.json', {cache:'no-cache'}),
-      fetch('../data/race-day-schedules.json', {cache:'no-cache'}),
+      element('scheduleSteps') ? fetch('../data/race-day-schedules.json', {cache:'no-cache'}) : Promise.resolve(null),
       fetch('../data/event-calendar.json', {cache:'no-cache'})
     ]);
-    if (!eventResponse.ok || !scheduleResponse.ok || !calendarResponse.ok) throw Error('Event information unavailable');
+    if (!eventResponse.ok || (scheduleResponse && !scheduleResponse.ok) || !calendarResponse.ok) throw Error('Event information unavailable');
     const settings = await eventResponse.json();
     const calendar = await calendarResponse.json();
     const meeting = nextMeeting(calendar.events);
     const event = {venue:settings.venue, ...meeting};
-    const schedules = await scheduleResponse.json();
+    const schedules = scheduleResponse ? await scheduleResponse.json() : {};
     const type = new URLSearchParams(location.search).get('type') || event.type;
     const kind = type === 'sword' ? 'sword' : 'club';
     if (element('eventTitle')) {
