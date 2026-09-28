@@ -392,7 +392,7 @@ footer a { color: #85e391; }
  .journey-map-overlay.fullscreen .journey-driver-picker{min-width:0}
  .journey-map-overlay.fullscreen .journey-map-controls :is(select,input[type=search],input[type=date]){height:34px}
  .journey-map-overlay.fullscreen .journey-driver-picker{margin:0}
- .journey-map-overlay.fullscreen .journey-timeline{grid-template-columns:auto 1fr;align-items:center;column-gap:5px}
+ .journey-map-overlay.fullscreen .journey-timeline{grid-column:1/-1;grid-template-columns:auto 1fr;align-items:center;column-gap:5px}
  .journey-map-overlay.fullscreen .journey-timeline strong{text-align:right;font-size:.65rem}
  .journey-map-overlay.fullscreen .journey-timeline input[type=range]{grid-column:1/-1;height:26px;min-height:26px;margin:0;padding:0}
  .journey-map-overlay.fullscreen .journey-map-toolbar{margin:0;gap:8px}
