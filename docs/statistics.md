@@ -4,7 +4,7 @@
 
 ## Statistics and profiles
 
-The statistics page includes a searchable leaderboard, driver profiles, head-to-head comparisons and an event/race explorer with LiveRC links. Profiles include activity totals, qualifying and finishing results, class breakdowns, consistency and race history.
+The event/race explorer, including lap charts and driver comparison controls, appears above the driver leaderboard. A sticky “Jump to driver leaderboard” link remains available while scrolling through the explorer and charts. The statistics page includes a searchable leaderboard, driver profiles, head-to-head comparisons and an event/race explorer with LiveRC links. Profiles include activity totals, qualifying and finishing results, class breakdowns, consistency and race history.
 
 The default date range is the rolling year ending at the latest imported event. The default leaderboard requires ten finals; the selector also offers 1, 5, 20 and 30. Filters include event type and class. “All senior classes” excludes Junior Racers results.
 
