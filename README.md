@@ -32,6 +32,7 @@ Paths below are relative to the published site address (including the repository
 | Driver Briefing | `/briefing/` |
 | Race Day Schedule | `/schedule/` |
 | Upload car avatar | `/avatar-upload/` |
+| Website guides & videos | `/website-guides/` |
 
 ## Project layout
 
