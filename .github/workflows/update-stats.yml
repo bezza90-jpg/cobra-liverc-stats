@@ -71,7 +71,9 @@ jobs:
       - name: Check for new approved car photos
         id: car_photos
         if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0'
-        run: echo "pending=$(python scripts/sync-approved-avatars.py --check)" >> "$GITHUB_OUTPUT"
+        run: |
+          pending=$(python scripts/sync-approved-avatars.py --check)
+          echo "pending=$pending" >> "$GITHUB_OUTPUT"
 
       - name: Cache background removal model
         if: steps.car_photos.outputs.pending == 'yes'
@@ -141,3 +143,19 @@ jobs:
         id: deployment
         if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/deploy-pages@v4
+
+      - name: Report avatar processing failures
+        if: steps.car_photos.outputs.pending == 'yes'
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads(Path('public/data/car-avatar-processing.json').read_text())
+          failures = report.get('failures', {})
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write(f"\nAvatar updates: {report.get('updated', 0)}. Processing failures: {len(failures)}.\n")
+              for pair, failure in failures.items():
+                  summary.write(f"- {pair}: {failure['error']}\n")
+          if failures:
+              raise SystemExit('Some avatars need attention. Successful updates have been deployed; use Site Manager Approvals to retry.')
+          PY
