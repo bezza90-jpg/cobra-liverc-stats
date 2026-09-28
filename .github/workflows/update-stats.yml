@@ -138,7 +138,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: public/lap-charts/share
-          key: chart-shares-v1-${{ hashFiles('scripts/build-chart-shares.mjs', 'public/virtual-race-replay/races/*.json') }}
+          key: chart-shares-v1-${{ hashFiles('scripts/build-chart-shares.mjs', 'scripts/site-shell.mjs', 'docs/wix-menu-reference.json', 'public/virtual-race-replay/races/*.json') }}
 
       - name: Build chart sharing pages and preview images
         if: steps.chart_cache.outputs.cache-hit != 'true' && (github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes')

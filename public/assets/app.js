@@ -1148,7 +1148,7 @@ function driverProfile(driverKey) {
   state.profileKey = driverKey;
   const dialog = $('driverDialog');
   if (!dialog.open) {
-    if (window.self !== window.top && (new URLSearchParams(location.search).get('tracker') === '1' || new URLSearchParams(location.search).has('map'))) dialog.show();
+    if (new URLSearchParams(location.search).get('tracker') === '1' || (window.self !== window.top && new URLSearchParams(location.search).has('map'))) dialog.show();
     else if (typeof dialog.showModal === 'function') dialog.showModal();
     else dialog.setAttribute('open', '');
   }
@@ -1469,16 +1469,17 @@ async function init() {
         $('driverProfileName').textContent = 'Driver Distance Tracker';
         const dialog = $('driverDialog');
         if (!dialog.open) {
-          if (window.self !== window.top && (new URLSearchParams(location.search).get('tracker') === '1' || new URLSearchParams(location.search).has('map'))) dialog.show();
+          if ((new URLSearchParams(location.search).get('tracker') === '1' || (window.self !== window.top && new URLSearchParams(location.search).has('map')))) dialog.show();
     else if (typeof dialog.showModal === 'function') dialog.showModal();
           else dialog.setAttribute('open', '');
         }
       }
-      if (window.self !== window.top) {
+      if (window.self !== window.top || params.get('tracker') === '1') {
         document.body.classList.add('embedded-tracker-page');
 
       }
       openJourneyMap(trackerDriver);
+      if (params.get('tracker') === '1') window.scrollTo(0, 0);
       renderJourneyDriverChecklist();
     } else if (requestedDriver && data.driverByKey[requestedDriver]) driverProfile(requestedDriver);
   } catch (error) {

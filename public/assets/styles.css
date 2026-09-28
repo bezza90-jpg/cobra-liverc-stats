@@ -499,7 +499,7 @@ footer a { color: #85e391; }
 
 /* A dedicated Wix tracker is page content, not a modal over another page.
    Natural document scrolling lets Wix carry the wheel past the iframe. */
-body.embedded-tracker-page > :not(#driverDialog):not(script) { display:none; }
+body.embedded-tracker-page > :not(#driverDialog):not(script):not(.cobra-site-header):not(.cobra-site-footer) { display:none; }
 body.embedded-tracker-page #driverDialog { position:static; inset:auto; display:block; width:100%; max-width:none; height:auto; max-height:none; margin:0; padding:0; border:0; overflow:visible; }
 body.embedded-tracker-page #driverDialog > .dialog-shell { padding:0; }
 body.embedded-tracker-page .dialog-shell > :not(#journeyMapOverlay) { display:none; }
