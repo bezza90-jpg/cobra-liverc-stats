@@ -20,9 +20,10 @@ permissions or Drive's embedded video player.
 
 `scripts/build-navigation.mjs` adds the page to shared navigation and the
 existing page footers. The footer link is important because Wix hides the
-duplicate embedded header. Guide links use `target="_top"` so the full page
-opens outside the fixed-height Wix frame. No uncreated Wix route is assumed.
-The Wix top-level menu is managed separately.
+duplicate embedded header. The Wix menu now links About COBRA → Help & Website Guides to
+https://www.cobracardiff.co.uk/website-guides, which embeds this page with the
+COBRA top menu and footer. The banner matches the shared black-to-green
+gradient. Wix navigation remains managed separately from this repository.
 
 The Track Design guide covers the public Track Gallery and replay layouts;
 it does not claim a public track editor or skin editor exists. The avatar
@@ -33,3 +34,6 @@ To replace a video, update its MP4, poster and captions together, then check
 playback, mobile layout, written steps and the download link. If duration
 changes, update the duration in the card. Run the usual site checks and
 `node scripts/build-navigation.mjs --check` before publishing.
+
+The first avatar Reel was recaptured after its podium car images loaded,
+and replaced in both the public media and the existing Google Drive file.

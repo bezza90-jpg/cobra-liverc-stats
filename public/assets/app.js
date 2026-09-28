@@ -1,3 +1,4 @@
+import {renderLapCharts} from './lap-charts.js';
 import { loadMap } from './load-map.js';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
 
@@ -396,7 +397,18 @@ function renderLeaderboard() {
     </tr>`).join('') : '<tr><td colspan="11">No drivers match these filters.</td></tr>';
 }
 
+let lapChartRequest = 0;
+async function loadExplorerLapCharts(raceId) {
+  const token=++lapChartRequest;
+  let panel=$('raceLapCharts');
+  if(!panel){panel=document.createElement('section');panel.id='raceLapCharts';panel.className='lap-charts';panel.setAttribute('aria-label','Lap times by driver');$('raceExplorerResults').closest('.table-wrap').after(panel);}
+  panel.innerHTML='<h2>Lap times by driver</h2><p role="status">'+(raceId?'Loading recorded laps…':'Choose a race to see individual lap times.')+'</p>';
+  if(!raceId)return;
+  try {const response=await fetch(new URL('../virtual-race-replay/races/'+encodeURIComponent(raceId)+'.json',import.meta.url));if(!response.ok)throw Error('Unavailable');const race=await response.json();if(token===lapChartRequest)renderLapCharts(panel,race);}
+  catch {if(token===lapChartRequest)panel.innerHTML='<h2>Lap times by driver</h2><p role="status">Individual lap records are unavailable for this race. The results above remain available.</p>';}
+}
 function renderRaceExplorer(raceId) {
+  loadExplorerLapCharts(raceId);
   const data = state.data;
   const race = data.raceById[raceId];
   const body = $('raceExplorerResults');

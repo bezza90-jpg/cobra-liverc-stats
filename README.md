@@ -48,7 +48,7 @@ Paths below are relative to the published site address (including the repository
 
 ## Working on the site
 
-Use Node.js 20 or later with npm. No npm packages are needed for the build and checks.
+Use Node.js 20 or later with npm. No npm packages are needed for the data build and checks. The publishing workflow installs pinned `@napi-rs/canvas@0.1.100` to generate chart sharing images.
 
 ```sh
 npm run build
@@ -58,3 +58,5 @@ npm run check
 The build regenerates dashboard data, the smaller championship dataset and shared navigation. The checks cover local page/asset links, literal data fetches, JavaScript syntax, navigation consistency, data integrity, championship equivalence and map loading/retry behaviour.
 
 Preview `public/` through a local HTTP server; opening HTML directly from the filesystem will not support its data requests. See [maintenance](docs/maintenance.md) for publishing and external-service requirements.
+
+Lap charts, race-position summaries, multi-driver comparisons, comparison replays and Facebook sharing are described in [statistics](docs/statistics.md).

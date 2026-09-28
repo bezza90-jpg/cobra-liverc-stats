@@ -1,3 +1,4 @@
+import {renderLapCharts} from '../assets/lap-charts.js';
 import {paceMap} from './pace.js';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions} from './track-layouts.js';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
@@ -7,6 +8,7 @@ const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e
 const clock=s=>`${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`;
 const params=new URLSearchParams(location.search),originalRoute=$('route').getAttribute('d');
 let catalog,trackPlans={},avatars={},event,selectedDriver=params.get('driver')||'',dayMode=false,frame=0,loadToken=0,pauseCurrent=()=>{},updateFocus=()=>{};
+let comparisonKeys=params.getAll('compare');
 const key=name=>name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');
 function avatarFor(d,cls){const v=avatars[d.key||key(d.name)];const asset=typeof v==='string'?v:v?.[cls]||v?.default||'';return asset?'../'+asset:'';}
 function layout(race){
@@ -47,12 +49,16 @@ function layout(race){
 function options(el,items,blank){el.replaceChildren();if(blank){const o=document.createElement('option');o.value='';o.textContent=blank;el.append(o);}for(const [value,text]of items){const o=document.createElement('option');o.value=value;o.textContent=text;el.append(o);}}
 function listRaces(){return event.races.filter(r=>!selectedDriver||r.drivers.some(d=>d.key===selectedDriver));}
 function raceOptions(preferred){const races=listRaces();options($('raceSelect'),races.map(r=>[r.id,`${r.round} · ${r.name}`]));$('raceSelect').value=races.some(r=>r.id===preferred)?preferred:races[0]?.id||'';$('dayPlay').disabled=!selectedDriver||!races.length;$('dayStatus').textContent=selectedDriver?`${races.length} available races for this driver, in session order.`:'Choose a driver to follow their day.';return races;}
-function syncUrl(){const url=new URL(location.href);url.searchParams.set('event',event.id);url.searchParams.set('race',$('raceSelect').value);if(selectedDriver)url.searchParams.set('driver',selectedDriver);else url.searchParams.delete('driver');if($('layoutSelect').value==='oval')url.searchParams.set('layout','oval');else url.searchParams.delete('layout');history.replaceState(null,'',url);}
+function syncUrl(){const url=new URL(location.href);url.searchParams.set('event',event.id);url.searchParams.set('race',$('raceSelect').value);if(selectedDriver)url.searchParams.set('driver',selectedDriver);else url.searchParams.delete('driver');if($('layoutSelect').value==='oval')url.searchParams.set('layout','oval');else url.searchParams.delete('layout');url.searchParams.delete('compare');comparisonKeys.forEach(k=>url.searchParams.append('compare',k));history.replaceState(null,'',url);}
 let eventToken=0;async function changeEvent(preferred){const token=++eventToken;pauseCurrent();dayMode=false;const selected=catalog.events.find(e=>e.id===$('eventSelect').value);$('play').disabled=true;$('message').textContent='Loading event…';try{const response=await fetch(`events/${selected.id}.json`);if(!response.ok)throw Error('Event unavailable');const loaded=await response.json();if(token!==eventToken)return;event=loaded;}catch(error){if(token===eventToken)$('message').textContent=error.message;return;}const drivers=new Map(event.races.flatMap(r=>r.drivers).map(d=>[d.key,d.name]));if(!drivers.has(selectedDriver))selectedDriver='';options($('focus'),[...drivers].sort((a,b)=>a[1].localeCompare(b[1])),'All drivers');$('focus').value=selectedDriver;raceOptions(preferred);dayMode=false;loadRace();}
 function nextRace(auto=false){const races=listRaces(),idx=races.findIndex(r=>r.id===$('raceSelect').value);if(idx+1<races.length){$('raceSelect').value=races[idx+1].id;loadRace(auto);}else{dayMode=false;$('dayStatus').textContent='Driver day replay complete.';}}
 async function loadRace(autoplay=false){
- pauseCurrent();cancelAnimationFrame(frame);const token=++loadToken;const id=$('raceSelect').value;syncUrl();$('message').textContent='Loading lap records…';$('play').disabled=true;
+ pauseCurrent();cancelAnimationFrame(frame);$('replayLapCharts').innerHTML='<h2>Lap times by driver</h2><p role="status">Loading recorded laps…</p>';const token=++loadToken;const id=$('raceSelect').value;syncUrl();$('message').textContent='Loading lap records…';$('play').disabled=true;
  try{if(!/^\d+$/.test(id))throw Error('No matching race.');const response=await fetch(`races/${id}.json`);if(!response.ok)throw Error('Lap records unavailable.');const race=await response.json();if(token!==loadToken)return;
+ comparisonKeys=comparisonKeys.filter(k=>race.drivers.some(d=>d.key===k));syncUrl();
+ renderLapCharts($('replayLapCharts'),race,comparisonKeys);
+ $('comparisonStatus').hidden=!comparisonKeys.length;
+ $('comparisonNames').textContent='Comparing: '+race.drivers.filter(d=>comparisonKeys.includes(d.key)).map(d=>d.name).join(' · ')+'. Positions and gaps remain relative to the full race.';
  const drivers=race.drivers.sort((a,b)=>a.number-b.number).map((d,i)=>({...prepare(d),color:palette[i%palette.length]}));const fitted=layout(race);$('play').disabled=false;
  $('message').textContent=race.omitted?.length?`Not animated because lap records do not match the result: ${race.omitted.join(', ')}. See official results for the complete classification.`:'';
  const duration=Math.max(...drivers.map(d=>d.total));let time=0,playing=false,last=0,lastTable=-1,focus=drivers.find(d=>d.key===selectedDriver)?.id||'';
@@ -92,20 +98,22 @@ async function loadRace(autoplay=false){
  group.setAttribute('transform',s.finished?`translate(${parkedX},${parkedY}) scale(1.44)`:`translate(${x},${y}) rotate(${angle}) scale(1.44)`);
  group.querySelector('image').setAttribute('transform',s.finished&&endedEarly?'scale(1,-1)':'scale(1,1)');
  group.classList.toggle('retired',s.finished&&endedEarly);
+ group.style.display=comparisonKeys.length&&!comparisonKeys.includes(d.key)?'none':'';
  group.classList.toggle('dim',!!focus&&focus!==d.id);group.classList.toggle('selected',focus===d.id);
  group.querySelector('title').textContent=`Car ${d.number}: ${d.name}${s.finished?(endedEarly?' · lap records ended early':' · finished'):''}`;}
  if(!force&&Math.abs(time-lastTable)<.15)return;lastTable=time;$('rows').replaceChildren();
- standings.forEach((s,i)=>{const d=s.driver,tr=document.createElement('tr');if(focus===d.id)tr.className='chosen';let gap='Leader';if(i){if(time>=duration){const lapGap=leader.driver.laps.length-d.laps.length;gap=lapGap?`+${lapGap} lap${lapGap===1?'':'s'}`:`+${(d.officialTime-leader.driver.officialTime).toFixed(2)}s`;}else{const behind=leader.progress-s.progress;if(behind>=1)gap=`+${Math.floor(behind)} lap${Math.floor(behind)===1?'':'s'}`;else{const at=timeAtProgress(d,leader.progress);gap=at===null?'Finished':`~+${Math.max(0,at-time).toFixed(1)}s`;}}}
+ standings.forEach((s,i)=>{const d=s.driver;if(comparisonKeys.length&&!comparisonKeys.includes(d.key))return;const tr=document.createElement('tr');if(focus===d.id)tr.className='chosen';let gap='Leader';if(i){if(time>=duration){const lapGap=leader.driver.laps.length-d.laps.length;gap=lapGap?`+${lapGap} lap${lapGap===1?'':'s'}`:`+${(d.officialTime-leader.driver.officialTime).toFixed(2)}s`;}else{const behind=leader.progress-s.progress;if(behind>=1)gap=`+${Math.floor(behind)} lap${Math.floor(behind)===1?'':'s'}`;else{const at=timeAtProgress(d,leader.progress);gap=at===null?'Finished':`~+${Math.max(0,at-time).toFixed(1)}s`;}}}
  const delta=s.lapTime-d.typical,slow=!s.finished&&s.lap>1&&s.lapTime>d.typical*1.1;
  for(const val of [i+1,d.name,s.finished?`Finished · ${s.completed}`:`${s.lap} / ${d.laps.length}`,gap,`${s.lapTime.toFixed(3)}s`,s.lap===1&&!s.finished?'Opening lap':`${delta>=0?'+':''}${delta.toFixed(2)}s${slow?' · slower lap':''}`]){const td=document.createElement('td');td.textContent=val;tr.append(td)}
  const chip=document.createElement('span');chip.className='chip';chip.style.background=d.color;chip.textContent=d.number;tr.children[1].prepend(chip);if(slow)tr.children[5].className='slow';if(s.finished)tr.children[2].className='finished';$('rows').append(tr);});}
  function setPlaying(value){playing=value;last=performance.now();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';render(true);}
  function seek(value){time=Math.max(0,Math.min(duration,value));if(time>=duration)setPlaying(false);render(true);}
+ $('showAllDrivers').onclick=()=>{comparisonKeys=[];$('comparisonStatus').hidden=true;syncUrl();renderLapCharts($('replayLapCharts'),race);render(true);};
  $('play').onclick=()=>{if(time>=duration)time=0;setPlaying(!playing)};$('restart').onclick=()=>{setPlaying(false);seek(0)};$('back').onclick=()=>seek(time-10);$('forward').onclick=()=>seek(time+10);$('timeline').oninput=e=>seek(+e.target.value);updateFocus=()=>{focus=drivers.find(d=>d.key===selectedDriver)?.id||'';render(true)};
  document.onvisibilitychange=()=>{if(document.hidden)setPlaying(false)};pauseCurrent=()=>setPlaying(false);
  function tick(now){if(playing){time=Math.min(duration,time+Math.min((now-last)/1000,.1)*+$('speed').value);if(time>=duration){setPlaying(false);if(dayMode){nextRace(true);return;}}render()}last=now;frame=requestAnimationFrame(tick)}render(true);frame=requestAnimationFrame(tick);if(autoplay)setPlaying(true);
 
- }catch(error){if(token!==loadToken)return;$('message').textContent='The replay could not load. '+error.message;dayMode=false;$('play').disabled=true;}
+ }catch(error){if(token!==loadToken)return;$('replayLapCharts').innerHTML='<h2>Lap times by driver</h2><p>Individual lap records are unavailable for this race.</p>';$('message').textContent='The replay could not load. '+error.message;dayMode=false;$('play').disabled=true;}
 }
 try{
  const responses=await Promise.all([fetch('catalog.json'),fetch('../data/car-avatars.json'),fetch('track-plans.json')]);if(!responses[0].ok)throw Error('Race catalogue unavailable.');catalog=await responses[0].json();if(responses[1].ok)avatars=await responses[1].json();if(!responses[2].ok)throw Error('Track plan catalogue unavailable.');trackPlans=await responses[2].json();
