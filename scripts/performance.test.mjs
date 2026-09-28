@@ -39,10 +39,10 @@ test('smaller championship data preserves standings for every season and class',
 async function loader() {
   const nodes = [];
   const context = vm.createContext({
-    window: {}, setTimeout, clearTimeout,
+    window: {}, setTimeout, clearTimeout, URL,
     document: { createElement: tag => ({ tag, remove() { this.removed = true; } }), head: { append(...items) { nodes.push(...items); } } }
   });
-  vm.runInContext((await read('public/assets/load-map.js')).replace('export function', 'function'), context);
+  vm.runInContext((await read('public/assets/load-map.js')).replace('export function', 'function').replaceAll('import.meta.url', JSON.stringify('https://example.com/site/assets/load-map.js')), context);
   return { context, nodes, load: () => vm.runInContext('loadMap()', context) };
 }
 test('map waits for both assets, shares concurrent requests and reuses loaded assets', async () => {
@@ -51,6 +51,8 @@ test('map waits for both assets, shares concurrent requests and reuses loaded as
   const pending = load();
   assert.equal(load(), pending);
   assert.equal(nodes.length, 2);
+  assert.equal(nodes[0].href, 'https://example.com/site/assets/vendor/leaflet/leaflet.css');
+  assert.equal(nodes[1].src, 'https://example.com/site/assets/vendor/leaflet/leaflet.js');
   let complete = false;
   pending.then(() => { complete = true; });
   context.window.L = {};

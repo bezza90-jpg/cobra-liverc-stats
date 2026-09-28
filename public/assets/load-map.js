@@ -5,9 +5,9 @@ export function loadMap() {
   pending = new Promise((resolve, reject) => {
     const style = document.createElement('link');
     style.rel = 'stylesheet';
-    style.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    style.href = new URL('./vendor/leaflet/leaflet.css', import.meta.url).href;
     const script = document.createElement('script');
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.src = new URL('./vendor/leaflet/leaflet.js', import.meta.url).href;
     script.async = true;
     let remaining = 2;
     const timeout = setTimeout(fail, 15000);
