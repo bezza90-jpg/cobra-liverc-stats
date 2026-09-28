@@ -95,7 +95,13 @@ def prepare_avatar(photo_bytes):
     bounds = original.getchannel('A').getbbox()
     if not bounds: raise ValueError('The reviewed photograph is fully transparent.')
     original = original.crop(bounds)
-    if original.getchannel("A").getextrema()[0] < 255:
+    alpha = original.getchannel('A')
+    # Ignore a thin antialiased border from resizing a rectangular photo.
+    inset = min(3, (min(original.size) - 1) // 2)
+    interior = alpha.crop((inset, inset, original.width - inset, original.height - inset))
+    histogram = interior.histogram()
+    transparent_fraction = sum(histogram[:128]) / max(1, interior.width * interior.height)
+    if transparent_fraction > 0.01:
         # Preserve the cutout explicitly reviewed and approved in the browser.
         cutout = original
     else:
