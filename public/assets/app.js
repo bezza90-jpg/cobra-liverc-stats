@@ -2,7 +2,7 @@ import {createAvatarLoader} from './avatar-loader.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
-import { loadMap } from './load-map.js';
+import { loadMap } from './load-map.js?v=20260928-local';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
 
 const state = { data: null, profileKey: '' };
@@ -1274,6 +1274,10 @@ function refresh() {
 }
 
 async function init() {
+  // On the dedicated tracker, start the map library alongside the race data.
+  // Ordinary statistics visits keep the map download on demand.
+  const startupParams = new URLSearchParams(window.location.search);
+  if (startupParams.get('tracker') === '1' || startupParams.has('map')) loadMap().catch(() => {});
   try {
     const { data, videosReady } = await loadStatisticsData();
     data.videos = [];
