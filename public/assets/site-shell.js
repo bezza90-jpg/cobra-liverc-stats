@@ -1,6 +1,7 @@
 if (window.self !== window.top) document.documentElement.classList.add('cobra-embedded');
-const shell = document.querySelector('.cobra-site-header');
-if (shell) {
+export function initSiteHeader(shell = document.querySelector('.cobra-site-header')) {
+if (!shell || shell.dataset.initialized) return;
+shell.dataset.initialized = 'true';
   const mobile = shell.querySelector('.cobra-mobile-menu');
   const groups = [...shell.querySelectorAll('.cobra-menu-group')];
   const desktop = matchMedia('(min-width:1051px)');
@@ -21,3 +22,5 @@ if (shell) {
     }
   });
 }
+
+initSiteHeader();
