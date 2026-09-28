@@ -62,7 +62,14 @@ dialog.querySelector('.fullscreen-close').addEventListener('click', close);
 dialog.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
 for (const [id, next] of [['expandTrack', 'track'], ['expandTimings', 'timings']]) {
   const button = document.getElementById(id);
-  button.addEventListener('click', () => open(next, button));
+  button.addEventListener('click', event => {
+    const url = new URL(location.href);
+    url.searchParams.set('fullscreen', next);
+    button.href = url.href;
+    if (window.top !== window.self) return; // Escape the main site's constrained iframe in a dedicated tab.
+    event.preventDefault();
+    open(next, button);
+  });
 }
 dialog.addEventListener('touchstart', event => {
   start = null;
@@ -77,3 +84,6 @@ dialog.addEventListener('touchend', event => {
   if (next) showView(next);
 }, { passive: true });
 dialog.addEventListener('touchcancel', () => { start = null; });
+
+const initialView = new URL(location.href).searchParams.get('fullscreen');
+if (initialView === 'track' || initialView === 'timings') open(initialView, document.getElementById(initialView === 'track' ? 'expandTrack' : 'expandTimings'));

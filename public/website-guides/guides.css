@@ -6,3 +6,5 @@ header .topbar{border-bottom-color:rgba(255,255,255,.2)}
 header .site-menu summary,header .hero-actions>span{color:#d6e4da}
 
 .tour-grid{display:grid;gap:28px;margin-bottom:40px}.tour-card .description{min-height:0;max-width:850px}.tour-card video{aspect-ratio:16/9;max-width:none}.format-downloads{display:flex;gap:28px}.format-downloads .download{flex:1}.format-note{color:var(--muted);font-size:12px}.tour-card .card-links{grid-template-columns:repeat(2,minmax(0,1fr))}@media(max-width:767px){.tour-card video{aspect-ratio:9/16;max-width:420px;align-self:center}.tour-card .card-links{grid-template-columns:1fr}.format-downloads{gap:16px}}
+
+.featured-tour{margin:0 0 28px;border:2px solid var(--green,#8ce929)}
