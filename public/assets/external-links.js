@@ -24,7 +24,7 @@ function prepareLink(link) {
   }
   if (link.hasAttribute('download') || (link.classList.contains('lap-chart-open') && link.target === '_blank')) return;
   let destination = new URL(link.href, location.href);
-  if (embedded && destination.origin === siteRoot.origin && destination.pathname.startsWith(siteRoot.pathname)) {
+  if (embedded && siteRoot.hostname !== 'racehub.cobracardiff.co.uk' && destination.origin === siteRoot.origin && destination.pathname.startsWith(siteRoot.pathname)) {
     const route = destination.pathname.slice(siteRoot.pathname.length).replace(/index\.html$/, '');
     // Menu links select a section. Preserve filters and event-specific links elsewhere.
     const menuLink = Boolean(link.closest('.results-nav'));
@@ -35,7 +35,7 @@ function prepareLink(link) {
       link.href = destination.href;
     }
   }
-  if (/^https?:$/.test(destination.protocol) && destination.origin !== location.origin) {
+  if (/^https?:$/.test(destination.protocol) && (destination.origin !== location.origin || (embedded && siteRoot.hostname === 'racehub.cobracardiff.co.uk'))) {
     link.target = '_top';
   }
 }
