@@ -75,3 +75,5 @@ Playback compatibility: after a reported GoPro Player stop around 1:52, all six 
 Full race/driver charts and selected comparisons now open in the same tab; Facebook sharing retains its separate tab. Chart pages show the COBRA logo with navigation to Statistics, Replay, guides and home. Replay navigation preserves the race and selected drivers.
 
 Final audio correction: the source music contained a silent tail from about 1:45 to 1:53. Trimmed that tail and used a two-second crossfade for continuous music. Added a six-second Perimeter oval explanation in each of the six showcase exports. New durations: 178.5s, 102.5s and 119.5s. Final videos use continuous H.264 Main Level 4.1 without B frames and AAC 48kHz audio.
+
+Playback correction: all six tour MP4s now have matched video and audio track durations. Rebuilt the approved music loop from decoded PCM; independent MP4 media-header checks previously found a 98-second audio track inside the 178.5-second full tour. Each corrected export passed separate stream-duration checks and full decoding. Cache key: 20260928-audio-duration-fixed.
