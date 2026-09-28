@@ -21,26 +21,38 @@ let journeyLastMotionKm = new Map();
 let journeyPlaybackHasStarted = false;
 let journeyFollowSelected = true;
 let journeySelectedKeys = new Set();
+let journeyRecentKeys = null;
 let journeyLabelsSeed = 0;
 let journeyMapFullscreen = false;
 let journeyRaceElapsedDays = 0;
 const journeyAvatars = createAvatarLoader({onLoad(key) {
   if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
-  if (state.profileKey === key) renderProfileAvatar(key);
 }});
 const journeyAvatarImages = journeyAvatars.images;
 const $ = id => document.getElementById(id);
-function renderProfileAvatar(driverKey) {
+async function renderProfileAvatar(driverKey) {
   const frame = $('driverProfileAvatar');
   if (!frame) return;
-  journeyAvatars.load(driverKey);
-  const image = journeyAvatarImages.get(driverKey);
-  frame.hidden = !image;
-  if (image) {
-    const photo = frame.querySelector('img');
-    photo.src = image.src;
-    photo.alt = `${state.data?.driverByKey?.[driverKey] || 'Driver'} car avatar`;
+  const request = String((Number(frame.dataset.request) || 0) + 1);
+  frame.dataset.request = request;
+  if (frame.dataset.driver !== driverKey) { frame.hidden = true; frame.replaceChildren(); }
+  frame.dataset.driver = driverKey;
+  const cars = await journeyAvatars.loadAll(driverKey);
+  if (frame.dataset.request !== request) return;
+  frame.replaceChildren();
+  frame.style.setProperty('--avatar-columns', cars.length > 1 ? '2' : '1');
+  frame.style.setProperty('--avatar-column-tracks', cars.length === 2 ? cars.map(({image})=>`minmax(0,${image.avatarAspect || 1}fr)`).join(' ') : `repeat(${cars.length > 1 ? 2 : 1},minmax(0,1fr))`);
+  frame.style.setProperty('--avatar-rows', String(Math.max(1,Math.ceil(cars.length / 2))));
+  for (const {className,image,displaySrc} of cars) {
+    const figure = document.createElement('figure');
+    const label = classLabels[className] || (className === 'default' ? 'Car avatar' : className);
+    const photo = document.createElement('img');
+    photo.src = displaySrc || image.src; photo.decoding = 'async';
+    photo.alt = `${state.data?.driverByKey?.[driverKey] || 'Driver'} — ${label}`;
+    const caption = document.createElement('figcaption'); caption.textContent = label;
+    figure.append(photo,caption); frame.append(figure);
   }
+  frame.hidden = !cars.length;
 }
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -740,12 +752,13 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
         driverKey: key, name: state.data.driverByKey[key] || key, km: 0, laps: 0, runs: 0,
         events: 0, classes: [], lastDate: '', lastEvent: ''
       })
-    : drivers;
+    : drivers.filter(driver => !journeyRecentKeys || journeyRecentKeys.has(driver.driverKey));
   if (!journeySelectedKeys.size && !displayedDrivers.some(driver => driver.driverKey === journeySelectedKey) && drivers.some(driver => driver.driverKey === journeySelectedKey)) {
     displayedDrivers.push(drivers.find(driver => driver.driverKey === journeySelectedKey));
   }
 
   $('journeyRaceStandings').hidden = !raceMode;
+  if (allDriversView && !raceMode) $('journeyMapTitle').textContent = `Driver tracker — ${displayedDrivers.length} recent racers`;
   if (raceMode) $('journeyRaceStandings').innerHTML = displayedDrivers.slice().sort((a,b) => b.km - a.km || a.name.localeCompare(b.name))
     .map((driver,index) => `<span><b>${index+1}.</b> ${escapeHtml(driver.name)} <strong>${fmt.format(kmToMiles(driver.km))} mi</strong></span>`).join('');
 
@@ -810,7 +823,7 @@ function renderJourneyDriverChecklist() {
   const query = $('journeyPickerSearch').value.trim().toLowerCase();
   const drivers = state.data.drivers.filter(driver => !journeyExcludedDrivers.has(driver.k) && driver.n.toLowerCase().includes(query)).sort((a, b) => a.n.localeCompare(b.n));
   $('journeyDriverChecklist').innerHTML = drivers.map(driver => `<label><input type="checkbox" value="${escapeHtml(driver.k)}" ${journeySelectedKeys.has(driver.k) ? 'checked' : ''}> ${escapeHtml(driver.n)}</label>`).join('');
-  $('journeyDriverSummary').textContent = journeySelectedKeys.size ? `Playback drivers (${journeySelectedKeys.size} selected)` : 'Choose playback drivers (all)';
+  $('journeyDriverSummary').textContent = journeySelectedKeys.size ? `Playback drivers (${journeySelectedKeys.size} selected)` : 'Playback drivers (last two years)';
   if ($('journeyPlaybackMode')?.value === 'race') $('journeyPlay').disabled = !journeySelectedKeys.size;
 }
 
@@ -893,6 +906,7 @@ async function openJourneyMap(driverKey) {
   journeySelectedKey = driverKey;
   const latestDate = state.data.meta.latestEventDate || Object.values(state.data.raceById).map(race => race.d).sort().at(-1) || '2022-01-01';
   journeyRoundSlots = buildJourneyRoundSlots();
+  journeyRecentKeys = recentJourneyDrivers(journeyDriverDistances());
   journeyTimelineDates = buildJourneyTimeline(latestDate);
   journeyMotionCache = null;
   journeyPlaybackPosition = null;
@@ -945,6 +959,13 @@ async function openJourneyMap(driverKey) {
       renderJourneyMap({ focusDriver: Boolean(driverKey) });
     }, 50);
   });
+}
+
+function recentJourneyDrivers(drivers, today = new Date()) {
+  const cutoff = new Date(today);
+  cutoff.setUTCFullYear(cutoff.getUTCFullYear() - 2);
+  const date = cutoff.toISOString().slice(0,10);
+  return new Set(drivers.filter(driver => driver.lastDate >= date).map(driver => driver.driverKey));
 }
 
 function completedLaps(run) {
