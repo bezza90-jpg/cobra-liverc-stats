@@ -55,7 +55,8 @@ const dashboard = {
   ]).filter(row => row[2]),
   raceById: Object.fromEntries(races.map(row => [row.liveRcRaceId, {
     e: row.liveRcEventId, d: row.eventDate, c: canonicalClass(row.className), n: row.raceName,
-    r: row.round, m: row.mainLetter || '', f: Boolean(row.isFinal), u: row.sourceUrl || ''
+    r: row.round, m: row.mainLetter || '', f: Boolean(row.isFinal), u: row.sourceUrl || '',
+    l: Number(row.durationSeconds) > 0 ? Number(row.durationSeconds) : null
   }]).filter(([, race]) => race.c)),
   raceResults: raceResults.map(row => [
     row.liveRcRaceId, row.driverKey, row.position, row.lapsTime || '', row.behind || '',

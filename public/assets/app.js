@@ -263,9 +263,9 @@ function calculateLeaderboard() {
     row.laps += completedLaps(run);
     row.seconds += runTimeSeconds(run);
     if (Number(position) === 1) row.raceWins += 1;
-    const lap = Number.parseFloat(fastestLap);
+    const lap = lapTimeSeconds(fastestLap);
     if (Number.isFinite(lap) && lap > 0) row.fastestLap = Math.min(row.fastestLap, lap);
-    const averageLapValue = Number.parseFloat(averageLap);
+    const averageLapValue = lapTimeSeconds(averageLap);
     if (Number.isFinite(lap) && lap > 0 && Number.isFinite(averageLapValue) && averageLapValue >= lap) row.lapSpreads.push(averageLapValue - lap);
     const value = Number.parseFloat(consistency);
     if (Number.isFinite(value) && isCompleteConsistencyRun(run, data)) {
@@ -306,6 +306,7 @@ function calculateLeaderboard() {
 }
 
 function countAndRate(count, total) {
+  if (!(total > 0)) return '—';
   return `${count} (${Math.round(100 * count / total)}%)`;
 }
 
@@ -951,6 +952,13 @@ function completedLaps(run) {
   return match ? Number(match[1]) : 0;
 }
 
+function lapTimeSeconds(value) {
+  const text = String(value ?? '').trim();
+  const clock = text.match(/^(\d+):(\d{2}(?:\.\d+)?)(?:\s|$)/);
+  if (clock) return Number(clock[1]) * 60 + Number(clock[2]);
+  return Number.parseFloat(text);
+}
+
 function runTimeSeconds(run) {
   const value = String(run[3] || '');
   const separator = value.indexOf('/');
@@ -1015,7 +1023,7 @@ function driverProfile(driverKey) {
   const qualifying = results.map(row => Number(row[5])).filter(Number.isFinite).filter(value => value > 0);
   const consistencyRuns = runs.filter(row => isCompleteConsistencyRun(row, data));
   const consistencies = consistencyRuns.map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
-  const lapSpreads = consistencyRuns.map(row => Number.parseFloat(row[6]) - Number.parseFloat(row[5])).filter(value => Number.isFinite(value) && value >= 0);
+  const lapSpreads = consistencyRuns.map(row => lapTimeSeconds(row[6]) - lapTimeSeconds(row[5])).filter(value => Number.isFinite(value) && value >= 0);
   const uniqueEvents = new Set(entries.map(row => row[0]));
   const eligibleEventIds = new Set(data.events
     .filter(event => inRange(event.d, from, to) && eventMatches(event.i, eventType) && data.entries.some(row => row[0] === event.i && classMatches(row[2], className)))
@@ -1074,6 +1082,10 @@ function driverProfile(driverKey) {
     if (!runsByClass.has(race.c)) runsByClass.set(race.c, []);
     runsByClass.get(race.c).push(run);
   }
+  // A class remains part of a driver's history even without a published final.
+  for (const cls of [...runsByClass.keys(), ...entries.map(row => row[2])]) {
+    if (!classes.has(cls)) classes.set(cls, []);
+  }
   $('driverClassDetails').innerHTML = [...classes].sort(([a], [b]) => a.localeCompare(b)).map(([cls, rows]) => {
     const classPositions = rows.map(row => row[4]);
     const classTopFive = classPositions.filter(value => value <= 5).length;
@@ -1085,17 +1097,17 @@ function driverProfile(driverKey) {
     const classRuns = runsByClass.get(cls) || [];
     const classEntries = entries.filter(row => row[2] === cls).length;
     const classRaceWins = classRuns.filter(row => Number(row[2]) === 1).length;
-    const fastestLaps = classRuns.map(row => Number.parseFloat(row[5])).filter(value => Number.isFinite(value) && value > 0);
+    const fastestLaps = classRuns.map(row => lapTimeSeconds(row[5])).filter(value => Number.isFinite(value) && value > 0);
     const classConsistencies = classRuns.filter(row => isCompleteConsistencyRun(row, data)).map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
-    return `<tr><td>${escapeHtml(cls)}</td><td>${classEntries}</td><td>${classRuns.length}</td><td>${fmt.format(totalLaps(classRuns))}</td><td>${distanceRaced(classRuns)}</td><td>${trackTime(classRuns)}</td><td>${rows.length}</td><td>${average(classKeptPositions).toFixed(1)}</td><td>${Math.min(...classPositions)}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${classOverallWins}</td><td>${classRaceWins}</td><td>${classTqs}</td><td>${average(classKeptPerformance).toFixed(1)}</td><td>${fastestLaps.length ? `${Math.min(...fastestLaps).toFixed(3)}s` : '—'}</td><td>${classConsistencies.length ? `${average(classConsistencies).toFixed(1)}%` : '—'}</td></tr>`;
-  }).join('') || '<tr><td colspan="17">No completed finals within these filters.</td></tr>';
+    return `<tr><td>${escapeHtml(cls)}</td><td>${classEntries}</td><td>${classRuns.length}</td><td>${fmt.format(totalLaps(classRuns))}</td><td>${distanceRaced(classRuns)}</td><td>${trackTime(classRuns)}</td><td>${rows.length}</td><td>${classKeptPositions.length ? average(classKeptPositions).toFixed(1) : '—'}</td><td>${classPositions.length ? Math.min(...classPositions) : '—'}</td><td>${countAndRate(classTopFive, rows.length)}</td><td>${countAndRate(classPodiums, rows.length)}</td><td>${classOverallWins}</td><td>${classRaceWins}</td><td>${classTqs}</td><td>${classKeptPerformance.length ? average(classKeptPerformance).toFixed(1) : '—'}</td><td>${fastestLaps.length ? `${Math.min(...fastestLaps).toFixed(3)}s` : '—'}</td><td>${classConsistencies.length ? `${average(classConsistencies).toFixed(1)}%` : '—'}</td></tr>`;
+  }).join('') || '<tr><td colspan="17">No class activity within these filters.</td></tr>';
 
   $('driverConsistencyDetails').innerHTML = [...runsByClass].sort(([a], [b]) => a.localeCompare(b)).map(([cls, classRuns]) => {
     const completeRuns = classRuns.filter(run => isCompleteConsistencyRun(run, data));
     const values = completeRuns.map(run => Number.parseFloat(run[7])).filter(Number.isFinite);
     if (!values.length) return '';
     const adjusted = attendanceAdjustedResults(values, true);
-    const gaps = completeRuns.map(run => Number.parseFloat(run[6]) - Number.parseFloat(run[5])).filter(value => Number.isFinite(value) && value >= 0);
+    const gaps = completeRuns.map(run => lapTimeSeconds(run[6]) - lapTimeSeconds(run[5])).filter(value => Number.isFinite(value) && value >= 0);
     const band = predicate => countAndRate(values.filter(predicate).length, values.length);
     return `<tr><td>${escapeHtml(cls)}</td><td>${values.length}</td><td>${average(adjusted).toFixed(1)}%</td><td>${Math.max(...values).toFixed(1)}%</td><td>${band(value => value >= 98)}</td><td>${band(value => value >= 95 && value < 98)}</td><td>${band(value => value >= 90 && value < 95)}</td><td>${band(value => value < 90)}</td><td>${gaps.length ? `${average(gaps).toFixed(3)}s` : '—'}</td></tr>`;
   }).join('') || '<tr><td colspan="9">No consistency data within these filters.</td></tr>';

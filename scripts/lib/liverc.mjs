@@ -213,11 +213,13 @@ export function parseRace(html) {
     .filter(row => /^\d+$/.test(row[0] || '') && row.length >= 4)
     .map(row => Object.fromEntries(headers.map((header, index) => [header, row[index] ?? ''])));
   const round = title.match(/Round:\s*(.*?)\s+Length:/i)?.[1]?.trim() || '';
+  const duration = title.match(/Length:\s*(\d+):(\d{2})(?:\.(\d+))?\s+Timed\b/i);
+  const durationSeconds = duration ? Number(duration[1]) * 60 + Number(duration[2]) + Number('0.' + (duration[3] || '0')) : null;
   const raceName = title.replace(/\s+Round:[\s\S]*$/i, '').replace(/^\d+\s+/, '').trim();
   const mainLetter = raceName.match(/\b([A-Z])-Main\b/i)?.[1]?.toUpperCase() || '';
   const className = raceName.replace(/\s+[A-Z]-Main\b.*$/i, '').replace(/\s*\(Heat.*$/i, '').trim();
   return {
-    title, round, raceName, className, mainLetter,
+    title, round, raceName, className, mainLetter, durationSeconds,
     isFinal: /Main Events/i.test(round) || /\b[A-Z]-Main\b/i.test(raceName),
     results: records.map(record => ({
       position: Number(record.Pos) || null,

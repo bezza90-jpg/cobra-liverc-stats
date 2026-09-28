@@ -43,6 +43,20 @@ if (dashboard.meta.eventCount !== events.length) errors.push('Dashboard event co
 if (dashboard.meta.raceCount !== races.length) errors.push('Dashboard race count does not match raw data.');
 if (dashboard.meta.raceResultCount !== raceResults.length) errors.push('Dashboard result count does not match raw data.');
 if (!dashboard.drivers.length || !dashboard.classes.length) errors.push('Dashboard driver or class list is empty.');
+const eventIds = new Set(dashboard.events.map(row => row.i));
+const driverIds = new Set(dashboard.drivers.map(row => row.k));
+for (const race of races) {
+  const published = dashboard.raceById[race.liveRcRaceId];
+  if (!published) { errors.push(`Race ${race.liveRcRaceId} missing from dashboard.`); continue; }
+  if (!eventIds.has(published.e)) errors.push(`Race ${race.liveRcRaceId} has no event.`);
+  if (!(race.durationSeconds > 0) || published.l !== race.durationSeconds) errors.push(`Race ${race.liveRcRaceId} is missing its verified scheduled duration.`);
+}
+for (const row of dashboard.raceResults) {
+  if (!dashboard.raceById[row[0]] || !driverIds.has(row[1])) errors.push(`Race result ${row[0]}/${row[1]} has a broken source link.`);
+}
+for (const row of [...dashboard.entries, ...dashboard.eventResults]) {
+  if (!eventIds.has(row[0]) || !driverIds.has(row[3])) errors.push(`Event record ${row[0]}/${row[3]} has a broken source link.`);
+}
 if (!eventResults.some(row => row.qualifyingPosition === 1)) errors.push('No TQ results were found.');
 if (!races.some(row => row.isFinal && row.mainLetter === 'A')) errors.push('No A-final races were found.');
 if (!raceResults.some(row => row.position === 1)) errors.push('No race winners were found.');
