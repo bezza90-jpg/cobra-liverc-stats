@@ -50,3 +50,5 @@ Facebook buttons open a sharing composer; nothing is posted automatically. Each 
 The publish workflow runs scripts/build-chart-shares.mjs after validating and saving refreshed race data, before uploading the site. Generated public/lap-charts/share files are deployment artifacts, not committed media. The renderer uses pinned @napi-rs/canvas 0.1.100 and enforces a 650 MB image budget.
 
 Selected comparisons can open Virtual Replay with repeated `compare` parameters. Only selected cars and standings rows are shown; full-race timing, grid placement, positions and gaps remain intact. Play, pause and seeking work normally. Show all drivers restores the full field.
+
+The generated sharing pages are cached between publications using the renderer and race-data hashes; changed race records or renderer code invalidate the cache. This avoids rebuilding unchanged archive images for ordinary site edits.
