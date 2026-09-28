@@ -69,3 +69,9 @@ Virtual Replay now has separate Fullscreen track and Fullscreen timings buttons.
 All six full/mixed showcase exports include a 16-second fullscreen replay demonstration before the closing logo. Desktop uses desktop views; Reels use mobile views with a sideways panel transition. New durations: full 172.5s, mix one 96.5s, mix two 113.5s.
 
 The full feature showcase is now the first item in the help page, with individual guides and mixed tours retained below. Embedded replay fullscreen links open the chosen panel in a dedicated tab, preserving the selected race and comparison. This avoids iframe fullscreen restrictions.
+
+Playback compatibility: after a reported GoPro Player stop around 1:52, all six showcase MP4s were re-encoded as continuous H.264 High Level 4.1, 30fps video with AAC 48kHz audio and fast-start metadata. Scene content, music and timings are unchanged.
+
+Full race/driver charts and selected comparisons now open in the same tab; Facebook sharing retains its separate tab. Chart pages show the COBRA logo with navigation to Statistics, Replay, guides and home. Replay navigation preserves the race and selected drivers.
+
+Final audio correction: the source music contained a silent tail from about 1:45 to 1:53. Trimmed that tail and used a two-second crossfade for continuous music. Added a six-second Perimeter oval explanation in each of the six showcase exports. New durations: 178.5s, 102.5s and 119.5s. Final videos use continuous H.264 Main Level 4.1 without B frames and AAC 48kHz audio.
