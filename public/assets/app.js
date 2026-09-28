@@ -1,3 +1,4 @@
+import {createAvatarLoader} from './avatar-loader.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
 import { loadMap } from './load-map.js';
@@ -22,60 +23,17 @@ let journeySelectedKeys = new Set();
 let journeyLabelsSeed = 0;
 let journeyMapFullscreen = false;
 let journeyRaceElapsedDays = 0;
-let mattCarAvatarReady = false;
-let journeyAvatarManifestReady = false;
-let journeyAvatarImages = new Map();
-const avatarClassOrder = ['default', '2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Trucks', 'Vintage', 'Junior Racers'];
-function availableAvatarPath(entry) {
-  const path = typeof entry === 'string' ? entry : entry && typeof entry === 'object'
-    ? avatarClassOrder.map(cls => entry[cls]).find(Boolean) : '';
-  return typeof path === 'string' && /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(path) ? path : '';
-}
-const mattCarAvatar = new Image();
-mattCarAvatar.onload = () => {
-  mattCarAvatarReady = true;
+const journeyAvatars = createAvatarLoader({onLoad(key) {
   if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
-  if (state.profileKey === 'MATTHEW-HODGES') renderProfileAvatar(state.profileKey);
-};
-mattCarAvatar.src = new URL('./matt-hodges-car.png', import.meta.url).href;
-async function loadJourneyAvatars() {
-  try {
-    const [response, revisions] = await Promise.all([
-      fetch(new URL('../data/car-avatars.json', import.meta.url), { cache: 'no-cache' }),
-      fetch(new URL('../data/car-avatar-source-revisions.json', import.meta.url), { cache: 'no-cache' }).then(r => r.ok ? r.json() : {}).catch(() => ({}))
-    ]);
-    if (!response.ok) throw new Error('Avatar list is unavailable');
-    const manifest = await response.json();
-    const next = new Map();
-    journeyAvatarImages = next;
-    journeyAvatarManifestReady = true;
-    for (const [key, entry] of Object.entries(manifest)) {
-      const path = availableAvatarPath(entry);
-      if (!path) continue;
-      const image = new Image();
-      image.onload = () => {
-        if (journeyAvatarImages !== next) return;
-        next.set(key, image);
-        if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
-        if (state.profileKey === key) renderProfileAvatar(key);
-      };
-      const assetUrl = new URL(`../${path}`, import.meta.url);
-      const className = typeof entry === 'string' ? 'default' : Object.keys(entry).find(cls => entry[cls] === path);
-      const revision = revisions[key + '|' + className];
-      if (revision) assetUrl.searchParams.set('v', String(revision));
-      image.src = assetUrl.href;
-    }
-    if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
-  } catch {
-    journeyAvatarManifestReady = false;
-    journeyAvatarImages = new Map();
-  }
-}
+  if (state.profileKey === key) renderProfileAvatar(key);
+}});
+const journeyAvatarImages = journeyAvatars.images;
 const $ = id => document.getElementById(id);
 function renderProfileAvatar(driverKey) {
   const frame = $('driverProfileAvatar');
   if (!frame) return;
-  const image = journeyAvatarImages.get(driverKey) || (!journeyAvatarManifestReady && driverKey === 'MATTHEW-HODGES' && mattCarAvatarReady ? mattCarAvatar : null);
+  journeyAvatars.load(driverKey);
+  const image = journeyAvatarImages.get(driverKey);
   frame.hidden = !image;
   if (image) {
     const photo = frame.querySelector('img');
@@ -813,8 +771,8 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   for (const driver of displayedDrivers) {
     const route = journeyRouteAt(driver.km);
     const selectedDriver = driver.driverKey === activeKey;
-    const isMattCar = [driver.driverKey, driver.name].some(value => /^(?:MATTHEW|MATT)HODGES$/.test(String(value || '').replace(/[^a-z]/gi, '').toUpperCase()));
-    const avatar = journeyAvatarImages.get(driver.driverKey) || (!journeyAvatarManifestReady && isMattCar && mattCarAvatarReady ? mattCarAvatar : null);
+    journeyAvatars.load(driver.driverKey);
+    const avatar = journeyAvatarImages.get(driver.driverKey);
     const mobileCar = avatar && window.matchMedia('(max-width: 700px)').matches;
     const icon = window.L.divIcon(avatar
       ? { className: `journey-driver-icon car-avatar${mobileCar ? ' car-avatar-mobile' : ''}`, html: `<img src="${avatar.src}" alt="">`, iconSize: mobileCar ? [84, 62] : [66, 50], iconAnchor: mobileCar ? [42, 54] : [33, 43] }
@@ -1328,7 +1286,7 @@ async function init() {
     data.driverByKey = Object.fromEntries(data.drivers.map(driver => [driver.k, driver.n]));
     data.raceResults.forEach(row => { row[5] = fastestLapText(row[5]); row[6] = averageLapText(row[6]); });
     state.data = data;
-    loadJourneyAvatars();
+
     $('eventTotal').textContent = fmt.format(data.meta.eventCount);
     $('driverTotal').textContent = fmt.format(data.meta.driverCount);
     $('raceTotal').textContent = fmt.format(data.meta.raceCount);

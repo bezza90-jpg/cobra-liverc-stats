@@ -186,9 +186,10 @@
   <dialog class="driver-dialog" id="driverDialog" aria-labelledby="driverProfileName">
     <div class="dialog-shell">
       <button type="button" class="dialog-close" id="closeDriverProfile" aria-label="Close driver profile">×</button>
-      <p class="eyebrow">Driver profile</p>
+      <div class="driver-profile-header"><div><p class="eyebrow">Driver profile</p>
       <h2 id="driverProfileName">Driver</h2>
-      <p class="profile-context" id="driverProfileContext"></p>
+      <p class="profile-context" id="driverProfileContext"></p></div>
+      <div class="driver-profile-avatar" id="driverProfileAvatar" hidden><img alt="" decoding="async"></div></div>
       <div class="profile-stats" id="driverProfileStats"></div>
       <section class="profile-section">
         <h3>Class breakdown</h3>
@@ -221,6 +222,6 @@
     <a href="about/">About COBRA</a><a href="briefing/">Drivers Briefing</a>
     <a href="https://cobracardiff.liverc.com/events/" rel="noopener" target="_top">View source results on LiveRC</a>
   <a class="website-guides-link" href="./website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>
-  <script type="module" src="assets/app.js?v=20260928-same-tab"></script>
+  <script type="module" src="assets/app.js?v=20260928-lazy-avatars"></script>
 </body>
 </html>
