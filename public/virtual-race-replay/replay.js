@@ -1,4 +1,4 @@
-import {renderLapCharts} from '../assets/lap-charts.js';
+import {renderLapCharts} from '../assets/lap-charts.js?v=20260928-same-tab';
 import {paceMap} from './pace.js';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions} from './track-layouts.js';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');

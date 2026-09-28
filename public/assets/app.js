@@ -1,5 +1,5 @@
 import {averageLapText, fastestLapText} from './lap-result-format.js';
-import {renderLapCharts} from './lap-charts.js';
+import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
 import { loadMap } from './load-map.js';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
 
