@@ -13,3 +13,34 @@ header .race-date{font-size:20px;font-weight:750;color:#ecf2ed;margin:0 0 8px}
 #drawn-plan{pointer-events:none}.loop-label{paint-order:stroke;stroke:#102016;stroke-width:4px;stroke-linejoin:round}
 
 .replay-update{margin:0 0 20px;padding:14px 18px;background:#17271c;border-left:3px solid var(--lime);border-radius:0 8px 8px 0}.replay-update h2{font-size:15px;color:var(--lime)}.replay-update p{margin:5px 0 0;color:#c4d6c8;font-size:14px}
+
+.replay-expand{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.replay-fullscreen-open{overflow:hidden}
+.replay-fullscreen{position:fixed;inset:0;width:100%;height:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);border:0;background:#0a100d;color:#ecf2ed;overflow:hidden}
+.replay-fullscreen[open]{display:flex;flex-direction:column}
+.replay-fullscreen::backdrop{background:#0a100d}
+.fullscreen-nav{display:flex;justify-content:space-between;gap:10px;padding:8px 12px;flex:none}
+.fullscreen-nav [role=group]{display:flex;gap:8px}
+.fullscreen-nav [aria-pressed=true]{background:var(--lime);color:#102207;font-weight:750}
+.swipe-hint{display:none;margin:0;padding:0 12px 6px;color:#bdcbbf;font-size:12px}
+.fullscreen-content{flex:1;min-height:0;overflow:auto;touch-action:pan-y}
+.replay-fullscreen .player,.replay-fullscreen .standings{margin:0;border:0;border-radius:0;min-height:100%}
+.replay-fullscreen .player:not([hidden]){height:100%;display:flex;align-items:center;justify-content:center}
+.replay-fullscreen [hidden]{display:none!important}
+.replay-fullscreen .track{width:100%;height:100%;max-height:none;aspect-ratio:auto}
+.replay-fullscreen .track>svg{overflow:hidden}
+.fullscreen-controls{flex:none;border-top:1px solid var(--line)}
+.fullscreen-controls .controls{padding:8px 14px}
+.fullscreen-controls .timeline-label{margin-top:6px}
+.fullscreen-controls .hint{display:none}
+@media(max-width:767px){.swipe-hint{display:block}.fullscreen-nav button{padding:7px 12px}.fullscreen-clock .bar{padding:5px 12px;gap:5px}.fullscreen-clock .bar strong{font-size:20px}.fullscreen-clock .tag{font-size:10px}.fullscreen-clock #raceStatus{font-size:12px}.fullscreen-controls .buttons{gap:5px}.fullscreen-controls button,.fullscreen-controls select{padding:6px;font-size:13px}.fullscreen-controls .primary{min-width:76px}.replay-fullscreen .table-wrap{overflow:visible}.replay-fullscreen table{white-space:normal;table-layout:fixed}.replay-fullscreen th,.replay-fullscreen td{padding:7px 4px;font-size:11px;overflow-wrap:anywhere}.replay-fullscreen th:first-child{width:30px}.replay-fullscreen th:nth-child(2){width:29%}.replay-fullscreen .chip{min-width:20px;height:20px;margin-right:3px}.replay-fullscreen .section-head{padding:8px}.replay-fullscreen h2{font-size:16px}}
+@media(max-height:480px){.fullscreen-clock .bar{padding:2px 12px}.fullscreen-clock .bar strong{font-size:18px}.swipe-hint{display:none}.fullscreen-nav{padding:3px 10px}.fullscreen-nav button{padding:3px 10px}.fullscreen-controls .controls{padding:3px 12px}.fullscreen-controls .timeline-label{display:none}.fullscreen-controls input[type=range]{height:18px;margin:0}}
+.fullscreen-content{overflow:hidden}
+.fullscreen-panels{display:flex;width:100%;height:100%;transform:translateX(0)}
+.replay-fullscreen[data-view=timings] .fullscreen-panels{transform:translateX(-100%)}
+.replay-fullscreen .fullscreen-panels>.player,.replay-fullscreen .fullscreen-panels>.standings{flex:0 0 100%;width:100%;min-width:0;height:100%;min-height:0;overflow:auto}
+@media(max-width:767px){.fullscreen-panels{transition:transform .28s ease-out}}
+@media(prefers-reduced-motion:reduce){.fullscreen-panels{transition:none}}
+.replay-fullscreen .fullscreen-panels>.player{overflow:hidden}
+.replay-fullscreen .track>img{display:block}
+@media(max-width:767px){.replay-fullscreen th{font-size:10px}.replay-fullscreen th:first-child{white-space:nowrap}}
