@@ -51,3 +51,9 @@ For every future video, wait for each live page to finish loading before advanci
 Replaced the Simon Fisher scene in Meet the COBRA Drivers after confirming the live car image loaded. Replaced the existing Drive video in place. Corrected repeated average lap values and labelled fastest-lap lap numbers, including older concatenated values; fastest-lap results use bold purple.
 
 Statistics avatar loading now uses the published image revision instead of a per-visit timestamp, allowing unchanged images to stay cached. Revision and avatar lists load in parallel. This removes unnecessary repeat image downloads; it does not establish the cause of every Wix loading delay.
+
+## Responsive public feature tours (28 September 2026)
+
+Three new tours: full public website tour (152s), Race, compare and replay (75s), and Discover your racing story (91s). Each has separate 1920×1080 desktop and 1080×1920 mobile exports. Under 768px, the player selects the vertical version; otherwise widescreen. Both formats remain downloadable. Resize changes apply after playback ends, or immediately before playback starts; active viewing is never restarted. Original nine quick guides remain vertical.
+
+Tours retain COBRA bumpers and approved Mixkit A Game soundtrack, shorten menu to 3s, use brief crossfades, include actual moving Virtual Replay footage and mobile data close-ups. Captures were checked for loaded images before use.
