@@ -1,3 +1,4 @@
+import {chassisChoice} from './chassis-choice.mjs';
 import {loadBookings, matchBooking} from './booking-calendar.mjs';
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
@@ -40,7 +41,7 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
         driverName: entry.driverName,
         className: entry.className,
         countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
-        chassis: String(override.chassis || chassis[key]?.name || '').trim(),
+        chassis: chassisChoice(override, chassis[key]?.name || ''),
         transponder: entry.transponder
       };
     })
