@@ -1,6 +1,7 @@
 const classOrder = ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Trucks', 'Vintage', 'Junior Racers', 'default'];
 function imagesFor(entry) {
-  const entries = typeof entry === 'string' ? [['default', entry]] : entry && typeof entry === 'object' ? Object.entries(entry) : [];
+  let entries = typeof entry === 'string' ? [['default', entry]] : entry && typeof entry === 'object' ? Object.entries(entry) : [];
+  if (entries.some(([cls, path]) => ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy'].includes(cls) && typeof path === 'string' && /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(path))) entries = entries.filter(([cls]) => cls !== 'default');
   return entries.filter(([, path]) => typeof path === 'string' && /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(path))
     .sort(([a], [b]) => (classOrder.indexOf(a) < 0 ? 99 : classOrder.indexOf(a)) - (classOrder.indexOf(b) < 0 ? 99 : classOrder.indexOf(b)) || a.localeCompare(b));
 }
