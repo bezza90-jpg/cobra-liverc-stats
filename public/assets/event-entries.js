@@ -2,7 +2,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=1';
+  link.href = '../assets/event-entries.css?v=2';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -108,13 +108,14 @@ function render(root, data) {
     const wrap = element('div', 'event-entry-table-wrap');
     const table = element('table', 'event-entry-table');
     const head = document.createElement('thead');
-    head.innerHTML = '<tr><th scope="col">Country</th><th scope="col">Driver</th><th scope="col">Chassis</th><th scope="col">Transponder</th></tr>';
+    head.innerHTML = '<tr><th scope="col">Country</th><th scope="col">No.</th><th scope="col">Driver</th><th scope="col">Chassis</th><th scope="col">Transponder</th></tr>';
     const body = document.createElement('tbody');
-    for (const entry of entries) {
+    for (const [index, entry] of entries.entries()) {
       const row = document.createElement('tr');
       row.dataset.search = `${entry.driverName} ${entry.className} ${entry.chassis} ${entry.transponder}`.toLowerCase();
       const country = document.createElement('td');
-      const flag = element('span', 'event-entry-flag', countryFlag(entry.countryCode));
+      const flag = String(entry.countryCode).toUpperCase() === 'GB' ? element('img', 'event-entry-flag-image') : element('span', 'event-entry-flag', countryFlag(entry.countryCode));
+      if (flag.tagName === 'IMG') { flag.src = '../assets/gb-flag.svg'; flag.alt = 'United Kingdom'; flag.width = 32; flag.height = 16; }
       flag.title = countryNames[entry.countryCode] || entry.countryCode || 'Country not listed';
       flag.setAttribute('aria-label', flag.title);
       country.dataset.label = 'Country';
@@ -122,14 +123,23 @@ function render(root, data) {
       const driver = document.createElement('td');
       driver.dataset.label = 'Driver';
       const profile = element('a', '', entry.driverName);
-      profile.href = `../?driver=${encodeURIComponent(entry.driverKey)}`;
+      profile.href = `../?driver=${encodeURIComponent(entry.driverKey)}&returnTo=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
       driver.append(profile);
-      const chassis = element('td', '', entry.chassis || 'Not listed');
+      const chassis = element('td');
+      const slug = {'team associated':'team-associated','associated':'team-associated','schumacher':'schumacher','kyosho':'kyosho','xray':'xray','yokomo':'yokomo','tlr':'tlr','team losi racing':'tlr','sworkz':'sworkz','agama':'agama','tamiya':'tamiya','pr':'pr','pr racing':'pr','r1 wurks':'r1-wurks'}[String(entry.chassis || '').trim().toLowerCase()];
+      if (slug) {
+        const logo = element('img', 'event-entry-chassis-logo');
+        logo.src = '../assets/manufacturers/' + slug + '.png'; logo.alt = entry.chassis; logo.title = entry.chassis; logo.loading = 'lazy';
+        logo.addEventListener('error', () => { chassis.textContent = entry.chassis; }, {once:true});
+        chassis.append(logo);
+      } else { chassis.textContent = entry.chassis || 'Not listed'; }
       chassis.dataset.label = 'Chassis';
       if (!entry.chassis) chassis.classList.add('event-entry-missing');
       const transponder = element('td', 'event-entry-transponder', entry.transponder || 'Not listed');
       transponder.dataset.label = 'Transponder';
-      row.append(country, driver, chassis, transponder);
+      const number = element('td', 'event-entry-number', String(index + 1));
+      number.dataset.label = 'No.';
+      row.append(country, number, driver, chassis, transponder);
       body.append(row);
     }
     table.append(head, body);
