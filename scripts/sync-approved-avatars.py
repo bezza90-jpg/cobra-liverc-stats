@@ -54,6 +54,14 @@ def canonical_driver_key(driver_key):
     return avatar_aliases().get(driver_key, driver_key)
 
 
+def assigned_class(driver_key, source_class):
+    routes = read_json(ROOT / 'public/data/car-avatar-class-moves.json')
+    target = routes.get(driver_key + '|' + source_class, source_class)
+    if target not in {*CLASS_SUFFIX, 'default'}:
+        raise ValueError('Invalid avatar class move; existing images are preserved.')
+    return target
+
+
 def request_jsonp(url, params):
     query = urllib.parse.urlencode({**params, "callback": "cobraAvatarSync"})
     request = urllib.request.Request(f"{url}?{query}", headers={"User-Agent": "COBRA-avatar-sync/1.0"})
@@ -158,7 +166,19 @@ def write_thumbnail(avatar_path):
         image.save(target, "WEBP", quality=82, method=6, lossless=False)
 
 
+def validate_class_targets(current):
+    targets = set()
+    for pair in current:
+        source, cls = pair.split('|', 1)
+        driver = canonical_driver_key(source)
+        target = (driver, assigned_class(driver, cls))
+        if target in targets:
+            raise ValueError('Two approved images now target the same moved class. Move the published avatar to another empty class before retrying; existing images are preserved.')
+        targets.add(target)
+
+
 def needs_processing(current, previous, photo_ids, retry_id=''):
+    validate_class_targets(current)
     manifest = read_json(MANIFEST)
     if retry_id and retry_id not in photo_ids.values():
         raise ValueError('Retry submission is not in the current approved feed.')
@@ -167,7 +187,8 @@ def needs_processing(current, previous, photo_ids, retry_id=''):
         key, cls = pair.split('|', 1)
         key = canonical_driver_key(key)
         entry = manifest.get(key, {})
-        path = entry.get(cls, '') if isinstance(entry, dict) else ''
+        target_class = assigned_class(key, cls)
+        path = entry.get(target_class, '') if isinstance(entry, dict) else entry if target_class == 'default' else ''
         if not path or not (ROOT / 'public' / path).is_file(): return True
     return False
 
@@ -177,6 +198,7 @@ def publish(retry_id=''):
     if not url:
         print("Avatar approvals are not configured; skipping.")
         return
+    validate_class_targets(current)
     manifest = read_json(MANIFEST)
     if retry_id and retry_id not in photo_ids.values():
         raise ValueError('Retry submission is not in the current approved feed.')
@@ -186,7 +208,8 @@ def publish(retry_id=''):
         source_driver_key, cls = pair.split("|", 1)
         driver_key = canonical_driver_key(source_driver_key)
         existing = manifest.get(driver_key, {})
-        assigned = existing.get(cls, '') if isinstance(existing, dict) else ''
+        target_class = assigned_class(driver_key, cls)
+        assigned = existing.get(target_class, '') if isinstance(existing, dict) else existing if target_class == 'default' else ''
         if previous.get(pair) == revision and photo_ids[pair] != retry_id and assigned and (ROOT / 'public' / assigned).is_file():
             continue
         ident = photo_ids[pair]
@@ -211,7 +234,7 @@ def publish(retry_id=''):
         write_thumbnail(target)
         existing = manifest.get(driver_key, {})
         entry = dict(existing) if isinstance(existing, dict) else {"default": existing} if isinstance(existing, str) and existing else {}
-        entry[cls] = relative
+        entry[target_class] = relative
         manifest[driver_key] = entry
         previous[pair] = revision
         changes += 1
@@ -221,15 +244,19 @@ def publish(retry_id=''):
         driver_key = canonical_driver_key(source_driver_key)
         existing = manifest.get(driver_key)
         expected = f"assets/car-avatars/{driver_key}-AUTO-{CLASS_SUFFIX[cls]}.png"
-        if isinstance(existing, dict) and existing.get(cls) == expected:
+        target_class = assigned_class(driver_key, cls)
+        if isinstance(existing, str): existing = {'default': existing}
+        if isinstance(existing, dict) and existing.get(target_class) == expected:
             entry = dict(existing)
-            entry.pop(cls)
+            entry.pop(target_class)
             manifest[driver_key] = entry if entry else ""
             if not entry:
                 manifest.pop(driver_key)
             removed_avatar = ROOT / "public" / expected
-            removed_avatar.unlink(missing_ok=True)
-            thumbnail_path(removed_avatar).unlink(missing_ok=True)
+            still_used = any(expected in (value.values() if isinstance(value, dict) else [value]) for value in manifest.values())
+            if not still_used:
+                removed_avatar.unlink(missing_ok=True)
+                thumbnail_path(removed_avatar).unlink(missing_ok=True)
         previous.pop(pair)
         changes += 1
 
