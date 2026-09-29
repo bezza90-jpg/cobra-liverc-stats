@@ -79,6 +79,22 @@ class SyncTests(unittest.TestCase):
             sync.publish()
         self.assertEqual(json.loads(sync.MANIFEST.read_text())['DALE'],{'Vintage':'other'})
 
+    def test_cross_driver_move_survives_sync_retry_and_withdrawal(self):
+        pair='DALE|2-Wheel Drive Buggy';image='assets/car-avatars/DALE-AUTO-2WD.png'
+        (self.data/'car-avatar-class-moves.json').write_text(json.dumps({pair:{'driverKey':'MARK','className':'Trucks'}}))
+        sync.MANIFEST.write_text(json.dumps({'MARK':{'Trucks':image,'Vintage':'other'}}))
+        asset=self.root/'public'/image;asset.parent.mkdir(parents=True);asset.write_bytes(b'original')
+        current={pair:'rev'};ids={pair:'id'}
+        self.assertFalse(sync.needs_processing(current,current,ids))
+        with self.assertRaises(ValueError):sync.needs_processing({**current,'MARK|Trucks':'other'}, {}, {})
+        photo={'id':'id','base64':base64.b64encode(b'photo').decode()}
+        with patch.object(sync,'state',return_value=('url',current,dict(current),ids)),patch.object(sync,'request_jsonp',return_value=photo),patch.object(sync,'prepare_avatar',return_value=b'new'),patch.object(sync,'write_thumbnail'):
+            sync.publish('id')
+        self.assertEqual(json.loads(sync.MANIFEST.read_text())['MARK']['Trucks'],image)
+        self.assertNotIn('DALE',json.loads(sync.MANIFEST.read_text()))
+        with patch.object(sync,'state',return_value=('url',{},dict(current),{})):sync.publish()
+        self.assertEqual(json.loads(sync.MANIFEST.read_text())['MARK'],{'Vintage':'other'})
+
     def test_rectangular_photo_with_transparent_padding_runs_removal(self):
         original = Image.new('RGBA', (100,100))
         original.paste(Image.new('RGBA',(80,60),(20,30,40,255)),(10,20))
