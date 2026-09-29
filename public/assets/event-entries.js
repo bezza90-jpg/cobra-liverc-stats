@@ -1,3 +1,4 @@
+import {compareEntryNames} from './event-entry-order.js';
 function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
@@ -91,7 +92,7 @@ function render(root, data) {
   source.href = data.sourceUrl;
   source.target = '_blank';
   source.rel = 'noopener';
-  controls.append(search, source);
+  controls.append(search, element('span', 'event-entry-order', 'Drivers A–Z by surname'), source);
   content.append(controls);
 
   const classes = element('div', 'event-entry-classes');
@@ -101,6 +102,7 @@ function render(root, data) {
     groups.get(entry.className).push(entry);
   }
   for (const [className, entries] of groups) {
+    entries.sort(compareEntryNames);
     const group = element('details', 'event-entry-class');
     group.open = true;
     const heading = element('summary');
