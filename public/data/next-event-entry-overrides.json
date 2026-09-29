@@ -72,6 +72,12 @@
       "mode": "until-liverc-change",
       "livercAtSave": "",
       "updatedAt": "2026-09-29T18:13:28.369792+00:00"
+    },
+    "CHRIS-LEONARD": {
+      "chassis": "Team Associated",
+      "mode": "until-liverc-change",
+      "livercAtSave": "R1 Wurks",
+      "updatedAt": "2026-09-29T19:10:33.934331+00:00"
     }
   }
 }
