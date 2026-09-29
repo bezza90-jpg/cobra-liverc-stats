@@ -2,7 +2,7 @@
 export function createAvatarLoader({fetcher = fetch, createImage = () => new Image(), base = import.meta.url, onLoad = () => {}} = {}) {
   const images = new Map(), pending = new Map(), profilePending = new Map();
   let catalogue;
-  const classes = ['default', '2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Trucks', 'Vintage', 'Junior Racers'];
+  const classes = ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Trucks', 'Vintage', 'Junior Racers', 'default'];
   const loadCatalogue = () => catalogue ||= Promise.all([
     fetcher(new URL('../data/car-avatars.json', base), {cache: 'no-cache'}).then(r => {if (!r.ok) throw Error('Avatar list unavailable'); return r.json();}),
     fetcher(new URL('../data/car-avatar-source-revisions.json', base), {cache: 'no-cache'}).then(r => r.ok ? r.json() : {}).catch(() => ({}))
