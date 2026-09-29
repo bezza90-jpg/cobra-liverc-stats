@@ -1,6 +1,7 @@
 import {createAvatarLoader} from './avatar-loader.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
+import {potentialRun} from './potential-run.js';
 import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
 import { loadMap } from './load-map.js?v=20260928-local';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
@@ -382,7 +383,19 @@ async function loadExplorerLapCharts(raceId) {
   if(!panel){panel=document.createElement('section');panel.id='raceLapCharts';panel.className='lap-charts';panel.setAttribute('aria-label','Lap times by driver');$('raceExplorerResults').closest('.table-wrap').after(panel);}
   panel.innerHTML='<h2>Lap times by driver</h2><p role="status">'+(raceId?'Loading recorded laps…':'Choose a race to see individual lap times.')+'</p>';
   if(!raceId)return;
-  try {const response=await fetch(new URL('../virtual-race-replay/races/'+encodeURIComponent(raceId)+'.json',import.meta.url));if(!response.ok)throw Error('Unavailable');const race=await response.json();if(token===lapChartRequest)renderLapCharts(panel,race);}
+  try {
+    const response=await fetch(new URL('../virtual-race-replay/races/'+encodeURIComponent(raceId)+'.json',import.meta.url));
+    if(!response.ok)throw Error('Unavailable');
+    const race=await response.json();
+    if(token===lapChartRequest){
+      renderLapCharts(panel,race);
+      const drivers=new Map(race.drivers.map(driver=>[driver.key,driver]));
+      $('raceExplorerResults').querySelectorAll('tr').forEach(row=>{
+        const cell=row.querySelector('.potential-run');
+        if(cell)cell.textContent=potentialRun(drivers.get(row.querySelector('[data-driver-key]')?.dataset.driverKey),Number(state.data.raceById[raceId]?.l));
+      });
+    }
+  }
   catch {if(token===lapChartRequest)panel.innerHTML='<h2>Lap times by driver</h2><p role="status">Individual lap records are unavailable for this race. The results above remain available.</p>';}
 }
 function renderRaceExplorer(raceId) {
@@ -390,6 +403,8 @@ function renderRaceExplorer(raceId) {
   const data = state.data;
   const race = data.raceById[raceId];
   const body = $('raceExplorerResults');
+  const headings=body.closest('table').querySelector('thead tr');
+  if(!headings.querySelector('.potential-run-heading'))headings.insertAdjacentHTML('beforeend','<th class="potential-run-heading">Potential run</th>');
   if (!race) {
     $('raceResultTitle').textContent = 'No races match these filters';
     body.innerHTML = '<tr><td colspan="8">Choose a different event or class.</td></tr>';
@@ -418,7 +433,7 @@ function renderRaceExplorer(raceId) {
   body.innerHTML = rows.length ? rows.map(row => `
     <tr><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>
     <td>${row[8] ? `P${row[8]}` : '—'}</td><td>${escapeHtml(row[3] || '—')}</td><td>${escapeHtml(row[4] || '—')}</td>
-    <td${row === fastestRow ? ' class="fastest-lap" title="Fastest lap of this race"' : ''}>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td></tr>`).join('') : '<tr><td colspan="8">No results were recorded for this race.</td></tr>';
+    <td${row === fastestRow ? ' class="fastest-lap" title="Fastest lap of this race"' : ''}>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td><td class="potential-run">—</td></tr>`).join('') : '<tr><td colspan="9">No results were recorded for this race.</td></tr>';
 }
 
 function updateRaceSelection(preserve = true) {
