@@ -54,12 +54,18 @@ def canonical_driver_key(driver_key):
     return avatar_aliases().get(driver_key, driver_key)
 
 
-def assigned_class(driver_key, source_class):
+def assigned_target(driver_key, source_class):
     routes = read_json(ROOT / 'public/data/car-avatar-class-moves.json')
     target = routes.get(driver_key + '|' + source_class, source_class)
-    if target not in {*CLASS_SUFFIX, 'default'}:
-        raise ValueError('Invalid avatar class move; existing images are preserved.')
-    return target
+    if isinstance(target, dict):
+        key, cls = target.get('driverKey', ''), target.get('className', '')
+    else: key, cls = driver_key, target
+    if not isinstance(key,str) or not KEY.fullmatch(key) or cls not in {*CLASS_SUFFIX, 'default'}:
+        raise ValueError('Invalid avatar assignment; existing images are preserved.')
+    return key, cls
+
+def assigned_class(driver_key, source_class):
+    return assigned_target(driver_key, source_class)[1]
 
 
 def request_jsonp(url, params):
@@ -171,7 +177,7 @@ def validate_class_targets(current):
     for pair in current:
         source, cls = pair.split('|', 1)
         driver = canonical_driver_key(source)
-        target = (driver, assigned_class(driver, cls))
+        target = assigned_target(driver, cls)
         if target in targets:
             raise ValueError('Two approved images now target the same moved class. Move the published avatar to another empty class before retrying; existing images are preserved.')
         targets.add(target)
@@ -186,8 +192,8 @@ def needs_processing(current, previous, photo_ids, retry_id=''):
     for pair in current:
         key, cls = pair.split('|', 1)
         key = canonical_driver_key(key)
+        key, target_class = assigned_target(key, cls)
         entry = manifest.get(key, {})
-        target_class = assigned_class(key, cls)
         path = entry.get(target_class, '') if isinstance(entry, dict) else entry if target_class == 'default' else ''
         if not path or not (ROOT / 'public' / path).is_file(): return True
     return False
@@ -206,9 +212,9 @@ def publish(retry_id=''):
     changes = 0
     for pair, revision in current.items():
         source_driver_key, cls = pair.split("|", 1)
-        driver_key = canonical_driver_key(source_driver_key)
+        origin_key = canonical_driver_key(source_driver_key)
+        driver_key, target_class = assigned_target(origin_key, cls)
         existing = manifest.get(driver_key, {})
-        target_class = assigned_class(driver_key, cls)
         assigned = existing.get(target_class, '') if isinstance(existing, dict) else existing if target_class == 'default' else ''
         if previous.get(pair) == revision and photo_ids[pair] != retry_id and assigned and (ROOT / 'public' / assigned).is_file():
             continue
@@ -227,7 +233,7 @@ def publish(retry_id=''):
             failures[pair] = {'id': ident, 'revision': revision, 'error': message[:300]}
             print(f'::warning::Avatar {ident}: {message[:300]}', file=sys.stderr)
             continue
-        relative = f"assets/car-avatars/{driver_key}-AUTO-{CLASS_SUFFIX[cls]}.png"
+        relative = f"assets/car-avatars/{origin_key}-AUTO-{CLASS_SUFFIX[cls]}.png"
         target = ROOT / "public" / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(avatar_bytes)
@@ -241,10 +247,10 @@ def publish(retry_id=''):
 
     for pair in set(previous) - set(current):
         source_driver_key, cls = pair.split("|", 1)
-        driver_key = canonical_driver_key(source_driver_key)
+        origin_key = canonical_driver_key(source_driver_key)
+        driver_key, target_class = assigned_target(origin_key, cls)
         existing = manifest.get(driver_key)
-        expected = f"assets/car-avatars/{driver_key}-AUTO-{CLASS_SUFFIX[cls]}.png"
-        target_class = assigned_class(driver_key, cls)
+        expected = f"assets/car-avatars/{origin_key}-AUTO-{CLASS_SUFFIX[cls]}.png"
         if isinstance(existing, str): existing = {'default': existing}
         if isinstance(existing, dict) and existing.get(target_class) == expected:
             entry = dict(existing)
