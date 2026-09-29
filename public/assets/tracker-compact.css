@@ -30,3 +30,8 @@
 
 .journey-driver-label.avatar-priority{z-index:2!important}
 .journey-driver-label.selected{z-index:3!important}
+@media(min-width:801px){
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-timeline{grid-column:1/-1;display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:10px;margin:0}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-timeline strong{font-size:.7rem;white-space:nowrap}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-timeline input[type=range]{width:100%;min-width:0;min-height:20px;height:20px;margin:0}
+}
