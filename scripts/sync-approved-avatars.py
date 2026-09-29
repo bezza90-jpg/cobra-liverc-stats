@@ -19,6 +19,7 @@ CONFIG = ROOT / "public/data/avatar-upload-config.json"
 MANIFEST = ROOT / "public/data/car-avatars.json"
 REVISIONS = ROOT / "public/data/car-avatar-source-revisions.json"
 REPORT = ROOT / "public/data/car-avatar-processing.json"
+THUMBNAILS = ROOT / "public/assets/car-avatar-thumbnails"
 CLASS_SUFFIX = {
     "2-Wheel Drive Buggy": "2WD", "4-Wheel Drive Buggy": "4WD", "Vintage": "VINTAGE",
     "Trucks": "TRUCKS", "Junior Racers": "JUNIORS"
@@ -126,6 +127,21 @@ def prepare_avatar(photo_bytes):
     return blob.getvalue()
 
 
+def thumbnail_path(avatar_path):
+    return THUMBNAILS / (avatar_path.stem + ".webp")
+
+
+def write_thumbnail(avatar_path):
+    from PIL import Image
+
+    target = thumbnail_path(avatar_path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with Image.open(avatar_path) as image:
+        image = image.convert("RGBA")
+        image.thumbnail((360, 200), Image.Resampling.LANCZOS)
+        image.save(target, "WEBP", quality=82, method=6, lossless=False)
+
+
 def needs_processing(current, previous, photo_ids, retry_id=''):
     manifest = read_json(MANIFEST)
     if retry_id and retry_id not in photo_ids.values():
@@ -174,6 +190,7 @@ def publish(retry_id=''):
         target = ROOT / "public" / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(avatar_bytes)
+        write_thumbnail(target)
         existing = manifest.get(driver_key, {})
         entry = dict(existing) if isinstance(existing, dict) else {"default": existing} if isinstance(existing, str) and existing else {}
         entry[cls] = relative
@@ -191,7 +208,9 @@ def publish(retry_id=''):
             manifest[driver_key] = entry if entry else ""
             if not entry:
                 manifest.pop(driver_key)
-            (ROOT / "public" / expected).unlink(missing_ok=True)
+            removed_avatar = ROOT / "public" / expected
+            removed_avatar.unlink(missing_ok=True)
+            thumbnail_path(removed_avatar).unlink(missing_ok=True)
         previous.pop(pair)
         changes += 1
 

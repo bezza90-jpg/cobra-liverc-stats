@@ -18,7 +18,7 @@ class SyncTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.data = self.root / 'public/data'
         self.data.mkdir(parents=True)
-        self.patches = [patch.object(sync, 'ROOT', self.root), patch.object(sync, 'MANIFEST', self.data/'car-avatars.json'), patch.object(sync, 'REVISIONS', self.data/'revisions.json'), patch.object(sync, 'REPORT', self.data/'report.json')]
+        self.patches = [patch.object(sync, 'ROOT', self.root), patch.object(sync, 'MANIFEST', self.data/'car-avatars.json'), patch.object(sync, 'REVISIONS', self.data/'revisions.json'), patch.object(sync, 'REPORT', self.data/'report.json'), patch.object(sync, 'THUMBNAILS', self.root/'public/assets/car-avatar-thumbnails')]
         for p in self.patches: p.start()
     def tearDown(self):
         for p in self.patches: p.stop()
@@ -32,7 +32,7 @@ class SyncTests(unittest.TestCase):
         def request(url, p):
             if p['id']=='id1': raise ValueError('Invalid foreground')
             return {'id':'id2','base64':base64.b64encode(b'photo').decode()}
-        with patch.object(sync, 'state', return_value=state), patch.object(sync, 'request_jsonp', side_effect=request), patch.object(sync, 'prepare_avatar', return_value=b'PNG'):
+        with patch.object(sync, 'state', return_value=state), patch.object(sync, 'request_jsonp', side_effect=request), patch.object(sync, 'prepare_avatar', return_value=b'PNG'), patch.object(sync, 'write_thumbnail'):
             sync.publish()
         manifest=json.loads(sync.MANIFEST.read_text())
         self.assertIn('MARK',manifest)
@@ -53,5 +53,16 @@ class SyncTests(unittest.TestCase):
         output=io.BytesIO();original.save(output,'PNG')
         result=sync.prepare_avatar(output.getvalue())
         self.assertTrue(result.startswith(b'\x89PNG'))
+    def test_thumbnail_is_small_transparent_webp(self):
+        avatar=self.root/'public/assets/car-avatars/TEST.png'
+        avatar.parent.mkdir(parents=True)
+        Image.new('RGBA',(900,600),(0,200,0,120)).save(avatar,'PNG')
+        sync.write_thumbnail(avatar)
+        thumb=sync.thumbnail_path(avatar)
+        self.assertTrue(thumb.is_file())
+        with Image.open(thumb) as image:
+            self.assertLessEqual(image.width,360)
+            self.assertLessEqual(image.height,200)
+            self.assertIn('A',image.getbands())
 
 if __name__=='__main__': unittest.main()
