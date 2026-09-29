@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-09-29T22:05:33.739Z",
+  "updatedAt": "2026-09-29T23:05:37.180Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -366,6 +366,14 @@
       "countryCode": "GB",
       "chassis": "Xray",
       "transponder": "4115135"
+    },
+    {
+      "driverKey": "MARK-GREENWOOD",
+      "driverName": "MARK GREENWOOD",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "7720183"
     },
     {
       "driverKey": "DANIEL-GRIFFITHS",
