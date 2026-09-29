@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-09-29T17:52:44.845Z",
+  "updatedAt": "2026-09-29T18:13:32.680811+00:00",
   "entries": [
     {
       "driverKey": "BEN-EVANS",
@@ -43,7 +43,7 @@
       "driverName": "LEO SMITH",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Schumacher",
       "transponder": "6624085"
     },
     {
@@ -163,7 +163,7 @@
       "driverName": "LEE KILLWORTH",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Xray",
       "transponder": "8379316"
     },
     {
@@ -243,7 +243,7 @@
       "driverName": "JAMIE BEASLEY",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Xray",
       "transponder": "3658404"
     },
     {
@@ -299,7 +299,7 @@
       "driverName": "LEE FIDOE",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Xray",
       "transponder": "6760569"
     },
     {
@@ -395,7 +395,7 @@
       "driverName": "LEWIS HOPKINS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Schumacher",
       "transponder": "7203900"
     },
     {
@@ -411,7 +411,7 @@
       "driverName": "STUART IRONS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Xray",
       "transponder": "5588658"
     },
     {
@@ -435,7 +435,7 @@
       "driverName": "LEE KILLWORTH",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Xray",
       "transponder": "8379316"
     },
     {
@@ -475,7 +475,7 @@
       "driverName": "RICHARD MORSE",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "R1 Wurks",
       "transponder": "3297060"
     },
     {
@@ -555,7 +555,7 @@
       "driverName": "EDWARD ROSS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Xray",
       "transponder": "6009030"
     },
     {
@@ -563,7 +563,7 @@
       "driverName": "NIGEL SANTIMANO",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Team Associated",
       "transponder": "4243064"
     },
     {
@@ -595,7 +595,7 @@
       "driverName": "JUSTIN WALKER",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "R1 Wurks",
       "transponder": "8367004"
     },
     {
@@ -603,7 +603,7 @@
       "driverName": "JOSH WILLIAMS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Team Associated",
       "transponder": "2173920"
     },
     {
