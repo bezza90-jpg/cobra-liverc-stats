@@ -4,6 +4,10 @@ function imagesFor(entry) {
   return entries.filter(([, path]) => typeof path === 'string' && /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(path))
     .sort(([a], [b]) => (classOrder.indexOf(a) < 0 ? 99 : classOrder.indexOf(a)) - (classOrder.indexOf(b) < 0 ? 99 : classOrder.indexOf(b)) || a.localeCompare(b));
 }
+function thumbnailFor(path) {
+  const file = path.split('/').pop().replace(/\.png$/i, '.webp');
+  return '../assets/car-avatar-thumbnails/' + file;
+}
 function element(tag, className, text) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -29,7 +33,7 @@ function showPreview(button, image) {
   hidePreview();
   previewOwner = button;
   button.setAttribute('aria-describedby', preview.id);
-  previewImage.src = image.src;
+  previewImage.src = image.dataset.fullSrc || image.src;
   previewImage.alt = image.alt;
   previewCaption.textContent = image.alt;
   preview.hidden = false;
@@ -49,8 +53,8 @@ window.addEventListener('resize', hidePreview);
 async function initialise() {
   const status = document.getElementById('galleryStatus');
   try {
-    const revisionRequest = fetch('../data/car-avatar-source-revisions.json', { cache: 'no-cache' }).then(response => response.ok ? response.json() : {}).catch(() => ({}));
-    const responses = await Promise.all([fetch('../data/driver-directory.json', { cache: 'no-cache' }), fetch('../data/car-avatars.json', { cache: 'no-cache' })]);
+    const revisionRequest = fetch('../data/car-avatar-source-revisions.json').then(response => response.ok ? response.json() : {}).catch(() => ({}));
+    const responses = await Promise.all([fetch('../data/driver-directory.json'), fetch('../data/car-avatars.json')]);
     if (responses.some(response => !response.ok)) throw new Error('Unable to load the driver gallery. Please refresh to try again.');
     const [dashboard, manifest] = await Promise.all(responses.map(response => response.json()));
     // Images retain their filename when re-reviewed; a revision prevents stale cutouts.
@@ -83,12 +87,19 @@ async function initialise() {
             const revision = revisions[driver.k + '|' + className];
             image.loading = 'lazy';
             image.decoding = 'async';
-            image.src = '../' + path + (revision ? '?v=' + encodeURIComponent(revision) : '');
+            const revisionQuery = revision ? '?v=' + encodeURIComponent(revision) : '';
+            image.src = thumbnailFor(path) + revisionQuery;
+            image.dataset.fullSrc = '../' + path + revisionQuery;
             image.alt = driver.n + ' — ' + label;
             image.loading = 'lazy';
             image.width = 320;
             image.height = 200;
             image.addEventListener('error', () => {
+              if (image.dataset.thumbnailFallback !== 'true' && image.src !== image.dataset.fullSrc) {
+                image.dataset.thumbnailFallback = 'true';
+                image.src = image.dataset.fullSrc;
+                return;
+              }
               if (previewOwner === zoomButton) hidePreview();
               zoomButton.disabled = true;
               image.replaceWith(element('p', 'car-image-unavailable', 'Image unavailable'));
