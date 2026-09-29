@@ -1,3 +1,4 @@
+import {entryIdentity} from './event-entry-identity.js';
 import {compareEntryNames} from './event-entry-order.js';
 function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
@@ -114,7 +115,7 @@ function render(root, data) {
     const body = document.createElement('tbody');
     for (const [index, entry] of entries.entries()) {
       const row = document.createElement('tr');
-      row.dataset.search = `${entry.driverName} ${entry.className} ${entry.chassis} ${entry.transponder}`.toLowerCase();
+      row.dataset.search = `${entry.driverName} ${entry.bookingName || ''} ${entry.className} ${entry.chassis} ${entry.transponder}`.toLowerCase();
       const country = document.createElement('td');
       const flag = String(entry.countryCode).toUpperCase() === 'GB' ? element('img', 'event-entry-flag-image') : element('span', 'event-entry-flag', countryFlag(entry.countryCode));
       if (flag.tagName === 'IMG') { flag.src = '../assets/gb-flag.svg'; flag.alt = 'United Kingdom'; flag.width = 32; flag.height = 16; }
@@ -162,9 +163,10 @@ function render(root, data) {
 }
 
 if (roots.length) {
-  fetch('../data/next-event-entries.json', {cache:'no-cache'})
-    .then(response => { if (!response.ok) throw Error('Entries unavailable'); return response.json(); })
-    .then(data => roots.forEach(root => render(root, data)))
+  Promise.all([
+    fetch('../data/next-event-entries.json', {cache:'no-cache'}).then(response => { if (!response.ok) throw Error('Entries unavailable'); return response.json(); }),
+    fetch('../data/car-avatar-driver-aliases.json', {cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({}))
+  ]).then(([data,aliases]) => roots.forEach(root => render(root, {...data, entries:data.entries.map(entry => entryIdentity(entry,aliases))})))
     .catch(() => roots.forEach(root => {
       const summary = root.querySelector('[data-entry-summary]');
       if (summary) summary.textContent = 'Entries are temporarily unavailable. Please check LiveRC.';

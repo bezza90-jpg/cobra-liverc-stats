@@ -1,3 +1,4 @@
+import {canonicalDriverKey} from './driver-identity.js';
 import {createAvatarLoader} from './avatar-loader.js';
 import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
@@ -1525,11 +1526,11 @@ async function init() {
       refresh();
     });
     const params = new URLSearchParams(window.location.search);
-    const requestedDriver = params.get('driver');
+    const requestedDriver = canonicalDriverKey(params.get('driver'));
     const requestedMap = params.get('map');
     const trackerDriver = requestedMap && data.driverByKey[requestedMap] && !journeyExcludedDrivers.has(requestedMap) ? requestedMap : '';
     if (trackerDriver || params.get('tracker') === '1') {
-      const selected = (params.get('raceDrivers') || '').split(',').filter(key => data.driverByKey[key] && !journeyExcludedDrivers.has(key));
+      const selected = (params.get('raceDrivers') || '').split(',').map(canonicalDriverKey).filter(key => data.driverByKey[key] && !journeyExcludedDrivers.has(key));
       journeySelectedKeys = new Set(selected);
       if (trackerDriver) driverProfile(trackerDriver);
       else {

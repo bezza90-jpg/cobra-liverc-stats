@@ -1,3 +1,4 @@
+import {mergeDriverRows} from '../public/assets/driver-identity.js';
 import {averageLapText, fastestLapText} from '../public/assets/lap-result-format.js';
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import path from 'node:path';
@@ -11,7 +12,7 @@ async function read(name) {
   return JSON.parse(await readFile(raw(name), 'utf8'));
 }
 
-const [events, entries, eventResults, races, raceResults, sync] = await Promise.all([
+const [events, rawEntries, rawEventResults, races, rawRaceResults, sync] = await Promise.all([
   read('events.json'), read('entries.json'), read('event-results.json'),
   read('races.json'), read('race-results.json'), read('sync.json')
 ]);
@@ -26,6 +27,9 @@ function canonicalClass(value = '') {
   return '';
 }
 
+const entries=mergeDriverRows(rawEntries,r=>`${r.liveRcEventId}|${canonicalClass(r.className)}|${r.driverKey}`);
+const eventResults=mergeDriverRows(rawEventResults,r=>`${r.liveRcEventId}|${canonicalClass(r.className)}|${r.driverKey}`);
+const raceResults=mergeDriverRows(rawRaceResults,r=>`${r.liveRcRaceId}|${r.driverKey}`);
 const names = new Map();
 for (const row of [...entries, ...eventResults, ...raceResults]) names.set(row.driverKey, row.driverName);
 const juniorKeys = new Set(eventResults.filter(row => canonicalClass(row.className) === 'Junior Racers').map(row => row.driverKey));

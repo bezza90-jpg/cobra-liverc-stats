@@ -71,12 +71,13 @@
       "transponder": "6155425"
     },
     {
-      "driverKey": "PAUL-CURTIS",
-      "driverName": "PAUL CURTIS",
+      "driverKey": "BRUCE",
+      "driverName": "Bruce",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
-      "transponder": "4950687"
+      "transponder": "4950687",
+      "bookingName": "PAUL CURTIS"
     },
     {
       "driverKey": "MIKE-DRISCOLL",

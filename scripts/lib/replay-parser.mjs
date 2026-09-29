@@ -1,4 +1,5 @@
-export const driverKey=name=>name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');
+import {canonicalDriverKey,canonicalDriverName} from '../../public/assets/driver-identity.js';
+export const driverKey=name=>canonicalDriverKey(name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,''));
 export function parseReplay(html,meta){
  const rows=[...html.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)].map(m=>m[1]);const drivers=[],omitted=[];
  for(const m of html.matchAll(/racerLaps\[(\d+)\]\s*=\s*\{([\s\S]*?)\n\s*\};/g)){
@@ -11,7 +12,7 @@ export function parseReplay(html,meta){
   const total=row.match(/(\d+)\/(?:(\d+):)?(\d+\.\d+)/);if(!total)throw Error('Missing total '+name);
   const expected=+(total[2]||0)*60 + +total[3];
   if(!finalPosition||!number||laps.some((l,i)=>l.lap!==i+1||l.seconds<=0)||laps.length!==+total[1]||Math.abs(laps.reduce((s,l)=>s+l.seconds,0)-expected)>.02){omitted.push(name);continue;}
-  drivers.push({id,key:driverKey(name),name,number,finalPosition,officialTime:expected,laps});
+  drivers.push({id,key:driverKey(name),name:canonicalDriverName(driverKey(name),name),number,finalPosition,officialTime:expected,laps});
  }
  if(!drivers.length)throw Error('No complete lap records');
  return {id:meta.liveRcRaceId,eventId:meta.liveRcEventId,event:meta.eventName,date:meta.eventDate,name:meta.raceName,round:meta.round,className:meta.className,isFinal:meta.isFinal,source:meta.sourceUrl,omitted,drivers};
