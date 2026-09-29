@@ -1,4 +1,5 @@
 import {createAvatarLoader} from './avatar-loader.js';
+import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
@@ -768,18 +769,19 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const nextMilestone = journeyMilestoneData.find(([, km]) => km > selected.km);
   $('journeyMilestones').innerHTML = journeyMilestoneData.map(([name, km]) => `<span class="${selected.km >= km ? 'reached' : nextMilestone?.[0] === name ? 'next' : ''}">${selected.km >= km ? '✓ ' : ''}${escapeHtml(name)} <small>${fmt.format(kmToMiles(km))} miles</small></span>`).join('');
 
+  for (const driver of drivers) journeyAvatars.load(driver.driverKey);
   const displayedDrivers = journeySelectedKeys.size
     ? [...journeySelectedKeys].map(key => drivers.find(driver => driver.driverKey === key) || {
         driverKey: key, name: state.data.driverByKey[key] || key, km: 0, laps: 0, runs: 0,
         events: 0, classes: [], lastDate: '', lastEvent: ''
       })
-    : drivers.filter(driver => !journeyRecentKeys || journeyRecentKeys.has(driver.driverKey));
+    : trackerDrivers(drivers, journeyRecentKeys, journeyAvatarImages, activeKey);
   if (!journeySelectedKeys.size && !displayedDrivers.some(driver => driver.driverKey === journeySelectedKey) && drivers.some(driver => driver.driverKey === journeySelectedKey)) {
     displayedDrivers.push(drivers.find(driver => driver.driverKey === journeySelectedKey));
   }
 
   $('journeyRaceStandings').hidden = !raceMode;
-  if (allDriversView && !raceMode) $('journeyMapTitle').textContent = `Driver tracker — ${displayedDrivers.length} recent racers`;
+  if (allDriversView && !raceMode) $('journeyMapTitle').textContent = `Driver tracker — ${displayedDrivers.length} drivers`;
   if (raceMode) $('journeyRaceStandings').innerHTML = displayedDrivers.slice().sort((a,b) => b.km - a.km || a.name.localeCompare(b.name))
     .map((driver,index) => `<span><b>${index+1}.</b> ${escapeHtml(driver.name)} <strong>${fmt.format(kmToMiles(driver.km))} mi</strong></span>`).join('');
 
@@ -790,6 +792,8 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const candidates = displayedDrivers.slice().sort((left, right) => {
     if (left.driverKey === activeKey) return -1;
     if (right.driverKey === activeKey) return 1;
+    const avatarPriority = Number(journeyAvatarImages.has(right.driverKey)) - Number(journeyAvatarImages.has(left.driverKey));
+    if (avatarPriority) return avatarPriority;
     return ((hashJourneyKey(left.driverKey) + journeyLabelsSeed) % 7919) - ((hashJourneyKey(right.driverKey) + journeyLabelsSeed) % 7919);
   });
   const visibleLabels = new Set();
@@ -816,8 +820,8 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     const classText = driver.classes.map(cls => classLabels[cls] || cls).join(', ');
     const lastEvent = driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : '';
     const popup = `<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(kmToMiles(driver.km))} miles</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${escapeHtml(classText)}</span>${lastEvent}</div>`;
-    const marker = window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 1000 : 0 })
-      .bindTooltip(`<b>${fmt.format(kmToMiles(driver.km))} miles</b><br>${escapeHtml(driver.name)}`, { permanent: visibleLabels.has(driver.driverKey), direction: 'bottom', offset: [0, 12], className: `journey-driver-label${selectedDriver ? ' selected' : ''}` })
+    const marker = window.L.marker(route.point, { icon, zIndexOffset: selectedDriver ? 2000 : avatar ? 1000 : 0 })
+      .bindTooltip(`<b>${fmt.format(kmToMiles(driver.km))} miles</b><br>${escapeHtml(driver.name)}`, { permanent: visibleLabels.has(driver.driverKey), direction: 'bottom', offset: [0, 12], className: `journey-driver-label${avatar ? ' avatar-priority' : ''}${selectedDriver ? ' selected' : ''}` })
       .bindPopup(popup).addTo(journeyMapLayers);
     marker.on('click', () => {
       journeySelectedKey = driver.driverKey;

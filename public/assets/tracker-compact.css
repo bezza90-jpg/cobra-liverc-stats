@@ -1,0 +1,32 @@
+/* Compact standalone tracker; profile dialogs and fullscreen stay unchanged. */
+@media(min-width:801px){
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-shell{padding:10px 12px;min-width:0;scrollbar-gutter:auto}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-shell>.eyebrow{display:none}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) h3{font-size:1.25rem;line-height:1.25;padding:0}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-copy{margin:3px 0 8px;font-size:.78rem}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-controls{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px 8px;margin:0 0 5px}
+ body.embedded-tracker-page .journey-map-controls>*{min-width:0}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-controls label{font-size:.62rem;gap:2px}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-controls input:not([type=range]),body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-controls select,body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-controls button,body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-driver-picker summary{box-sizing:border-box;width:100%;min-width:0;min-height:32px;height:32px;padding:5px 7px;font-size:.72rem}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-round-note{font-size:.65rem;margin:2px 0 4px}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-milestones{margin:0;padding-bottom:3px}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-milestones span{padding:3px 6px;font-size:.63rem}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-toolbar{margin:3px 0;gap:8px}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-toolbar button{min-height:30px;padding:5px 10px;font-size:.72rem}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map{height:max(440px,calc(100dvh - 285px));max-height:none}
+ body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-legend{margin-top:5px;font-size:.68rem}
+}
+@media(min-width:1051px){
+ body.embedded-tracker-page .cobra-header-inner{display:flex;align-items:center;gap:18px;min-height:58px;height:58px;aspect-ratio:auto;padding:4px 14px}
+ body.embedded-tracker-page .cobra-site-header .cobra-site-logo{position:static;flex:0 0 190px;width:190px}
+ body.embedded-tracker-page .cobra-site-header .cobra-site-logo img{max-height:48px}
+ body.embedded-tracker-page .cobra-site-header .cobra-book-in{position:static;flex:0 0 110px;width:110px;height:36px;font-size:14px}
+ body.embedded-tracker-page .cobra-mobile-menu{position:static;flex:1;width:auto;padding:0}
+ body.embedded-tracker-page .cobra-site-menu{justify-content:space-evenly;gap:4px}
+ body.embedded-tracker-page .cobra-site-menu>a,body.embedded-tracker-page .cobra-menu-group>summary{font-size:14px;padding:8px 5px}
+ body.embedded-tracker-page .cobra-site-header .cobra-gpw-logo{position:static;flex:0 0 65px;width:65px}
+ body.embedded-tracker-page .cobra-site-header .cobra-gpw-logo img{width:65px;height:46px}
+}
+
+.journey-driver-label.avatar-priority{z-index:2!important}
+.journey-driver-label.selected{z-index:3!important}
