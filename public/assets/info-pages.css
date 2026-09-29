@@ -35,3 +35,5 @@
 .schedule-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
 .event-heading{display:flex;align-items:center;justify-content:space-between;gap:20px}.event-heading h2{margin:0}.event-booking{flex-shrink:0}.event-booking[hidden]{display:none}@media(max-width:600px){.event-heading{align-items:flex-start;flex-direction:column;gap:12px}}
+
+.event-quick-links{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 18px}.event-quick-links a{background:#087b19;color:#fff;padding:10px 14px;border-radius:8px;text-decoration:none;font-weight:750}.event-calendar-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:14px}.event-calendar-actions:empty{display:none}#eventEntries{scroll-margin-top:20px}@media(max-width:540px){.event-quick-links a{flex:1;text-align:center}.event-heading .schedule-actions{width:100%}.event-heading .schedule-actions .info-action{width:auto;flex:1;padding:10px}.event-calendar-actions .info-action{width:auto}.event-calendar-actions small{display:block}}
