@@ -46,5 +46,11 @@
   },
   "JOHN-MORDEN": {
     "2-Wheel Drive Buggy": "assets/car-avatars/JOHN-MORDEN-AUTO-2WD.png"
+  },
+  "MARTIN-PITMAN": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/MARTIN-PITMAN-AUTO-2WD.png"
+  },
+  "PAUL-CURTIS": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/PAUL-CURTIS-AUTO-2WD.png"
   }
 }
