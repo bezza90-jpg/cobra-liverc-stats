@@ -50,6 +50,35 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(manifest['BRUCE']['2-Wheel Drive Buggy'], 'assets/car-avatars/BRUCE-AUTO-2WD.png')
         self.assertNotIn('PAUL-CURTIS', manifest)
 
+    def test_new_submission_collision_does_not_overwrite_moved_avatar(self):
+        (self.data/'car-avatar-class-moves.json').write_text(json.dumps({'DALE|2-Wheel Drive Buggy':'Trucks'}))
+        with self.assertRaises(ValueError):
+            sync.needs_processing({'DALE|2-Wheel Drive Buggy':'a','DALE|Trucks':'b'}, {}, {})
+
+    def test_moved_class_survives_sync_and_retry(self):
+        pair='DALE|2-Wheel Drive Buggy'
+        image='assets/car-avatars/DALE-AUTO-2WD.png'
+        (self.data/'car-avatar-class-moves.json').write_text(json.dumps({pair:'Trucks'}))
+        sync.MANIFEST.write_text(json.dumps({'DALE':{'Trucks':image}}))
+        asset=self.root/'public'/image;asset.parent.mkdir(parents=True);asset.write_bytes(b'original')
+        current={pair:'rev'};ids={pair:'id'}
+        self.assertFalse(sync.needs_processing(current,current,ids))
+        state=('https://example.test',current,dict(current),ids)
+        with patch.object(sync,'state',return_value=state),patch.object(sync,'request_jsonp') as request:
+            sync.publish();request.assert_not_called()
+        photo={'id':'id','base64':base64.b64encode(b'photo').decode()}
+        with patch.object(sync,'state',return_value=state),patch.object(sync,'request_jsonp',return_value=photo),patch.object(sync,'prepare_avatar',return_value=b'new'),patch.object(sync,'write_thumbnail'):
+            sync.publish('id')
+        self.assertEqual(json.loads(sync.MANIFEST.read_text())['DALE'],{'Trucks':image})
+
+    def test_withdrawn_moved_avatar_cleans_correct_class(self):
+        pair='DALE|2-Wheel Drive Buggy';image='assets/car-avatars/DALE-AUTO-2WD.png'
+        (self.data/'car-avatar-class-moves.json').write_text(json.dumps({pair:'Trucks'}))
+        sync.MANIFEST.write_text(json.dumps({'DALE':{'Trucks':image,'Vintage':'other'}}))
+        with patch.object(sync,'state',return_value=('url',{}, {pair:'rev'},{})):
+            sync.publish()
+        self.assertEqual(json.loads(sync.MANIFEST.read_text())['DALE'],{'Vintage':'other'})
+
     def test_rectangular_photo_with_transparent_padding_runs_removal(self):
         original = Image.new('RGBA', (100,100))
         original.paste(Image.new('RGBA',(80,60),(20,30,40,255)),(10,20))
