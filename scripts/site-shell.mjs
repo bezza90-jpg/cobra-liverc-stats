@@ -24,6 +24,6 @@ export function addSiteShell(html, base='./') {
   html = html.replace(/<!-- cobra-shell:start -->[\s\S]*?<!-- cobra-shell:end -->/g,'')
     .replace(/<!-- cobra-footer:start -->[\s\S]*?<!-- cobra-footer:end -->/g,'')
     .replace(/<link[^>]+data-cobra-shell[^>]*>/g,'').replace(/<script[^>]+data-cobra-shell[^>]*><\/script>/g,'');
-  return html.replace('</head>',`<link data-cobra-shell rel="stylesheet" href="${base}assets/site-shell.css?v=2"><script data-cobra-shell type="module" src="${base}assets/site-shell.js?v=2" defer></script></head>`)
+  return html.replace('</head>',`<link data-cobra-shell rel="stylesheet" href="${base}assets/site-shell.css?v=3"><script data-cobra-shell type="module" src="${base}assets/site-shell.js?v=3" defer></script></head>`)
     .replace(/<body\b[^>]*>/,match=>match+siteHeader(base)).replace('</body>',siteFooter(base)+'</body>');
 }
