@@ -1,8 +1,9 @@
+import {installCalendarButton} from './calendar-download.js';
 import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight';
 if (document.head?.append && document.createElement) {
   const entriesScript = document.createElement('script');
   entriesScript.type = 'module';
-  entriesScript.src = '../assets/event-entries.js?v=4';
+  entriesScript.src = '../assets/event-entries.js?v=5';
   document.head.append(entriesScript);
 }
 (async () => {
@@ -35,6 +36,8 @@ if (document.head?.append && document.createElement) {
         booking.href = event.bookingUrl;
         booking.hidden = false;
       }
+      if (meeting) installCalendarButton(event, element('eventCalendarActions'));
+      if (element('quickSchedule')) element('quickSchedule').href = '../schedule/?type=' + (event.type === 'sword' ? 'sword' : 'club');
       element('scheduleLink').hidden = !meeting;
       element('scheduleLink').href = '../schedule/?type=' + (event.type === 'sword' ? 'sword' : 'club');
     }

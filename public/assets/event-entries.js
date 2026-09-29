@@ -4,7 +4,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=2';
+  link.href = '../assets/event-entries.css?v=3';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -13,6 +13,7 @@ function entrySection(type = '') {
   const section = document.createElement('section');
   section.className = 'panel event-entries-panel';
   section.dataset.eventEntries = '';
+  section.id = 'eventEntries';
   if (type) section.dataset.eventType = type;
   section.innerHTML = '<div class="event-entries-heading"><div><p class="eyebrow">Next meeting</p><h2 data-entry-title>Event entries</h2><p data-entry-summary>Loading entries from LiveRC…</p></div></div><div data-entry-content></div>';
   return section;
@@ -95,6 +96,24 @@ function render(root, data) {
   source.rel = 'noopener';
   controls.append(search, element('span', 'event-entry-order', 'Drivers A–Z by surname'), source);
   content.append(controls);
+  const savedControls=element('div','remember-driver');
+  const label=element('label','','My driver (on this device)');
+  const picker=element('select');picker.setAttribute('aria-label','Choose my driver');
+  picker.append(new Option('Choose your name',''));
+  const drivers=[...new Map(data.entries.map(e=>[e.driverKey,e.driverName])).entries()].sort((a,b)=>a[1].localeCompare(b[1]));
+  for(const [key,name] of drivers) picker.append(new Option(name,key));
+  let remembered='';try{remembered=localStorage.getItem('cobra-my-driver')||'';}catch{}
+  if(drivers.some(([key])=>key===remembered)) picker.value=remembered;
+  const remember=element('button','','Remember me'),mine=element('button','','Show my entries'),all=element('button','','Show all'),forget=element('button','','Forget me');
+  for(const b of [remember,mine,all,forget]) b.type='button';
+  const message=element('span');message.setAttribute('role','status');
+  mine.disabled=!picker.value;
+  picker.addEventListener('change',()=>{mine.disabled=!picker.value;});
+  remember.addEventListener('click',()=>{if(!picker.value){message.textContent='Choose your name first.';return;}try{localStorage.setItem('cobra-my-driver',picker.value);message.textContent='Saved on this device.';}catch{message.textContent='This browser cannot save your choice; Show my entries still works.';}});
+  mine.addEventListener('click',()=>{search.value=drivers.find(([key])=>key===picker.value)?.[1]||'';search.dispatchEvent(new Event('input'));});
+  all.addEventListener('click',()=>{search.value='';search.dispatchEvent(new Event('input'));});
+  forget.addEventListener('click',()=>{try{localStorage.removeItem('cobra-my-driver');picker.value='';mine.disabled=true;search.value='';search.dispatchEvent(new Event('input'));message.textContent='Saved choice removed.';}catch{message.textContent='Could not remove the saved choice in this browser.';}});
+  label.append(picker);savedControls.append(label,remember,mine,all,forget,message);content.append(savedControls);
 
   const classes = element('div', 'event-entry-classes');
   const groups = new Map();

@@ -1333,12 +1333,18 @@ function refresh() {
 }
 
 async function init() {
+  const loadingControls=[...document.querySelectorAll('main select,main input,main button')];
+  const priorDisabled=loadingControls.map(control=>control.disabled);
+  loadingControls.forEach(control=>control.disabled=true);
+  $('updatedStatus').setAttribute('role','status');
+  $('updatedStatus').textContent='Loading race records — filters will be ready shortly…';
   // On the dedicated tracker, start the map library alongside the race data.
   // Ordinary statistics visits keep the map download on demand.
   const startupParams = new URLSearchParams(window.location.search);
   if (startupParams.get('tracker') === '1' || startupParams.has('map')) loadMap().catch(() => {});
   try {
     const { data, videosReady } = await loadStatisticsData();
+    loadingControls.forEach((control,index)=>control.disabled=priorDisabled[index]);
     data.videos = [];
     videosReady.then(videos => {
       data.videos = videos;
@@ -1551,8 +1557,11 @@ async function init() {
       renderJourneyDriverChecklist();
     } else if (requestedDriver && data.driverByKey[requestedDriver]) driverProfile(requestedDriver);
   } catch (error) {
-    $('updatedStatus').textContent = 'Statistics could not be loaded.';
+    $('updatedStatus').textContent = 'Statistics could not be loaded. ';
+    const retry=document.createElement('button');retry.type='button';retry.textContent='Try again';retry.addEventListener('click',()=>location.reload());$('updatedStatus').append(retry);
     $('leaderboardBody').innerHTML = `<tr><td colspan="11">${escapeHtml(error.message)}</td></tr>`;
+  } finally {
+    loadingControls.forEach((control,index)=>control.disabled=priorDisabled[index]);
   }
 }
 
