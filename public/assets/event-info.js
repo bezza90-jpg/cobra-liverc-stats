@@ -48,10 +48,10 @@ if (document.head?.append && document.createElement) {
         content.className = 'schedule-content';
         const name = document.createElement('strong'); name.textContent = entry.label;
         content.append(name);
-        if (entry.description) {
+        for (const paragraph of (entry.description || '').split(/\n\s*\n/).filter(Boolean)) {
           const description = document.createElement('p');
           description.className = 'schedule-description';
-          description.textContent = entry.description;
+          description.textContent = paragraph;
           content.append(description);
         }
         const time = document.createElement('span');
