@@ -11,7 +11,8 @@
   "MIKE-DRISCOLL": "assets/car-avatars/MIKE-DRISCOLL.png",
   "STEVE-CURTIS-RICH": {
     "default": "assets/car-avatars/STEVE-CURTIS-RICH.png",
-    "2-Wheel Drive Buggy": "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-2WD.png"
+    "2-Wheel Drive Buggy": "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-4WD.png"
   },
   "BOBTECH": {
     "2-Wheel Drive Buggy": "assets/car-avatars/BOBTECH-AUTO-2WD.png"
