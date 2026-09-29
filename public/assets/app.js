@@ -411,10 +411,14 @@ function renderRaceExplorer(raceId) {
   $('raceVideoLink').textContent = video ? `Watch ${video.round || 'race'} video ▶` : 'Watch race video ▶';
   $('raceVideoLink').hidden = !video;
   const rows = data.raceResults.filter(row => row[0] === raceId).sort((a, b) => a[2] - b[2]);
+  const fastestRow = rows.reduce((best, row) => {
+    const seconds = lapTimeSeconds(row[5]);
+    return Number.isFinite(seconds) && seconds > 0 && (!best || seconds < lapTimeSeconds(best[5])) ? row : best;
+  }, null);
   body.innerHTML = rows.length ? rows.map(row => `
     <tr><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>
     <td>${row[8] ? `P${row[8]}` : '—'}</td><td>${escapeHtml(row[3] || '—')}</td><td>${escapeHtml(row[4] || '—')}</td>
-    <td class="fastest-lap">${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td></tr>`).join('') : '<tr><td colspan="8">No results were recorded for this race.</td></tr>';
+    <td${row === fastestRow ? ' class="fastest-lap" title="Fastest lap of this race"' : ''}>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td></tr>`).join('') : '<tr><td colspan="8">No results were recorded for this race.</td></tr>';
 }
 
 function updateRaceSelection(preserve = true) {
