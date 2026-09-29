@@ -18,7 +18,7 @@ class SyncTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.data = self.root / 'public/data'
         self.data.mkdir(parents=True)
-        self.patches = [patch.object(sync, 'ROOT', self.root), patch.object(sync, 'MANIFEST', self.data/'car-avatars.json'), patch.object(sync, 'REVISIONS', self.data/'revisions.json'), patch.object(sync, 'REPORT', self.data/'report.json'), patch.object(sync, 'THUMBNAILS', self.root/'public/assets/car-avatar-thumbnails')]
+        self.patches = [patch.object(sync, 'ROOT', self.root), patch.object(sync, 'MANIFEST', self.data/'car-avatars.json'), patch.object(sync, 'REVISIONS', self.data/'revisions.json'), patch.object(sync, 'REPORT', self.data/'report.json'), patch.object(sync, 'ALIASES', self.data/'aliases.json'), patch.object(sync, 'THUMBNAILS', self.root/'public/assets/car-avatar-thumbnails')]
         for p in self.patches: p.start()
     def tearDown(self):
         for p in self.patches: p.stop()
@@ -38,6 +38,18 @@ class SyncTests(unittest.TestCase):
         self.assertIn('MARK',manifest)
         self.assertNotIn('DALE',manifest)
         self.assertIn('DALE|Trucks',json.loads(sync.REPORT.read_text())['failures'])
+    def test_driver_alias_publishes_under_liverc_name(self):
+        sync.ALIASES.write_text(json.dumps({'PAUL-CURTIS': {'driverKey': 'BRUCE', 'displayName': 'BRUCE (PAUL CURTIS)'}}))
+        (self.data/'car-avatars.json').write_text(json.dumps({'BRUCE':'assets/car-avatars/BRUCE.png'}))
+        state = ('https://example.test', {'PAUL-CURTIS|2-Wheel Drive Buggy':'file1'}, {}, {'PAUL-CURTIS|2-Wheel Drive Buggy':'id1'})
+        photo = {'id':'id1','base64':base64.b64encode(b'photo').decode()}
+        with patch.object(sync, 'state', return_value=state), patch.object(sync, 'request_jsonp', return_value=photo), patch.object(sync, 'prepare_avatar', return_value=b'PNG'), patch.object(sync, 'write_thumbnail'):
+            sync.publish()
+        manifest=json.loads(sync.MANIFEST.read_text())
+        self.assertEqual(manifest['BRUCE']['default'], 'assets/car-avatars/BRUCE.png')
+        self.assertEqual(manifest['BRUCE']['2-Wheel Drive Buggy'], 'assets/car-avatars/BRUCE-AUTO-2WD.png')
+        self.assertNotIn('PAUL-CURTIS', manifest)
+
     def test_rectangular_photo_with_transparent_padding_runs_removal(self):
         original = Image.new('RGBA', (100,100))
         original.paste(Image.new('RGBA',(80,60),(20,30,40,255)),(10,20))

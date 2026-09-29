@@ -19,6 +19,7 @@ CONFIG = ROOT / "public/data/avatar-upload-config.json"
 MANIFEST = ROOT / "public/data/car-avatars.json"
 REVISIONS = ROOT / "public/data/car-avatar-source-revisions.json"
 REPORT = ROOT / "public/data/car-avatar-processing.json"
+ALIASES = ROOT / "public/data/car-avatar-driver-aliases.json"
 THUMBNAILS = ROOT / "public/assets/car-avatar-thumbnails"
 CLASS_SUFFIX = {
     "2-Wheel Drive Buggy": "2WD", "4-Wheel Drive Buggy": "4WD", "Vintage": "VINTAGE",
@@ -36,6 +37,21 @@ def read_json(path):
         return value if isinstance(value, dict) else {}
     except FileNotFoundError:
         return {}
+
+
+def avatar_aliases():
+    aliases = read_json(ALIASES)
+    result = {}
+    for source, value in aliases.items():
+        target = value.get("driverKey", "") if isinstance(value, dict) else ""
+        if not (KEY.fullmatch(source) and KEY.fullmatch(target)):
+            raise ValueError("The car-avatar driver alias list is invalid.")
+        result[source] = target
+    return result
+
+
+def canonical_driver_key(driver_key):
+    return avatar_aliases().get(driver_key, driver_key)
 
 
 def request_jsonp(url, params):
@@ -149,6 +165,7 @@ def needs_processing(current, previous, photo_ids, retry_id=''):
     if current != previous or retry_id: return True
     for pair in current:
         key, cls = pair.split('|', 1)
+        key = canonical_driver_key(key)
         entry = manifest.get(key, {})
         path = entry.get(cls, '') if isinstance(entry, dict) else ''
         if not path or not (ROOT / 'public' / path).is_file(): return True
@@ -166,11 +183,12 @@ def publish(retry_id=''):
     failures = {}
     changes = 0
     for pair, revision in current.items():
-        existing = manifest.get(pair.split('|', 1)[0], {})
-        assigned = existing.get(pair.split('|', 1)[1], '') if isinstance(existing, dict) else ''
+        source_driver_key, cls = pair.split("|", 1)
+        driver_key = canonical_driver_key(source_driver_key)
+        existing = manifest.get(driver_key, {})
+        assigned = existing.get(cls, '') if isinstance(existing, dict) else ''
         if previous.get(pair) == revision and photo_ids[pair] != retry_id and assigned and (ROOT / 'public' / assigned).is_file():
             continue
-        driver_key, cls = pair.split("|", 1)
         ident = photo_ids[pair]
         try:
             photo = request_jsonp(url, {"action": "image", "id": ident})
@@ -199,7 +217,8 @@ def publish(retry_id=''):
         changes += 1
 
     for pair in set(previous) - set(current):
-        driver_key, cls = pair.split("|", 1)
+        source_driver_key, cls = pair.split("|", 1)
+        driver_key = canonical_driver_key(source_driver_key)
         existing = manifest.get(driver_key)
         expected = f"assets/car-avatars/{driver_key}-AUTO-{CLASS_SUFFIX[cls]}.png"
         if isinstance(existing, dict) and existing.get(cls) == expected:
