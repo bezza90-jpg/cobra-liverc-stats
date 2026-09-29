@@ -54,13 +54,28 @@ async function initialise() {
   const status = document.getElementById('galleryStatus');
   try {
     const revisionRequest = fetch('../data/car-avatar-source-revisions.json').then(response => response.ok ? response.json() : {}).catch(() => ({}));
+    const aliasRequest = fetch('../data/car-avatar-driver-aliases.json').then(response => response.ok ? response.json() : {}).catch(() => ({}));
     const responses = await Promise.all([fetch('../data/driver-directory.json'), fetch('../data/car-avatars.json')]);
     if (responses.some(response => !response.ok)) throw new Error('Unable to load the driver gallery. Please refresh to try again.');
     const [dashboard, manifest] = await Promise.all(responses.map(response => response.json()));
     // Images retain their filename when re-reviewed; a revision prevents stale cutouts.
-    const revisions = await revisionRequest;
+    const [revisions, aliases] = await Promise.all([revisionRequest, aliasRequest]);
     if (!Array.isArray(dashboard.drivers) || !manifest || typeof manifest !== 'object') throw new Error('The driver gallery is unavailable. Please try again later.');
-    const drivers = dashboard.drivers.filter(driver => /^[A-Za-z0-9_-]+$/.test(String(driver.k)) && driver.n && driver.k !== 'BOB-BOBTECH-GELSTHARP')
+    const aliasEntries = Object.entries(aliases).filter(([source, value]) => /^[A-Z0-9_-]+$/.test(source) && value && /^[A-Z0-9_-]+$/.test(value.driverKey));
+    const aliasBySource = new Map(aliasEntries);
+    const displayByCanonical = new Map(aliasEntries.map(([, value]) => [value.driverKey, value.displayName || value.driverKey]));
+    const canonicalDrivers = new Map();
+    for (const driver of dashboard.drivers) {
+      if (!/^[A-Za-z0-9_-]+$/.test(String(driver.k)) || !driver.n || driver.k === 'BOB-BOBTECH-GELSTHARP') continue;
+      const target = aliasBySource.get(driver.k)?.driverKey || driver.k;
+      if (!canonicalDrivers.has(target) || driver.k === target) canonicalDrivers.set(target, { ...driver, k: target, n: displayByCanonical.get(target) || driver.n });
+    }
+    const sourceRevision = (driverKey, className) => {
+      if (revisions[driverKey + '|' + className]) return revisions[driverKey + '|' + className];
+      for (const [source, value] of aliasEntries) if (value.driverKey === driverKey && revisions[source + '|' + className]) return revisions[source + '|' + className];
+      return '';
+    };
+    const drivers = [...canonicalDrivers.values()]
       .map(driver => ({ ...driver, images: imagesFor(manifest[driver.k]) }))
       .sort((a,b) => Number(Boolean(b.images.length)) - Number(Boolean(a.images.length)) || a.n.localeCompare(b.n, 'en-GB'));
     const search = document.getElementById('driverSearch');
@@ -84,7 +99,7 @@ async function initialise() {
             const label = className === 'default' ? 'General car avatar' : className;
             const figure = element('figure', 'car-image-card');
             const image = element('img');
-            const revision = revisions[driver.k + '|' + className];
+            const revision = sourceRevision(driver.k, className);
             image.loading = 'lazy';
             image.decoding = 'async';
             const revisionQuery = revision ? '?v=' + encodeURIComponent(revision) : '';

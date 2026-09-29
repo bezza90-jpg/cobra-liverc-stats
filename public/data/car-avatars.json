@@ -1,5 +1,8 @@
 {
-  "BRUCE": "assets/car-avatars/BRUCE.png",
+  "BRUCE": {
+    "default": "assets/car-avatars/BRUCE.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/BRUCE-AUTO-2WD.png"
+  },
   "MATTHEW-HODGES": {
     "default": "assets/matt-hodges-car.png",
     "2-Wheel Drive Buggy": "assets/car-avatars/MATTHEW-HODGES-2WD.png",
@@ -49,8 +52,5 @@
   },
   "MARTIN-PITMAN": {
     "2-Wheel Drive Buggy": "assets/car-avatars/MARTIN-PITMAN-AUTO-2WD.png"
-  },
-  "PAUL-CURTIS": {
-    "2-Wheel Drive Buggy": "assets/car-avatars/PAUL-CURTIS-AUTO-2WD.png"
   }
 }
