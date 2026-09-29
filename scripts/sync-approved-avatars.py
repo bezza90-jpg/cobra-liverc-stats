@@ -223,13 +223,39 @@ def publish(retry_id=''):
         print(f'::warning::{len(failures)} avatar(s) need attention. Successful avatars can still deploy.', file=sys.stderr)
 
 
+
+def automation_enabled():
+    data = json.loads((ROOT/'public/data/automation-controls.json').read_text())
+    if data.get('version') != 1 or type(data.get('features',{}).get('avatars')) is not bool:
+        raise ValueError('Invalid avatar processing controls; published images preserved.')
+    return data['features']['avatars']
+
+
+def automation_status(status, queued=None):
+    file = ROOT/'public/data/automation-status.json'
+    data = read_json(file)
+    previous = data.get('avatars',{})
+    stamp = datetime.now(timezone.utc).isoformat()
+    data['avatars'] = {**previous,'status':status,'lastAttempt':stamp,'queued':queued if queued is not None else 'Unknown; source retained'}
+    if status == 'success': data['avatars']['lastSuccess'] = stamp
+    temp=file.with_suffix('.tmp'); temp.write_text(json.dumps(data,indent=2)+'\n');temp.replace(file)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--check", action="store_true")
     parser.add_argument('--retry-id', default=os.environ.get('COBRA_AVATAR_SUBMISSION', ''))
     args = parser.parse_args()
+    if not automation_enabled():
+        automation_status('paused')
+        print('no' if args.check else 'Avatar processing paused; Drive queue and published images retained.')
+        sys.exit(0)
     if args.check:
         url, current, previous, photo_ids = state()
-        print("yes" if url and needs_processing(current, previous, photo_ids, args.retry_id) else "no")
+        pending = bool(url and needs_processing(current, previous, photo_ids, args.retry_id))
+        automation_status('queued' if pending else 'success', sum(previous.get(k)!=v for k,v in current.items()))
+        print('yes' if pending else 'no')
     else:
         publish(args.retry_id)
+        report=read_json(REPORT)
+        automation_status('needs-attention' if report.get('failures') else 'success',len(report.get('failures',{})))

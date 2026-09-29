@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "features": {
+    "liverc": true,
+    "youtube": true,
+    "avatars": true,
+    "podiums": true
+  }
+}
