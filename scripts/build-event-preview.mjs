@@ -1,0 +1,44 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+import {nextMeeting} from '../public/assets/event-calendar.js';
+const {createCanvas}=await import(process.env.COBRA_CANVAS_MODULE || '@napi-rs/canvas');
+const root=fileURLToPath(new URL('../public/',import.meta.url));
+const calendar=JSON.parse(fs.readFileSync(path.join(root,'data/event-calendar.json'),'utf8'));
+const settings=JSON.parse(fs.readFileSync(path.join(root,'data/current-event.json'),'utf8'));
+const meeting=nextMeeting(calendar.events);
+const title=meeting?.title || 'Next meeting to be announced';
+const kind=meeting?.type==='sword'?'SWORD CHAMPIONSHIP':meeting?.type==='club'?'COBRA CLUB SERIES':'COBRA RACE MEETINGS';
+const date=meeting?.date?new Date(meeting.date+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}):'Check RaceHub for the latest event information';
+const venue=meeting?.venue || settings.venue || 'Cardiff City House of Sport, Cardiff CF11 8AW';
+const canvas=createCanvas(1200,630),ctx=canvas.getContext('2d');
+ctx.fillStyle='#06150c';ctx.fillRect(0,0,1200,630);
+ctx.fillStyle='#0c7e24';ctx.fillRect(0,0,1200,12);
+function text(value,x,y,size,color){ctx.font=`bold ${size}px sans-serif`;ctx.fillStyle=color;ctx.fillText(value,x,y);}
+function wrapped(value,x,y,size,width,lineHeight,maxLines){
+ ctx.font=`bold ${size}px sans-serif`;const lines=[];let line='';
+ for(const word of value.split(/\s+/)){const next=line?line+' '+word:word;if(line&&ctx.measureText(next).width>width){lines.push(line);line=word;}else line=next;}if(line)lines.push(line);
+ if(lines.length>maxLines&&size>18)return wrapped(value,x,y,size-2,width,lineHeight,maxLines);
+ for(const [i,line] of lines.entries())text(line,x,y+i*lineHeight,size,ctx.fillStyle);
+}
+text('COBRA  /  RACEHUB',60,77,27,'#a3f329');
+text('CURRENT EVENT',60,140,43,'#ffffff');
+ctx.fillStyle='#ffffff';ctx.fillRect(40,180,1120,330);
+text(kind,70,225,21,'#087b1a');
+ctx.fillStyle='#101b14';wrapped(title,70,280,44,1050,53,2);
+text(date,70,395,28,'#143a21');
+ctx.fillStyle='#304a39';wrapped(venue,70,445,23,1040,32,2);
+text('Event information  •  Booking  •  Briefing  •  Schedule',60,560,25,'#ffffff');
+text('racehub.cobracardiff.co.uk/event/',60,602,23,'#a3f329');
+const png=canvas.toBuffer('image/png');
+const hash=crypto.createHash('sha256').update(png).digest('hex').slice(0,12);
+const image=`preview-${hash}.png`,url='https://racehub.cobracardiff.co.uk/event/';
+fs.writeFileSync(path.join(root,'event',image),png);
+const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const description=`${date}. ${venue}. Booking, drivers briefing and race-day information.`;
+const tags=`<!-- event-preview:start -->\n<link rel="canonical" href="${url}">\n<meta name="description" content="${esc(title+'. '+description)}">\n<meta property="og:type" content="website">\n<meta property="og:url" content="${url}">\n<meta property="og:site_name" content="COBRA RaceHub">\n<meta property="og:title" content="${esc(title)} | COBRA RaceHub">\n<meta property="og:description" content="${esc(description)}">\n<meta property="og:image" content="${url+image}">\n<meta property="og:image:type" content="image/png">\n<meta property="og:image:width" content="1200">\n<meta property="og:image:height" content="630">\n<meta property="og:image:alt" content="${esc(title+' — '+date+' — '+venue)}">\n<meta name="twitter:card" content="summary_large_image">\n<meta name="twitter:title" content="${esc(title)} | COBRA RaceHub">\n<meta name="twitter:description" content="${esc(description)}">\n<meta name="twitter:image" content="${url+image}">\n<!-- event-preview:end -->`;
+const page=path.join(root,'event/index.html');let html=fs.readFileSync(page,'utf8');
+html=html.includes('<!-- event-preview:start -->')?html.replace(/<!-- event-preview:start -->[\s\S]*?<!-- event-preview:end -->/,tags):html.replace('</head>',tags+'</head>');
+fs.writeFileSync(page,html);
+console.log(`Event preview: ${title}; ${image} (${png.length} bytes)`);

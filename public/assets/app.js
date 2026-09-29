@@ -1495,6 +1495,14 @@ async function init() {
       leaveJourneyFullscreen();
       $('journeyMapOverlay').hidden = true;
       $('driverDialog').classList.remove('journey-open');
+      const returnTo = new URLSearchParams(location.search).get('returnTo');
+      if (returnTo) {
+        const destination = new URL(returnTo, location.href);
+        if (destination.origin === location.origin && destination.pathname !== location.pathname) {
+          if (document.referrer === destination.href && history.length > 1) history.back();
+          else location.assign(destination.href);
+        }
+      }
     });
     $('driverDialog').addEventListener('click', event => {
       if (event.target === $('driverDialog')) $('driverDialog').close();

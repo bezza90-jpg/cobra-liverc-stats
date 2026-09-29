@@ -65,4 +65,16 @@ for (const [slug, url] of imageUrls) {
   } catch (error) { console.warn(`LiveRC chassis: could not update ${slug} (${error.message})`); }
 }
 await writeFile(dataPath, `${JSON.stringify(brands, null, 2)}\n`);
+// Refresh the entered-driver display in this same run, rather than waiting
+// until tomorrow's calendar update to pick up the newly fetched chassis.
+const entriesPath = path.join(root, 'public/data/next-event-entries.json');
+try {
+  const roster = JSON.parse(await readFile(entriesPath, 'utf8'));
+  const overrides = JSON.parse(await readFile(path.join(root,'public/data/next-event-entry-overrides.json'),'utf8').catch(error => {if(error.code==='ENOENT')return '{}';throw error;}));
+  for (const entry of roster.entries || []) {
+    entry.chassis = overrides.drivers?.[entry.driverKey]?.chassis || brands[entry.driverKey]?.name || entry.chassis || '';
+  }
+  roster.updatedAt = new Date().toISOString();
+  await writeFile(entriesPath, JSON.stringify(roster,null,2)+'\n');
+} catch(error) { if(error.code!=='ENOENT')throw error; }
 console.log(`LiveRC chassis: ${Object.keys(found).length} drivers found; ${Object.keys(brands).length} recorded.`);
