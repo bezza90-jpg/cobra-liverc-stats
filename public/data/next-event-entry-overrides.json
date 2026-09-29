@@ -6,6 +6,72 @@
       "chassis": "Team Associated",
       "livercAtSave": "",
       "mode": "until-liverc-change"
+    },
+    "EDWARD-ROSS": {
+      "chassis": "Xray",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:03:30.777192+00:00"
+    },
+    "JAMIE-BEASLEY": {
+      "chassis": "Xray",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:03:47.586957+00:00"
+    },
+    "JOSH-WILLIAMS": {
+      "chassis": "Team Associated",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:09:59.958765+00:00"
+    },
+    "JUSTIN-WALKER": {
+      "chassis": "R1 Wurks",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:10:25.647988+00:00"
+    },
+    "LEE-FIDOE": {
+      "chassis": "Xray",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:10:35.367502+00:00"
+    },
+    "LEE-KILLWORTH": {
+      "chassis": "Xray",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:10:57.456139+00:00"
+    },
+    "LEO-SMITH": {
+      "chassis": "Schumacher",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:11:25.714997+00:00"
+    },
+    "LEWIS-HOPKINS": {
+      "chassis": "Schumacher",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:11:30.105032+00:00"
+    },
+    "NIGEL-SANTIMANO": {
+      "chassis": "Team Associated",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:11:37.054466+00:00"
+    },
+    "RICHARD-MORSE": {
+      "chassis": "R1 Wurks",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:11:47.964187+00:00"
+    },
+    "STUART-IRONS": {
+      "chassis": "Xray",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-29T18:13:28.369792+00:00"
     }
   }
 }
