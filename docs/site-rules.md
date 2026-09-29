@@ -19,6 +19,12 @@ The Sunday gate excludes meetings labelled test/testing. If no meeting is listed
 
 These are scheduled start times, not guaranteed publication times. Queueing, external services and the build add delay. Updates use one deployment concurrency group and do not cancel a running publication. A failed required step prevents that run from deploying; the previously published website remains available.
 
+### Site Automation Controls (29 September 2026)
+
+Site Manager 1.6.0 can persistently pause LiveRC/derived-data refresh, YouTube matching, approved-avatar processing and illustrated podium rebuilding through `public/data/automation-controls.json`. The workflow and `npm run update` obey these gates. Disabled stages retain existing outputs and source backlogs. Validation, chart-share generation and deployment stay available. Re-enable a stage and run the workflow to catch up; running jobs may finish with their original settings. Worker status is saved in `public/data/automation-status.json` and becomes public after successful deployment; inspect GitHub Actions for failures that prevented deployment.
+
+The separate private manager policy controls the hourly Work tasks, automatic Wix checks, event-email scheduling and review alerts. Low Credit Mode pauses avatar AI, legacy image audits and feature reels without changing the GitHub switches. Uploads and manual approvals stay available. Work task wake-ups still consume some credits; pausing the matching Codex schedule is required to remove those wake-ups. The avatar schedule also carries Wix checks, so pausing it pauses those bundled duties. These are processing controls, not an account-level credit cap.
+
 Source: [publishing workflow](../.github/workflows/update-stats.yml), [race-day check](../scripts/check-race-day.mjs).
 
 ## Current Event and race-day schedules

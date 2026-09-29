@@ -58,7 +58,7 @@ jobs:
         if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
           if [[ "${{ github.event.schedule }}" == '7,22,37,52 15-18 * * 0' ]]; then
-            node scripts/update-liverc.mjs
+            node scripts/automation-run.mjs liverc
           else
             npm run update
           fi
@@ -94,8 +94,7 @@ jobs:
       - name: Rebuild illustrated podiums
         if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
-          node scripts/sync-manufacturer-logos.mjs
-          node scripts/build-podium-defaults.mjs
+          node scripts/automation-run.mjs podiums
 
       - name: Validate dashboard data
         if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
