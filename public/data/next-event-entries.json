@@ -4,8 +4,16 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-09-29T20:44:12.160Z",
+  "updatedAt": "2026-09-29T21:36:33.627Z",
   "entries": [
+    {
+      "driverKey": "MARCIA-DAVIS",
+      "driverName": "MARCIA DAVIS",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "7090137"
+    },
     {
       "driverKey": "BEN-EVANS",
       "driverName": "BEN EVANS",
@@ -21,14 +29,6 @@
       "countryCode": "GB",
       "chassis": "Schumacher",
       "transponder": "6645548"
-    },
-    {
-      "driverKey": "HAIDEN-HICKS",
-      "driverName": "HAIDEN HICKS",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": "Kyosho",
-      "transponder": "3422662"
     },
     {
       "driverKey": "NOAH-MCBRIDE",
@@ -63,14 +63,6 @@
       "transponder": "7226235"
     },
     {
-      "driverKey": "STEVE-CURTIS-RICH",
-      "driverName": "STEVE CURTIS-RICH",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "transponder": "6155425"
-    },
-    {
       "driverKey": "BRUCE",
       "driverName": "Bruce",
       "bookingName": "PAUL CURTIS",
@@ -78,6 +70,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "4950687"
+    },
+    {
+      "driverKey": "HARRY-DAVIS",
+      "driverName": "HARRY DAVIS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho",
+      "transponder": "3309053"
     },
     {
       "driverKey": "MIKE-DRISCOLL",
@@ -184,12 +184,28 @@
       "transponder": "4652466"
     },
     {
+      "driverKey": "LEO-NOTLEY",
+      "driverName": "LEO NOTLEY",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "7151081"
+    },
+    {
       "driverKey": "DAN-PULLEY",
       "driverName": "DAN PULLEY",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
       "transponder": "7832340"
+    },
+    {
+      "driverKey": "EDWARD-SCOTT",
+      "driverName": "EDWARD SCOTT",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": ""
     },
     {
       "driverKey": "RUSSELL-THOMAS",
@@ -206,6 +222,14 @@
       "countryCode": "GB",
       "chassis": "Xray",
       "transponder": "6657438"
+    },
+    {
+      "driverKey": "MATT-WOODIWISS",
+      "driverName": "MATT WOODIWISS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Yokomo",
+      "transponder": "6991518"
     },
     {
       "driverKey": "SPENCER-FARLEY",
@@ -270,6 +294,14 @@
       "countryCode": "GB",
       "chassis": "Xray",
       "transponder": "9036431"
+    },
+    {
+      "driverKey": "HARRY-DAVIS",
+      "driverName": "HARRY DAVIS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho",
+      "transponder": "5032515"
     },
     {
       "driverKey": "MIKE-DRISCOLL",
@@ -374,6 +406,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "4961721"
+    },
+    {
+      "driverKey": "HAIDEN-HICKS",
+      "driverName": "HAIDEN HICKS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho",
+      "transponder": "3422662"
     },
     {
       "driverKey": "MARK-HICKS",
