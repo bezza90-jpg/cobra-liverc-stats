@@ -34,7 +34,7 @@ test('consistency excludes early retirements, short runs and unknown durations',
 test('driver class and consistency breakdowns include qualifying-only activity', () => {
   const nodes = {};
   const data = {drivers:[{k:'TEST',n:'Test Racer'}],events:[{i:'e',d:'2026-09-20',t:'club'}],eventById:{e:{t:'club'}},entries:[['e','2026-09-20','Trucks','TEST']],eventResults:[],raceById:{r:{e:'e',d:'2026-09-20',c:'Trucks',l:300}},raceResults:[['r','TEST',1,'18/5:04.090','','16.000','16.894','96.2%']],videos:[]};
-  const context = vm.createContext({state:{data},$:id=>nodes[id] ||= {open:true},filters:()=>({from:'',to:'',eventType:'',className:''}),renderProfileAvatar(){},profileStat:()=>'',distanceJourneyStat:()=>'',classLabels:{},dateFmt:new Intl.DateTimeFormat('en-GB'),fmt:new Intl.NumberFormat('en-GB'),kmToMiles:n=>n,escapeHtml:String});
+  const context = vm.createContext({state:{data},$:id=>nodes[id] ||= {open:true},filters:()=>({from:'',to:'',eventType:'',className:''}),renderProfileAvatar(){},sharedRaceVideo:()=>null,profileStat:()=>'',distanceJourneyStat:()=>'',classLabels:{},dateFmt:new Intl.DateTimeFormat('en-GB'),fmt:new Intl.NumberFormat('en-GB'),kmToMiles:n=>n,escapeHtml:String});
   vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','driverProfile'].map(functionSource).join('\n'),context);
   context.driverProfile('TEST');
   assert.match(nodes.driverClassDetails.innerHTML, /Trucks/);
@@ -47,7 +47,7 @@ test('every archived driver profile renders without broken numbers or missing co
   data.eventById = Object.fromEntries(data.events.map(e=>[e.i,e]));
   data.videos = [];
   const nodes = {};
-  const context = vm.createContext({state:{data},$:id=>nodes[id] ||= {open:true},filters:()=>({from:'',to:'',eventType:'',className:''}),renderProfileAvatar(){},profileStat:(value)=>String(value),distanceJourneyStat:()=>'',classLabels:{},dateFmt:new Intl.DateTimeFormat('en-GB'),fmt:new Intl.NumberFormat('en-GB'),kmToMiles:n=>n,escapeHtml:String});
+  const context = vm.createContext({state:{data},$:id=>nodes[id] ||= {open:true},filters:()=>({from:'',to:'',eventType:'',className:''}),renderProfileAvatar(){},sharedRaceVideo:()=>null,profileStat:(value)=>String(value),distanceJourneyStat:()=>'',classLabels:{},dateFmt:new Intl.DateTimeFormat('en-GB'),fmt:new Intl.NumberFormat('en-GB'),kmToMiles:n=>n,escapeHtml:String});
   vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','driverProfile'].map(functionSource).join('\n'),context);
   for (const driver of data.drivers) {
     context.driverProfile(driver.k);
