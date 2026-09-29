@@ -5,6 +5,7 @@ import {potentialRun} from './potential-run.js';
 import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
 import { loadMap } from './load-map.js?v=20260928-local';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
+import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
 
 const state = { data: null, profileKey: '' };
 let journeyMap = null;
@@ -421,9 +422,10 @@ function renderRaceExplorer(raceId) {
   $('raceReplayLink').hidden = false;
   $('raceResultLink').href = race.u || '#';
   $('raceResultLink').hidden = !race.u;
-  const video = data.videos.find(item => item.raceId === raceId);
+  const video = sharedRaceVideo(data.raceResults, data.videos, raceId);
   $('raceVideoLink').href = video?.url || '#';
-  $('raceVideoLink').textContent = video ? `Watch ${video.round || 'race'} video ▶` : 'Watch race video ▶';
+  $('raceVideoLink').textContent = video ? `Watch Matthew’s ${video.round || 'race'} video ▶` : 'Watch Matthew’s race video ▶';
+  $('raceVideoLink').title = video ? 'You are in this race' : '';
   $('raceVideoLink').hidden = !video;
   const rows = data.raceResults.filter(row => row[0] === raceId).sort((a, b) => a[2] - b[2]);
   const fastestRow = rows.reduce((best, row) => {
@@ -1189,8 +1191,8 @@ function driverProfile(driverKey) {
     const runRows = eventRuns.map(run => {
       const race = data.raceById[run[0]];
       const raceName = race.u ? `<a href="${escapeHtml(race.u)}" target="_blank" rel="noopener">${escapeHtml(race.n)}</a>` : escapeHtml(race.n);
-      const video = data.videos.find(item => item.raceId === run[0]);
-      const videoLink = video ? `<a class="race-video-inline" href="${escapeHtml(video.url)}" target="_blank" rel="noopener">Watch ▶</a>` : '—';
+      const video = sharedRaceVideo(data.raceResults, data.videos, run[0], driverKey);
+      const videoLink = video ? `<a class="race-video-inline" href="${escapeHtml(video.url)}" target="_blank" rel="noopener" title="You are in this race">Watch Matthew’s video ▶</a>` : '—';
       return `<tr><td>${escapeHtml(race.r)}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td><td>${videoLink}</td></tr>`;
     }).join('');
     const raceDrilldown = `<details class="inline-races"><summary>${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}</summary><div class="table-wrap"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Video</th></tr></thead><tbody>${runRows}</tbody></table></div></details>`;
@@ -1335,9 +1337,10 @@ async function init() {
     data.videos = [];
     videosReady.then(videos => {
       data.videos = videos;
-      const video = videos.find(item => item.raceId === $('raceSelection').value);
+      const video = sharedRaceVideo(data.raceResults, videos, $('raceSelection').value);
       $('raceVideoLink').href = video?.url || '#';
-      $('raceVideoLink').textContent = video ? `Watch ${video.round || 'race'} video ▶` : 'Watch race video ▶';
+      $('raceVideoLink').textContent = video ? `Watch Matthew’s ${video.round || 'race'} video ▶` : 'Watch Matthew’s race video ▶';
+      $('raceVideoLink').title = video ? 'You are in this race' : '';
       $('raceVideoLink').hidden = !video;
       if ($('driverDialog').open && state.profileKey) driverProfile(state.profileKey);
     });
