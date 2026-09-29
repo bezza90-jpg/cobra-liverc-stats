@@ -46,3 +46,5 @@ header .race-date{font-size:20px;font-weight:750;color:#ecf2ed;margin:0 0 8px}
 @media(max-width:767px){.replay-fullscreen th{font-size:10px}.replay-fullscreen th:first-child{white-space:nowrap}}
 
 .replay-expand a{display:inline-block;font:inherit;border:1px solid #526456;border-radius:8px;padding:10px 13px;color:white;background:#213026;text-decoration:none}.replay-expand a:hover{background:#314734}.replay-expand a:focus-visible{outline:3px solid #c7ff9a;outline-offset:4px}
+
+.download-replay{border-color:#78b951;background:#1d4023;color:#dfffd0;font-weight:750}.download-replay:hover{background:#285b30}.download-replay.recording{background:#4d3420;color:#ffe0a6}.download-status{min-height:1.5em;margin:5px 0 0;color:#bff29e;font-size:13px}
