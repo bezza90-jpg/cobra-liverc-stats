@@ -1,7 +1,7 @@
 import {loadBookings, matchBooking} from './booking-calendar.mjs';
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
-import { BASE_URL, fetchText, parseArchive, parseEventIndex, parseOverall } from './lib/liverc.mjs';
+import { BASE_URL, driverKey, fetchText, parseArchive, parseEntryList, parseEventIndex, parseOverall } from './lib/liverc.mjs';
 import { londonDate } from '../public/assets/event-calendar.js';
 export function calendarMeetings(events) {
   return events.filter(event => /^\d{4}-\d{2}-\d{2}$/.test(event.date) &&
@@ -20,6 +20,58 @@ export function allFinalsComplete(html) {
   const statuses = [...html.matchAll(/<span\b[^>]*class=["']race_status["'][^>]*>([\s\S]*?)<\/span>/gi)];
   return classes.length > 0 && statuses.length === classes.length && statuses.every(([,status]) =>
     /^Status:\s*Complete\b/i.test(status.replace(/<[^>]*>/g,'').trim()) && /p=view_race_result/.test(status));
+}
+
+export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides = {}) {
+  const defaultCountryCode = String(overrides.defaultCountryCode || 'GB').trim().toUpperCase();
+  const driverOverrides = overrides.drivers || {};
+  return {
+    eventId: meeting?.eventId || '',
+    title: meeting?.title || 'Next COBRA race meeting',
+    date: meeting?.date || '',
+    type: meeting?.type || '',
+    sourceUrl: meeting?.resultsUrl || BASE_URL + '/events/',
+    updatedAt: new Date().toISOString(),
+    entries: entries.map(entry => {
+      const key = driverKey(entry.driverName);
+      const override = driverOverrides[key] || {};
+      return {
+        driverKey: key,
+        driverName: entry.driverName,
+        className: entry.className,
+        countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
+        chassis: String(override.chassis || chassis[key]?.name || '').trim(),
+        transponder: entry.transponder
+      };
+    })
+  };
+}
+
+async function writeIfChanged(file, value) {
+  const output = JSON.stringify(value, null, 2) + '\n';
+  const previous = await readFile(file, 'utf8').catch(error => { if (error.code === 'ENOENT') return ''; throw error; });
+  if (output === previous) return false;
+  const temporary = new URL(file.href + '.tmp');
+  await writeFile(temporary, output);
+  await rename(temporary, file);
+  return true;
+}
+
+async function updateNextEventEntries(meetings, today) {
+  const ordered = [...meetings].sort((a,b) => a.date.localeCompare(b.date) || a.title.localeCompare(b.title));
+  const meeting = ordered.find(event => event.date >= today) || ordered.at(-1);
+  const destination = new URL('../public/data/next-event-entries.json', import.meta.url);
+  if (!meeting) {
+    await writeIfChanged(destination, enrichNextEventEntries(null, []));
+    return 0;
+  }
+  const eventHtml = await fetchText(meeting.resultsUrl);
+  const entryListUrl = parseEventIndex(eventHtml).entryList;
+  const entries = entryListUrl ? parseEntryList(await fetchText(entryListUrl)) : [];
+  const chassis = JSON.parse(await readFile(new URL('../public/data/liverc-chassis.json', import.meta.url), 'utf8').catch(() => '{}'));
+  const overrides = JSON.parse(await readFile(new URL('../public/data/next-event-entry-overrides.json', import.meta.url), 'utf8').catch(() => '{}'));
+  await writeIfChanged(destination, enrichNextEventEntries(meeting, entries, chassis, overrides));
+  return entries.length;
 }
 export async function updateEventCalendar(events) {
   const meetings = calendarMeetings(events);
@@ -41,14 +93,9 @@ export async function updateEventCalendar(events) {
   const bookings = await loadBookings();
   for (const meeting of selected) meeting.bookingUrl = matchBooking(meeting, bookings);
   const file = new URL('../public/data/event-calendar.json', import.meta.url);
-  const output = JSON.stringify({sourceUrl:BASE_URL + '/events/', events:selected}, null, 2) + '\n';
-  const previous = await readFile(file, 'utf8').catch(error => { if (error.code === 'ENOENT') return ''; throw error; });
-  if (output !== previous) {
-    const temporary = new URL('../public/data/event-calendar.json.tmp', import.meta.url);
-    await writeFile(temporary, output);
-    await rename(temporary, file);
-  }
-  console.log(`Calendar refreshed: ${selected.length} meetings.`);
+  await writeIfChanged(file, {sourceUrl:BASE_URL + '/events/', events:selected});
+  const entryCount = await updateNextEventEntries(selected, today);
+  console.log(`Calendar refreshed: ${selected.length} meetings; ${entryCount} next-event entries.`);
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await updateEventCalendar(parseArchive(await fetchText(BASE_URL + '/events/')));

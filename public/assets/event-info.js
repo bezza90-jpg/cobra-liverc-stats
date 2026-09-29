@@ -1,4 +1,10 @@
 import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight';
+if (document.head?.append && document.createElement) {
+  const entriesScript = document.createElement('script');
+  entriesScript.type = 'module';
+  entriesScript.src = '../assets/event-entries.js?v=1';
+  document.head.append(entriesScript);
+}
 (async () => {
   'use strict';
   const element = id => document.getElementById(id);
