@@ -1,6 +1,12 @@
 {
   "PAUL-CURTIS": {
     "driverKey": "BRUCE",
-    "displayName": "BRUCE (PAUL CURTIS)"
+    "displayName": "BRUCE (PAUL CURTIS)",
+    "profileName": "Bruce"
+  },
+  "PAUL-BRUCE-CURTIS": {
+    "driverKey": "BRUCE",
+    "displayName": "BRUCE (PAUL CURTIS)",
+    "profileName": "Bruce"
   }
 }

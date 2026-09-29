@@ -1,3 +1,4 @@
+import {canonicalDriverKey,canonicalDriverName} from '../public/assets/driver-identity.js';
 import {chassisChoice} from './chassis-choice.mjs';
 import {loadBookings, matchBooking} from './booking-calendar.mjs';
 import { readFile, writeFile, rename } from 'node:fs/promises';
@@ -34,14 +35,16 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
     sourceUrl: meeting?.resultsUrl || BASE_URL + '/events/',
     updatedAt: new Date().toISOString(),
     entries: entries.map(entry => {
-      const key = driverKey(entry.driverName);
-      const override = driverOverrides[key] || {};
+      const sourceKey=driverKey(entry.driverName);
+      const key = canonicalDriverKey(sourceKey);
+      const override = driverOverrides[key] || driverOverrides[sourceKey] || {};
       return {
         driverKey: key,
-        driverName: entry.driverName,
+        driverName: canonicalDriverName(key,entry.driverName),
+        ...(key !== sourceKey ? {bookingName:entry.driverName} : {}),
         className: entry.className,
         countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
-        chassis: chassisChoice(override, chassis[key]?.name || ''),
+        chassis: chassisChoice(override, chassis[key]?.name || chassis[sourceKey]?.name || ''),
         transponder: entry.transponder
       };
     })
