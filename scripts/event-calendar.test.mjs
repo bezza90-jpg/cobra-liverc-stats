@@ -73,3 +73,18 @@ test('one-month fallback clamps month-end and crosses year boundaries', () => {
  assert.equal(nextMeeting([dec],'',new Date('2027-01-20T23:59:59Z')),dec);
  assert.equal(nextMeeting([dec],'',new Date('2027-01-21T00:00:00Z')),null);
 });
+
+// A manually chosen brand survives repeated old LiveRC data, but releases
+// permanently when LiveRC supplies a different value.
+import {chassisChoice, releaseChangedChoices} from './chassis-choice.mjs';
+test('manual chassis remains until a changed LiveRC brand supersedes it',()=>{
+ const rule={chassis:'Team Associated',mode:'until-liverc-change',livercAtSave:'Xray'};
+ assert.equal(chassisChoice(rule,'Xray'),'Team Associated');
+ assert.equal(chassisChoice(rule,''),'Team Associated');
+ assert.equal(chassisChoice(rule,'Schumacher'),'Schumacher');
+ const choices={drivers:{DRIVER:rule}};
+ releaseChangedChoices(choices,{DRIVER:{name:'Schumacher'}});
+ assert.equal(choices.drivers.DRIVER.chassis,'');
+ assert.equal(chassisChoice(choices.drivers.DRIVER,'Xray'),'Xray');
+ assert.equal(chassisChoice({chassis:'Kyosho'},'Xray'),'Kyosho');
+});
