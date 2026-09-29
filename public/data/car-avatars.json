@@ -1,7 +1,8 @@
 {
   "BRUCE": {
     "2-Wheel Drive Buggy": "assets/car-avatars/BRUCE-AUTO-2WD.png",
-    "Trucks": "assets/car-avatars/BRUCE.png"
+    "Trucks": "assets/car-avatars/BRUCE.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/BRUCE-AUTO-4WD.png"
   },
   "MATTHEW-HODGES": {
     "default": "assets/matt-hodges-car.png",
