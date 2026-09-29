@@ -1,0 +1,25 @@
+# Next-event entries
+
+The public Current Event, Race Day Schedule, Club Series and SWORD Championship pages show the next applicable LiveRC entry list. Entries are grouped by class and include country flag, driver, chassis and transponder.
+
+## Data refresh
+
+`npm run update` refreshes the event calendar and `public/data/next-event-entries.json` before rebuilding the remaining LiveRC data. The updater reads the next published COBRA meeting and its LiveRC entry list. This is also the command used by the scheduled results workflow and by the Site Manager **Refresh event entries** action.
+
+LiveRC supplies the class, driver and transponder. Chassis names are joined from `public/data/liverc-chassis.json`. Country and chassis exceptions can be maintained in `public/data/next-event-entry-overrides.json`; the default country is `GB` when LiveRC has no country field.
+
+Example override:
+
+```json
+{
+  "defaultCountryCode": "GB",
+  "drivers": {
+    "DRIVER-NAME": {
+      "countryCode": "GB-WLS",
+      "chassis": "Team Associated"
+    }
+  }
+}
+```
+
+The public component is loaded from `public/assets/event-entries.js`. It selects the next event for the current page, supports driver/class/chassis searching, and uses a compact card layout on phones.

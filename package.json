@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Automatically updated COBRA LiveRC statistics dashboard",
   "scripts": {
-    "update": "node scripts/update-liverc.mjs && node scripts/update-youtube.mjs",
+    "update": "node scripts/update-event-calendar.mjs && node scripts/update-liverc.mjs && node scripts/update-youtube.mjs",
     "build": "node scripts/build-dashboard.mjs && npm run build:navigation",
     "validate": "node scripts/validate.mjs && node --test scripts/consistency-source.test.mjs scripts/profile-data.test.mjs",
     "check": "node scripts/check-site.mjs && node scripts/build-navigation.mjs --check && npm run validate && node --test scripts/site-shell.test.mjs scripts/wix-navigation.test.mjs scripts/performance.test.mjs scripts/critical-data.test.mjs scripts/avatar-loader.test.mjs scripts/guide-playback.test.mjs && node --test scripts/event-calendar.test.mjs && node --test scripts/mobile-data.test.mjs && node --test scripts/booking-destination.test.mjs && node --test scripts/replay.test.mjs && node --test scripts/lap-charts.test.mjs",

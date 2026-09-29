@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nextMeeting, londonDate} from '../public/assets/event-calendar.js';
-import {calendarMeetings, allFinalsComplete, finalLineupUrls} from './update-event-calendar.mjs';
+import {calendarMeetings, allFinalsComplete, enrichNextEventEntries, finalLineupUrls} from './update-event-calendar.mjs';
 const now = new Date('2026-10-04T17:00:00Z');
 const current = {date:'2026-10-04', title:'SWORD Round 1', type:'sword'};
 const future = {date:'2026-10-11', title:'Club Day', type:'club'};
@@ -35,6 +35,13 @@ test('completion needs every scheduled final and result link, not just an overal
  assert.equal(allFinalsComplete(''),false);
  assert.equal(allFinalsComplete(complete+'<span class="class_header">Junior A-Main</span>'),false);
  assert.deepEqual(finalLineupUrls('<a href="/results/?p=view_heat_sheet&amp;id=2">Main Events</a><a href="?p=view_heat_sheet&id=3">Qualifier Round 4</a>'),['https://cobracardiff.liverc.com/results/?p=view_heat_sheet&id=2']);
+});
+test('next event entries combine the LiveRC roster with published chassis and country overrides', () => {
+ const meeting={eventId:'518554',title:'SWORD Round 1',date:'2026-10-04',type:'sword',resultsUrl:'https://cobracardiff.liverc.com/results/?p=view_event&id=518554'};
+ const entries=[{driverName:'MATTHEW HODGES',className:'2-Wheel Drive Buggy',transponder:'1234567'}];
+ const result=enrichNextEventEntries(meeting,entries,{'MATTHEW-HODGES':{name:'Team Associated'}},{defaultCountryCode:'GB',drivers:{'MATTHEW-HODGES':{countryCode:'GB-WLS'}}});
+ assert.equal(result.type,'sword');
+ assert.deepEqual(result.entries[0],{driverKey:'MATTHEW-HODGES',driverName:'MATTHEW HODGES',className:'2-Wheel Drive Buggy',countryCode:'GB-WLS',chassis:'Team Associated',transponder:'1234567'});
 });
 
 import {parseBooking,matchBooking} from './booking-calendar.mjs';
