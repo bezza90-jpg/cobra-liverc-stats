@@ -102,6 +102,12 @@
       "mode": "until-liverc-change",
       "livercAtSave": "Yokomo",
       "updatedAt": "2026-09-30T17:33:18.864485+00:00"
+    },
+    "TOONZ-TOWNSEND": {
+      "chassis": "Xray",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-30T17:38:20.610252+00:00"
     }
   }
 }
