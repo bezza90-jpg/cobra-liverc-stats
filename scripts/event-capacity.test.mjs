@@ -1,0 +1,12 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {eventSpaces} from '../public/assets/event-capacity.js';
+const meeting={eventId:'1',date:'2026-10-04',type:'sword'};
+const data={...meeting,entries:[{className:'2WD'},{className:'2WD'}]};
+test('counts class entries and applies event limits',()=>assert.equal(eventSpaces(data,meeting,{events:{1:{limits:{'2WD':5}}}})[0].remaining,3));
+test('never carries old counts into another meeting',()=>assert.deepEqual(eventSpaces(data,{...meeting,eventId:'2'},{types:{sword:{'2WD':5}}}),[]));
+test('series defaults apply to future events and event override wins',()=>{const c={types:{sword:{'2WD':5}},events:{1:{limits:{'2WD':4}}}};assert.equal(eventSpaces(data,meeting,c)[0].limit,4);assert.equal(eventSpaces({...data,eventId:'2'},{...meeting,eventId:'2'},c)[0].limit,5)});
+test('confirmed entries protect spaces until feed catches up',()=>{const c={events:{1:{limits:{'2WD':5},confirmedMinimum:{'2WD':4}}}};assert.equal(eventSpaces(data,meeting,c)[0].remaining,1);assert.equal(eventSpaces({...data,entries:Array(6).fill({className:'2WD'})},meeting,c)[0].remaining,0)});
+test('unconfigured event does not invent capacity',()=>assert.deepEqual(eventSpaces(data,meeting,{}),[]));
+test('reserved driver replaces their reserved space when entered',()=>{const c={types:{sword:{'2WD':5}},reservedByType:{sword:{'2WD':['BOB']}}};assert.equal(eventSpaces(data,meeting,c)[0].remaining,2);assert.equal(eventSpaces({...data,entries:[...data.entries,{className:'2WD',driverKey:'BOB'}]},meeting,c)[0].remaining,2)});
+test('current event can disable defaults and use confirmed totals',()=>{const c={types:{sword:{'2WD':5}},reservedByType:{sword:{'2WD':['BOB']}},events:{1:{reserved:{},confirmedMinimum:{'2WD':3}}}};assert.equal(eventSpaces(data,meeting,c)[0].remaining,2)});

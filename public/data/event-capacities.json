@@ -1,0 +1,17 @@
+{
+  "types": {"sword":{"Junior Racers":12,"4-Wheel Drive Buggy":30,"2-Wheel Drive Buggy":80}},
+  "reservedByType": {
+    "sword": {
+      "2-Wheel Drive Buggy":["MATTHEW-HODGES","BOBTECH","STEVE-CURTIS-RICH","MIKE-HYSIAK"],
+      "4-Wheel Drive Buggy":["MATTHEW-HODGES","BOBTECH","STEVE-CURTIS-RICH","MIKE-HYSIAK","BRUCE"]
+    }
+  },
+  "events": {
+    "518554": {
+      "limits":{"Junior Racers":12,"4-Wheel Drive Buggy":30,"2-Wheel Drive Buggy":80},
+      "reserved":{},
+      "confirmedMinimum":{"Junior Racers":5,"4-Wheel Drive Buggy":27,"2-Wheel Drive Buggy":58},
+      "confirmedOn":"2026-09-30"
+    }
+  }
+}

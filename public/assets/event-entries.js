@@ -1,10 +1,12 @@
+import {eventSpaces} from './event-capacity.js';
+import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
 import {entryIdentity} from './event-entry-identity.js';
 import {compareEntryNames} from './event-entry-order.js';
 function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=4';
+  link.href = '../assets/event-entries.css?v=5';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -66,7 +68,7 @@ function expectedType(root) {
   return new URLSearchParams(location.search).get('type') === 'sword' ? 'sword' : 'club';
 }
 
-function render(root, data) {
+function render(root, data, capacity = {}, calendar = {}) {
   const type = expectedType(root);
   if (type && data.type && type !== data.type) {
     root.hidden = true;
@@ -80,6 +82,29 @@ function render(root, data) {
   const eventDate = data.date ? new Date(data.date + 'T12:00:00Z').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'UTC'}) : '';
   summary.textContent = `${data.entries.length} ${data.entries.length === 1 ? 'entry' : 'entries'} published in LiveRC${eventDate ? ` · ${eventDate}` : ''}`;
   content.replaceChildren();
+  const meeting = nextMeeting(calendar.events || [], type);
+  const spaces = eventSpaces(data, meeting, capacity);
+  if (spaces.length) {
+    const panel = element('section', 'event-spaces');
+    panel.setAttribute('aria-label','Remaining race-class spaces');
+    panel.append(element('h3','','Race-class spaces'));
+    const cards = element('div','event-space-cards');
+    for (const item of spaces) {
+      const card = element('div','event-space-card');
+      const label = {'Junior Racers':'Junior heat','4-Wheel Drive Buggy':'4WD','2-Wheel Drive Buggy':'2WD'}[item.name] || item.name;
+      card.append(element('strong','',label),element('b','',item.remaining ? `${item.remaining} spaces remaining` : 'Class full'),element('span','',`${item.entered} entered or reserved / ${item.limit} spaces`));
+      cards.append(card);
+    }
+    panel.append(cards);
+    const checked = new Date(data.updatedAt);
+    const stamp = Number.isNaN(checked.getTime()) ? '' : ` Last refreshed ${checked.toLocaleString('en-GB',{timeZone:'Europe/London'})} (UK time).`;
+    panel.append(element('p','',`Based on published LiveRC entries${spaces.some(item=>item.confirmed) ? ' and race-control confirmed entries' : ''}.${stamp} Club-driver reservations are included where configured. New bookings may not yet be included. Check availability when booking. Under-16s racing with seniors count in their car class.`));
+    if (/^https:\/\/www\.cobracardiff\.co\.uk\/event-details-1\//.test(meeting.bookingUrl || '')) {
+      const booking=element('a','event-entry-source','Book this event ↗');
+      booking.href=meeting.bookingUrl; booking.target='_blank'; booking.rel='noopener'; panel.append(booking);
+    }
+    content.append(panel);
+  }
   if (!data.entries.length) {
     content.append(element('p', 'event-entries-empty', 'Entries will appear here when they are published in LiveRC.'));
     return;
@@ -185,7 +210,9 @@ if (roots.length) {
   Promise.all([
     fetch('../data/next-event-entries.json', {cache:'no-cache'}).then(response => { if (!response.ok) throw Error('Entries unavailable'); return response.json(); }),
     fetch('../data/car-avatar-driver-aliases.json', {cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({}))
-  ]).then(([data,aliases]) => roots.forEach(root => render(root, {...data, entries:data.entries.map(entry => entryIdentity(entry,aliases))})))
+    ,fetch('../data/event-capacities.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
+    ,fetch('../data/event-calendar.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
+  ]).then(([data,aliases,capacity,calendar]) => roots.forEach(root => render(root, {...data, entries:data.entries.map(entry => entryIdentity(entry,aliases))},capacity,calendar)))
     .catch(() => roots.forEach(root => {
       const summary = root.querySelector('[data-entry-summary]');
       if (summary) summary.textContent = 'Entries are temporarily unavailable. Please check LiveRC.';
