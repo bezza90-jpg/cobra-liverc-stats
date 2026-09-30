@@ -1,0 +1,25 @@
+/* Only the statistics landing page uses this compact phone layout. */
+.mobile-driver-shortcut{display:none}
+@media(max-width:700px){
+  .statistics-page>.hero{padding:14px 16px 16px}
+  .statistics-page .hero-copy{padding:0 0 8px}
+  .statistics-page .hero-copy .eyebrow{margin-bottom:6px;font-size:.65rem}
+  .statistics-page .hero h1{font-size:1.55rem;line-height:1.15}
+  .statistics-page .hero-copy>p:last-child{font-size:.875rem;line-height:1.4;margin-top:7px}
+  .statistics-page .mobile-driver-shortcut{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;min-height:48px;margin:3px 0 8px;padding:10px 14px;border-radius:7px;background:#fff;color:#067b14;font-weight:850;text-decoration:none}
+  .statistics-page .updated{display:block;border:0;background:none;border-radius:0;padding:0;font-size:.75rem;line-height:1.4}
+  .statistics-page .update-schedule{display:block;margin:3px 0 0;font-size:.7rem;line-height:1.4}
+  .statistics-page .hero>.archive-link{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin:8px 6px 0 0;padding:8px 12px;box-shadow:none}
+  .statistics-page>main>.overview{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0;transform:none}
+  .statistics-page>main>.overview article{min-height:64px;padding:10px 12px;box-shadow:none;border-top-width:3px}
+  .statistics-page>main>.overview strong{font-size:1.35rem}
+  .statistics-page>main>.overview span{margin-top:4px;font-size:.65rem}
+  .statistics-page .filters{padding:16px}
+  .statistics-page .filters .section-heading{gap:10px;margin-bottom:14px}
+  .statistics-page .filters .section-heading .eyebrow{display:none}
+  .statistics-page .filters h2{font-size:1.35rem}
+  .statistics-page .filter-grid>label{order:1}
+  .statistics-page .filter-grid>.statistics-driver-search{order:0;grid-column:1/-1}
+  .statistics-page #driverSearch{scroll-margin-top:20px;min-height:48px;font-size:16px}
+  .statistics-page #driverSearch:target{outline:3px solid #08a31a;outline-offset:3px}
+}
