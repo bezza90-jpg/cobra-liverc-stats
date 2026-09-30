@@ -11,3 +11,11 @@ test('merge retains different races and classes without double counting duplicat
  assert.equal(result.length,3);assert.equal(result.filter(r=>r.driverKey==='BRUCE').reduce((n,r)=>n+r.laps,0),26);
  assert.equal(rows[0].driverKey,'PAUL-CURTIS');
 });
+
+test('Bob Gelstharp uses BobTech master without changing unrelated drivers',()=>{
+ assert.equal(canonicalDriverKey('BOB-GELSTHARP'),'BOBTECH');
+ assert.equal(canonicalDriverName('BOBTECH','BOBTECH'),'BobTech');
+ assert.equal(canonicalDriverKey('BOB-OTHER'),'BOB-OTHER');
+ const rows=[{driverKey:'BOB-GELSTHARP',race:1},{driverKey:'BOBTECH',race:2}];
+ assert.equal(mergeDriverRows(rows,r=>r.race+'|'+r.driverKey).length,2);
+});

@@ -175,6 +175,7 @@ def write_thumbnail(avatar_path):
 def validate_class_targets(current):
     targets = set()
     for pair in current:
+        if manually_kept(pair, current[pair]): continue
         source, cls = pair.split('|', 1)
         driver = canonical_driver_key(source)
         target = assigned_target(driver, cls)
@@ -183,13 +184,18 @@ def validate_class_targets(current):
         targets.add(target)
 
 
+def manually_kept(pair, revision):
+    return read_json(ROOT / 'public/data/car-avatar-manual-revisions.json').get(pair) == revision
+
+
 def needs_processing(current, previous, photo_ids, retry_id=''):
     validate_class_targets(current)
     manifest = read_json(MANIFEST)
     if retry_id and retry_id not in photo_ids.values():
         raise ValueError('Retry submission is not in the current approved feed.')
-    if current != previous or retry_id: return True
+    if any(not manually_kept(pair,revision) and previous.get(pair)!=revision for pair,revision in current.items()) or set(previous)-set(current) or retry_id: return True
     for pair in current:
+        if manually_kept(pair, current[pair]): continue
         key, cls = pair.split('|', 1)
         key = canonical_driver_key(key)
         key, target_class = assigned_target(key, cls)
@@ -211,6 +217,7 @@ def publish(retry_id=''):
     failures = {}
     changes = 0
     for pair, revision in current.items():
+        if manually_kept(pair, revision): continue
         source_driver_key, cls = pair.split("|", 1)
         origin_key = canonical_driver_key(source_driver_key)
         driver_key, target_class = assigned_target(origin_key, cls)
@@ -246,6 +253,10 @@ def publish(retry_id=''):
         changes += 1
 
     for pair in set(previous) - set(current):
+        if manually_kept(pair, previous[pair]):
+            previous.pop(pair)
+            changes += 1
+            continue
         source_driver_key, cls = pair.split("|", 1)
         origin_key = canonical_driver_key(source_driver_key)
         driver_key, target_class = assigned_target(origin_key, cls)

@@ -25,6 +25,17 @@ class SyncTests(unittest.TestCase):
         self.tmp.cleanup()
     def test_missing_asset_rebuilds_even_if_revision_matches(self):
         self.assertTrue(sync.needs_processing({'DALE|Trucks':'revision'}, {'DALE|Trucks':'revision'}, {'DALE|Trucks':'id'}))
+    def test_manually_removed_photo_stays_removed_until_new_revision(self):
+        pair='DALE|Trucks'
+        (self.data/'car-avatar-manual-revisions.json').write_text(json.dumps({pair:'revision'}))
+        self.assertFalse(sync.needs_processing({pair:'revision'}, {pair:'revision'}, {pair:'id'}))
+        self.assertTrue(sync.needs_processing({pair:'newrevision'}, {pair:'revision'}, {pair:'id'}))
+    def test_merged_same_class_old_revisions_do_not_collide(self):
+        (self.data/'aliases.json').write_text(json.dumps({'OLD':{'driverKey':'MASTER'}}))
+        held={'OLD|Trucks':'old','MASTER|Trucks':'master'}
+        (self.data/'car-avatar-manual-revisions.json').write_text(json.dumps(held))
+        sync.validate_class_targets(held)
+        sync.validate_class_targets({'OLD|Trucks':'new','MASTER|Trucks':'master'})
     def test_retry_unknown_id_refused(self):
         with self.assertRaises(ValueError): sync.needs_processing({}, {}, {}, 'unknown')
     def test_one_failure_does_not_lose_other_avatar(self):
