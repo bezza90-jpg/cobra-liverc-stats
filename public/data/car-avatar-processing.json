@@ -1,11 +1,5 @@
 {
-  "checkedAt": "2026-09-30T00:07:52.662579+00:00",
-  "updated": 0,
-  "failures": {
-    "MARK-GREENWOOD|2-Wheel Drive Buggy": {
-      "id": "9dd89d18-d1f2-47cd-844c-cb79dca6fa90",
-      "revision": "1TPXxA3RB07EqcABsB6lNMdbmZ0Fx_AYg",
-      "error": "HTTPError while downloading or removing the background; see workflow log."
-    }
-  }
+  "checkedAt": "2026-09-30T00:10:38.946106+00:00",
+  "updated": 1,
+  "failures": {}
 }
