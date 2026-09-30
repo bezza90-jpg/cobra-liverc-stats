@@ -1,3 +1,4 @@
+import {fitAvatarImage} from './avatar-loader.js';
 const classOrder = ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Trucks', 'Vintage', 'Junior Racers', 'default'];
 function imagesFor(entry) {
   let entries = typeof entry === 'string' ? [['default', entry]] : entry && typeof entry === 'object' ? Object.entries(entry) : [];
@@ -15,12 +16,18 @@ function element(tag, className, text) {
   if (text) node.textContent = text;
   return node;
 }
+function fitDisplayedCar(image) {
+  if (image.src.startsWith('data:')) return;
+  const fitted = fitAvatarImage(image);
+  if (fitted !== image.src) image.src = fitted;
+}
 // One shared preview avoids clipping by gallery cards or the viewport edges.
 const preview = element('div', 'car-avatar-preview');
 preview.hidden = true;
 preview.setAttribute('role', 'tooltip');
 preview.id = 'carAvatarPreview';
 const previewImage = element('img');
+previewImage.addEventListener('load', () => fitDisplayedCar(previewImage));
 const previewCaption = element('p');
 preview.append(previewImage, previewCaption);
 document.body.append(preview);
@@ -103,6 +110,7 @@ async function initialise() {
             const revision = sourceRevision(driver.k, className);
             image.loading = 'lazy';
             image.decoding = 'async';
+            image.addEventListener('load', () => fitDisplayedCar(image));
             const revisionQuery = revision ? '?v=' + encodeURIComponent(revision) : '';
             image.src = thumbnailFor(path) + revisionQuery;
             image.dataset.fullSrc = '../' + path + revisionQuery;
