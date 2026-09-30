@@ -192,7 +192,8 @@ def needs_processing(current, previous, photo_ids, retry_id=''):
     validate_class_targets(current)
     manifest = read_json(MANIFEST)
     if retry_id and retry_id not in photo_ids.values():
-        raise ValueError('Retry submission is not in the current approved feed.')
+        print('::warning::Retry submission is no longer in the current approved feed; skipping its stale retry.', file=sys.stderr)
+        retry_id = ''
     if any(not manually_kept(pair,revision) and previous.get(pair)!=revision for pair,revision in current.items()) or set(previous)-set(current) or retry_id: return True
     for pair in current:
         if manually_kept(pair, current[pair]): continue
@@ -213,7 +214,8 @@ def publish(retry_id=''):
     validate_class_targets(current)
     manifest = read_json(MANIFEST)
     if retry_id and retry_id not in photo_ids.values():
-        raise ValueError('Retry submission is not in the current approved feed.')
+        print('::warning::Retry submission is no longer in the current approved feed; skipping its stale retry.', file=sys.stderr)
+        retry_id = ''
     failures = {}
     changes = 0
     for pair, revision in current.items():
