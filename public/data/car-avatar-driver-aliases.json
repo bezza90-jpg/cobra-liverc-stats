@@ -8,5 +8,15 @@
     "driverKey": "BRUCE",
     "displayName": "BRUCE (PAUL CURTIS)",
     "profileName": "Bruce"
+  },
+  "BOBTECH": {
+    "driverKey": "BOBTECH",
+    "displayName": "BobTech",
+    "profileName": "BobTech"
+  },
+  "BOB-GELSTHARP": {
+    "driverKey": "BOBTECH",
+    "displayName": "BobTech",
+    "profileName": "BobTech"
   }
 }

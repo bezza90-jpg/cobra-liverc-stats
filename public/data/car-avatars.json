@@ -18,7 +18,9 @@
     "4-Wheel Drive Buggy": "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-4WD.png"
   },
   "BOBTECH": {
-    "2-Wheel Drive Buggy": "assets/car-avatars/BOBTECH-AUTO-2WD.png"
+    "2-Wheel Drive Buggy": "assets/car-avatars/BOBTECH-AUTO-2WD.png",
+    "Vintage": "assets/car-avatars/BOB-GELSTHARP-AUTO-VINTAGE.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/BOB-GELSTHARP-AUTO-4WD.png"
   },
   "GREG-LANE": {
     "2-Wheel Drive Buggy": "assets/car-avatars/GREG-LANE-AUTO-2WD.png"
@@ -68,9 +70,5 @@
   },
   "JUSTIN-WALKER": {
     "2-Wheel Drive Buggy": "assets/car-avatars/JUSTIN-WALKER-AUTO-2WD.png"
-  },
-  "BOB-GELSTHARP": {
-    "Vintage": "assets/car-avatars/BOB-GELSTHARP-AUTO-VINTAGE.png",
-    "4-Wheel Drive Buggy": "assets/car-avatars/BOB-GELSTHARP-AUTO-4WD.png"
   }
 }
