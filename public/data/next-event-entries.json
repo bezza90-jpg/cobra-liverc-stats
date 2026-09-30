@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-09-30T17:34:48.028Z",
+  "updatedAt": "2026-09-30T17:38:29.337378+00:00",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -662,7 +662,7 @@
       "driverName": "TOONZ TOWNSEND",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Xray",
       "transponder": "2846066"
     },
     {
