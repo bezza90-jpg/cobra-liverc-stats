@@ -16,17 +16,7 @@
  body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map{height:max(440px,calc(100dvh - 285px));max-height:none}
  body.embedded-tracker-page .journey-map-overlay:not(.fullscreen) .journey-map-legend{margin-top:5px;font-size:.68rem}
 }
-@media(min-width:1051px){
- body.embedded-tracker-page .cobra-header-inner{display:flex;align-items:center;gap:18px;min-height:58px;height:58px;aspect-ratio:auto;padding:4px 14px}
- body.embedded-tracker-page .cobra-site-header .cobra-site-logo{position:static;flex:0 0 190px;width:190px}
- body.embedded-tracker-page .cobra-site-header .cobra-site-logo img{max-height:48px}
- body.embedded-tracker-page .cobra-site-header .cobra-book-in{position:static;flex:0 0 110px;width:110px;height:36px;font-size:14px}
- body.embedded-tracker-page .cobra-mobile-menu{position:static;flex:1;width:auto;padding:0}
- body.embedded-tracker-page .cobra-site-menu{justify-content:space-evenly;gap:4px}
- body.embedded-tracker-page .cobra-site-menu>a,body.embedded-tracker-page .cobra-menu-group>summary{font-size:14px;padding:8px 5px}
- body.embedded-tracker-page .cobra-site-header .cobra-gpw-logo{position:static;flex:0 0 65px;width:65px}
- body.embedded-tracker-page .cobra-site-header .cobra-gpw-logo img{width:65px;height:46px}
-}
+
 
 .journey-driver-label.avatar-priority{z-index:2!important}
 .journey-driver-label.selected{z-index:3!important}
