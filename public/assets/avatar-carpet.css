@@ -1,0 +1,10 @@
+/* Display background only: original car PNGs stay transparent. */
+.driver-profile-avatar,.car-image-card,.car-avatar-preview{
+  background-color:#9b9b99;
+  background-image:url('./grey-carpet.svg');
+  background-size:128px 128px;
+  border-color:#828280;
+}
+.driver-profile-avatar figcaption,.car-image-card figcaption,.car-avatar-preview p{
+  color:#17211a;background:#ffffffeb;border-radius:4px;padding:3px 5px;
+}
