@@ -3,7 +3,7 @@ import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight
 if (document.head?.append && document.createElement) {
   const entriesScript = document.createElement('script');
   entriesScript.type = 'module';
-  entriesScript.src = '../assets/event-entries.js?v=6';
+  entriesScript.src = '../assets/event-entries.js?v=7';
   document.head.append(entriesScript);
 }
 (async () => {
