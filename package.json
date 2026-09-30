@@ -7,7 +7,7 @@
   "scripts": {
     "update": "node scripts/automation-run.mjs liverc && node scripts/automation-run.mjs youtube",
     "build": "node scripts/build-dashboard.mjs && npm run build:navigation",
-    "validate": "node scripts/validate.mjs && node --test scripts/consistency-source.test.mjs scripts/profile-data.test.mjs scripts/shared-race-video.test.mjs",
+    "validate": "node scripts/validate.mjs && node --test scripts/driver-directory.test.mjs scripts/consistency-source.test.mjs scripts/profile-data.test.mjs scripts/shared-race-video.test.mjs",
     "check": "node scripts/check-site.mjs && node scripts/build-navigation.mjs --check && npm run validate && node --test scripts/site-shell.test.mjs scripts/wix-navigation.test.mjs scripts/performance.test.mjs scripts/critical-data.test.mjs scripts/avatar-loader.test.mjs scripts/guide-playback.test.mjs && node --test scripts/event-calendar.test.mjs && node --test scripts/mobile-data.test.mjs && node --test scripts/booking-destination.test.mjs && node --test scripts/replay.test.mjs && node --test scripts/lap-charts.test.mjs",
     "build:navigation": "node scripts/build-navigation.mjs",
     "update:calendar": "node scripts/update-event-calendar.mjs"
