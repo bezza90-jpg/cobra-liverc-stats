@@ -70,6 +70,7 @@
     "2-Wheel Drive Buggy": "assets/car-avatars/JUSTIN-WALKER-AUTO-2WD.png"
   },
   "BOB-GELSTHARP": {
-    "Vintage": "assets/car-avatars/BOB-GELSTHARP-AUTO-VINTAGE.png"
+    "Vintage": "assets/car-avatars/BOB-GELSTHARP-AUTO-VINTAGE.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/BOB-GELSTHARP-AUTO-4WD.png"
   }
 }
