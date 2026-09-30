@@ -1,3 +1,4 @@
+import {addCurrentEntrants} from './driver-directory.mjs';
 import {mergeDriverRows} from '../public/assets/driver-identity.js';
 import {averageLapText, fastestLapText} from '../public/assets/lap-result-format.js';
 import { readFile, writeFile, rename } from 'node:fs/promises';
@@ -32,6 +33,11 @@ const eventResults=mergeDriverRows(rawEventResults,r=>`${r.liveRcEventId}|${cano
 const raceResults=mergeDriverRows(rawRaceResults,r=>`${r.liveRcRaceId}|${r.driverKey}`);
 const names = new Map();
 for (const row of [...entries, ...eventResults, ...raceResults]) names.set(row.driverKey, row.driverName);
+const currentEntries = JSON.parse(await readFile(path.join(root, 'public/data/next-event-entries.json'), 'utf8').catch(error => {
+  if (error.code === 'ENOENT') return '{"entries":[]}';
+  throw error;
+}));
+addCurrentEntrants(names, currentEntries.entries);
 const juniorKeys = new Set(eventResults.filter(row => canonicalClass(row.className) === 'Junior Racers').map(row => row.driverKey));
 const classOrder = ['Junior Racers', '2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Trucks', 'Vintage'];
 const availableClasses = new Set([...entries, ...eventResults, ...races].map(row => canonicalClass(row.className)).filter(Boolean));
