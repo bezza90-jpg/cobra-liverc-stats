@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-09-30T15:53:40.557Z",
+  "updatedAt": "2026-09-30T16:33:54.853Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -193,6 +193,14 @@
       "transponder": "7151081"
     },
     {
+      "driverKey": "GREG-PARKER",
+      "driverName": "GREG PARKER",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "7312122"
+    },
+    {
       "driverKey": "DAN-PULLEY",
       "driverName": "DAN PULLEY",
       "className": "4-Wheel Drive Buggy",
@@ -281,12 +289,28 @@
       "transponder": "2367009"
     },
     {
+      "driverKey": "CHRIS-BODEN",
+      "driverName": "CHRIS BODEN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "3309053"
+    },
+    {
       "driverKey": "TIM-BRAVERY",
       "driverName": "TIM BRAVERY",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
       "transponder": "7856530"
+    },
+    {
+      "driverKey": "MARK-COX",
+      "driverName": "MARK COX",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "3727335"
     },
     {
       "driverKey": "JAMIE-DAVIES",
@@ -632,6 +656,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "4571829"
+    },
+    {
+      "driverKey": "TOONZ-TOWNSEND",
+      "driverName": "TOONZ TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": "2846066"
     },
     {
       "driverKey": "JON-TUCKER",
