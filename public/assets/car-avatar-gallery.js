@@ -61,9 +61,9 @@ window.addEventListener('resize', hidePreview);
 async function initialise() {
   const status = document.getElementById('galleryStatus');
   try {
-    const revisionRequest = fetch('../data/car-avatar-source-revisions.json').then(response => response.ok ? response.json() : {}).catch(() => ({}));
-    const aliasRequest = fetch('../data/car-avatar-driver-aliases.json').then(response => response.ok ? response.json() : {}).catch(() => ({}));
-    const responses = await Promise.all([fetch('../data/driver-directory.json'), fetch('../data/car-avatars.json')]);
+    const revisionRequest = fetch('../data/car-avatar-source-revisions.json', {cache:'no-store'}).then(response => response.ok ? response.json() : {}).catch(() => ({}));
+    const aliasRequest = fetch('../data/car-avatar-driver-aliases.json', {cache:'no-store'}).then(response => response.ok ? response.json() : {}).catch(() => ({}));
+    const responses = await Promise.all([fetch('../data/driver-directory.json', {cache:'no-store'}), fetch('../data/car-avatars.json', {cache:'no-store'})]);
     if (responses.some(response => !response.ok)) throw new Error('Unable to load the driver gallery. Please refresh to try again.');
     const [dashboard, manifest] = await Promise.all(responses.map(response => response.json()));
     // Images retain their filename when re-reviewed; a revision prevents stale cutouts.
