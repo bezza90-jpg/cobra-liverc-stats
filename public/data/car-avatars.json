@@ -84,5 +84,8 @@
   "LEE-KILLWORTH": {
     "2-Wheel Drive Buggy": "assets/car-avatars/LEE-KILLWORTH-AUTO-2WD.png",
     "4-Wheel Drive Buggy": "assets/car-avatars/LEE-KILLWORTH-AUTO-4WD.png"
+  },
+  "BEN-EVANS": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/BEN-EVANS-AUTO-2WD.png"
   }
 }
