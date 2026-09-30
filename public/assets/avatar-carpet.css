@@ -1,7 +1,7 @@
 /* Display background only: original car PNGs stay transparent. */
 .driver-profile-avatar,.car-image-card,.car-avatar-preview{
-  background-color:#9b9b99;
-  background-image:linear-gradient(to bottom,#eef7ef 0%,rgba(238,247,239,.88) 20%,rgba(238,247,239,.3) 58%,rgba(238,247,239,0) 100%),url('./grey-carpet.svg');
+  background-color:#86a38b;
+  background-image:linear-gradient(to bottom,#eef7ef 0%,rgba(238,247,239,.88) 20%,rgba(238,247,239,.3) 58%,rgba(238,247,239,0) 100%),url('./green-carpet.svg');
   background-size:100% 100%,128px 128px;
   border-color:#c5d5c9;
 }
