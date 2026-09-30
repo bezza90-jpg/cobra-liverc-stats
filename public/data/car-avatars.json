@@ -20,7 +20,8 @@
   "BOBTECH": {
     "2-Wheel Drive Buggy": "assets/car-avatars/BOBTECH-AUTO-2WD.png",
     "Vintage": "assets/car-avatars/BOB-GELSTHARP-AUTO-VINTAGE.png",
-    "4-Wheel Drive Buggy": "assets/car-avatars/BOB-GELSTHARP-AUTO-4WD.png"
+    "4-Wheel Drive Buggy": "assets/car-avatars/BOB-GELSTHARP-AUTO-4WD.png",
+    "Trucks": "assets/car-avatars/BOBTECH-AUTO-TRUCKS.png"
   },
   "GREG-LANE": {
     "2-Wheel Drive Buggy": "assets/car-avatars/GREG-LANE-AUTO-2WD.png"
@@ -70,5 +71,18 @@
   },
   "JUSTIN-WALKER": {
     "2-Wheel Drive Buggy": "assets/car-avatars/JUSTIN-WALKER-AUTO-2WD.png"
+  },
+  "MIKE-HYSIAK": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-HYSIAK-AUTO-2WD.png"
+  },
+  "STUART-IRONS": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/STUART-IRONS-AUTO-2WD.png"
+  },
+  "EDWARD-ROSS": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/EDWARD-ROSS-AUTO-2WD.png"
+  },
+  "LEE-KILLWORTH": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/LEE-KILLWORTH-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/LEE-KILLWORTH-AUTO-4WD.png"
   }
 }
