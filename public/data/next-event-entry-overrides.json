@@ -78,6 +78,30 @@
       "mode": "until-liverc-change",
       "livercAtSave": "R1 Wurks",
       "updatedAt": "2026-09-29T19:10:33.934331+00:00"
+    },
+    "EDWARD-SCOTT": {
+      "chassis": "Team Associated",
+      "mode": "until-liverc-change",
+      "livercAtSave": "",
+      "updatedAt": "2026-09-30T01:48:25.985645+00:00"
+    },
+    "MATT-OSLAND-JONES": {
+      "chassis": "Xray",
+      "mode": "until-liverc-change",
+      "livercAtSave": "Team Associated",
+      "updatedAt": "2026-09-30T13:13:16.915828+00:00"
+    },
+    "MARK-COX": {
+      "chassis": "Yokomo",
+      "mode": "until-liverc-change",
+      "livercAtSave": "Team Associated",
+      "updatedAt": "2026-09-30T15:36:52.710631+00:00"
+    },
+    "MATT-WOODIWISS": {
+      "chassis": "Xray",
+      "mode": "until-liverc-change",
+      "livercAtSave": "Yokomo",
+      "updatedAt": "2026-09-30T17:33:18.864485+00:00"
     }
   }
 }

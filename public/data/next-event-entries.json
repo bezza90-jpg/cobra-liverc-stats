@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-09-30T17:14:10.949Z",
+  "updatedAt": "2026-09-30T17:33:39.431761+00:00",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -213,7 +213,7 @@
       "driverName": "EDWARD SCOTT",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Team Associated",
       "transponder": ""
     },
     {
@@ -237,7 +237,7 @@
       "driverName": "MATT WOODIWISS",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Yokomo",
+      "chassis": "Xray",
       "transponder": "6991518"
     },
     {
@@ -309,7 +309,7 @@
       "driverName": "MARK COX",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Yokomo",
       "transponder": "3727335"
     },
     {
@@ -574,7 +574,7 @@
       "driverName": "MATT OSLAND-JONES",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Xray",
       "transponder": "2915962"
     },
     {
@@ -702,7 +702,7 @@
       "driverName": "MATT WOODIWISS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Yokomo",
+      "chassis": "Xray",
       "transponder": "6991518"
     },
     {
