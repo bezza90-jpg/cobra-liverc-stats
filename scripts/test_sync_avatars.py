@@ -36,8 +36,8 @@ class SyncTests(unittest.TestCase):
         (self.data/'car-avatar-manual-revisions.json').write_text(json.dumps(held))
         sync.validate_class_targets(held)
         sync.validate_class_targets({'OLD|Trucks':'new','MASTER|Trucks':'master'})
-    def test_retry_unknown_id_refused(self):
-        with self.assertRaises(ValueError): sync.needs_processing({}, {}, {}, 'unknown')
+    def test_stale_retry_is_harmless(self):
+        self.assertFalse(sync.needs_processing({}, {}, {}, 'old-submission'))
     def test_one_failure_does_not_lose_other_avatar(self):
         state = ('https://example.test', {'DALE|Trucks':'file1','MARK|Trucks':'file2'}, {}, {'DALE|Trucks':'id1','MARK|Trucks':'id2'})
         def request(url, p):
