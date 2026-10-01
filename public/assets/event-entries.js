@@ -5,7 +5,12 @@ import {compareEntryNames} from './event-entry-order.js';
 const allowedAvatar = /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/;
 function entryAvatar(avatars, revisions, entry) {
   const record = avatars?.[entry.driverKey];
-  const className = typeof record === 'string' ? 'default' : (typeof record?.[entry.className] === 'string' ? entry.className : 'default');
+  const juniorClasses = ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Junior Racers', 'default'];
+  const className = typeof record === 'string'
+    ? 'default'
+    : entry.className === 'Junior Racers'
+      ? juniorClasses.find(candidate => typeof record?.[candidate] === 'string')
+      : (typeof record?.[entry.className] === 'string' ? entry.className : 'default');
   const path = typeof record === 'string' ? record : record?.[className];
   if (typeof path !== 'string' || !allowedAvatar.test(path)) return null;
   const revision = revisions?.[entry.driverKey + '|' + className];
@@ -16,7 +21,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=7';
+  link.href = '../assets/event-entries.css?v=8';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
