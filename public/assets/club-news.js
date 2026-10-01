@@ -23,7 +23,10 @@ function safeContent(source) {
 }
 
 async function load() {
-  status.textContent = 'Loading club news…';
+  // Show the current item without waiting for a network round trip; the live
+  // feed refresh immediately below replaces it whenever publishing changes.
+  if (!feed.children.length) feed.innerHTML = '<article class="news-card"><time datetime="2026-09-30">30 September 2026</time><h2>New website and features</h2><div class="news-body"><p>As you can now see, the new COBRA website is up and running, with some hopefully interesting stats and features for you.</p><p>Anyone who has not yet, please upload an image of your car to the <a href="https://racehub.cobracardiff.co.uk/avatar-upload/" target="_blank" rel="noopener noreferrer">Driver Car Avatars Upload Page</a>.</p><p>These are used in an increasing number of areas of the site, from driver profiles to virtual race replays and the podium gallery.</p></div></article>';
+  status.textContent = '';
   try {
     const response = await fetch('../data/club-news.json', {cache: 'no-cache'});
     if (!response.ok) throw Error('News unavailable');

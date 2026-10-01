@@ -2,7 +2,7 @@ const $ = id => document.getElementById(id);
 if (typeof document !== 'undefined' && document.head?.append && document.createElement) {
   const entriesScript = document.createElement('script');
   entriesScript.type = 'module';
-  entriesScript.src = '../assets/event-entries.js?v=20261001-avatar-column';
+  entriesScript.src = '../assets/event-entries.js?v=20261001-avatar-eager';
   document.head.append(entriesScript);
 }
 const fmt = new Intl.NumberFormat('en-GB');
@@ -158,7 +158,7 @@ function render() {
       <td>${driver.highestDrop || '—'}</td><td class="championship-total">${driver.total}</td><td>${driver.tqs}</td><td>${driver.wins}</td>
     </tr>`;
   }).join('') : `<tr><td colspan="${9 + events.length}" class="empty-standings">No ${escapeHtml(classLabels[activeClass] || activeClass)} results have been published for this championship yet.</td></tr>`;
-  import('./result-avatars.js?v=2').then(({hydrateResultAvatars}) => hydrateResultAvatars($('standingsBody')));
+  import('./result-avatars.js?v=3').then(({hydrateResultAvatars}) => hydrateResultAvatars($('standingsBody')));
 
   $('roundLinks').innerHTML = events.length ? events.map((event, index) => `<a class="event-link" href="${escapeHtml(event.u)}" target="_blank" rel="noopener">Round ${index + 1}: ${escapeHtml(event.n)}</a>`).join('') : '<p class="empty-state">Rounds will appear automatically after LiveRC publishes the results.</p>';
   $('rulesSummary').textContent = `100 points for 1st, reducing by one point per overall position. TQ earns 1 bonus point. Up to the best ${config.bestRounds} rounds count. DNS and DNF score their published overall position. Ties are decided by the highest dropped score; if that is also equal, the position remains tied.`;

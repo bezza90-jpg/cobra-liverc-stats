@@ -210,7 +210,8 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
         image.src = avatar.src;
         image.dataset.fallback = avatar.fallback;
         image.alt = '';
-        image.loading = 'lazy';
+        image.loading = 'eager';
+        image.fetchPriority = 'auto';
         image.decoding = 'async';
         image.width = 52;
         image.height = 32;

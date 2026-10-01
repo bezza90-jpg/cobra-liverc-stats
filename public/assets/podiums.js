@@ -1,4 +1,4 @@
-import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=2';
+import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=3';
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
 const formatDate = value => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${value}T12:00:00Z`));

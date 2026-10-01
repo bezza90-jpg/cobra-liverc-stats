@@ -64,7 +64,10 @@ export async function hydrateResultAvatars(root = document) {
     image.alt = '';
     image.width = 52;
     image.height = 32;
-    image.loading = 'lazy';
+    // These small WebP thumbnails are table content, not decoration. Load
+    // them immediately so scrolling never reveals an empty avatar column.
+    image.loading = 'eager';
+    image.fetchPriority = 'auto';
     image.decoding = 'async';
     image.tabIndex = 0;
     image.title = 'Enlarge car avatar';
