@@ -10,7 +10,18 @@ export function resultAvatarCell(driverKey, className = '') {
 
 export function resultAvatarPath(record, className = '') {
   if (typeof record === 'string') return record;
+  if (className === 'Junior Racers') {
+    return record?.['2-Wheel Drive Buggy'] || record?.['4-Wheel Drive Buggy'] || record?.['Junior Racers'] || record?.default || '';
+  }
   return record?.[className] || record?.default || '';
+}
+
+export function resultAvatarClass(record, className = '') {
+  if (typeof record === 'string') return 'default';
+  if (className === 'Junior Racers') {
+    return ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Junior Racers', 'default'].find(candidate => record?.[candidate]) || className;
+  }
+  return record?.[className] ? className : (record?.default ? 'default' : className);
 }
 
 function catalogueData() {
@@ -55,7 +66,8 @@ export async function hydrateResultAvatars(root = document) {
     const path = resultAvatarPath(record, className);
     if (!allowedAvatar.test(path || '')) continue;
     const file = path.split('/').pop();
-    const revision = revisions[`${key}|${className}`] || revisions[`${key}|default`] || '';
+    const resolvedClass = resultAvatarClass(record, className);
+    const revision = revisions[`${key}|${resolvedClass}`] || revisions[`${key}|default`] || '';
     const query = revision ? `?v=${encodeURIComponent(revision)}` : '';
     const image = document.createElement('img');
     image.className = 'result-avatar';
@@ -64,8 +76,6 @@ export async function hydrateResultAvatars(root = document) {
     image.alt = '';
     image.width = 52;
     image.height = 32;
-    // These small WebP thumbnails are table content, not decoration. Load
-    // them immediately so scrolling never reveals an empty avatar column.
     image.loading = 'eager';
     image.fetchPriority = 'auto';
     image.decoding = 'async';
