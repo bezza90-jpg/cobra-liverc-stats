@@ -33,7 +33,8 @@
     "4-Wheel Drive Buggy": "assets/car-avatars/JAMIE-DAVIES-AUTO-4WD.png"
   },
   "CHRIS-LEONARD": {
-    "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-LEONARD-AUTO-2WD.png"
+    "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-LEONARD-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-LEONARD-AUTO-4WD.png"
   },
   "JON-PAISLEY": {
     "2-Wheel Drive Buggy": "assets/car-avatars/JON-PAISLEY-AUTO-2WD.png",
@@ -96,5 +97,8 @@
   "JON-TUCKER": "assets/car-avatars/JON-TUCKER.png",
   "SPENCER-FARLEY": {
     "4-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-4WD.png"
+  },
+  "JOSH-WILLIAMS": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/JOSH-WILLIAMS-AUTO-2WD.png"
   }
 }
