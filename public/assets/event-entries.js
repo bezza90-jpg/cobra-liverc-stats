@@ -28,6 +28,7 @@ function installSection() {
   if (!main) return;
   if (path.endsWith('/event')) {
     const section = entrySection();
+    section.querySelector('.eyebrow').textContent = 'Entries';
     const firstPanel = main.querySelector(':scope > .panel');
     firstPanel?.after(section);
   } else if (path.endsWith('/schedule')) {
@@ -69,6 +70,7 @@ function expectedType(root) {
 }
 
 function render(root, data, capacity = {}, calendar = {}) {
+  const currentEventPage = location.pathname.replace(/\/+$/, '').endsWith('/event');
   const type = expectedType(root);
   const activeSeason = document.body.dataset.activeChampionshipSeason || '';
   const currentSeason = document.body.dataset.currentChampionshipSeason || '';
@@ -84,9 +86,9 @@ function render(root, data, capacity = {}, calendar = {}) {
   const title = root.querySelector('[data-entry-title]');
   const summary = root.querySelector('[data-entry-summary]');
   const content = root.querySelector('[data-entry-content]');
-  title.textContent = data.title || 'Next COBRA event';
+  title.textContent = currentEventPage ? 'Driver entries' : (data.title || 'Next COBRA event');
   const eventDate = data.date ? new Date(data.date + 'T12:00:00Z').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'UTC'}) : '';
-  summary.textContent = `${data.entries.length} ${data.entries.length === 1 ? 'entry' : 'entries'} published in LiveRC${eventDate ? ` · ${eventDate}` : ''}`;
+  summary.textContent = `${data.entries.length} ${data.entries.length === 1 ? 'entry' : 'entries'} published in LiveRC${!currentEventPage && eventDate ? ` · ${eventDate}` : ''}`;
   content.replaceChildren();
   const meeting = nextMeeting(calendar.events || [], type);
   const spaces = eventSpaces(data, meeting, capacity);
@@ -105,11 +107,12 @@ function render(root, data, capacity = {}, calendar = {}) {
     const checked = new Date(data.updatedAt);
     const stamp = Number.isNaN(checked.getTime()) ? '' : ` Last refreshed ${checked.toLocaleString('en-GB',{timeZone:'Europe/London'})} (UK time).`;
     panel.append(element('p','',`Based on current Wix bookings and published LiveRC entries${spaces.some(item=>item.confirmed) ? ', with race-control confirmed entries' : ''}.${stamp} New bookings normally appear after the next automatic update. Club-driver reservations are included where configured. Check availability when booking. Under-16s racing with seniors count in their car class.`));
-    if (/^https:\/\/www\.cobracardiff\.co\.uk\/event-details-1\//.test(meeting.bookingUrl || '')) {
+    if (!currentEventPage && /^https:\/\/www\.cobracardiff\.co\.uk\/event-details-1\//.test(meeting.bookingUrl || '')) {
       const booking=element('a','event-entry-source','Book this event ↗');
       booking.href=meeting.bookingUrl; booking.target='_blank'; booking.rel='noopener'; panel.append(booking);
     }
-    content.append(panel);
+    const eventSummary = currentEventPage ? document.querySelector('main.info-main > .panel') : null;
+    (eventSummary || content).append(panel);
   }
   if (!data.entries.length) {
     content.append(element('p', 'event-entries-empty', 'Entries will appear here when they are published in LiveRC.'));
