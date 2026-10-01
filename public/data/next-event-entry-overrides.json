@@ -114,6 +114,12 @@
       "mode": "until-liverc-change",
       "livercAtSave": "Schumacher",
       "updatedAt": "2026-10-01T01:03:43.783035+00:00"
+    },
+    "GREG-LANE": {
+      "chassis": "Team Associated",
+      "mode": "until-liverc-change",
+      "livercAtSave": "Agama",
+      "updatedAt": "2026-10-01T15:54:47.529224+00:00"
     }
   }
 }
