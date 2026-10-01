@@ -10,6 +10,7 @@ const routes = {
   'website-guides':'website-guides/'
 };
 const escape = value => value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
+const analytics = `<!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"8bd96a91178344ddb3c5078533d44dde"}'></script><!-- End Cloudflare Web Analytics -->`;
 export function siteHeader(base = './') {
   const link = ({label,url}) => {
     const key = new URL(url).pathname.replace(/^\/|\/$/g,'');
@@ -24,7 +25,8 @@ export function siteFooter(base = './') {
 export function addSiteShell(html, base='./') {
   html = html.replace(/<!-- cobra-shell:start -->[\s\S]*?<!-- cobra-shell:end -->/g,'')
     .replace(/<!-- cobra-footer:start -->[\s\S]*?<!-- cobra-footer:end -->/g,'')
+    .replace(/<!-- Cloudflare Web Analytics -->[\s\S]*?<!-- End Cloudflare Web Analytics -->/g,'')
     .replace(/<link[^>]+data-cobra-shell[^>]*>/g,'').replace(/<script[^>]+data-cobra-shell[^>]*><\/script>/g,'');
-  return html.replace('</head>',`<link data-cobra-shell rel="stylesheet" href="${base}assets/site-shell.css?v=3"><script data-cobra-shell type="module" src="${base}assets/site-shell.js?v=3" defer></script></head>`)
+  return html.replace('</head>',`<link data-cobra-shell rel="stylesheet" href="${base}assets/site-shell.css?v=3"><script data-cobra-shell type="module" src="${base}assets/site-shell.js?v=3" defer></script>${analytics}</head>`)
     .replace(/<body\b[^>]*>/,match=>match+siteHeader(base)).replace('</body>',siteFooter(base)+'</body>');
 }
