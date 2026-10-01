@@ -5,12 +5,7 @@ import {compareEntryNames} from './event-entry-order.js';
 const allowedAvatar = /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/;
 function entryAvatar(avatars, revisions, entry) {
   const record = avatars?.[entry.driverKey];
-  const juniorClasses = ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Junior Racers', 'default'];
-  const className = typeof record === 'string'
-    ? 'default'
-    : entry.className === 'Junior Racers'
-      ? juniorClasses.find(candidate => typeof record?.[candidate] === 'string')
-      : (typeof record?.[entry.className] === 'string' ? entry.className : 'default');
+  const className = typeof record === 'string' ? 'default' : (typeof record?.[entry.className] === 'string' ? entry.className : 'default');
   const path = typeof record === 'string' ? record : record?.[className];
   if (typeof path !== 'string' || !allowedAvatar.test(path)) return null;
   const revision = revisions?.[entry.driverKey + '|' + className];
@@ -115,7 +110,10 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     for (const item of spaces) {
       const card = element('div','event-space-card');
       const label = {'Junior Racers':'Junior heat','4-Wheel Drive Buggy':'4WD','2-Wheel Drive Buggy':'2WD'}[item.name] || item.name;
-      card.append(element('strong','',label),element('b','',item.remaining ? `${item.remaining} spaces remaining` : 'Class full'),element('span','',`${item.entered} entered or reserved / ${item.limit} spaces`));
+      const availability = item.remaining === 0
+        ? element('b','event-space-status event-space-status--full','Class Full')
+        : element('b',item.remaining / item.limit < .25 ? 'event-space-status event-space-status--low' : 'event-space-status',`${item.remaining} spaces remaining`);
+      card.append(element('strong','',label),availability,element('span','',`${item.entered} entered or reserved / ${item.limit} spaces`));
       cards.append(card);
     }
     panel.append(cards);
