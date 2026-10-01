@@ -38,6 +38,17 @@ function sameName(a,b) {
   const clean=value=>String(value || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
   return clean(`${a?.firstName || ''}${a?.lastName || ''}`)===clean(`${b?.firstName || ''}${b?.lastName || ''}`);
 }
+export function publicDriverName(firstValue,lastValue) {
+  const first=String(firstValue || '').trim().replace(/\s+/g,' ');
+  const last=String(lastValue || '').trim().replace(/\s+/g,' ');
+  if (!first || !last) return '';
+  // Wix occasionally stores the full name in both guest fields. It can also
+  // repeat the surname once at the join. Keep the safe public name concise.
+  if (first.includes(' ') && first.toUpperCase()===last.toUpperCase()) return first.toUpperCase();
+  const words=`${first} ${last}`.toUpperCase().split(/\s+/).filter(Boolean);
+  const collapsed=words.filter((word,index)=>index<2 || word!==words[index-1]);
+  return collapsed.join(' ');
+}
 export function publicEntry(guest,order,mapping) {
   const details=guest.guestDetails || {};
   if (guest.inactive || ['NOT_ATTENDING','CANCELED','CANCELLED'].includes(guest.attendanceStatus)) return null;
@@ -50,9 +61,9 @@ export function publicEntry(guest,order,mapping) {
   const ticketForm=ticket.guestDetails?.form;
   const form=details.formResponse || ticketForm || (sameName(order,details) ? order.checkoutForm : null);
   const number=answers(form)[mapping[label] || label] || '';
-  const first=String(details.firstName || '').trim(), last=String(details.lastName || '').trim();
-  if (!first || !last) return null;
-  return {driverName:`${first} ${last}`.replace(/\s+/g,' ').trim().toUpperCase(),className,
+  const driverName=publicDriverName(details.firstName,details.lastName);
+  if (!driverName) return null;
+  return {driverName,className,
     transponder:/^[0-9]{7}$/.test(number) ? number : ''};
 }
 

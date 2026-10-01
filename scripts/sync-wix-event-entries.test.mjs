@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bookingSlug,formMapping,publicEntry,londonDate} from './sync-wix-event-entries.mjs';
+import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate} from './sync-wix-event-entries.mjs';
 
 test('Wix booking page slug and exact transponder form mapping',()=>{
   assert.equal(bookingSlug('https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-1'),'cobra-sword-round-1');
@@ -16,4 +16,8 @@ test('only an exact seven digit number can update the public entry',()=>{
 test('automatic Wix event rolls at UK midnight',()=>{
   assert.equal(londonDate(new Date('2026-10-04T22:59:59Z')),'2026-10-04');
   assert.equal(londonDate(new Date('2026-10-04T23:00:00Z')),'2026-10-05');
+});
+test('duplicated Wix guest names are published once',()=>{
+  assert.equal(publicDriverName('Nathan Notley','Nathan Notley'),'NATHAN NOTLEY');
+  assert.equal(publicDriverName('Royston Stewart','Stewart'),'ROYSTON STEWART');
 });

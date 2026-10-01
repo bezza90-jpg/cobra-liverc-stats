@@ -55,9 +55,15 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
   if (!wixSnapshot || String(wixSnapshot.liveRcEventId || '') !== String(meeting?.eventId || '')) return liveEntries;
   const merged=new Map();
   const key=row => `${canonicalDriverKey(driverKey(row.driverName))}|${String(row.className || '').trim().toUpperCase()}`;
+  const identity=row=>canonicalDriverKey(driverKey(row.driverName));
+  const liveNames=new Set(liveEntries.map(identity));
+  const wixSeniorNames=new Set((wixSnapshot.entries || []).filter(row=>row.className!=='Junior Racers').map(identity));
   for (const row of liveEntries) merged.set(key(row),{...row});
   for (const row of wixSnapshot.entries || []) {
     if (!row.driverName || !row.className) continue;
+    // A Junior ticket can be used for the under-16 price even when the driver
+    // is racing in a senior car class. Respect the senior event assignment.
+    if (row.className==='Junior Racers' && (liveNames.has(identity(row)) || wixSeniorNames.has(identity(row)))) continue;
     const id=key(row), current=merged.get(id);
     const transponder=/^[0-9]{7}$/.test(String(row.transponder || '')) ? String(row.transponder) : '';
     if (current) merged.set(id,{...current,...(transponder ? {transponder} : {})});
