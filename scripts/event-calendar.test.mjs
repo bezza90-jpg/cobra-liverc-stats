@@ -56,6 +56,17 @@ test('Wix bookings appear before LiveRC and merge without duplicates',()=>{
  assert.equal(merged.find(row=>row.driverName==='NEW DRIVER').transponder,'7654321');
  assert.equal(merged.find(row=>row.driverName==='DUBIOUS DRIVER').transponder,'');
 });
+test('Junior-price booking does not duplicate a driver assigned to a senior class',()=>{
+ const meeting={eventId:'123'};
+ const live=[{driverName:'HAIDEN HICKS',className:'2-Wheel Drive Buggy',transponder:'3422662'}];
+ const wix={liveRcEventId:'123',entries:[
+  {driverName:'HAIDEN HICKS',className:'Junior Racers',transponder:''},
+  {driverName:'NATHAN NOTLEY',className:'Junior Racers',transponder:''},
+  {driverName:'NATHAN NOTLEY',className:'4-Wheel Drive Buggy',transponder:'4663156'}]};
+ const merged=mergeWixEntries(meeting,live,wix);
+ assert.deepEqual(merged.map(row=>`${row.driverName}|${row.className}`).sort(),[
+  'HAIDEN HICKS|2-Wheel Drive Buggy','NATHAN NOTLEY|4-Wheel Drive Buggy']);
+});
 
 import {parseBooking,matchBooking} from './booking-calendar.mjs';
 test('booking matches exact date and type, not a guessed slug', () => {
