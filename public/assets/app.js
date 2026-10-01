@@ -31,8 +31,18 @@ let journeyRecentKeys = null;
 let journeyLabelsSeed = 0;
 let journeyMapFullscreen = false;
 let journeyRaceElapsedDays = 0;
+let journeyAvatarRenderQueued = false;
 const journeyAvatars = createAvatarLoader({onLoad(key) {
-  if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
+  if (!journeyMap || $('journeyMapOverlay').hidden || journeyAvatarRenderQueued) return;
+  journeyAvatarRenderQueued = true;
+  // Leaflet can still be completing its initial size/layout pass when cached
+  // avatar images resolve. Redraw on the next settled frame so cars appear
+  // immediately instead of waiting for the user's first zoom interaction.
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    journeyAvatarRenderQueued = false;
+    journeyMap?.invalidateSize({ pan: false });
+    if (journeyMap && !$('journeyMapOverlay').hidden) renderJourneyMap();
+  }));
 }});
 const journeyAvatarImages = journeyAvatars.images;
 const $ = id => document.getElementById(id);
@@ -674,6 +684,17 @@ function journeyCutoffDate() {
   return journeyTimelineDates[Number($('journeyDateSlider').value)] || journeyTimelineDates.at(-1) || { time: Date.now(), round: '' };
 }
 
+function updateJourneyDateLabel(raceMode = journeyRaceMode()) {
+  if (raceMode) {
+    $('journeyDateLabel').textContent = `Checkpoint ${Number($('journeyDateSlider').value) + 1} / ${journeyRaceTimeline.length}`;
+    return;
+  }
+  const cutoff = journeyCutoffDate();
+  const date = new Date(cutoff.time).toISOString().slice(0, 10);
+  const displayDate = dateFmt.format(new Date(`${date}T12:00:00Z`));
+  $('journeyDateLabel').textContent = cutoff.round ? `${displayDate} · ${cutoff.round}` : displayDate;
+}
+
 function journeyRaceStarts() {
   const starts = new Map();
   const ends = new Map();
@@ -757,6 +778,7 @@ function journeyDriversAtPosition(raceMode) {
 }
 
 function updateJourneyMovingMarkers() {
+  updateJourneyDateLabel();
   if (!journeyMap || !journeyDriverMarkers.size) return;
   const raceMode = journeyRaceMode();
   const drivers = journeyDriversAtPosition(raceMode);
@@ -784,8 +806,6 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   // Leaflet needs an initial centre and zoom before projecting driver positions.
   if (resetView) journeyMap.fitBounds(window.L.latLngBounds(journeyRoadRoute), { padding: [24, 24] });
   const raceMode = journeyRaceMode();
-  const cutoff = journeyCutoffDate();
-  const cutoffDate = new Date(cutoff.time).toISOString().slice(0, 10);
   journeyRaceElapsedDays = raceMode ? journeyRaceTimeline[Number($('journeyDateSlider').value)] ?? 0 : 0;
   const drivers = journeyDriversAtPosition(raceMode).sort((a, b) => b.km - a.km);
   const activeKey = raceMode && !journeySelectedKeys.has(journeySelectedKey) ? [...journeySelectedKeys][0] : journeySelectedKey;
@@ -797,8 +817,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     if (focusDriver && journeyMap.getZoom() < 8) journeyMap.setView(point, 8, { animate: false });
     else if (journeyMap.getCenter().distanceTo(window.L.latLng(point)) > 150) journeyMap.panTo(point, { animate: false });
   }
-  const displayDate = dateFmt.format(new Date(`${cutoffDate}T12:00:00Z`));
-  $('journeyDateLabel').textContent = raceMode ? `Checkpoint ${Number($('journeyDateSlider').value) + 1} / ${journeyRaceTimeline.length}` : displayDate;
+  updateJourneyDateLabel(raceMode);
   $('journeyMapTitle').textContent = raceMode ? `Race: ${journeySelectedKeys.size} drivers · ${Math.floor(journeyRaceElapsedDays)} career days` : allDriversView ? `All drivers — ${drivers.length} on the route` : `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
   const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the illustrated route.`;
   $('journeyMapCopy').textContent = raceMode ? `All selected drivers set off from Cardiff together. Their miles advance round by round from each driver's first recorded COBRA run in 2022 or later. All classes count.` : allDriversView ? 'Each pin shows a driver’s combined distance since January 2022. Click a car or pin to follow that driver, search by name, or play the journey through time.' : `Combined distance from every recorded practice, qualifying and final round since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
@@ -993,7 +1012,7 @@ async function openJourneyMap(driverKey) {
   journeyPlaybackPosition = null;
   const slider = $('journeyDateSlider');
   slider.max = String(Math.max(0, journeyTimelineDates.length - 1));
-  slider.value = slider.max;
+  slider.value = '0';
   $('journeyDriverOptions').innerHTML = state.data.drivers.filter(driver => !journeyExcludedDrivers.has(driver.k)).sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.n)}"></option>`).join('');
   $('journeyDriverSearch').value = state.data.driverByKey[driverKey] || '';
   journeyLabelsSeed = Math.floor(Math.random() * 7919);
@@ -1034,10 +1053,6 @@ async function openJourneyMap(driverKey) {
         $('journeyFollowStatus').textContent = 'Map moved · tap Refocus to follow';
       });
     }
-    // Repeat this after the asynchronous map load so delayed setup cannot
-    // restore the range input's original HTML value of zero (the first race).
-    slider.value = slider.max;
-    journeyPlaybackPosition = null;
     renderJourneyMap({ resetView: false });
     setTimeout(() => {
       journeyMap.invalidateSize();
