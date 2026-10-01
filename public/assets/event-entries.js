@@ -70,6 +70,12 @@ function expectedType(root) {
 
 function render(root, data, capacity = {}, calendar = {}) {
   const type = expectedType(root);
+  const activeSeason = document.body.dataset.activeChampionshipSeason || '';
+  const currentSeason = document.body.dataset.currentChampionshipSeason || '';
+  if (document.body.dataset.championship && activeSeason && currentSeason && activeSeason !== currentSeason) {
+    root.hidden = true;
+    return;
+  }
   if (type && data.type && type !== data.type) {
     root.hidden = true;
     return;
@@ -98,7 +104,7 @@ function render(root, data, capacity = {}, calendar = {}) {
     panel.append(cards);
     const checked = new Date(data.updatedAt);
     const stamp = Number.isNaN(checked.getTime()) ? '' : ` Last refreshed ${checked.toLocaleString('en-GB',{timeZone:'Europe/London'})} (UK time).`;
-    panel.append(element('p','',`Based on published LiveRC entries${spaces.some(item=>item.confirmed) ? ' and race-control confirmed entries' : ''}.${stamp} Club-driver reservations are included where configured. New bookings may not yet be included. Check availability when booking. Under-16s racing with seniors count in their car class.`));
+    panel.append(element('p','',`Based on current Wix bookings and published LiveRC entries${spaces.some(item=>item.confirmed) ? ', with race-control confirmed entries' : ''}.${stamp} New bookings normally appear after the next automatic update. Club-driver reservations are included where configured. Check availability when booking. Under-16s racing with seniors count in their car class.`));
     if (/^https:\/\/www\.cobracardiff\.co\.uk\/event-details-1\//.test(meeting.bookingUrl || '')) {
       const booking=element('a','event-entry-source','Book this event ↗');
       booking.href=meeting.bookingUrl; booking.target='_blank'; booking.rel='noopener'; panel.append(booking);

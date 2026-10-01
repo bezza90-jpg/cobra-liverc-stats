@@ -2,7 +2,7 @@ const $ = id => document.getElementById(id);
 if (typeof document !== 'undefined' && document.head?.append && document.createElement) {
   const entriesScript = document.createElement('script');
   entriesScript.type = 'module';
-  entriesScript.src = '../assets/event-entries.js?v=1';
+  entriesScript.src = '../assets/event-entries.js?v=20261001-archive-season';
   document.head.append(entriesScript);
 }
 const fmt = new Intl.NumberFormat('en-GB');
@@ -131,6 +131,11 @@ function render() {
   const dates = seasonDates(state.activeSeason);
   const completedSeason = state.activeSeason !== availableSeasons()[0];
   const roundTarget = completedSeason ? events.length : config.scheduledRounds;
+
+  document.body.dataset.activeChampionshipSeason = state.activeSeason;
+  document.body.dataset.currentChampionshipSeason = config.season;
+  const currentEventPanel = document.querySelector('[data-event-entries]');
+  if (currentEventPanel) currentEventPanel.hidden = state.activeSeason !== config.season;
 
   document.title = `${config.title} ${state.activeSeason} | COBRA`;
   document.querySelectorAll('[data-class]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.class === activeClass)));

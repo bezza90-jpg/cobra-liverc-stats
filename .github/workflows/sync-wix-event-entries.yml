@@ -1,0 +1,40 @@
+name: Sync current Wix event entries
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cobra-wix-event-entries
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Read current Wix event bookings
+        run: node scripts/sync-wix-event-entries.mjs
+        env:
+          WIX_SITE_ID: ${{ secrets.WIX_SITE_ID }}
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+      - name: Save safe public entry data
+        run: |
+          if [[ -n "$(git status --porcelain public/data/wix-current-event-entries.json)" ]]; then
+            git config user.name "COBRA Wix entries updater"
+            git config user.email "actions@users.noreply.github.com"
+            git add public/data/wix-current-event-entries.json
+            git commit -m "Update current Wix event entries"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi

@@ -51,6 +51,21 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
   };
 }
 
+export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
+  if (!wixSnapshot || String(wixSnapshot.liveRcEventId || '') !== String(meeting?.eventId || '')) return liveEntries;
+  const merged=new Map();
+  const key=row => `${canonicalDriverKey(driverKey(row.driverName))}|${String(row.className || '').trim().toUpperCase()}`;
+  for (const row of liveEntries) merged.set(key(row),{...row});
+  for (const row of wixSnapshot.entries || []) {
+    if (!row.driverName || !row.className) continue;
+    const id=key(row), current=merged.get(id);
+    const transponder=/^[0-9]{7}$/.test(String(row.transponder || '')) ? String(row.transponder) : '';
+    if (current) merged.set(id,{...current,...(transponder ? {transponder} : {})});
+    else merged.set(id,{driverName:row.driverName,className:row.className,transponder});
+  }
+  return [...merged.values()];
+}
+
 async function writeIfChanged(file, value) {
   const output = JSON.stringify(value, null, 2) + '\n';
   const previous = await readFile(file, 'utf8').catch(error => { if (error.code === 'ENOENT') return ''; throw error; });
@@ -72,10 +87,12 @@ async function updateNextEventEntries(meetings, today) {
   const eventHtml = await fetchText(meeting.resultsUrl);
   const entryListUrl = parseEventIndex(eventHtml).entryList;
   const entries = entryListUrl ? parseEntryList(await fetchText(entryListUrl)) : [];
+  const wixSnapshot = JSON.parse(await readFile(new URL('../public/data/wix-current-event-entries.json', import.meta.url), 'utf8').catch(() => 'null'));
   const chassis = JSON.parse(await readFile(new URL('../public/data/liverc-chassis.json', import.meta.url), 'utf8').catch(() => '{}'));
   const overrides = JSON.parse(await readFile(new URL('../public/data/next-event-entry-overrides.json', import.meta.url), 'utf8').catch(() => '{}'));
-  await writeIfChanged(destination, enrichNextEventEntries(meeting, entries, chassis, overrides));
-  return entries.length;
+  const mergedEntries=mergeWixEntries(meeting,entries,wixSnapshot);
+  await writeIfChanged(destination, enrichNextEventEntries(meeting, mergedEntries, chassis, overrides));
+  return mergedEntries.length;
 }
 export async function updateEventCalendar(events) {
   const meetings = calendarMeetings(events);
