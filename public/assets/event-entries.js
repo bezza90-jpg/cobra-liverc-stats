@@ -16,7 +16,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=8';
+  link.href = '../assets/event-entries.css?v=9';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -110,9 +110,15 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     for (const item of spaces) {
       const card = element('div','event-space-card');
       const label = {'Junior Racers':'Junior heat','4-Wheel Drive Buggy':'4WD','2-Wheel Drive Buggy':'2WD'}[item.name] || item.name;
-      const availability = item.remaining === 0
-        ? element('b','event-space-status event-space-status--full','Class Full')
-        : element('b',item.remaining / item.limit < .25 ? 'event-space-status event-space-status--low' : 'event-space-status',`${item.remaining} spaces remaining`);
+      const remainingRatio = item.remaining / item.limit;
+      const availabilityClass = item.remaining === 0
+        ? 'event-space-status event-space-status--full'
+        : remainingRatio < .25
+          ? 'event-space-status event-space-status--low'
+          : remainingRatio >= .5 && remainingRatio <= .75
+            ? 'event-space-status event-space-status--mid'
+            : 'event-space-status';
+      const availability = element('b',availabilityClass,item.remaining ? `${item.remaining} spaces remaining` : 'Class Full');
       card.append(element('strong','',label),availability,element('span','',`${item.entered} entered or reserved / ${item.limit} spaces`));
       cards.append(card);
     }
