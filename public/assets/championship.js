@@ -2,7 +2,7 @@ const $ = id => document.getElementById(id);
 if (typeof document !== 'undefined' && document.head?.append && document.createElement) {
   const entriesScript = document.createElement('script');
   entriesScript.type = 'module';
-  entriesScript.src = '../assets/event-entries.js?v=20261001-archive-season';
+  entriesScript.src = '../assets/event-entries.js?v=20261001-avatar-column';
   document.head.append(entriesScript);
 }
 const fmt = new Intl.NumberFormat('en-GB');
@@ -147,17 +147,18 @@ function render() {
   $('championshipDates').textContent = `${dateFmt.format(new Date(`${dates.startDate}T12:00:00Z`))} to ${dateFmt.format(new Date(`${dates.endDate}T12:00:00Z`))}`;
 
   const roundHeaders = events.map((event, index) => `<th scope="col"><a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">R${index + 1}</a><small>${dateFmt.format(new Date(`${event.d}T12:00:00Z`))}</small></th>`).join('');
-  $('standingsHead').innerHTML = `<tr><th scope="col">Pos</th><th scope="col">Driver</th><th scope="col">Rounds</th>${roundHeaders}<th scope="col">Dropped</th><th scope="col">Best ${config.bestRounds}</th><th scope="col">TQs</th><th scope="col">Wins</th></tr>`;
+  $('standingsHead').innerHTML = `<tr><th scope="col">Pos</th><th scope="col">Driver</th><th scope="col" class="result-avatar-heading">Avatar</th><th scope="col">Rounds</th>${roundHeaders}<th scope="col">Dropped</th><th scope="col">Best ${config.bestRounds}</th><th scope="col">TQs</th><th scope="col">Wins</th></tr>`;
 
   $('standingsBody').innerHTML = standings.length ? standings.map(driver => {
     const roundCells = events.map(event => eventCell(driver, event)).join('');
     return `<tr>
-      <td>${driver.rank}${driver.tied ? '=' : ''}</td>
-      <td><a class="driver-name" href="../?driver=${encodeURIComponent(driver.driverKey)}">${escapeHtml(driver.name)}</a></td>
+      <td>${driver.rank}${driver.tied ? '=' : ''}</td><td><a class="driver-name" href="../?driver=${encodeURIComponent(driver.driverKey)}">${escapeHtml(driver.name)}</a></td>
+      <td class="result-avatar-cell" data-avatar-driver="${escapeHtml(driver.driverKey)}" data-avatar-class="${escapeHtml(activeClass)}" aria-label="Avatar"></td>
       <td>${driver.results.length}</td>${roundCells}
       <td>${driver.highestDrop || '—'}</td><td class="championship-total">${driver.total}</td><td>${driver.tqs}</td><td>${driver.wins}</td>
     </tr>`;
-  }).join('') : `<tr><td colspan="${8 + events.length}" class="empty-standings">No ${escapeHtml(classLabels[activeClass] || activeClass)} results have been published for this championship yet.</td></tr>`;
+  }).join('') : `<tr><td colspan="${9 + events.length}" class="empty-standings">No ${escapeHtml(classLabels[activeClass] || activeClass)} results have been published for this championship yet.</td></tr>`;
+  import('./result-avatars.js?v=1').then(({hydrateResultAvatars}) => hydrateResultAvatars($('standingsBody')));
 
   $('roundLinks').innerHTML = events.length ? events.map((event, index) => `<a class="event-link" href="${escapeHtml(event.u)}" target="_blank" rel="noopener">Round ${index + 1}: ${escapeHtml(event.n)}</a>`).join('') : '<p class="empty-state">Rounds will appear automatically after LiveRC publishes the results.</p>';
   $('rulesSummary').textContent = `100 points for 1st, reducing by one point per overall position. TQ earns 1 bonus point. Up to the best ${config.bestRounds} rounds count. DNS and DNF score their published overall position. Ties are decided by the highest dropped score; if that is also equal, the position remains tied.`;

@@ -8,6 +8,7 @@ import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
 import { loadMap } from './load-map.js?v=20260928-local';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
+import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=1';
 
 const state = { data: null, profileKey: '' };
 let journeyMap = null;
@@ -155,7 +156,7 @@ function ensureEnhancedMarkup() {
           <a class="event-link" id="raceResultLink" href="#" target="_blank" rel="noopener">Open this race ↗</a><a class="event-link" id="raceReplayLink" href="#" target="_blank" rel="noopener">Virtual race replay ▶</a><a class="event-link video-link" id="raceVideoLink" href="#" target="_blank" rel="noopener" hidden>Watch race video ▶</a>
         </div>
         <h3 class="race-result-title" id="raceResultTitle">Select a race</h3>
-        <div class="table-wrap compact"><table><thead><tr><th>Pos</th><th>Driver</th><th>Qualifying</th><th>Laps / time</th><th>Behind</th><th>Fastest lap</th><th>Average lap</th><th>Consistency</th></tr></thead><tbody id="raceExplorerResults"></tbody></table></div>
+        <div class="table-wrap compact"><table><thead><tr><th>Pos</th><th>Driver</th><th class="result-avatar-heading">Avatar</th><th>Qualifying</th><th>Laps / time</th><th>Behind</th><th>Fastest lap</th><th>Average lap</th><th>Consistency</th></tr></thead><tbody id="raceExplorerResults"></tbody></table></div>
       </section>`);
   }
 
@@ -373,11 +374,12 @@ function renderLeaderboard() {
   $('leaderboardCount').textContent = `${fmt.format(rows.length)} ranked · ${fmt.format(state.leaderboardEligibleCount)} recorded`;
   $('leaderboardBody').innerHTML = rows.length ? rows.map(row => `
     <tr>
-      <td>${row.rank}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button></td><td class="ranked-metric">${escapeHtml(metric.display ? metric.display(row) : metric.value(row))}</td><td>${row.finals}</td>
+      <td>${row.rank}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button></td>${resultAvatarCell(row.driverKey, filters().className)}<td class="ranked-metric">${escapeHtml(metric.display ? metric.display(row) : metric.value(row))}</td><td>${row.finals}</td>
       <td>${row.average.toFixed(1)}</td><td>${row.best}</td><td>${countAndRate(row.topFive, row.finals)}</td>
       <td>${countAndRate(row.podiums, row.finals)}</td><td>${row.overallWins}</td>
       <td>${row.performance.toFixed(1)}</td><td>${row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`}</td>
-    </tr>`).join('') : '<tr><td colspan="11">No drivers match these filters.</td></tr>';
+    </tr>`).join('') : '<tr><td colspan="12">No drivers match these filters.</td></tr>';
+  hydrateResultAvatars($('leaderboardBody'));
 }
 
 let lapChartRequest = 0;
@@ -436,9 +438,10 @@ function renderRaceExplorer(raceId) {
     return Number.isFinite(seconds) && seconds > 0 && (!best || seconds < lapTimeSeconds(best[5])) ? row : best;
   }, null);
   body.innerHTML = rows.length ? rows.map(row => `
-    <tr><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>
+    <tr><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>${resultAvatarCell(row[1], race.c)}
     <td>${row[8] ? `P${row[8]}` : '—'}</td><td>${escapeHtml(row[3] || '—')}</td><td>${escapeHtml(row[4] || '—')}</td>
-    <td${row === fastestRow ? ' class="fastest-lap" title="Fastest lap of this race"' : ''}>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td><td class="potential-run">—</td></tr>`).join('') : '<tr><td colspan="9">No results were recorded for this race.</td></tr>';
+    <td${row === fastestRow ? ' class="fastest-lap" title="Fastest lap of this race"' : ''}>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td><td class="potential-run">—</td></tr>`).join('') : '<tr><td colspan="10">No results were recorded for this race.</td></tr>';
+  hydrateResultAvatars(body);
 }
 
 function updateRaceSelection(preserve = true) {

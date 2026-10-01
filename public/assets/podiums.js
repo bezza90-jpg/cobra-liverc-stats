@@ -1,3 +1,4 @@
+import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=1';
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
 const formatDate = value => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${value}T12:00:00Z`));
@@ -35,10 +36,10 @@ function resizedDriveImage(url, width) {
   return imageUrl.href;
 }
 
-function podiumRow(result) {
+function podiumRow(result, className) {
   const position = Number(result[2]);
   const medal = ['🥇', '🥈', '🥉'][position - 1];
-  return `<tr class="podium-place podium-place-${position}"><td><span aria-hidden="true">${medal}</span> ${position}</td><td>${escapeHtml(driverByKey.get(result[1]) || result[1])}</td><td>${escapeHtml(result[3] || '—')}</td><td>${escapeHtml(result[5] || '—')}</td></tr>`;
+  return `<tr class="podium-place podium-place-${position}"><td><span aria-hidden="true">${medal}</span> ${position}</td><td>${escapeHtml(driverByKey.get(result[1]) || result[1])}</td>${resultAvatarCell(result[1], className)}<td>${escapeHtml(result[3] || '—')}</td><td>${escapeHtml(result[5] || '—')}</td></tr>`;
 }
 
 function podiumIllustration(rows, photoName, className) {
@@ -86,8 +87,8 @@ function finalCard([raceId, race]) {
   const caption = approvedPhoto?.caption || '';
   const rows = raceTopThree(raceId);
   const results = rows.length
-    ? rows.map(podiumRow).join('')
-    : '<tr><td colspan="4" class="podium-no-results">No classified top-three result is available.</td></tr>';
+    ? rows.map(result => podiumRow(result, race.c)).join('')
+    : '<tr><td colspan="5" class="podium-no-results">No classified top-three result is available.</td></tr>';
   return `<article class="podium-card">
     <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
       ${hidePhoto ? '' : `<img src="${escapeHtml(photoUrl)}"${photoSrcset ? ` srcset="${escapeHtml(photoSrcset)}" sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 1100px) 50vw, 520px"` : ''} alt="${escapeHtml(photoTitle)}" loading="lazy" decoding="async"><button class="podium-photo-expand" type="button">Enlarge photo</button>`}
@@ -97,7 +98,7 @@ function finalCard([raceId, race]) {
       <p class="podium-class">${escapeHtml(race.c)}</p>
       <h3>${escapeHtml(race.n)}</h3>
       <div class="table-wrap podium-results"><table>
-        <thead><tr><th>Pos</th><th>Driver</th><th>Result</th><th>Fastest</th></tr></thead>
+        <thead><tr><th>Pos</th><th>Driver</th><th class="result-avatar-heading">Avatar</th><th>Result</th><th>Fastest</th></tr></thead>
         <tbody>${results}</tbody>
       </table></div>
       <a class="event-link podium-race-link" href="${escapeHtml(race.u)}" target="_blank" rel="noopener">See all finishers on LiveRC ↗</a>
@@ -124,6 +125,7 @@ function renderEvent(eventId, updateAddress = true) {
   if (podiumWebAppUrl) $('podiumUploadLink').href = podiumUploadUrl(activeEventId);
   $('eventSelect').value = activeEventId;
   $('finalsGrid').innerHTML = finals.length ? finals.map(finalCard).join('') : '<div class="panel empty-state">No finals were found for this event.</div>';
+  hydrateResultAvatars($('finalsGrid'));
   document.querySelectorAll('.podium-photo > img').forEach(image => {
     const markLoaded = () => {
       const photo = image.closest('.podium-photo');

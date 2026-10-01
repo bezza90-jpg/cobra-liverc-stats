@@ -16,7 +16,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=6';
+  link.href = '../assets/event-entries.css?v=7';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -160,6 +160,21 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
   label.append(picker);savedControls.append(label,remember,mine,all,forget,message);content.append(savedControls);
 
   const classes = element('div', 'event-entry-classes');
+  const avatarPreview = element('img', 'event-entry-avatar-preview');
+  avatarPreview.alt = '';
+  avatarPreview.hidden = true;
+  content.append(avatarPreview);
+  const showAvatarPreview = image => {
+    const rect = image.getBoundingClientRect();
+    const width = Math.min(260, window.innerWidth - 24);
+    const height = 170;
+    avatarPreview.src = image.currentSrc || image.src;
+    avatarPreview.style.width = `${width}px`;
+    avatarPreview.style.left = `${Math.max(12, Math.min(window.innerWidth - width - 12, rect.left + rect.width / 2 - width / 2))}px`;
+    avatarPreview.style.top = `${rect.bottom + height + 12 < window.innerHeight ? rect.bottom + 8 : Math.max(12, rect.top - height - 8)}px`;
+    avatarPreview.hidden = false;
+  };
+  const hideAvatarPreview = () => { avatarPreview.hidden = true; };
   const groups = new Map();
   for (const entry of data.entries) {
     if (!groups.has(entry.className)) groups.set(entry.className, []);
@@ -174,7 +189,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     const wrap = element('div', 'event-entry-table-wrap');
     const table = element('table', 'event-entry-table');
     const head = document.createElement('thead');
-    head.innerHTML = '<tr><th scope="col">Country</th><th scope="col">No.</th><th scope="col">Driver</th><th scope="col">Chassis</th><th scope="col">Transponder</th></tr>';
+    head.innerHTML = '<tr><th scope="col">Country</th><th scope="col">No.</th><th scope="col">Driver</th><th scope="col" class="event-entry-avatar-heading">Avatar</th><th scope="col">Chassis</th><th scope="col">Transponder</th></tr>';
     const body = document.createElement('tbody');
     for (const [index, entry] of entries.entries()) {
       const row = document.createElement('tr');
@@ -186,9 +201,9 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       flag.setAttribute('aria-label', flag.title);
       country.dataset.label = 'Country';
       country.append(flag);
-      const driver = document.createElement('td');
-      driver.dataset.label = 'Driver';
-      const driverIdentity = element('span', 'event-entry-driver');
+      const avatarCell = document.createElement('td');
+      avatarCell.className = 'event-entry-avatar-cell';
+      avatarCell.dataset.label = 'Avatar';
       const avatar = entryAvatar(avatars, revisions, entry);
       if (avatar) {
         const image = element('img', 'event-entry-avatar');
@@ -199,14 +214,24 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
         image.decoding = 'async';
         image.width = 52;
         image.height = 32;
+        image.tabIndex = 0;
+        image.title = `Enlarge ${entry.driverName}'s car avatar`;
+        image.addEventListener('pointerenter', () => showAvatarPreview(image));
+        image.addEventListener('pointerleave', hideAvatarPreview);
+        image.addEventListener('focus', () => showAvatarPreview(image));
+        image.addEventListener('blur', hideAvatarPreview);
         image.addEventListener('error', () => {
           if (image.dataset.fallback) {
             image.src = image.dataset.fallback;
             delete image.dataset.fallback;
+            if (!avatarPreview.hidden) avatarPreview.src = image.src;
           } else image.remove();
         });
-        driverIdentity.append(image);
+        avatarCell.append(image);
       }
+      const driver = document.createElement('td');
+      driver.dataset.label = 'Driver';
+      const driverIdentity = element('span', 'event-entry-driver');
       const profile = element('a', '', entry.driverName);
       profile.href = `../?driver=${encodeURIComponent(entry.driverKey)}&returnTo=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
       driverIdentity.append(profile);
@@ -225,7 +250,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       transponder.dataset.label = 'Transponder';
       const number = element('td', 'event-entry-number', String(index + 1));
       number.dataset.label = 'No.';
-      row.append(country, number, driver, chassis, transponder);
+      row.append(country, number, driver, avatarCell, chassis, transponder);
       body.append(row);
     }
     table.append(head, body);
