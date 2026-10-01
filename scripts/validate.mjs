@@ -84,7 +84,7 @@ const journeyChecks = [
   ['races since 2022', appJs.includes("race.d < '2022-01-01'")],
   ['playback controls', appJs.includes('toggleJourneyPlayback') && appJs.includes('id="journeySpeed"') && appJs.includes('length: 15')],
   ['race timeline', appJs.includes('buildJourneyTimeline') && appJs.includes('journeyMilestoneData')],
-  ['tracker timeline labels', appJs.includes("slider.max === '0' ? '0' : '1'") && appJs.includes('updateJourneyDateLabel') && appJs.includes('cutoff.round')],
+  ['tracker timeline labels', appJs.includes("slider.max === '0' ? '0' : '1'") && appJs.includes('updateJourneyDateLabel') && appJs.includes('journeyMonthFmt')],
   ['initial avatar redraw', appJs.includes('journeyAvatarRenderQueued') && appJs.includes('invalidateSize({ pan: false })')],
   ['clear start label', appJs.includes("direction: 'bottom', offset: [0, 22], pane: 'journeySiteLabels'")],
   ['driver selection', appJs.includes('journeyDriverSearch') && appJs.includes('journeyDriverPicker')],

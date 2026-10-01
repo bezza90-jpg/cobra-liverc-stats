@@ -72,6 +72,7 @@ async function renderProfileAvatar(driverKey) {
 }
 const fmt = new Intl.NumberFormat('en-GB');
 const dateFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+const journeyMonthFmt = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' });
 const dateTimeFmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London', hourCycle: 'h23' });
 const kmToMiles = km => Number((km * 0.621371).toFixed(1));
 const journeyExcludedDrivers = new Set(['SIMON-NOTLEY', 'BOB-BOBTECH-GELSTHARP']);
@@ -210,7 +211,7 @@ function ensureEnhancedMarkup() {
           <label>Find a driver<input type="search" id="journeyDriverSearch" list="journeyDriverOptions" placeholder="Start typing a name…"><datalist id="journeyDriverOptions"></datalist></label>
           <details class="journey-driver-picker" id="journeyDriverPicker"><summary id="journeyDriverSummary">Choose playback drivers (all)</summary><div class="journey-driver-picker-inner"><input id="journeyPickerSearch" type="search" placeholder="Search drivers" aria-label="Search playback drivers"><div class="journey-driver-picker-actions"><button type="button" id="journeySelectAll">All</button><button type="button" id="journeySelectNone">Clear</button></div><div id="journeyDriverChecklist" class="journey-driver-checklist"></div></div></details>
           <label>Playback mode<select id="journeyPlaybackMode"><option value="calendar">Race dates journey</option><option value="race">Race selected drivers</option></select></label><button type="button" id="journeyPlay">▶ Play journey</button><button type="button" id="journeyFullscreen">Full screen</button><a id="journeyStandalone" href="./" target="_blank" rel="noopener">Open map in new tab</a><label>Playback start<select id="journeyPlaybackStart"><option value="earliest">Earliest selected record</option><option value="2022">First recorded race</option><option value="chosen">Chosen date</option></select></label><label>Choose start date<input type="date" id="journeyStartDate" min="2022-01-01" disabled></label><label>Playback duration<select id="journeySpeed">${Array.from({ length: 15 }, (_, index) => `<option value="${(index + 1) * 60000}"${index === 1 ? ' selected' : ''}>${index + 1} ${index === 0 ? 'minute' : 'minutes'}</option>`).join('')}</select></label>
-          <label class="journey-timeline">Race date / round <strong id="journeyDateLabel">Latest</strong><input type="range" id="journeyDateSlider" min="0" max="0" value="0" step="1" aria-label="Recorded race dates and rounds"></label>
+          <label class="journey-timeline">Race date <strong id="journeyDateLabel">Starting…</strong><input type="range" id="journeyDateSlider" min="0" max="0" value="0" step="1" aria-label="Recorded race dates"></label>
         </div>
         <p class="journey-round-note">Distance advances through each recorded round. Round times within an event day are illustrative.</p>
         <div class="journey-race-standings" id="journeyRaceStandings" hidden aria-live="off"></div>
@@ -691,8 +692,7 @@ function updateJourneyDateLabel(raceMode = journeyRaceMode()) {
   }
   const cutoff = journeyCutoffDate();
   const date = new Date(cutoff.time).toISOString().slice(0, 10);
-  const displayDate = dateFmt.format(new Date(`${date}T12:00:00Z`));
-  $('journeyDateLabel').textContent = cutoff.round ? `${displayDate} · ${cutoff.round}` : displayDate;
+  $('journeyDateLabel').textContent = journeyMonthFmt.format(new Date(`${date}T12:00:00Z`));
 }
 
 function journeyRaceStarts() {
