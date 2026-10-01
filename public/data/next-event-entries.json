@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-09-30T22:29:34.195Z",
+  "updatedAt": "2026-10-01T01:03:52.466182+00:00",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -84,7 +84,7 @@
       "driverName": "MIKE DRISCOLL",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Schumacher",
+      "chassis": "TLR",
       "transponder": "7430862"
     },
     {
@@ -341,7 +341,7 @@
       "driverName": "MIKE DRISCOLL",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Schumacher",
+      "chassis": "TLR",
       "transponder": "5032515"
     },
     {
