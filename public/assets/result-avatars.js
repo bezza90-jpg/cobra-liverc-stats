@@ -8,6 +8,11 @@ export function resultAvatarCell(driverKey, className = '') {
   return `<td class="result-avatar-cell" data-avatar-driver="${escapeAttribute(driverKey)}" data-avatar-class="${escapeAttribute(className)}" aria-label="Avatar"></td>`;
 }
 
+export function resultAvatarPath(record, className = '') {
+  if (typeof record === 'string') return record;
+  return record?.[className] || record?.default || '';
+}
+
 function catalogueData() {
   return catalogue ||= Promise.all([
     fetch(new URL('../data/car-avatars.json', import.meta.url), {cache:'no-cache'}).then(response => response.ok ? response.json() : {}),
@@ -47,7 +52,7 @@ export async function hydrateResultAvatars(root = document) {
     const key = cell.dataset.avatarDriver;
     const className = cell.dataset.avatarClass;
     const record = manifest[key];
-    const path = typeof record === 'string' ? record : record?.[className] || record?.default || (Object.values(record || {}).filter(Boolean).length === 1 ? Object.values(record).find(Boolean) : '');
+    const path = resultAvatarPath(record, className);
     if (!allowedAvatar.test(path || '')) continue;
     const file = path.split('/').pop();
     const revision = revisions[`${key}|${className}`] || revisions[`${key}|default`] || '';
