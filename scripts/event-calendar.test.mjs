@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nextMeeting, londonDate} from '../public/assets/event-calendar.js';
-import {calendarMeetings, allFinalsComplete, enrichNextEventEntries, finalLineupUrls} from './update-event-calendar.mjs';
+import {calendarMeetings, allFinalsComplete, enrichNextEventEntries, finalLineupUrls, mergeWixEntries} from './update-event-calendar.mjs';
 const now = new Date('2026-10-04T17:00:00Z');
 const current = {date:'2026-10-04', title:'SWORD Round 1', type:'sword'};
 const future = {date:'2026-10-11', title:'Club Day', type:'club'};
@@ -42,6 +42,19 @@ test('next event entries combine the LiveRC roster with published chassis and co
  const result=enrichNextEventEntries(meeting,entries,{'MATTHEW-HODGES':{name:'Team Associated'}},{defaultCountryCode:'GB',drivers:{'MATTHEW-HODGES':{countryCode:'GB-WLS'}}});
  assert.equal(result.type,'sword');
  assert.deepEqual(result.entries[0],{driverKey:'MATTHEW-HODGES',driverName:'MATTHEW HODGES',className:'2-Wheel Drive Buggy',countryCode:'GB-WLS',chassis:'Team Associated',transponder:'1234567'});
+});
+test('Wix bookings appear before LiveRC and merge without duplicates',()=>{
+ const meeting={eventId:'123'};
+ const live=[{driverName:'PAUL CURTIS',className:'4-Wheel Drive Buggy',transponder:'1111111'}];
+ const wix={liveRcEventId:'123',entries:[
+  {driverName:'BRUCE',className:'4-Wheel Drive Buggy',transponder:'4950687'},
+  {driverName:'NEW DRIVER',className:'2-Wheel Drive Buggy',transponder:'7654321'},
+  {driverName:'DUBIOUS DRIVER',className:'2-Wheel Drive Buggy',transponder:'unknown'}]};
+ const merged=mergeWixEntries(meeting,live,wix);
+ assert.equal(merged.length,3);
+ assert.equal(merged.find(row=>row.driverName==='PAUL CURTIS').transponder,'4950687');
+ assert.equal(merged.find(row=>row.driverName==='NEW DRIVER').transponder,'7654321');
+ assert.equal(merged.find(row=>row.driverName==='DUBIOUS DRIVER').transponder,'');
 });
 
 import {parseBooking,matchBooking} from './booking-calendar.mjs';

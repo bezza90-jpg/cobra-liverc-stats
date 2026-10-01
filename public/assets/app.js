@@ -902,20 +902,20 @@ function toggleJourneyPlayback() {
   const remainingDuration = duration * remainingSteps / fullSteps;
   const startedAt = performance.now();
   if (!remainingDuration) { stopJourneyPlayback(); journeyPlaybackHasStarted = false; return; }
-  let lastDetailedRender = 0;
   let lastMotionRender = 0;
   const animate = now => {
     const progress = Math.min(1, (now - startedAt) / remainingDuration);
     journeyPlaybackPosition = current + remainingSteps * progress;
     const next = Math.floor(journeyPlaybackPosition);
     slider.value = String(next);
-    if (now - lastMotionRender >= 33 || progress === 1) {
+    if (now - lastMotionRender >= 40 || progress === 1) {
       updateJourneyMovingMarkers();
       lastMotionRender = now;
     }
-    if (now - lastDetailedRender >= 750 || progress === 1) {
+    // Clearing and rebuilding every Leaflet marker causes a visible jump.
+    // Keep the same layers throughout playback and rebuild once at the end.
+    if (progress === 1) {
       renderJourneyMap();
-      lastDetailedRender = now;
     }
     if (progress === 1) {
       stopJourneyPlayback();
