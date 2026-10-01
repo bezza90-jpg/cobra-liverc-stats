@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-01T03:17:50.934Z",
+  "updatedAt": "2026-10-01T12:34:09.944Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -768,6 +768,22 @@
       "countryCode": "GB",
       "chassis": "R1 Wurks",
       "transponder": "5097267"
+    },
+    {
+      "driverKey": "GREG-LANE",
+      "driverName": "GREG LANE",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Agama",
+      "transponder": "3276703"
+    },
+    {
+      "driverKey": "STEWART-WOODEND",
+      "driverName": "STEWART WOODEND",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "4770946"
     },
     {
       "driverKey": "DAVID-MILFORD",
