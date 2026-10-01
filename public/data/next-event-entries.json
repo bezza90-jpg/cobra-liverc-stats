@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-01T12:34:09.944Z",
+  "updatedAt": "2026-10-01T14:16:33.644Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -175,6 +175,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "7681778"
+    },
+    {
+      "driverKey": "DAVID-MILFORD",
+      "driverName": "DAVID MILFORD",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "5097267"
     },
     {
       "driverKey": "ALISTAIR-MUNRO",
@@ -530,6 +538,14 @@
       "transponder": "8379316"
     },
     {
+      "driverKey": "GREG-LANE",
+      "driverName": "GREG LANE",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Agama",
+      "transponder": "3276703"
+    },
+    {
       "driverKey": "CHRIS-LEONARD",
       "driverName": "CHRIS LEONARD",
       "className": "2-Wheel Drive Buggy",
@@ -552,6 +568,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "2322578"
+    },
+    {
+      "driverKey": "DAVID-MILFORD",
+      "driverName": "DAVID MILFORD",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "R1 Wurks",
+      "transponder": "5097267"
     },
     {
       "driverKey": "ROGER-MILLS",
@@ -722,6 +746,14 @@
       "transponder": "6657438"
     },
     {
+      "driverKey": "STEWART-WOODEND",
+      "driverName": "STEWART WOODEND",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "4770946"
+    },
+    {
       "driverKey": "MATT-WOODIWISS",
       "driverName": "MATT WOODIWISS",
       "className": "2-Wheel Drive Buggy",
@@ -762,36 +794,12 @@
       "transponder": "8268154"
     },
     {
-      "driverKey": "DAVID-MILFORD",
-      "driverName": "DAVID MILFORD",
+      "driverKey": "SCOTT-BOWKETT",
+      "driverName": "SCOTT BOWKETT",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "R1 Wurks",
-      "transponder": "5097267"
-    },
-    {
-      "driverKey": "GREG-LANE",
-      "driverName": "GREG LANE",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Agama",
-      "transponder": "3276703"
-    },
-    {
-      "driverKey": "STEWART-WOODEND",
-      "driverName": "STEWART WOODEND",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Xray",
-      "transponder": "4770946"
-    },
-    {
-      "driverKey": "DAVID-MILFORD",
-      "driverName": "DAVID MILFORD",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "transponder": "5097267"
+      "chassis": "Team Associated",
+      "transponder": "8508635"
     }
   ]
 }
