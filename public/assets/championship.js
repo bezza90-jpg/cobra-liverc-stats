@@ -2,7 +2,7 @@ const $ = id => document.getElementById(id);
 if (typeof document !== 'undefined' && document.head?.append && document.createElement) {
   const entriesScript = document.createElement('script');
   entriesScript.type = 'module';
-  entriesScript.src = '../assets/event-entries.js?v=20261001-avatar-eager';
+  entriesScript.src = '../assets/event-entries.js?v=20261001-junior-columns';
   document.head.append(entriesScript);
 }
 const fmt = new Intl.NumberFormat('en-GB');
