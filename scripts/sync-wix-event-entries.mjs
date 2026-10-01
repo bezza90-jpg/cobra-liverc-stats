@@ -3,11 +3,11 @@ import {pathToFileURL} from 'node:url';
 
 const API='https://www.wixapis.com';
 export const TICKETS={
-  'Junior Entry':['Junior Racers','Junior Transponder Number'],
-  '2WD Entry':['2-Wheel Drive Buggy','2WD Transponder Number'],
-  '2WD SWORD Entry':['2-Wheel Drive Buggy','2WD Transponder Number'],
-  '4WD Entry':['4-Wheel Drive Buggy','4WD Transponder Number'],
-  '4WD SWORD Entry':['4-Wheel Drive Buggy','4WD Transponder Number'],
+  'Junior Entry':['Junior Racers','Junior Transponder Number','Junior Chassis'],
+  '2WD Entry':['2-Wheel Drive Buggy','2WD Transponder Number','2WD Chassis'],
+  '2WD SWORD Entry':['2-Wheel Drive Buggy','2WD Transponder Number','2WD Chassis'],
+  '4WD Entry':['4-Wheel Drive Buggy','4WD Transponder Number','4WD Chassis'],
+  '4WD SWORD Entry':['4-Wheel Drive Buggy','4WD Transponder Number','4WD Chassis'],
   'Vintage Entry':['Vintage','Vintage Transponder Number'],
   'Mother Trucker Entry':['Trucks','Truck Transponder Number'],
   'Mother Truckers Entry':['Trucks','Truck Transponder Number']
@@ -24,7 +24,7 @@ export function londonDate(now=new Date()) {
 }
 export function formMapping(event) {
   const result={};
-  const wanted=new Set(Object.values(TICKETS).map(([,label])=>label));
+  const wanted=new Set(Object.values(TICKETS).flatMap(([,number,chassis])=>[number,chassis]).filter(Boolean));
   for (const control of event?.form?.controls || []) for (const input of control.inputs || []) {
     const match=[...wanted].find(label=>label.toLowerCase()===String(input.label || '').trim().toLowerCase());
     if (match && input.name) result[match]=input.name;
@@ -57,14 +57,17 @@ export function publicEntry(guest,order,mapping) {
   if (!ticket || ticket.canceled || ticket.archived) return null;
   const ticketName=ticket.name || ticket.ticketName || '';
   const definition=TICKETS[ticketName]; if (!definition) return null;
-  const [className,label]=definition;
+  const [className,label,chassisLabel]=definition;
   const ticketForm=ticket.guestDetails?.form;
   const form=details.formResponse || ticketForm || (sameName(order,details) ? order.checkoutForm : null);
-  const number=answers(form)[mapping[label] || label] || '';
+  const values=answers(form);
+  const number=values[mapping[label] || label] || '';
+  const chassis=chassisLabel ? String(values[mapping[chassisLabel] || chassisLabel] || '').trim().slice(0,80) : '';
   const driverName=publicDriverName(details.firstName,details.lastName);
   if (!driverName) return null;
   return {driverName,className,
-    transponder:/^[0-9]{7}$/.test(number) ? number : ''};
+    transponder:/^[0-9]{7}$/.test(number) ? number : '',
+    ...(chassis ? {chassis} : {})};
 }
 
 async function request(path,site,key,payload) {

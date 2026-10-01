@@ -68,7 +68,8 @@
     {
       "driverName": "DAVID MILFORD",
       "className": "2-Wheel Drive Buggy",
-      "transponder": "5097267"
+      "transponder": "5097267",
+      "chassis": "R1 Wurks"
     },
     {
       "driverName": "DEWI JONES",
@@ -308,7 +309,8 @@
     {
       "driverName": "DAVID MILFORD",
       "className": "4-Wheel Drive Buggy",
-      "transponder": "5097267"
+      "transponder": "5097267",
+      "chassis": "Schumacher"
     },
     {
       "driverName": "DEWI JONES",

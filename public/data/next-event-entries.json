@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-01T02:16:19.943Z",
+  "updatedAt": "2026-10-01T02:42:35.800Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -274,7 +274,7 @@
     },
     {
       "driverKey": "NATHAN-NOTLEY",
-      "driverName": "NATHAN NOTLEY",
+      "driverName": "Nathan Notley",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
@@ -774,32 +774,16 @@
       "driverName": "DAVID MILFORD",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "R1 Wurks",
       "transponder": "5097267"
-    },
-    {
-      "driverKey": "ROYSTON-STEWART-STEWART",
-      "driverName": "ROYSTON STEWART STEWART",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "",
-      "transponder": "2395627"
     },
     {
       "driverKey": "DAVID-MILFORD",
       "driverName": "DAVID MILFORD",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "",
+      "chassis": "Schumacher",
       "transponder": "5097267"
-    },
-    {
-      "driverKey": "NATHAN-NOTLEY-NATHAN-NOTLEY",
-      "driverName": "NATHAN NOTLEY NATHAN NOTLEY",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "",
-      "transponder": "4663156"
     }
   ]
 }

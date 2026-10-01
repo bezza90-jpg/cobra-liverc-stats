@@ -4,12 +4,14 @@ import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate} from '.
 
 test('Wix booking page slug and exact transponder form mapping',()=>{
   assert.equal(bookingSlug('https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-1'),'cobra-sword-round-1');
-  assert.deepEqual(formMapping({form:{controls:[{inputs:[{label:'2WD Transponder Number',name:'field-2wd'}]}]}}),{'2WD Transponder Number':'field-2wd'});
+  assert.deepEqual(formMapping({form:{controls:[{inputs:[{label:'2WD Transponder Number',name:'field-2wd'},{label:'2WD Chassis',name:'chassis-2wd'}]}]}}),{'2WD Transponder Number':'field-2wd','2WD Chassis':'chassis-2wd'});
 });
 test('only an exact seven digit number can update the public entry',()=>{
-  const guest={attendanceStatus:'ATTENDING',ticketNumber:'T1',guestDetails:{firstName:'Test',lastName:'Driver',formResponse:{inputValues:[{inputName:'field-2wd',value:'1234567'}]}}};
+  const guest={attendanceStatus:'ATTENDING',ticketNumber:'T1',guestDetails:{firstName:'Test',lastName:'Driver',formResponse:{inputValues:[{inputName:'field-2wd',value:'1234567'},{inputName:'chassis-2wd',value:'R1 Wurks'}]}}};
   const order={status:'PAID',tickets:[{ticketNumber:'T1',name:'2WD Entry'}]};
-  assert.equal(publicEntry(guest,order,{'2WD Transponder Number':'field-2wd'}).transponder,'1234567');
+  const entry=publicEntry(guest,order,{'2WD Transponder Number':'field-2wd','2WD Chassis':'chassis-2wd'});
+  assert.equal(entry.transponder,'1234567');
+  assert.equal(entry.chassis,'R1 Wurks');
   guest.guestDetails.formResponse.inputValues[0].value='ABC123';
   assert.equal(publicEntry(guest,order,{'2WD Transponder Number':'field-2wd'}).transponder,'');
 });
