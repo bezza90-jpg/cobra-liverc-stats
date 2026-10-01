@@ -1012,10 +1012,10 @@ async function openJourneyMap(driverKey) {
   journeyPlaybackPosition = null;
   const slider = $('journeyDateSlider');
   slider.max = String(Math.max(0, journeyTimelineDates.length - 1));
-  // Frame zero is the instant before the first recorded lap, so it contains
-  // no driver markers. Open on the completion of that first round: this is
-  // still the beginning of the journey, but the cars are visible at Cardiff.
-  slider.value = slider.max === '0' ? '0' : '1';
+  // The resting tracker shows every driver's complete recorded distance.
+  // Starting playback resets this to the configured beginning (February
+  // 2022 by default) before the animation advances through the timeline.
+  slider.value = slider.max;
   $('journeyDriverOptions').innerHTML = state.data.drivers.filter(driver => !journeyExcludedDrivers.has(driver.k)).sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.n)}"></option>`).join('');
   $('journeyDriverSearch').value = state.data.driverByKey[driverKey] || '';
   journeyLabelsSeed = Math.floor(Math.random() * 7919);
