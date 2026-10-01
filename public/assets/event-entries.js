@@ -110,12 +110,12 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     for (const item of spaces) {
       const card = element('div','event-space-card');
       const label = {'Junior Racers':'Junior heat','4-Wheel Drive Buggy':'4WD','2-Wheel Drive Buggy':'2WD'}[item.name] || item.name;
-      const remainingRatio = item.remaining / item.limit;
+      const occupiedRatio = item.entered / item.limit;
       const availabilityClass = item.remaining === 0
         ? 'event-space-status event-space-status--full'
-        : remainingRatio < .25
+        : occupiedRatio > .75
           ? 'event-space-status event-space-status--low'
-          : remainingRatio >= .5 && remainingRatio <= .75
+          : occupiedRatio > .5
             ? 'event-space-status event-space-status--mid'
             : 'event-space-status';
       const availability = element('b',availabilityClass,item.remaining ? `${item.remaining} spaces remaining` : 'Class Full');
