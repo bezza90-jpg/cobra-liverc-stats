@@ -1,0 +1,444 @@
+{
+  "liveRcEventId": "518554",
+  "wixEventId": "34c942ee-659f-4974-aec2-8974551f1062",
+  "eventTitle": "SWORD Round 1 EOS 2026/7",
+  "eventDate": "2026-10-04",
+  "updatedAt": "2026-10-01T01:55:33.904Z",
+  "entries": [
+    {
+      "driverName": "ADAM MCBRIDE",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7241911"
+    },
+    {
+      "driverName": "AINSLEY EVANS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8615491"
+    },
+    {
+      "driverName": "ALISTAIR MUNRO",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4151788"
+    },
+    {
+      "driverName": "ANDY MOUNTFORD",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3103330"
+    },
+    {
+      "driverName": "CHRIS BODEN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3309053"
+    },
+    {
+      "driverName": "CHRIS GUNTER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6865166"
+    },
+    {
+      "driverName": "CHRISTOPHER BAKER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": ""
+    },
+    {
+      "driverName": "CHRISWITHAC RC",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7956159"
+    },
+    {
+      "driverName": "DALE PRESTON",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2644565"
+    },
+    {
+      "driverName": "DAN PULLEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5811289"
+    },
+    {
+      "driverName": "DANIEL GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2604190"
+    },
+    {
+      "driverName": "DAVE ELMES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5404874"
+    },
+    {
+      "driverName": "DAVID MILFORD",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5097267"
+    },
+    {
+      "driverName": "DEWI JONES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2123455"
+    },
+    {
+      "driverName": "EDWARD ROSS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6009030"
+    },
+    {
+      "driverName": "GRAEME MCFARLANE",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": ""
+    },
+    {
+      "driverName": "GREG PARKER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7684548"
+    },
+    {
+      "driverName": "HARRY DAVIS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5032515"
+    },
+    {
+      "driverName": "IAN PEAKMAN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5653564"
+    },
+    {
+      "driverName": "IAN TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4571829"
+    },
+    {
+      "driverName": "JAMIE BEASLEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3658404"
+    },
+    {
+      "driverName": "JAMIE DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": ""
+    },
+    {
+      "driverName": "JOHN MORDEN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5310037"
+    },
+    {
+      "driverName": "JON PUZEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": ""
+    },
+    {
+      "driverName": "JON TUCKER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5466460"
+    },
+    {
+      "driverName": "JOSH WILLIAMS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2173920"
+    },
+    {
+      "driverName": "JUSTIN WALKER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8367004"
+    },
+    {
+      "driverName": "LEE FIDOE",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6760569"
+    },
+    {
+      "driverName": "LEE KILLWORTH",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8379316"
+    },
+    {
+      "driverName": "LEWIS HOPKINS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7203900"
+    },
+    {
+      "driverName": "MARK COX",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3727335"
+    },
+    {
+      "driverName": "MARK GIAQUINTO",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4115135"
+    },
+    {
+      "driverName": "MARK GREENWOOD",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7720183"
+    },
+    {
+      "driverName": "MARK HICKS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3753291"
+    },
+    {
+      "driverName": "MARTIN PITMAN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3499449"
+    },
+    {
+      "driverName": "MARTYN HADLEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "1234567"
+    },
+    {
+      "driverName": "MATT OSLAND-JONES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2915962"
+    },
+    {
+      "driverName": "MATT WOODIWISS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6991518"
+    },
+    {
+      "driverName": "MIKE HYSIAK",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9073997"
+    },
+    {
+      "driverName": "NEIL SMITH",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5677397"
+    },
+    {
+      "driverName": "NIGEL SANTIMANO",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4243064"
+    },
+    {
+      "driverName": "RICHARD HARRISON",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4961721"
+    },
+    {
+      "driverName": "RICHARD MORSE",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3297060"
+    },
+    {
+      "driverName": "ROGER MILLS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9115761"
+    },
+    {
+      "driverName": "ROY DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8268154"
+    },
+    {
+      "driverName": "ROYSTON STEWART STEWART",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2395627"
+    },
+    {
+      "driverName": "RUSS WILLIAMS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6657438"
+    },
+    {
+      "driverName": "RUSSELL THOMAS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "0777999"
+    },
+    {
+      "driverName": "SIMON FISHER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2189851"
+    },
+    {
+      "driverName": "STEVEN GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8943115"
+    },
+    {
+      "driverName": "STUART IRONS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5588658"
+    },
+    {
+      "driverName": "TIM BRAVERY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7856530"
+    },
+    {
+      "driverName": "TOM JENKINS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5749969"
+    },
+    {
+      "driverName": "TONY BISHOP",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": ""
+    },
+    {
+      "driverName": "TOONZ TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2846066"
+    },
+    {
+      "driverName": "WILLIAM FISHER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3421234"
+    },
+    {
+      "driverName": "ALISTAIR MUNRO",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4652466"
+    },
+    {
+      "driverName": "CHRIS GUNTER",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6099608"
+    },
+    {
+      "driverName": "DAN PULLEY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7832340"
+    },
+    {
+      "driverName": "DAVE ELMES",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7382723"
+    },
+    {
+      "driverName": "DAVID MILFORD",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "5097267"
+    },
+    {
+      "driverName": "DEWI JONES",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": ""
+    },
+    {
+      "driverName": "EDWARD SCOTT",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": ""
+    },
+    {
+      "driverName": "FRAN BRAVERY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "9746100"
+    },
+    {
+      "driverName": "GREG PARKER",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7322122"
+    },
+    {
+      "driverName": "HARRY DAVIS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "3309053"
+    },
+    {
+      "driverName": "IAN PEAKMAN",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6091953"
+    },
+    {
+      "driverName": "LEE KILLWORTH",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "8379316"
+    },
+    {
+      "driverName": "LIAM TOOLE",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": ""
+    },
+    {
+      "driverName": "MARK GIAQUINTO",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4115135"
+    },
+    {
+      "driverName": "MATT WOODIWISS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6991518"
+    },
+    {
+      "driverName": "NATHAN NOTLEY NATHAN NOTLEY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4663156"
+    },
+    {
+      "driverName": "NEIL SMITH",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "2322578"
+    },
+    {
+      "driverName": "RICHARD HARRISON",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4407442"
+    },
+    {
+      "driverName": "RUSS WILLIAMS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6657438"
+    },
+    {
+      "driverName": "RUSSELL THOMAS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "0777999"
+    },
+    {
+      "driverName": "SPENCER FARLEY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "9889135"
+    },
+    {
+      "driverName": "TIM BRAVERY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7226235"
+    },
+    {
+      "driverName": "TOM JENKINS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "5749969"
+    },
+    {
+      "driverName": "WILLIAM FISHER",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4760819"
+    },
+    {
+      "driverName": "BEN EVANS",
+      "className": "Junior Racers",
+      "transponder": "3581757"
+    },
+    {
+      "driverName": "HAIDEN HICKS",
+      "className": "Junior Racers",
+      "transponder": ""
+    },
+    {
+      "driverName": "HARRY DAVIS",
+      "className": "Junior Racers",
+      "transponder": "7090137"
+    },
+    {
+      "driverName": "LEO SMITH",
+      "className": "Junior Racers",
+      "transponder": "6624085"
+    },
+    {
+      "driverName": "NATHAN NOTLEY NATHAN NOTLEY",
+      "className": "Junior Racers",
+      "transponder": ""
+    },
+    {
+      "driverName": "NOAH MCBRIDE",
+      "className": "Junior Racers",
+      "transponder": "8205771"
+    },
+    {
+      "driverName": "SEB FISHER",
+      "className": "Junior Racers",
+      "transponder": "6645548"
+    }
+  ]
+}
