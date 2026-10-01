@@ -902,7 +902,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     });
     journeyDriverMarkers.set(driver.driverKey, marker);
   }
-  window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'right', pane: 'journeySiteLabels' }).addTo(journeyMapLayers);
+  window.L.circleMarker(journeyRoadRoute[0], { radius: 7, color: '#fff', weight: 2, fillColor: '#067b14', fillOpacity: 1 }).bindTooltip('House of Sport, Cardiff', { permanent: true, direction: 'bottom', offset: [0, 22], pane: 'journeySiteLabels' }).addTo(journeyMapLayers);
   window.L.circleMarker(journeyRoadRoute.at(-1), { radius: 7, color: '#fff', weight: 2, fillColor: '#17211a', fillOpacity: 1 }).bindTooltip('Istanbul, Türkiye', { permanent: true, direction: 'left' }).addTo(journeyMapLayers);
 }
 
@@ -1012,7 +1012,10 @@ async function openJourneyMap(driverKey) {
   journeyPlaybackPosition = null;
   const slider = $('journeyDateSlider');
   slider.max = String(Math.max(0, journeyTimelineDates.length - 1));
-  slider.value = '0';
+  // Frame zero is the instant before the first recorded lap, so it contains
+  // no driver markers. Open on the completion of that first round: this is
+  // still the beginning of the journey, but the cars are visible at Cardiff.
+  slider.value = slider.max === '0' ? '0' : '1';
   $('journeyDriverOptions').innerHTML = state.data.drivers.filter(driver => !journeyExcludedDrivers.has(driver.k)).sort((a, b) => a.n.localeCompare(b.n)).map(driver => `<option value="${escapeHtml(driver.n)}"></option>`).join('');
   $('journeyDriverSearch').value = state.data.driverByKey[driverKey] || '';
   journeyLabelsSeed = Math.floor(Math.random() * 7919);
