@@ -90,6 +90,19 @@ test('Wix chassis stays attached to the entered class',()=>{
  assert.equal(published.entries.find(row=>row.className==='4-Wheel Drive Buggy').chassis,'Schumacher');
 });
 
+test('a Wix nickname merges with the unique same-class LiveRC transponder',()=>{
+ const meeting={eventId:'123'};
+ const live=[
+  {driverName:'CHRIS LEONARD',className:'2-Wheel Drive Buggy',transponder:'7956159'},
+  {driverName:'ANOTHER DRIVER',className:'4-Wheel Drive Buggy',transponder:'7956159'}];
+ const wix={liveRcEventId:'123',entries:[
+  {driverName:'CHRISWITHAC RC',className:'2-Wheel Drive Buggy',transponder:'7956159'}]};
+ const merged=mergeWixEntries(meeting,live,wix);
+ assert.equal(merged.length,2);
+ assert.equal(merged.filter(row=>row.className==='2-Wheel Drive Buggy').length,1);
+ assert.equal(merged.find(row=>row.className==='2-Wheel Drive Buggy').driverName,'CHRIS LEONARD');
+});
+
 import {parseBooking,matchBooking} from './booking-calendar.mjs';
 test('booking matches exact date and type, not a guessed slug', () => {
  const url='https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-1';

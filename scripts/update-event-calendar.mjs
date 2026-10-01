@@ -64,8 +64,16 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
     // A Junior ticket can be used for the under-16 price even when the driver
     // is racing in a senior car class. Respect the senior event assignment.
     if (row.className==='Junior Racers' && (liveNames.has(identity(row)) || wixSeniorNames.has(identity(row)))) continue;
-    const id=key(row), current=merged.get(id);
+    let id=key(row), current=merged.get(id);
     const transponder=/^[0-9]{7}$/.test(String(row.transponder || '')) ? String(row.transponder) : '';
+    // A booking name can differ from the established LiveRC name. When one
+    // valid transponder uniquely identifies an existing driver in the same
+    // class, merge into that row instead of publishing a duplicate entrant.
+    if (!current && transponder) {
+      const transponderMatches=[...merged.entries()].filter(([,candidate]) =>
+        candidate.className===row.className && String(candidate.transponder || '')===transponder);
+      if (transponderMatches.length===1) [id,current]=transponderMatches[0];
+    }
     const currentChassis=String(row.chassis || '').trim();
     if (current) merged.set(id,{...current,...(transponder ? {transponder} : {}),...(currentChassis ? {chassis:currentChassis} : {})});
     else merged.set(id,{driverName:row.driverName,className:row.className,transponder,...(currentChassis ? {chassis:currentChassis} : {})});
