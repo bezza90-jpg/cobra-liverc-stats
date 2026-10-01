@@ -84,6 +84,7 @@ const journeyChecks = [
   ['races since 2022', appJs.includes("race.d < '2022-01-01'")],
   ['playback controls', appJs.includes('toggleJourneyPlayback') && appJs.includes('id="journeySpeed"') && appJs.includes('length: 15')],
   ['race timeline', appJs.includes('buildJourneyTimeline') && appJs.includes('journeyMilestoneData')],
+  ['latest tracker date', appJs.includes('slider.value = slider.max') && appJs.includes('state.data.meta.latestEventDate')],
   ['driver selection', appJs.includes('journeyDriverSearch') && appJs.includes('journeyDriverPicker')],
   ['excluded test driver', /journeyExcludedDrivers\s*=\s*new Set\(\[[^\]]*['"]SIMON-NOTLEY['"]/.test(appJs)],
   ['destination and map tiles', appJs.includes('Istanbul, Türkiye') && appJs.includes('openstreetmap.org')],
