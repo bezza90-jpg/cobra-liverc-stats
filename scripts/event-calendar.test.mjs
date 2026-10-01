@@ -68,6 +68,28 @@ test('Junior-price booking does not duplicate a driver assigned to a senior clas
   'HAIDEN HICKS|2-Wheel Drive Buggy','NATHAN NOTLEY|4-Wheel Drive Buggy']);
 });
 
+test('duplicated LiveRC full name collapses into the correct driver',()=>{
+ const meeting={eventId:'123',title:'SWORD Round 1',date:'2026-10-04',type:'sword'};
+ const live=[
+  {driverName:'NATHAN NOTLEY',className:'4-Wheel Drive Buggy',transponder:'4663156'},
+  {driverName:'NATHAN NOTLEY NATHAN NOTLEY',className:'4-Wheel Drive Buggy',transponder:'4663156'}];
+ const merged=mergeWixEntries(meeting,live,{liveRcEventId:'123',entries:[]});
+ assert.equal(merged.length,1);
+ const published=enrichNextEventEntries(meeting,merged);
+ assert.equal(published.entries[0].driverKey,'NATHAN-NOTLEY');
+ assert.equal(published.entries[0].driverName,'Nathan Notley');
+});
+
+test('Wix chassis stays attached to the entered class',()=>{
+ const meeting={eventId:'123'};
+ const wix={liveRcEventId:'123',entries:[
+  {driverName:'DAVID MILFORD',className:'2-Wheel Drive Buggy',transponder:'5097267',chassis:'R1 Wurks'},
+  {driverName:'DAVID MILFORD',className:'4-Wheel Drive Buggy',transponder:'5097267',chassis:'Schumacher'}]};
+ const published=enrichNextEventEntries(meeting,mergeWixEntries(meeting,[],wix));
+ assert.equal(published.entries.find(row=>row.className==='2-Wheel Drive Buggy').chassis,'R1 Wurks');
+ assert.equal(published.entries.find(row=>row.className==='4-Wheel Drive Buggy').chassis,'Schumacher');
+});
+
 import {parseBooking,matchBooking} from './booking-calendar.mjs';
 test('booking matches exact date and type, not a guessed slug', () => {
  const url='https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-1';

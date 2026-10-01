@@ -44,7 +44,7 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
         ...(key !== sourceKey ? {bookingName:entry.driverName} : {}),
         className: entry.className,
         countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
-        chassis: chassisChoice(override, chassis[key]?.name || chassis[sourceKey]?.name || ''),
+        chassis: chassisChoice(override, entry.chassis || chassis[key]?.name || chassis[sourceKey]?.name || ''),
         transponder: entry.transponder
       };
     })
@@ -66,8 +66,9 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
     if (row.className==='Junior Racers' && (liveNames.has(identity(row)) || wixSeniorNames.has(identity(row)))) continue;
     const id=key(row), current=merged.get(id);
     const transponder=/^[0-9]{7}$/.test(String(row.transponder || '')) ? String(row.transponder) : '';
-    if (current) merged.set(id,{...current,...(transponder ? {transponder} : {})});
-    else merged.set(id,{driverName:row.driverName,className:row.className,transponder});
+    const currentChassis=String(row.chassis || '').trim();
+    if (current) merged.set(id,{...current,...(transponder ? {transponder} : {}),...(currentChassis ? {chassis:currentChassis} : {})});
+    else merged.set(id,{driverName:row.driverName,className:row.className,transponder,...(currentChassis ? {chassis:currentChassis} : {})});
   }
   return [...merged.values()];
 }
