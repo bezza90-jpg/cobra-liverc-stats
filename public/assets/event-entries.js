@@ -5,7 +5,12 @@ import {compareEntryNames} from './event-entry-order.js';
 const allowedAvatar = /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/;
 function entryAvatar(avatars, revisions, entry) {
   const record = avatars?.[entry.driverKey];
-  const className = typeof record === 'string' ? 'default' : (typeof record?.[entry.className] === 'string' ? entry.className : 'default');
+  let className = typeof record === 'string' ? 'default' : (typeof record?.[entry.className] === 'string' ? entry.className : 'default');
+  if (entry.className === 'Junior Racers' && typeof record === 'object' && typeof record?.[className] !== 'string') {
+    className = typeof record['2-Wheel Drive Buggy'] === 'string' ? '2-Wheel Drive Buggy'
+      : typeof record['4-Wheel Drive Buggy'] === 'string' ? '4-Wheel Drive Buggy'
+        : 'default';
+  }
   const path = typeof record === 'string' ? record : record?.[className];
   if (typeof path !== 'string' || !allowedAvatar.test(path)) return null;
   const revision = revisions?.[entry.driverKey + '|' + className];
