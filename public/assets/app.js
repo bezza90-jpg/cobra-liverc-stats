@@ -978,7 +978,13 @@ function toggleJourneyPlayback() {
 
 async function openJourneyMap(driverKey) {
   journeySelectedKey = driverKey;
-  const latestDate = state.data.meta.latestEventDate || Object.values(state.data.raceById).map(race => race.d).sort().at(-1) || '2022-01-01';
+  // Use the newest date from either source. The generated metadata and race
+  // index normally agree, but choosing metadata first can strand the tracker
+  // on an old meeting after a partial data refresh.
+  const latestDate = [
+    state.data.meta.latestEventDate,
+    ...Object.values(state.data.raceById).map(race => race.d)
+  ].filter(Boolean).sort().at(-1) || '2022-01-01';
   journeyRoundSlots = buildJourneyRoundSlots();
   journeySmoothTracks = null;
   journeyRecentKeys = recentJourneyDrivers(journeyDriverDistances());
@@ -1028,6 +1034,10 @@ async function openJourneyMap(driverKey) {
         $('journeyFollowStatus').textContent = 'Map moved · tap Refocus to follow';
       });
     }
+    // Repeat this after the asynchronous map load so delayed setup cannot
+    // restore the range input's original HTML value of zero (the first race).
+    slider.value = slider.max;
+    journeyPlaybackPosition = null;
     renderJourneyMap({ resetView: false });
     setTimeout(() => {
       journeyMap.invalidateSize();
