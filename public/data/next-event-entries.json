@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-01T15:54:53.776134+00:00",
+  "updatedAt": "2026-10-01T15:55:52.664Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -319,6 +319,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "3309053"
+    },
+    {
+      "driverKey": "SCOTT-BOWKETT",
+      "driverName": "SCOTT BOWKETT",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "8508635"
     },
     {
       "driverKey": "TIM-BRAVERY",
@@ -792,14 +800,6 @@
       "countryCode": "GB",
       "chassis": "Tlr",
       "transponder": "8268154"
-    },
-    {
-      "driverKey": "SCOTT-BOWKETT",
-      "driverName": "SCOTT BOWKETT",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "transponder": "8508635"
     }
   ]
 }
