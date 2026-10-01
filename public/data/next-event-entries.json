@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-01T01:46:51.415Z",
+  "updatedAt": "2026-10-01T02:16:19.943Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -198,7 +198,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
-      "transponder": "7312122"
+      "transponder": "7322122"
     },
     {
       "driverKey": "DAN-PULLEY",
@@ -230,7 +230,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
-      "transponder": "777999"
+      "transponder": "0777999"
     },
     {
       "driverKey": "RUSS-WILLIAMS",
@@ -271,6 +271,14 @@
       "countryCode": "GB",
       "chassis": "Schumacher",
       "transponder": "7180911"
+    },
+    {
+      "driverKey": "NATHAN-NOTLEY",
+      "driverName": "NATHAN NOTLEY",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "4663156"
     },
     {
       "driverKey": "CHRISTOPHER-BAKER",
@@ -663,7 +671,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
-      "transponder": "777999"
+      "transponder": "0777999"
     },
     {
       "driverKey": "IAN-TOWNSEND",
@@ -752,6 +760,46 @@
       "countryCode": "GB",
       "chassis": "Tlr",
       "transponder": "8268154"
+    },
+    {
+      "driverKey": "CHRISWITHAC-RC",
+      "driverName": "CHRISWITHAC RC",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": "7956159"
+    },
+    {
+      "driverKey": "DAVID-MILFORD",
+      "driverName": "DAVID MILFORD",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": "5097267"
+    },
+    {
+      "driverKey": "ROYSTON-STEWART-STEWART",
+      "driverName": "ROYSTON STEWART STEWART",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": "2395627"
+    },
+    {
+      "driverKey": "DAVID-MILFORD",
+      "driverName": "DAVID MILFORD",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": "5097267"
+    },
+    {
+      "driverKey": "NATHAN-NOTLEY-NATHAN-NOTLEY",
+      "driverName": "NATHAN NOTLEY NATHAN NOTLEY",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": "4663156"
     }
   ]
 }
