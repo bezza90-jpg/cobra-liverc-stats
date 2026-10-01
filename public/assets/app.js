@@ -16,6 +16,7 @@ let journeyDriverMarkers = new Map();
 let journeySelectedKey = '';
 let journeyTimelineDates = [];
 let journeyRoundSlots = new Map();
+let journeySmoothTracks = null;
 let journeyRaceTimeline = [];
 let journeyPlaybackTimer = null;
 let journeyPlaybackPosition = null;
@@ -596,6 +597,49 @@ function journeyDriverDistances(cutoffTime = Infinity, raceStarts = null, elapse
   })).filter(driver => driver.km > 0);
 }
 
+function buildJourneySmoothTracks() {
+  const grouped=new Map();
+  for (const run of state.data.raceResults) {
+    const race=state.data.raceById[run[0]], slot=journeyRoundSlots.get(run[0]);
+    if (!race || !slot || race.d<'2022-01-01' || journeyExcludedDrivers.has(run[1])) continue;
+    if (!grouped.has(run[1])) grouped.set(run[1],[]);
+    grouped.get(run[1]).push({start:slot.start,time:slot.end,km:completedLaps(run)*.15,race});
+  }
+  for (const rows of grouped.values()) {
+    rows.sort((a,b)=>a.time-b.time);
+    let total=0;
+    for (const row of rows) { total+=row.km; row.total=total; }
+  }
+  return grouped;
+}
+
+// Playback is a compressed journey through several seasons. Spread each
+// driver's next recorded distance over the gap from their previous run so a
+// car does not stop merely because another class has the current checkpoint.
+// Every car still lands on its exact recorded cumulative total at each run.
+function journeyDriverDistancesSmoothed(cutoffTime, raceStarts=null, elapsedDays=0) {
+  journeySmoothTracks ||= buildJourneySmoothTracks();
+  const result=[];
+  for (const [driverKey,rows] of journeySmoothTracks) {
+    if (!rows.length) continue;
+    const first=raceStarts?.get(driverKey);
+    if (raceStarts && first===undefined) continue;
+    const now=raceStarts ? first+elapsedDays*86400000 : cutoffTime;
+    if (now<rows[0].start) continue;
+    let index=rows.findIndex(row=>row.time>=now);
+    if (index<0) index=rows.length-1;
+    const next=rows[index], previous=index ? rows[index-1] : {time:rows[0].start,total:0};
+    const fraction=next.time===previous.time ? 1 : Math.max(0,Math.min(1,(now-previous.time)/(next.time-previous.time)));
+    const km=previous.total+(next.total-previous.total)*fraction;
+    if (km<=0) continue;
+    const completed=rows.filter(row=>row.time<=now);
+    const latest=completed.at(-1) || next;
+    result.push({driverKey,name:state.data.driverByKey[driverKey] || driverKey,km,laps:Math.floor(km/.15),runs:completed.length,
+      events:new Set(completed.map(row=>row.race.e)).size,classes:[...new Set(completed.map(row=>row.race.c))],lastDate:latest.race.d,lastEvent:state.data.eventById[latest.race.e]?.n || ''});
+  }
+  return result;
+}
+
 function stopJourneyPlayback() {
   if (journeyPlaybackTimer) cancelAnimationFrame(journeyPlaybackTimer);
   journeyPlaybackTimer = null;
@@ -691,9 +735,10 @@ function journeyDriversAtPosition(raceMode) {
   const cacheKey = `${raceMode ? 'race' : 'dates'}:${before}:${after}:${[...journeySelectedKeys].sort().join(',')}`;
   if (journeyMotionCache?.key !== cacheKey) {
     const starts = raceMode ? journeyRaceStarts().starts : null;
+    const smooth=journeyPlaybackHasStarted;
     const distanceAt = index => raceMode
-      ? journeyDriverDistances(Infinity, starts, timeline[index] ?? 0)
-      : journeyDriverDistances(timeline[index]?.time ?? Infinity);
+      ? (smooth ? journeyDriverDistancesSmoothed(Infinity,starts,timeline[index] ?? 0) : journeyDriverDistances(Infinity, starts, timeline[index] ?? 0))
+      : (smooth ? journeyDriverDistancesSmoothed(timeline[index]?.time ?? Infinity) : journeyDriverDistances(timeline[index]?.time ?? Infinity));
     const earlier = distanceAt(before);
     const later = after === before ? earlier : distanceAt(after);
     journeyMotionCache = { key: cacheKey, earlier: new Map(earlier.map(driver => [driver.driverKey, driver])), later: new Map(later.map(driver => [driver.driverKey, driver])) };
@@ -932,6 +977,7 @@ async function openJourneyMap(driverKey) {
   journeySelectedKey = driverKey;
   const latestDate = state.data.meta.latestEventDate || Object.values(state.data.raceById).map(race => race.d).sort().at(-1) || '2022-01-01';
   journeyRoundSlots = buildJourneyRoundSlots();
+  journeySmoothTracks = null;
   journeyRecentKeys = recentJourneyDrivers(journeyDriverDistances());
   journeyTimelineDates = buildJourneyTimeline(latestDate);
   journeyMotionCache = null;
