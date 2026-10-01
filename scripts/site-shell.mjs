@@ -6,6 +6,7 @@ const routes = {
   'Podium-Gallery':'podiums/', 'race-stats':'', 'virtual-race-replay':'virtual-race-replay/',
   'driver-car-avatars':'car-avatars/', 'driver-distance-tracker':'?tracker=1',
   'drivers-setups':'setups/', 'upload-car-avatar':'avatar-upload/', 'about-cobra':'about/',
+  'club-news':'club-news/',
   'website-guides':'website-guides/'
 };
 const escape = value => value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');

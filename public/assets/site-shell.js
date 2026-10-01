@@ -42,7 +42,7 @@ const SEARCH_PAGES = [
   ['About COBRA','Club team, venue, location, food and nearby hotels.','about/','address directions house of sport team committee venue'],
   ['Website guides and videos','Watch help videos and read guides to the COBRA website features.','website-guides/','help tutorial instructions reel feature showcase'],
   ['Track gallery','Browse COBRA track layouts and event photographs.','https://www.cobracardiff.co.uk/track-gallery','track layout pictures photos'],
-  ['Club news','Read the latest COBRA announcements and updates.','https://www.cobracardiff.co.uk/club-news','news updates announcements'],
+  ['Club news','Read the latest COBRA announcements and updates.','club-news/','news updates announcements'],
   ['Media','Watch and browse COBRA race media.','https://www.cobracardiff.co.uk/media','video photos gallery'],
   ['Contact COBRA','Send the club a question or request.','https://www.cobracardiff.co.uk/contact','email message enquiry question help']
 ];

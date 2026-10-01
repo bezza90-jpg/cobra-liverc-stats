@@ -8,7 +8,7 @@ import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
 import { loadMap } from './load-map.js?v=20260928-local';
 import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
-import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=2';
+import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=3';
 
 const state = { data: null, profileKey: '' };
 let journeyMap = null;
