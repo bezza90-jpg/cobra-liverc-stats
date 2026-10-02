@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-02T23:28:34.138Z",
+  "updatedAt": "2026-10-02T23:50:08.789Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -96,7 +96,7 @@
     },
     {
       "driverKey": "BOBTECH",
-      "driverName": "BobTech",
+      "driverName": "Bob \"Bobtech\" Gelstharp",
       "bookingName": "BOB GELSTHARP",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
@@ -409,7 +409,7 @@
     },
     {
       "driverKey": "BOBTECH",
-      "driverName": "BobTech",
+      "driverName": "Bob \"Bobtech\" Gelstharp",
       "bookingName": "BOB GELSTHARP",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
