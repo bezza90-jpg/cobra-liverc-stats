@@ -23,3 +23,5 @@ Example override:
 ```
 
 The public component is loaded from `public/assets/event-entries.js`. It selects the next event for the current page, supports driver/class/chassis searching, and uses a compact card layout on phones.
+
+Junior-price Wix tickets do not assign a driver to the junior heat when their event entry is in a senior race class. The browser's live booking merge uses that assignment too, so Harry Davis, Nathan Notley and Haiden Hicks stay in their senior classes. The junior heat count and space count use the same filtered roster.

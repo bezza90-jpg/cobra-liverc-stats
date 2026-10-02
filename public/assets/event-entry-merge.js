@@ -1,0 +1,25 @@
+import {canonicalDriverKey} from './driver-identity.js';
+
+const identity = row => canonicalDriverKey(String(row.driverKey || row.driverName || '').trim().toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,''));
+const key = row => `${identity(row)}|${String(row.className || '').trim().toUpperCase()}`;
+
+export function mergeCurrentWixEntries(data, wix = {}) {
+  const published = Array.isArray(data?.entries) ? data.entries : [];
+  const bookings = Array.isArray(wix?.entries) ? wix.entries : [];
+  if (!bookings.length || (wix.eventDate && data.date && wix.eventDate !== data.date) ||
+      (wix.liveRcEventId && data.eventId && String(wix.liveRcEventId) !== String(data.eventId))) return data;
+  const seniorNames = new Set([...published, ...bookings].filter(row => row.className && row.className !== 'Junior Racers').map(identity));
+  const merged = published.filter(row => row.className !== 'Junior Racers' || !seniorNames.has(identity(row)));
+  const keys = new Set(merged.map(key));
+  for (const booking of bookings) {
+    if (!booking?.driverName || !booking?.className) continue;
+    if (booking.className === 'Junior Racers' && seniorNames.has(identity(booking))) continue;
+    if (keys.has(key(booking))) continue;
+    merged.push({driverName:booking.driverName, driverKey:identity(booking), className:booking.className,
+      countryCode:'GB', chassis:booking.chassis || '', transponder:booking.transponder || '', bookingStatus:'Wix booking'});
+    keys.add(key(booking));
+  }
+  const wixUpdated = Date.parse(wix.updatedAt || '');
+  const dataUpdated = Date.parse(data.updatedAt || '');
+  return {...data, entries:merged, updatedAt:wixUpdated > dataUpdated ? wix.updatedAt : data.updatedAt};
+}
