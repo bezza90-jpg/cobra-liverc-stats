@@ -107,5 +107,8 @@
   "DAVID-MILFORD": {
     "2-Wheel Drive Buggy": "assets/car-avatars/DAVID-MILFORD-AUTO-2WD.png",
     "4-Wheel Drive Buggy": "assets/car-avatars/DAVID-MILFORD-AUTO-4WD.png"
+  },
+  "MARK-COX": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/MARK-COX-AUTO-2WD.png"
   }
 }
