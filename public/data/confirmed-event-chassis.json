@@ -1,0 +1,507 @@
+{
+  "date": "2026-10-04",
+  "eventId": "518554",
+  "source": "Organiser-approved LiveRC import CSV",
+  "entries": [
+    {
+      "driverName": "CHRISTOPHER BAKER",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "SWorkz"
+    },
+    {
+      "driverName": "JAMIE BEASLEY",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "TONY BISHOP",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "CHRIS BODEN",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "SCOTT BOWKETT",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "TIM BRAVERY",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "MARK COX",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Yokomo"
+    },
+    {
+      "driverName": "STEVE CURTIS-RICH",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "JAMIE DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "ROY DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "HARRY DAVIS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "Mike Driscoll",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "DAVE ELMES",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "AINSLEY EVANS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "LEE FIDOE",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "SIMON FISHER",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "WILLIAM FISHER",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "BOB GELSTHARP",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": ""
+    },
+    {
+      "driverName": "MARK GIAQUINTO",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "MARK GREENWOOD",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "DANIEL GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "STEVEN GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "CHRIS GUNTER",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "MARTYN HADLEY",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "RICHARD HARRISON",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "HAIDEN HICKS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Kyosho"
+    },
+    {
+      "driverName": "MARK HICKS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "MATTHEW HODGES",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "LEWIS HOPKINS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "MIKE HYSIAK",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "STUART IRONS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "TOM JENKINS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "DEWI JONES",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "LEE KILLWORTH",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "GREG LANE",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "CHRIS LEONARD",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "ADAM MCBRIDE",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "GRAEME MCFARLANE",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "DAVID MILFORD",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "R1 Wurks"
+    },
+    {
+      "driverName": "ROGER MILLS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "JOHN MORDEN",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "RICHARD MORSE",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "R1 Wurks"
+    },
+    {
+      "driverName": "ANDY MOUNTFORD",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "ALISTAIR MUNRO",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "MATT OSLAND-JONES",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "GREG PARKER",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "IAN PEAKMAN",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "MARTIN PITMAN",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "DALE PRESTON",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "DAN PULLEY",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "JON PUZEY",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "EDWARD ROSS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "NIGEL SANTIMANO",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "NEIL SMITH",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "ROYSTON STEWART",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "Russell Thomas",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "IAN TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "TOONZ TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "JON TUCKER",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "Carl Turner",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "JUSTIN WALKER",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "R1 Wurks"
+    },
+    {
+      "driverName": "Justin Walsh",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "JOSH WILLIAMS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "RUSS WILLIAMS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "Stewart Woodend",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "Matt Woodiwiss",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "FRAN BRAVERY",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "TIM BRAVERY",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "HARRY DAVIS",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "MIKE DRISCOLL",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "DAVE ELMES",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "SPENCER FARLEY",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "WILLIAM FISHER",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "BOB GELSTHARP",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": ""
+    },
+    {
+      "driverName": "MARK GIAQUINTO",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "CHRIS GUNTER",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "RICHARD HARRISON",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "MATTHEW HODGES",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "TOM JENKINS",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "DEWI JONES",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "LEE KILLWORTH",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "CHRIS LEONARD",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "DAVID MILFORD",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "ALISTAIR MUNRO",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "LEO NOTLEY",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "NATHAN NOTLEY",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "GREG PARKER",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "IAN PEAKMAN",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "DAN PULLEY",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "PR"
+    },
+    {
+      "driverName": "EDWARD SCOTT",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "NEIL SMITH",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Russell Thomas",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "LIAM TOOLE",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "RUSS WILLIAMS",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "MATT WOODIWISS",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "MARCIA DAVIS",
+      "className": "Junior Racers",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "BEN EVANS",
+      "className": "Junior Racers",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "SEB FISHER",
+      "className": "Junior Racers",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "NOAH MCBRIDE",
+      "className": "Junior Racers",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "LEO SMITH",
+      "className": "Junior Racers",
+      "chassis": "Schumacher"
+    }
+  ]
+}
