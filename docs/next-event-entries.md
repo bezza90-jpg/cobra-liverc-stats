@@ -27,3 +27,5 @@ The public component is loaded from `public/assets/event-entries.js`. It selects
 Junior-price Wix tickets do not assign a driver to the junior heat when their event entry is in a senior race class. The browser's live booking merge uses that assignment too, so Harry Davis, Nathan Notley and Haiden Hicks stay in their senior classes. The junior heat count and space count use the same filtered roster.
 
 For SWORD Round 1 on 4 October 2026, confirmed driver/class chassis values come from the organiser-approved master import CSV in confirmed-event-chassis.json. This public file contains only names, classes and chassis. It does not change transponders or create bookings. New drivers keep their Wix chassis, and the confirmed chassis override expires when the selected event changes.
+
+The browser also applies the server's same-class unique-transponder nickname rule. Chris Leonard's Wix booking name CHRISWITHAC RC does not consume a second space. Two separately booked drivers sharing a transponder remain separate entries. Before the pending import, 2WD is 64 LiveRC entries plus Carl Turner and Justin Walsh from Wix:66 entered,14 of80 spaces remaining.
