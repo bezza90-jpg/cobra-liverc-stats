@@ -30,3 +30,5 @@ For SWORD Round 1 on 4 October 2026, confirmed driver/class chassis values come 
 
 The browser also applies the server's same-class unique-transponder nickname rule. Chris Leonard's Wix booking name CHRISWITHAC RC does not consume a second space. Two separately booked drivers sharing a transponder remain separate entries. Before the pending import, 2WD is 64 LiveRC entries plus Carl Turner and Justin Walsh from Wix:66 entered,14 of80 spaces remaining.
 `nBob Gelstharp is displayed as Bob "Bobtech" Gelstharp. BOBTECH, BOB-GELSTHARP and BOB-BOBTECH-GELSTHARP all point to the existing BOBTECH profile and images. His confirmed 2WD and 4WD chassis are Schumacher.
+
+Paul Curtis is displayed as Paul "Bruce" Curtis. BRUCE, PAUL-CURTIS and PAUL-BRUCE-CURTIS share the existing BRUCE profile. These mappings also feed tracker/result generation; historic raw results and image paths are preserved.
