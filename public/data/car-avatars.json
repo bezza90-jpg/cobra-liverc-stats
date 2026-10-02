@@ -113,5 +113,9 @@
   },
   "HARRY-DAVIS": {
     "2-Wheel Drive Buggy": "assets/car-avatars/HARRY-DAVIS-AUTO-2WD.png"
+  },
+  "RUSS-WILLIAMS": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/RUSS-WILLIAMS-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/RUSS-WILLIAMS-AUTO-4WD.png"
   }
 }
