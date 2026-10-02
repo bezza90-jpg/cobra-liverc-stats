@@ -285,15 +285,44 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
   });
 }
 
+function mergeCurrentWixEntries(data, wix = {}) {
+  const published = Array.isArray(data?.entries) ? data.entries : [];
+  const bookings = Array.isArray(wix?.entries) ? wix.entries : [];
+  if (!bookings.length || (wix.eventDate && data.date && wix.eventDate !== data.date)) return data;
+  const merged = [...published];
+  const keys = new Set(merged.map(entry => `${String(entry.driverName || '').trim().toUpperCase()}|${String(entry.className || '').trim().toUpperCase()}`));
+  for (const booking of bookings) {
+    if (!booking?.driverName || !booking?.className) continue;
+    const key = `${String(booking.driverName).trim().toUpperCase()}|${String(booking.className).trim().toUpperCase()}`;
+    if (keys.has(key)) continue;
+    merged.push({
+      driverName: booking.driverName,
+      className: booking.className,
+      countryCode: 'GB',
+      chassis: booking.chassis || '',
+      transponder: booking.transponder || '',
+      bookingStatus: 'Wix booking'
+    });
+    keys.add(key);
+  }
+  const wixUpdated = Date.parse(wix.updatedAt || '');
+  const dataUpdated = Date.parse(data.updatedAt || '');
+  return {...data, entries: merged, updatedAt: wixUpdated > dataUpdated ? wix.updatedAt : data.updatedAt};
+}
+
 if (roots.length) {
   Promise.all([
     fetch('../data/next-event-entries.json', {cache:'no-cache'}).then(response => { if (!response.ok) throw Error('Entries unavailable'); return response.json(); }),
+    fetch('../data/wix-current-event-entries.json', {cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({})),
     fetch('../data/car-avatar-driver-aliases.json', {cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({}))
     ,fetch('../data/event-capacities.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/event-calendar.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatars.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatar-source-revisions.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-  ]).then(([data,aliases,capacity,calendar,avatars,revisions]) => roots.forEach(root => render(root, {...data, entries:data.entries.map(entry => entryIdentity(entry,aliases))},capacity,calendar,avatars,revisions)))
+  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions]) => {
+    const combined = mergeCurrentWixEntries(data, wix);
+    roots.forEach(root => render(root, {...combined, entries:combined.entries.map(entry => entryIdentity(entry,aliases))},capacity,calendar,avatars,revisions));
+  })
     .catch(() => roots.forEach(root => {
       const summary = root.querySelector('[data-entry-summary]');
       if (summary) summary.textContent = 'Entries are temporarily unavailable. Please check LiveRC.';
