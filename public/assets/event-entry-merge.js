@@ -3,6 +3,12 @@ import {canonicalDriverKey} from './driver-identity.js';
 const identity = row => canonicalDriverKey(String(row.driverKey || row.driverName || '').trim().toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,''));
 const key = row => `${identity(row)}|${String(row.className || '').trim().toUpperCase()}`;
 
+export function applyConfirmedChassis(data, confirmed = {}) {
+  if (String(data.eventId) !== String(confirmed.eventId) || data.date !== confirmed.date) return data;
+  const chassis = new Map((confirmed.entries || []).map(row => [key(row), row.chassis]));
+  return {...data, entries:data.entries.map(row => chassis.has(key(row)) ? {...row, chassis:chassis.get(key(row))} : row)};
+}
+
 export function mergeCurrentWixEntries(data, wix = {}) {
   const published = Array.isArray(data?.entries) ? data.entries : [];
   const bookings = Array.isArray(wix?.entries) ? wix.entries : [];

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mergeCurrentWixEntries} from '../public/assets/event-entry-merge.js';
+import {mergeCurrentWixEntries,applyConfirmedChassis} from '../public/assets/event-entry-merge.js';
 import {eventSpaces} from '../public/assets/event-capacity.js';
 const meeting={eventId:'518554',date:'2026-10-04',type:'sword'};
 test('junior-price bookings cannot re-add senior drivers to the junior heat',()=>{
@@ -21,4 +21,15 @@ test('new junior remains visible and a fresh senior assignment replaces their ol
 test('a booking feed from another event cannot change the current race classes',()=>{
  const data={...meeting,entries:[]};
  assert.equal(mergeCurrentWixEntries(data,{eventDate:meeting.date,liveRcEventId:'other',entries:[{driverName:'NEW JUNIOR',className:'Junior Racers'}]}),data);
+});
+
+test('confirmed CSV chassis applies to that event and class without changing transponders or new Wix bookings',()=>{
+ const data={...meeting,entries:[{driverName:'HARRY DAVIS',className:'2-Wheel Drive Buggy',chassis:'Kyosho',transponder:'5032515'},{driverName:'HARRY DAVIS',className:'4-Wheel Drive Buggy',chassis:'Schumacher'},{driverName:'NEW DRIVER',className:'2-Wheel Drive Buggy',chassis:'TLR'}]};
+ const config={...meeting,entries:[{driverName:'Harry Davis',className:'2-Wheel Drive Buggy',chassis:'Team Associated'}]};
+ const result=applyConfirmedChassis(data,config);
+ assert.equal(result.entries[0].chassis,'Team Associated');
+ assert.equal(result.entries[0].transponder,'5032515');
+ assert.equal(result.entries[1].chassis,'Schumacher');
+ assert.equal(result.entries[2].chassis,'TLR');
+ assert.equal(applyConfirmedChassis({...data,eventId:'next'},config).entries[0].chassis,'Kyosho');
 });

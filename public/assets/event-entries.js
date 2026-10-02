@@ -1,4 +1,4 @@
-import {mergeCurrentWixEntries} from './event-entry-merge.js';
+import {mergeCurrentWixEntries,applyConfirmedChassis} from './event-entry-merge.js';
 import {eventSpaces} from './event-capacity.js';
 import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
 import {entryIdentity} from './event-entry-identity.js';
@@ -295,8 +295,9 @@ if (roots.length) {
     ,fetch('../data/event-calendar.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatars.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatar-source-revisions.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions]) => {
-    const combined = mergeCurrentWixEntries(data, wix);
+    ,fetch('../data/confirmed-event-chassis.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
+  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed]) => {
+    const combined = applyConfirmedChassis(mergeCurrentWixEntries(data, wix),confirmed);
     roots.forEach(root => render(root, {...combined, entries:combined.entries.map(entry => entryIdentity(entry,aliases))},capacity,calendar,avatars,revisions));
   })
     .catch(() => roots.forEach(root => {
