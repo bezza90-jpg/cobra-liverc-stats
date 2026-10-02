@@ -71,7 +71,8 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
     // class, merge into that row instead of publishing a duplicate entrant.
     if (!current && transponder) {
       const transponderMatches=[...merged.entries()].filter(([,candidate]) =>
-        candidate.className===row.className && String(candidate.transponder || '')===transponder);
+        candidate.className===row.className && String(candidate.transponder || '')===transponder &&
+        !(wixSnapshot.entries || []).some(booking=>key(booking)===key(candidate)));
       if (transponderMatches.length===1) [id,current]=transponderMatches[0];
     }
     const currentChassis=String(row.chassis || '').trim();

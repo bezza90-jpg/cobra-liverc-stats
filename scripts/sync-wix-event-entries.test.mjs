@@ -7,10 +7,10 @@ test('Wix booking page slug and exact transponder form mapping',()=>{
   assert.deepEqual(formMapping({form:{controls:[{inputs:[{label:'2WD Transponder Number',name:'field-2wd'},{label:'2WD Chassis',name:'chassis-2wd'}]}]}}),{'2WD Transponder Number':'field-2wd','2WD Chassis':'chassis-2wd'});
 });
 test('only an exact seven digit number can update the public entry',()=>{
-  const guest={attendanceStatus:'ATTENDING',ticketNumber:'T1',guestDetails:{firstName:'Test',lastName:'Driver',formResponse:{inputValues:[{inputName:'field-2wd',value:'1234567'},{inputName:'chassis-2wd',value:'R1 Wurks'}]}}};
+  const guest={attendanceStatus:'ATTENDING',ticketNumber:'T1',guestDetails:{firstName:'Test',lastName:'Driver',formResponse:{inputValues:[{inputName:'field-2wd',value:'2345678'},{inputName:'chassis-2wd',value:'R1 Wurks'}]}}};
   const order={status:'PAID',tickets:[{ticketNumber:'T1',name:'2WD Entry'}]};
   const entry=publicEntry(guest,order,{'2WD Transponder Number':'field-2wd','2WD Chassis':'chassis-2wd'});
-  assert.equal(entry.transponder,'1234567');
+  assert.equal(entry.transponder,'2345678');
   assert.equal(entry.chassis,'R1 Wurks');
   guest.guestDetails.formResponse.inputValues[0].value='ABC123';
   assert.equal(publicEntry(guest,order,{'2WD Transponder Number':'field-2wd'}).transponder,'');
