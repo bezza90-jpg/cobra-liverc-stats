@@ -33,3 +33,14 @@ test('confirmed CSV chassis applies to that event and class without changing tra
  assert.equal(result.entries[2].chassis,'TLR');
  assert.equal(applyConfirmedChassis({...data,eventId:'next'},config).entries[0].chassis,'Kyosho');
 });
+
+test('a Wix nickname for the same unique class and transponder does not consume another space',()=>{
+ const data={...meeting,entries:[{driverName:'CHRIS LEONARD',className:'2-Wheel Drive Buggy',transponder:'7956159'}]};
+ const wix={eventDate:meeting.date,entries:[{driverName:'CHRISWITHAC RC',className:'2-Wheel Drive Buggy',transponder:'7956159'}]};
+ assert.equal(mergeCurrentWixEntries(data,wix).entries.length,1);
+});
+test('distinct booked drivers sharing a transponder still consume separate spaces',()=>{
+ const data={...meeting,entries:[{driverName:'MATT WOODIWISS',className:'2-Wheel Drive Buggy',transponder:'6991518'}]};
+ const wix={eventDate:meeting.date,entries:[{driverName:'MATT WOODIWISS',className:'2-Wheel Drive Buggy',transponder:'6991518'},{driverName:'CARL TURNER',className:'2-Wheel Drive Buggy',transponder:'6991518'}]};
+ assert.equal(mergeCurrentWixEntries(data,wix).entries.length,2);
+});

@@ -17,10 +17,17 @@ export function mergeCurrentWixEntries(data, wix = {}) {
   const seniorNames = new Set([...published, ...bookings].filter(row => row.className && row.className !== 'Junior Racers').map(identity));
   const merged = published.filter(row => row.className !== 'Junior Racers' || !seniorNames.has(identity(row)));
   const keys = new Set(merged.map(key));
+  const bookingKeys = new Set(bookings.map(key));
   for (const booking of bookings) {
     if (!booking?.driverName || !booking?.className) continue;
     if (booking.className === 'Junior Racers' && seniorNames.has(identity(booking))) continue;
     if (keys.has(key(booking))) continue;
+    const transponder = String(booking.transponder || '');
+    if (/^[0-9]{7}$/.test(transponder) && transponder !== '1234567') {
+      const matches = merged.filter(row => row.className === booking.className &&
+        String(row.transponder || '') === transponder && !bookingKeys.has(key(row)));
+      if (matches.length === 1) continue;
+    }
     merged.push({driverName:booking.driverName, driverKey:identity(booking), className:booking.className,
       countryCode:'GB', chassis:booking.chassis || '', transponder:booking.transponder || '', bookingStatus:'Wix booking'});
     keys.add(key(booking));
