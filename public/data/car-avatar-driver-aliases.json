@@ -11,12 +11,22 @@
   },
   "BOBTECH": {
     "driverKey": "BOBTECH",
-    "displayName": "BobTech",
-    "profileName": "BobTech"
+    "displayName": "Bob \"Bobtech\" Gelstharp",
+    "profileName": "Bob \"Bobtech\" Gelstharp"
   },
   "BOB-GELSTHARP": {
     "driverKey": "BOBTECH",
-    "displayName": "BobTech",
-    "profileName": "BobTech"
+    "displayName": "Bob \"Bobtech\" Gelstharp",
+    "profileName": "Bob \"Bobtech\" Gelstharp"
+  },
+  "BOB-BOBTECH-GELSTHARP": {
+    "driverKey": "BOBTECH",
+    "displayName": "Bob \"Bobtech\" Gelstharp",
+    "profileName": "Bob \"Bobtech\" Gelstharp"
+  },
+  "NATHAN-NOTLEY-NATHAN-NOTLEY": {
+    "driverKey": "NATHAN-NOTLEY",
+    "displayName": "NATHAN NOTLEY",
+    "profileName": "Nathan Notley"
   }
 }
