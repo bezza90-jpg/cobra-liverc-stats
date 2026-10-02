@@ -4,24 +4,27 @@ let preview;
 
 const escapeAttribute = value => String(value ?? '').replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
 
+const overviewClasses = ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Vintage', 'Trucks', 'default'];
+
+function avatarClassCandidates(className = '') {
+  if (className === 'Junior Racers') return ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Junior Racers', 'default'];
+  if (className === 'senior' || !className) return overviewClasses;
+  return [className, 'default'];
+}
+
 export function resultAvatarCell(driverKey, className = '') {
   return `<td class="result-avatar-cell" data-avatar-driver="${escapeAttribute(driverKey)}" data-avatar-class="${escapeAttribute(className)}" aria-label="Avatar"></td>`;
 }
 
 export function resultAvatarPath(record, className = '') {
   if (typeof record === 'string') return record;
-  if (className === 'Junior Racers') {
-    return record?.['2-Wheel Drive Buggy'] || record?.['4-Wheel Drive Buggy'] || record?.['Junior Racers'] || record?.default || '';
-  }
-  return record?.[className] || record?.default || '';
+  const resolvedClass = avatarClassCandidates(className).find(candidate => record?.[candidate]);
+  return resolvedClass ? record[resolvedClass] : '';
 }
 
 export function resultAvatarClass(record, className = '') {
   if (typeof record === 'string') return 'default';
-  if (className === 'Junior Racers') {
-    return ['2-Wheel Drive Buggy', '4-Wheel Drive Buggy', 'Junior Racers', 'default'].find(candidate => record?.[candidate]) || className;
-  }
-  return record?.[className] ? className : (record?.default ? 'default' : className);
+  return avatarClassCandidates(className).find(candidate => record?.[candidate]) || className;
 }
 
 function catalogueData() {
