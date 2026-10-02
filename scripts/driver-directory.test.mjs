@@ -12,6 +12,6 @@ test('entrants without race results become selectable; repeated classes remain o
 test('known aliases are canonical and invalid identities are omitted',()=>{
  const names=new Map();
  addCurrentEntrants(names,[{driverKey:'PAUL-CURTIS',driverName:'Paul Curtis'},{driverKey:'BRUCE',driverName:'Bruce'},{driverKey:'../bad',driverName:'Invalid'},{driverKey:'EMPTY',driverName:''}]);
- assert.deepEqual([...names],[['BRUCE','Bruce']]);
+ assert.deepEqual([...names],[['BRUCE','Paul "Bruce" Curtis']]);
 });
 test('no entry file keeps the existing directory',()=>{const names=new Map([['OLD','Old']]);assert.deepEqual([...addCurrentEntrants(names)],[['OLD','Old']]);});
