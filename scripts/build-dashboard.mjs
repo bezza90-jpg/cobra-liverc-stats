@@ -1,4 +1,5 @@
 import {addCurrentEntrants} from './driver-directory.mjs';
+import {transponderHistory} from './lib/transponder-history.mjs';
 import {mergeDriverRows} from '../public/assets/driver-identity.js';
 import {averageLapText, fastestLapText} from '../public/assets/lap-result-format.js';
 import { readFile, writeFile, rename } from 'node:fs/promises';
@@ -29,6 +30,7 @@ function canonicalClass(value = '') {
 }
 
 const entries=mergeDriverRows(rawEntries,r=>`${r.liveRcEventId}|${canonicalClass(r.className)}|${r.driverKey}`);
+await writeFile(path.join(root,'public/data/transponder-history.json'),JSON.stringify(transponderHistory(entries.map(row=>({...row,className:canonicalClass(row.className)}))))+'\n');
 const eventResults=mergeDriverRows(rawEventResults,r=>`${r.liveRcEventId}|${canonicalClass(r.className)}|${r.driverKey}`);
 const raceResults=mergeDriverRows(rawRaceResults,r=>`${r.liveRcRaceId}|${r.driverKey}`);
 const names = new Map();

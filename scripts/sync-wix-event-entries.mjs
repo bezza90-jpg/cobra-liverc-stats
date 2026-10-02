@@ -1,5 +1,6 @@
 import {readFile,writeFile,rename} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
+import {transponderHistory,usePreviousTransponders} from './lib/transponder-history.mjs';
 
 const API='https://www.wixapis.com';
 export const TICKETS={
@@ -66,7 +67,7 @@ export function publicEntry(guest,order,mapping) {
   const driverName=publicDriverName(details.firstName,details.lastName);
   if (!driverName) return null;
   return {driverName,className,
-    transponder:/^[0-9]{7}$/.test(number) ? number : '',
+    transponder:/^[0-9]{7}$/.test(number) && number!=='1234567' ? number : '',
     ...(chassis ? {chassis} : {})};
 }
 
@@ -118,7 +119,8 @@ export async function sync({site,key}) {
   for (let index=0;index<orderNumbers.length;index+=4) {
     await Promise.all(orderNumbers.slice(index,index+4).map(async number=>orders.set(number,await order(event.id,number,site,key))));
   }
-  const entries=rows.map(row=>publicEntry(row,orders.get(row.orderNumber) || {},mapping)).filter(Boolean);
+  const history=transponderHistory(JSON.parse(await readFile(new URL('../data/raw/entries.json',import.meta.url),'utf8')),today);
+  const entries=usePreviousTransponders(rows.map(row=>publicEntry(row,orders.get(row.orderNumber) || {},mapping)).filter(Boolean),history);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
   const value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
   return {configured:true,changed:await writeIfChanged(new URL('../public/data/wix-current-event-entries.json',import.meta.url),value),entries:value.entries.length};

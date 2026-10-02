@@ -104,6 +104,16 @@ test('a Wix nickname merges with the unique same-class LiveRC transponder',()=>{
 });
 
 import {parseBooking,matchBooking} from './booking-calendar.mjs';
+test('different booked drivers sharing a number remain separate entries',()=>{
+ const meeting={eventId:'123'};
+ const live=[{driverName:'MATT WOODIWISS',className:'2-Wheel Drive Buggy',transponder:'6991518'}];
+ const wix={liveRcEventId:'123',entries:[
+  {driverName:'CARL TURNER',className:'2-Wheel Drive Buggy',transponder:'6991518'},
+  {driverName:'MATT WOODIWISS',className:'2-Wheel Drive Buggy',transponder:'3042886'}]};
+ const rows=mergeWixEntries(meeting,live,wix);
+ assert.equal(rows.length,2);
+ assert.equal(rows.find(r=>r.driverName==='MATT WOODIWISS').transponder,'3042886');
+});
 test('booking matches exact date and type, not a guessed slug', () => {
  const url='https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-1';
  const html='<script type="application/ld+json">'+JSON.stringify({'@type':'Event',name:'COBRA SWORD Round 1',startDate:'2026-10-04T08:00:00+01:00',eventStatus:'https://schema.org/EventScheduled'})+'</script>';
