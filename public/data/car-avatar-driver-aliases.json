@@ -1,13 +1,13 @@
 {
   "PAUL-CURTIS": {
     "driverKey": "BRUCE",
-    "displayName": "BRUCE (PAUL CURTIS)",
-    "profileName": "Bruce"
+    "displayName": "Paul \"Bruce\" Curtis",
+    "profileName": "Paul \"Bruce\" Curtis"
   },
   "PAUL-BRUCE-CURTIS": {
     "driverKey": "BRUCE",
-    "displayName": "BRUCE (PAUL CURTIS)",
-    "profileName": "Bruce"
+    "displayName": "Paul \"Bruce\" Curtis",
+    "profileName": "Paul \"Bruce\" Curtis"
   },
   "BOBTECH": {
     "driverKey": "BOBTECH",
@@ -28,5 +28,10 @@
     "driverKey": "NATHAN-NOTLEY",
     "displayName": "NATHAN NOTLEY",
     "profileName": "Nathan Notley"
+  },
+  "BRUCE": {
+    "driverKey": "BRUCE",
+    "displayName": "Paul \"Bruce\" Curtis",
+    "profileName": "Paul \"Bruce\" Curtis"
   }
 }
