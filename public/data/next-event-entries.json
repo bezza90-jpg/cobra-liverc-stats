@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-02T23:25:09.426Z",
+  "updatedAt": "2026-10-02T23:28:34.138Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -134,6 +134,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "3647613"
+    },
+    {
+      "driverKey": "LEWIS-HOPKINS",
+      "driverName": "LEWIS HOPKINS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "5268057"
     },
     {
       "driverKey": "TOM-JENKINS",
