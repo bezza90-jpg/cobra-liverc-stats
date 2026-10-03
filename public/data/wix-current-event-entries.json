@@ -3,7 +3,7 @@
   "wixEventId": "34c942ee-659f-4974-aec2-8974551f1062",
   "eventTitle": "SWORD Round 1 EOS 2026/7",
   "eventDate": "2026-10-04",
-  "updatedAt": "2026-10-03T08:17:56.360Z",
+  "updatedAt": "2026-10-03T08:33:15.187Z",
   "entries": [
     {
       "driverName": "ADAM MCBRIDE",
@@ -238,6 +238,12 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "9073997",
       "chassis": "XRAY"
+    },
+    {
+      "driverName": "MARTYN PRICE",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9397425",
+      "chassis": "Yokomo"
     },
     {
       "driverName": "MATT OSLAND-JONES",
