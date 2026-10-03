@@ -122,5 +122,9 @@
   "RICHARD-HARRISON": {
     "2-Wheel Drive Buggy": "assets/car-avatars/RICHARD-HARRISON-AUTO-2WD.png",
     "4-Wheel Drive Buggy": "assets/car-avatars/RICHARD-HARRISON-AUTO-4WD.png"
+  },
+  "IAN-PEAKMAN": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/IAN-PEAKMAN-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/IAN-PEAKMAN-AUTO-4WD.png"
   }
 }
