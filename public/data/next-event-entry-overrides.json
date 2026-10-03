@@ -80,10 +80,12 @@
       "updatedAt": "2026-09-29T19:10:33.934331+00:00"
     },
     "EDWARD-SCOTT": {
-      "chassis": "Team Associated",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-30T01:48:25.985645+00:00"
+      "updatedAt": "2026-09-30T01:48:25.985645+00:00",
+      "previousManualChassis": "Team Associated",
+      "replacedByLiveRC": "Team Associated"
     },
     "MATT-OSLAND-JONES": {
       "chassis": "Xray",
