@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-03T00:40:11.103Z",
+  "updatedAt": "2026-10-03T14:59:22.268Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -521,6 +521,14 @@
       "transponder": "5588658"
     },
     {
+      "driverKey": "CAERON-JENKINS",
+      "driverName": "CAERON JENKINS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "9063731"
+    },
+    {
       "driverKey": "TOM-JENKINS",
       "driverName": "TOM JENKINS",
       "className": "2-Wheel Drive Buggy",
@@ -657,6 +665,14 @@
       "transponder": "2644565"
     },
     {
+      "driverKey": "MARTYN-PRICE",
+      "driverName": "MARTYN PRICE",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "9397425"
+    },
+    {
       "driverKey": "DAN-PULLEY",
       "driverName": "DAN PULLEY",
       "className": "2-Wheel Drive Buggy",
@@ -729,12 +745,28 @@
       "transponder": "5466460"
     },
     {
+      "driverKey": "CARL-TURNER",
+      "driverName": "CARL TURNER",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "6991518"
+    },
+    {
       "driverKey": "JUSTIN-WALKER",
       "driverName": "JUSTIN WALKER",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "R1 Wurks",
       "transponder": "8367004"
+    },
+    {
+      "driverKey": "JUSTIN-WALSH",
+      "driverName": "JUSTIN WALSH",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Yokomo",
+      "transponder": "5462948"
     },
     {
       "driverKey": "JOSH-WILLIAMS",
@@ -799,22 +831,6 @@
       "countryCode": "GB",
       "chassis": "Tlr",
       "transponder": "8268154"
-    },
-    {
-      "driverKey": "CARL-TURNER",
-      "driverName": "CARL TURNER",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "transponder": "6991518"
-    },
-    {
-      "driverKey": "JUSTIN-WALSH",
-      "driverName": "JUSTIN WALSH",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Yokomo",
-      "transponder": "5462948"
     }
   ]
 }
