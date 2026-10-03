@@ -1,3 +1,4 @@
+import {addReserveActions} from './event-reserves.js';
 import {mergeCurrentWixEntries,applyConfirmedChassis} from './event-entry-merge.js';
 import {eventSpaces} from './event-capacity.js';
 import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
@@ -115,6 +116,8 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     const cards = element('div','event-space-cards');
     for (const item of spaces) {
       const card = element('div','event-space-card');
+      card.dataset.className=item.name;
+      card.dataset.remaining=String(item.remaining);
       const label = {'Junior Racers':'Junior heat','4-Wheel Drive Buggy':'4WD','2-Wheel Drive Buggy':'2WD'}[item.name] || item.name;
       const occupiedRatio = item.entered / item.limit;
       const availabilityClass = item.remaining === 0
@@ -129,6 +132,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       cards.append(card);
     }
     panel.append(cards);
+    addReserveActions(cards,meeting).catch(()=>{});
     const checked = new Date(data.updatedAt);
     const stamp = Number.isNaN(checked.getTime()) ? '' : ` Last refreshed ${checked.toLocaleString('en-GB',{timeZone:'Europe/London'})} (UK time).`;
     panel.append(element('p','',`Based on current Wix bookings and published LiveRC entries${spaces.some(item=>item.confirmed) ? ', with race-control confirmed entries' : ''}.${stamp} New bookings normally appear after the next automatic update. Club-driver reservations are included where configured. Check availability when booking. Under-16s racing with seniors count in their car class.`));
