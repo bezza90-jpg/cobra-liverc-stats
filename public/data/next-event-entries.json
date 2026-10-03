@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-02T23:50:08.789Z",
+  "updatedAt": "2026-10-03T00:34:45.000Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -216,14 +216,6 @@
       "transponder": "7832340"
     },
     {
-      "driverKey": "EDWARD-SCOTT",
-      "driverName": "EDWARD SCOTT",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "transponder": ""
-    },
-    {
       "driverKey": "NEIL-SMITH",
       "driverName": "NEIL SMITH",
       "className": "4-Wheel Drive Buggy",
@@ -270,6 +262,14 @@
       "countryCode": "GB",
       "chassis": "Schumacher",
       "transponder": "6091953"
+    },
+    {
+      "driverKey": "EDWARD-SCOTT",
+      "driverName": "EDWARD SCOTT",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "4648442"
     },
     {
       "driverKey": "LIAM-TOOLE",

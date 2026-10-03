@@ -706,5 +706,9 @@
   "BOB-GELSTHARP": {
     "name": "Schumacher",
     "slug": "schumacher"
+  },
+  "EDWARD-SCOTT": {
+    "name": "Team Associated",
+    "slug": "team-associated"
   }
 }
