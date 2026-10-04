@@ -74,7 +74,7 @@ async function loadRace(autoplay=false){
  const jumpPlan=planned&&trackPlans[race.eventId]?.routeStatus==='confirmed'?trackPlans[race.eventId]:null;
  const jumpPolygons=(jumpPlan?.jumpZones||[]).map(polygon=>polygon.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]}));
  const jumpFeatures=(jumpPlan?.jumpFeatures||[]).map(feature=>Object.fromEntries(['takeoff','landing'].map(key=>[key,feature[key].map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})])));
- const jumpLift=jumpProfile(samples,jumpPolygons,6,jumpFeatures);
+ const jumpLift=jumpProfile(samples,jumpPolygons,50,jumpFeatures);
  const illustrative=fitted?false:!planned||!['518551','499054'].includes(race.eventId);
  const pace=paceMap(samples,{mainStraight,straightSpeed:illustrative?2.5:1.65});
  document.getElementById('grid-reference')?.remove();
