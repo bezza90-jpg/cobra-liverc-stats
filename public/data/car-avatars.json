@@ -126,5 +126,9 @@
   "IAN-PEAKMAN": {
     "2-Wheel Drive Buggy": "assets/car-avatars/IAN-PEAKMAN-AUTO-2WD.png",
     "4-Wheel Drive Buggy": "assets/car-avatars/IAN-PEAKMAN-AUTO-4WD.png"
+  },
+  "NEIL-SMITH": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/NEIL-SMITH-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/NEIL-SMITH-AUTO-4WD.png"
   }
 }
