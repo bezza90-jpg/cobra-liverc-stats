@@ -3,57 +3,75 @@
   "drivers": {
     "WILLIAM-FISHER": {
       "updatedAt": "2026-09-29T17:50:35.3729728Z",
-      "chassis": "Team Associated",
+      "chassis": "",
       "livercAtSave": "",
-      "mode": "until-liverc-change"
+      "mode": "until-liverc-change",
+      "previousManualChassis": "Team Associated",
+      "replacedByLiveRC": "Team Associated"
     },
     "EDWARD-ROSS": {
-      "chassis": "Xray",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:03:30.777192+00:00"
+      "updatedAt": "2026-09-29T18:03:30.777192+00:00",
+      "previousManualChassis": "Xray",
+      "replacedByLiveRC": "Xray"
     },
     "JAMIE-BEASLEY": {
-      "chassis": "Xray",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:03:47.586957+00:00"
+      "updatedAt": "2026-09-29T18:03:47.586957+00:00",
+      "previousManualChassis": "Xray",
+      "replacedByLiveRC": "Xray"
     },
     "JOSH-WILLIAMS": {
-      "chassis": "Team Associated",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:09:59.958765+00:00"
+      "updatedAt": "2026-09-29T18:09:59.958765+00:00",
+      "previousManualChassis": "Team Associated",
+      "replacedByLiveRC": "Team Associated"
     },
     "JUSTIN-WALKER": {
-      "chassis": "R1 Wurks",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:10:25.647988+00:00"
+      "updatedAt": "2026-09-29T18:10:25.647988+00:00",
+      "previousManualChassis": "R1 Wurks",
+      "replacedByLiveRC": "R1 Wurks"
     },
     "LEE-FIDOE": {
-      "chassis": "Xray",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:10:35.367502+00:00"
+      "updatedAt": "2026-09-29T18:10:35.367502+00:00",
+      "previousManualChassis": "Xray",
+      "replacedByLiveRC": "Xray"
     },
     "LEE-KILLWORTH": {
-      "chassis": "Xray",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:10:57.456139+00:00"
+      "updatedAt": "2026-09-29T18:10:57.456139+00:00",
+      "previousManualChassis": "Xray",
+      "replacedByLiveRC": "Xray"
     },
     "LEO-SMITH": {
-      "chassis": "Schumacher",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:11:25.714997+00:00"
+      "updatedAt": "2026-09-29T18:11:25.714997+00:00",
+      "previousManualChassis": "Schumacher",
+      "replacedByLiveRC": "Schumacher"
     },
     "LEWIS-HOPKINS": {
-      "chassis": "Schumacher",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:11:30.105032+00:00"
+      "updatedAt": "2026-09-29T18:11:30.105032+00:00",
+      "previousManualChassis": "Schumacher",
+      "replacedByLiveRC": "Schumacher"
     },
     "NIGEL-SANTIMANO": {
       "chassis": "Team Associated",
@@ -62,22 +80,28 @@
       "updatedAt": "2026-09-29T18:11:37.054466+00:00"
     },
     "RICHARD-MORSE": {
-      "chassis": "R1 Wurks",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:11:47.964187+00:00"
+      "updatedAt": "2026-09-29T18:11:47.964187+00:00",
+      "previousManualChassis": "R1 Wurks",
+      "replacedByLiveRC": "R1 Wurks"
     },
     "STUART-IRONS": {
-      "chassis": "Xray",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:13:28.369792+00:00"
+      "updatedAt": "2026-09-29T18:13:28.369792+00:00",
+      "previousManualChassis": "Xray",
+      "replacedByLiveRC": "Xray"
     },
     "CHRIS-LEONARD": {
-      "chassis": "Team Associated",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "R1 Wurks",
-      "updatedAt": "2026-09-29T19:10:33.934331+00:00"
+      "updatedAt": "2026-09-29T19:10:33.934331+00:00",
+      "previousManualChassis": "Team Associated",
+      "replacedByLiveRC": "Team Associated"
     },
     "EDWARD-SCOTT": {
       "chassis": "",
@@ -88,40 +112,52 @@
       "replacedByLiveRC": "Team Associated"
     },
     "MATT-OSLAND-JONES": {
-      "chassis": "Xray",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Team Associated",
-      "updatedAt": "2026-09-30T13:13:16.915828+00:00"
+      "updatedAt": "2026-09-30T13:13:16.915828+00:00",
+      "previousManualChassis": "Xray",
+      "replacedByLiveRC": "Xray"
     },
     "MARK-COX": {
-      "chassis": "Yokomo",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Team Associated",
-      "updatedAt": "2026-09-30T15:36:52.710631+00:00"
+      "updatedAt": "2026-09-30T15:36:52.710631+00:00",
+      "previousManualChassis": "Yokomo",
+      "replacedByLiveRC": "Yokomo"
     },
     "MATT-WOODIWISS": {
-      "chassis": "Xray",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Yokomo",
-      "updatedAt": "2026-09-30T17:33:18.864485+00:00"
+      "updatedAt": "2026-09-30T17:33:18.864485+00:00",
+      "previousManualChassis": "Xray",
+      "replacedByLiveRC": "Xray"
     },
     "TOONZ-TOWNSEND": {
-      "chassis": "Xray",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-30T17:38:20.610252+00:00"
+      "updatedAt": "2026-09-30T17:38:20.610252+00:00",
+      "previousManualChassis": "Xray",
+      "replacedByLiveRC": "Xray"
     },
     "MIKE-DRISCOLL": {
-      "chassis": "TLR",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Schumacher",
-      "updatedAt": "2026-10-01T01:03:43.783035+00:00"
+      "updatedAt": "2026-10-01T01:03:43.783035+00:00",
+      "previousManualChassis": "TLR",
+      "replacedByLiveRC": "Team Associated"
     },
     "GREG-LANE": {
-      "chassis": "Team Associated",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Agama",
-      "updatedAt": "2026-10-01T15:54:47.529224+00:00"
+      "updatedAt": "2026-10-01T15:54:47.529224+00:00",
+      "previousManualChassis": "Team Associated",
+      "replacedByLiveRC": "Team Associated"
     }
   }
 }
