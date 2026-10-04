@@ -1,5 +1,7 @@
-# Podium gallery link preview
+# RaceHub Facebook page previews
 
-Updated 4 October 2026. The Podium Gallery at https://racehub.cobracardiff.co.uk/podiums/ now declares its own 1200 × 630 PNG in static Open Graph and Twitter metadata. This prevents social crawlers from selecting the shared navigation GPW logo. The gallery and photo workflow are unchanged.
+Updated 4 October 2026. Podium Gallery, SWORD Championship and Club Series now use actual 1200 Ã— 630 page screenshots in static Open Graph and Twitter metadata. The screenshots include the latest available podiums and standings. Race statistics, About, Briefing, Driver car avatars, Setups, Schedule, Website Guides, Avatar Upload and Club News also have dedicated page screenshots.
 
-Facebook may retain an older preview for previously shared links. Re-scrape the gallery URL in Facebook Sharing Debugger after deployment; use a fresh query on the shared URL when necessary. Existing posts may keep their previous preview.
+Screenshots are presentation snapshots, not a live results feed. Recapture them when the page presentation or season changes. Existing Current Event and Virtual Race Replay previews are preserved. Booking redirects and the chart template are not public content pages; generated chart share pages retain their individual chart previews.
+
+Facebook caches previously shared links. After deployment, re-scrape https://racehub.cobracardiff.co.uk/podiums/ and https://racehub.cobracardiff.co.uk/sword/ using Facebook Sharing Debugger. Existing posts may retain the earlier preview.
