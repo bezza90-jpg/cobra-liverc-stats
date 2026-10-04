@@ -10,6 +10,9 @@ on:
   schedule:
     - cron: "0 18 * * *"
       timezone: "Europe/London"
+    # Refresh the next meeting after the UK date rollover.
+    - cron: "10 0 * * *"
+      timezone: "Europe/London"
     # Sunday race afternoons, every 15 minutes. LiveRC calendar gates the expensive work.
     - cron: "7,22,37,52 15-18 * * 0"
       timezone: "Europe/London"
