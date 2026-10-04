@@ -9,3 +9,5 @@ Seven mapped feature regions lift the artwork by one car-height (50 local artwor
 Verification: 286,371 recorded crossings from 2,522 races, 19,583 driver records and 28 route variants passed the existing timing/route checks. Jump bounds, direction, hold-to-landing and recording-format checks passed. The browser rendered the 10-car latest 2WD final without errors, at approximately 60 frames per second on the verification machine. This is a desktop measurement, not a guarantee for every device.
 
 Future events need imported lap records, an event-specific plan image, a mapped driving route beginning at the loop, and optionally feature zones. A clean plan and a centreline reference can be supplied separately; they need not both be published.
+
+The replay Facebook preview is an actual 1200 × 630 screen capture of the SWORD 2WD A-final at 12 seconds, with the track and ten cars visible. Static Open Graph/Twitter metadata uses the RaceHub URL.
