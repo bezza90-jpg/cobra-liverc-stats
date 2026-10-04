@@ -13,7 +13,7 @@ const params=new URLSearchParams(location.search),originalRoute=$('route').getAt
 let catalog,trackPlans={},avatars={},event,selectedDriver=canonicalDriverKey(params.get('driver')||''),dayMode=false,frame=0,loadToken=0,pauseCurrent=()=>{},updateFocus=()=>{};
 let comparisonKeys=params.getAll('compare').map(canonicalDriverKey);
 const key=name=>name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');
-function avatarFor(d,cls){const v=avatars[d.key||key(d.name)];const asset=typeof v==='string'?v:v?.[cls]||v?.default||'';return asset?'../'+asset:'';}
+function avatarFor(d,cls){const v=avatars[d.key||key(d.name)];const asset=typeof v==='string'?v:v?.[cls]||v?.default||'';return asset?'../assets/car-avatar-thumbnails/'+asset.split('/').pop().replace(/\.png$/i,'.webp'):'';}
 function layout(race){
  const matched=$('layoutSelect').value!=='oval'?trackPlans[race.eventId]:null;
  const confirmed=matched?.routeStatus==='confirmed'?matched:null;
@@ -21,7 +21,7 @@ function layout(race){
  const real=race.eventId==='518551'&&$('layoutSelect').value!=='oval';
  const oval='M100 500 V320 Q100 170 250 170 H1330 Q1480 170 1480 320 V680 Q1480 830 1330 830 H250 Q100 830 100 680 V500 Z';
  $('route').setAttribute('d',real?originalRoute:oval);document.querySelector('.centreline').setAttribute('d',real?originalRoute:oval);
- document.querySelector('.track>img').src=real?'track-plan.png':'oval-track.png';document.querySelector('.track>img').alt=real?'20 September 2026 COBRA circuit':'Illustrative plain grey perimeter oval';
+ if(!confirmed)document.querySelector('.track>img').src=real?'track-plan.png':'oval-track.png';document.querySelector('.track>img').alt=real?'20 September 2026 COBRA circuit':'Illustrative plain grey perimeter oval';
  document.querySelector('.tag').textContent=real?'20 September circuit':'Illustrative perimeter oval';
  document.querySelector('.timing').setAttribute('d',real?'M97 725 H183':'M50 500 H150');document.querySelector('.loop-label').setAttribute('x',real?'200':'165');document.querySelector('.loop-label').setAttribute('y',real?'731':'506');
  $('circuit').setAttribute('aria-label',real?'Replay following the supplied September track':'Replay around an illustrative perimeter oval');
@@ -95,7 +95,7 @@ async function loadRace(autoplay=false){
   });
   $('cars').before(marks);
  }
- for(const d of drivers){let group=document.createElementNS(svgNS,'g');group.classList.add('car');group.dataset.driver=d.id;const shape=document.createElementNS(svgNS,'image');shape.setAttribute('href',avatarFor(d,race.className)||'avatars/plain-fallback.png');shape.setAttribute('x','-36');shape.setAttribute('y','-25');shape.setAttribute('width','72');shape.setAttribute('height','50');
+ for(const d of drivers){let group=document.createElementNS(svgNS,'g');group.classList.add('car');group.dataset.driver=d.id;const shape=document.createElementNS(svgNS,'image');shape.setAttribute('href',avatarFor(d,race.className)||'avatars/plain-fallback.webp');shape.setAttribute('x','-36');shape.setAttribute('y','-25');shape.setAttribute('width','72');shape.setAttribute('height','50');
  if(!avatarFor(d,race.className)){const filter=document.createElementNS(svgNS,'filter');filter.id=`tint-${d.id}`;filter.setAttribute('color-interpolation-filters','sRGB');const matrix=document.createElementNS(svgNS,'feColorMatrix');const rgb=[1,3,5].map(n=>parseInt(d.color.slice(n,n+2),16)/255);matrix.setAttribute('type','matrix');matrix.setAttribute('values',rgb.map(v=>`${v*.2126} ${v*.7152} ${v*.0722} 0 0`).join(' ')+' 0 0 0 1 0');filter.append(matrix);$('circuit').prepend(filter);shape.setAttribute('filter',`url(#${filter.id})`);}
  const fire=document.createElementNS(svgNS,'g');fire.classList.add('retirement-fire');fire.setAttribute('aria-hidden','true');for(const [d,fill] of [['M-15 -18 C-32 -42 -5 -43 -9 -67 C13 -55 3 -43 14 -49 C28 -27 19 -13 0 -12 Z','#ff7029'],['M-7 -17 C-18 -32 0 -33 -2 -48 C13 -35 13 -22 5 -15 Z','#ffd75e']]){const flame=document.createElementNS(svgNS,'path');flame.setAttribute('d',d);flame.setAttribute('fill',fill);fire.append(flame);}
  const num=document.createElementNS(svgNS,'text');num.textContent=d.number;num.classList.add('car-number');const title=document.createElementNS(svgNS,'title');title.textContent=`Car ${d.number}: ${d.name}${avatarFor(d,race.className)?'':' · coloured fallback car'}`;const artwork=document.createElementNS(svgNS,'g');artwork.classList.add('car-artwork');artwork.append(shape,num);group.append(artwork,fire,title);$('cars').append(group);cars.set(d.id,group);}
