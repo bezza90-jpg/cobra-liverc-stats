@@ -779,18 +779,25 @@ function journeyDriversAtPosition(raceMode) {
 
 function updateJourneyMovingMarkers() {
   updateJourneyDateLabel();
-  if (!journeyMap || !journeyDriverMarkers.size) return;
+  if (!journeyMap) return;
   const raceMode = journeyRaceMode();
   const drivers = journeyDriversAtPosition(raceMode);
+  const wanted = journeySelectedKeys.size ? drivers.filter(d=>journeySelectedKeys.has(d.driverKey)) : trackerDrivers(drivers,journeyRecentKeys,journeyAvatarImages,journeySelectedKey);
+  // Add drivers as their first recorded run enters the timeline, without a zoom.
+  if(wanted.some(d=>!journeyDriverMarkers.has(d.driverKey))) renderJourneyMap();
   for (const driver of drivers) {
     const marker = journeyDriverMarkers.get(driver.driverKey);
     if (!marker || Math.abs(driver.km - (journeyLastMotionKm.get(driver.driverKey) ?? -1)) < .001) continue;
     marker.setLatLng(journeyRouteAt(driver.km).point);
     journeyLastMotionKm.set(driver.driverKey, driver.km);
+    marker.setTooltipContent(`<b>${fmt.format(kmToMiles(driver.km))} miles</b><br>${escapeHtml(driver.name)}`);
+    marker.setPopupContent(`<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(kmToMiles(driver.km))} miles</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${driver.classes.map(cls=>classLabels[cls]||cls).map(escapeHtml).join(', ')}</span>${driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : ''}</div>`);
   }
   const key = raceMode && !journeySelectedKeys.has(journeySelectedKey) ? [...journeySelectedKeys][0] : journeySelectedKey;
   const selected = drivers.find(driver => driver.driverKey === key);
   if (!selected) return;
+  if(!raceMode) $('journeyMapTitle').textContent=`${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
+  if(raceMode) $('journeyRaceStandings').innerHTML=drivers.filter(d=>journeySelectedKeys.has(d.driverKey)).sort((a,b)=>b.km-a.km||a.name.localeCompare(b.name)).map((d,i)=>`<span><b>${i+1}.</b> ${escapeHtml(d.name)} <strong>${fmt.format(kmToMiles(d.km))} mi</strong></span>`).join('');
   const route = journeyRouteAt(selected.km);
   if (Math.abs(selected.km - (journeyLastMotionKm.get(`route:${key}`) ?? -1)) >= .005) {
     journeyTravelledLine?.setLatLngs(route.travelled);
