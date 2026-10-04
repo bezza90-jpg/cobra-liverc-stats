@@ -29,7 +29,7 @@ const routes=[
 ];
 const plans=JSON.parse(readFileSync(new URL('track-plans.json',base),'utf8'));
 const catalog=JSON.parse(readFileSync(new URL('catalog.json',base),'utf8'));
-assert.equal(Object.keys(plans).length,24);
+assert.equal(Object.keys(plans).length,25);
 for(const [id,plan] of Object.entries(plans)){
  assert.equal(catalog.events.find(e=>e.id===id)?.date,plan.date,`${id}: event date match`);
  assert(existsSync(new URL(plan.image,base)),`${id}: missing image`);
@@ -37,14 +37,14 @@ for(const [id,plan] of Object.entries(plans)){
  assert(loop.x>=87&&loop.x<=1525&&loop.y>=125&&loop.y<=891,`${id}: cropped loop outside template`);
  const points=plan.routeStatus==='confirmed'?plan.points:plan.draftPoints;
  if(!points)continue;
- const start=routePoint(points[0]);assert(Math.hypot(start.x-loop.x,start.y-loop.y)<.02,`${id}: route must begin at the marked loop`);
- routes.push({name:`${plan.date} ${plan.routeStatus==='confirmed'?'confirmed':'draft'}`,d:routePath(points),...straightFor(points)});
+ const start=routePoint(points[0],plan);assert(Math.hypot(start.x-loop.x,start.y-loop.y)<.02,`${id}: route must begin at the marked loop`);
+ routes.push({name:`${plan.date} ${plan.routeStatus==='confirmed'?'confirmed':'draft'}`,d:routePath(points,plan),...straightFor(points,plan)});
 }
 const maps=routes.map(r=>{
  const grid=gridPositions(r,12),straightLength=Math.hypot(r.to.x-r.from.x,r.to.y-r.from.y);
  for(let i=0;i<grid.length;i++){
   assert(Math.hypot(grid[i].x-r.to.x,grid[i].y-r.to.y)<straightLength,`${r.name}: grid must fit the straight`);
-  if(i>=2)assert(Math.abs(Math.hypot(grid[i].x-grid[i-2].x,grid[i].y-grid[i-2].y)-2*planBorder.width/30)<1e-8,`${r.name}: two metre same-side spacing`);
+  if(i>=2)assert(Math.abs(Math.hypot(grid[i].x-grid[i-2].x,grid[i].y-grid[i-2].y)-2*(r.scaleWidth||planBorder.width)/30)<1e-8,`${r.name}: two metre same-side spacing`);
  }
  const {points,length}=sample(r.d),straightSpeed=r.name==='Oval'?2.5:1.65,pace=paceMap(points,{mainStraight:r,straightSpeed});
  assert.equal(pace(0),0);assert.equal(pace(1),1);for(let k=0;k<=100;k++)assert(Math.abs(pace(pace.timeAtDistance(k/100))-k/100)<1e-10);
