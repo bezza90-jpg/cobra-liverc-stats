@@ -4,7 +4,7 @@
   "date": "2026-10-04",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
-  "updatedAt": "2026-10-03T21:22:35.748Z",
+  "updatedAt": "2026-10-04T07:59:44.392Z",
   "entries": [
     {
       "driverKey": "MARCIA-DAVIS",
@@ -37,6 +37,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "8205771"
+    },
+    {
+      "driverKey": "LOGAN-RHODES",
+      "driverName": "LOGAN RHODES",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": "7023442"
     },
     {
       "driverKey": "LEO-SMITH",
@@ -152,14 +160,6 @@
       "transponder": "5749969"
     },
     {
-      "driverKey": "DEWI-JONES",
-      "driverName": "DEWI JONES",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "transponder": ""
-    },
-    {
       "driverKey": "LEE-KILLWORTH",
       "driverName": "LEE KILLWORTH",
       "className": "4-Wheel Drive Buggy",
@@ -270,14 +270,6 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "4648442"
-    },
-    {
-      "driverKey": "LIAM-TOOLE",
-      "driverName": "LIAM TOOLE",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "transponder": "7180911"
     },
     {
       "driverKey": "NATHAN-NOTLEY",
@@ -537,14 +529,6 @@
       "transponder": "5749969"
     },
     {
-      "driverKey": "DEWI-JONES",
-      "driverName": "DEWI JONES",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "transponder": "2123455"
-    },
-    {
       "driverKey": "LEE-KILLWORTH",
       "driverName": "LEE KILLWORTH",
       "className": "2-Wheel Drive Buggy",
@@ -689,20 +673,20 @@
       "transponder": "7390713"
     },
     {
+      "driverKey": "LOGAN-RHODES",
+      "driverName": "LOGAN RHODES",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": ""
+    },
+    {
       "driverKey": "EDWARD-ROSS",
       "driverName": "EDWARD ROSS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
       "transponder": "6009030"
-    },
-    {
-      "driverKey": "NIGEL-SANTIMANO",
-      "driverName": "NIGEL SANTIMANO",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "transponder": "4243064"
     },
     {
       "driverKey": "NEIL-SMITH",
@@ -831,6 +815,38 @@
       "countryCode": "GB",
       "chassis": "Tlr",
       "transponder": "8268154"
+    },
+    {
+      "driverKey": "DEWI-JONES",
+      "driverName": "DEWI JONES",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "2123455"
+    },
+    {
+      "driverKey": "NIGEL-SANTIMANO",
+      "driverName": "NIGEL SANTIMANO",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "4243064"
+    },
+    {
+      "driverKey": "DEWI-JONES",
+      "driverName": "DEWI JONES",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": ""
+    },
+    {
+      "driverKey": "LIAM-TOOLE",
+      "driverName": "LIAM TOOLE",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "7180911"
     }
   ]
 }

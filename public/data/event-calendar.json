@@ -11,20 +11,12 @@
       "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day"
     },
     {
-      "title": "SWORD Round 6 EOS 2025/6",
-      "date": "2026-03-29",
-      "type": "sword",
-      "eventId": "499054",
-      "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=499054",
-      "completed": true,
-      "bookingUrl": ""
-    },
-    {
       "title": "SWORD Round 1 EOS 2026/7",
       "date": "2026-10-04",
       "type": "sword",
       "eventId": "518554",
       "resultsUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518554",
+      "completed": false,
       "bookingUrl": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-1"
     },
     {
