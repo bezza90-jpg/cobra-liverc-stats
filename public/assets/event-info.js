@@ -3,7 +3,7 @@ import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight
 if (document.head?.append && document.createElement) {
   const entriesScript = document.createElement('script');
   entriesScript.type = 'module';
-  entriesScript.src = '../assets/event-entries.js?v=20261001-capacity-bands';
+  entriesScript.src = '../assets/event-entries.js?v=20261005-rollover';
   document.head.append(entriesScript);
 }
 (async () => {

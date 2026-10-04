@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mergeCurrentWixEntries,applyConfirmedChassis} from '../public/assets/event-entry-merge.js';
+import {mergeCurrentWixEntries,applyConfirmedChassis,entriesForMeeting} from '../public/assets/event-entry-merge.js';
 import {eventSpaces} from '../public/assets/event-capacity.js';
 const meeting={eventId:'518554',date:'2026-10-04',type:'sword'};
 test('junior-price bookings cannot re-add senior drivers to the junior heat',()=>{
@@ -43,4 +43,15 @@ test('distinct booked drivers sharing a transponder still consume separate space
  const data={...meeting,entries:[{driverName:'MATT WOODIWISS',className:'2-Wheel Drive Buggy',transponder:'6991518'}]};
  const wix={eventDate:meeting.date,entries:[{driverName:'MATT WOODIWISS',className:'2-Wheel Drive Buggy',transponder:'6991518'},{driverName:'CARL TURNER',className:'2-Wheel Drive Buggy',transponder:'6991518'}]};
  assert.equal(mergeCurrentWixEntries(data,wix).entries.length,2);
+});
+
+test('rollover replaces old roster metadata and accepts only the selected meeting bookings',()=>{
+ const old={eventId:'518554',date:'2026-10-04',type:'sword',entries:[{driverName:'OLD DRIVER',className:'2-Wheel Drive Buggy'}]};
+ const next={eventId:'518555',date:'2026-10-11',type:'club',title:'Club Day',resultsUrl:'https://example.com/518555'};
+ const wix={liveRcEventId:'518555',eventDate:'2026-10-11',entries:[{driverName:'NEW DRIVER',className:'4-Wheel Drive Buggy'}]};
+ const result=entriesForMeeting(old,wix,next);
+ assert.equal(result.eventId,'518555');assert.equal(result.date,next.date);assert.equal(result.type,'club');assert.deepEqual(result.entries.map(e=>e.driverName),['NEW DRIVER']);
+ assert.deepEqual(entriesForMeeting(old,{...wix,liveRcEventId:'518554'},next).entries,[]);
+ assert.deepEqual(entriesForMeeting(old,{...wix,entries:[]},next).entries,[]);
+ assert.deepEqual(entriesForMeeting(old,{},meeting).entries,old.entries);
 });

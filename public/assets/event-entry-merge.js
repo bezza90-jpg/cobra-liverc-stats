@@ -36,3 +36,10 @@ export function mergeCurrentWixEntries(data, wix = {}) {
   const dataUpdated = Date.parse(data.updatedAt || '');
   return {...data, entries:merged, updatedAt:wixUpdated > dataUpdated ? wix.updatedAt : data.updatedAt};
 }
+
+export function entriesForMeeting(data, wix, meeting) {
+  if (!meeting) return {...data, entries:[]};
+  const matches = data.date === meeting.date && String(data.eventId) === String(meeting.eventId);
+  const selected = matches ? data : {eventId:String(meeting.eventId || ''),title:meeting.title,date:meeting.date,type:meeting.type,sourceUrl:meeting.resultsUrl,entries:[],updatedAt:''};
+  return mergeCurrentWixEntries(selected, wix);
+}
