@@ -1,19 +1,19 @@
 {
   "MIKE-DRISCOLL": {
-    "name": "Schumacher",
-    "slug": "schumacher"
+    "name": "Team Associated",
+    "slug": "team-associated"
   },
   "HARRY-DAVIS": {
-    "name": "Kyosho",
-    "slug": "kyosho"
+    "name": "Team Associated",
+    "slug": "team-associated"
   },
   "DAVE-CLUTTERBUCK": {
     "name": "Team Associated",
     "slug": "team-associated"
   },
   "MATT-WOODIWISS": {
-    "name": "Yokomo",
-    "slug": "yokomo"
+    "name": "Xray",
+    "slug": "xray"
   },
   "AINSLEY-EVANS": {
     "name": "Team Associated",
@@ -96,8 +96,8 @@
     "slug": "team-associated"
   },
   "GREG-PARKER": {
-    "name": "Xray",
-    "slug": "xray"
+    "name": "Schumacher",
+    "slug": "schumacher"
   },
   "MARTYN-PRICE": {
     "name": "Schumacher",
@@ -136,12 +136,12 @@
     "slug": "team-associated"
   },
   "NATHAN-NOTLEY": {
-    "name": "Xray",
-    "slug": "xray"
+    "name": "Tlr",
+    "slug": "tlr"
   },
   "CHRIS-LEONARD": {
-    "name": "R1 Wurks",
-    "slug": "r1-wurks"
+    "name": "Team Associated",
+    "slug": "team-associated"
   },
   "STEVEN-GRIFFITHS": {
     "name": "Schumacher",
@@ -232,8 +232,8 @@
     "slug": "schumacher"
   },
   "HAIDEN-HICKS": {
-    "name": "Kyosho",
-    "slug": "kyosho"
+    "name": "Team Associated",
+    "slug": "team-associated"
   },
   "DANIEL-GRIFFITHS": {
     "name": "Team Associated",
@@ -320,20 +320,20 @@
     "slug": "xray"
   },
   "DAVE-ELMES": {
-    "name": "Xray",
-    "slug": "xray"
+    "name": "Tlr",
+    "slug": "tlr"
   },
   "TOM-JENKINS": {
-    "name": "Xray",
-    "slug": "xray"
+    "name": "Tlr",
+    "slug": "tlr"
   },
   "GREG-LANE": {
-    "name": "Agama",
-    "slug": "agama"
-  },
-  "MATT-OSLAND-JONES": {
     "name": "Team Associated",
     "slug": "team-associated"
+  },
+  "MATT-OSLAND-JONES": {
+    "name": "Xray",
+    "slug": "xray"
   },
   "SHAUN-OGDEN": {
     "name": "Yokomo",
@@ -436,8 +436,8 @@
     "slug": "xray"
   },
   "DAN-PULLEY": {
-    "name": "Xray",
-    "slug": "xray"
+    "name": "Pr",
+    "slug": "pr"
   },
   "JUSTIN-WALSH": {
     "name": "Yokomo",
@@ -476,8 +476,8 @@
     "slug": "schumacher"
   },
   "MARK-COX": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Yokomo",
+    "slug": "yokomo"
   },
   "LUCA-DAWSON": {
     "name": "Team Associated",
@@ -710,5 +710,57 @@
   "EDWARD-SCOTT": {
     "name": "Team Associated",
     "slug": "team-associated"
+  },
+  "LEO-SMITH": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "LEE-KILLWORTH": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "DAVID-MILFORD": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "LEWIS-HOPKINS": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "WILLIAM-FISHER": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "EDWARD-ROSS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "STUART-IRONS": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "JOSH-WILLIAMS": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "LEE-FIDOE": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "TOONZ-TOWNSEND": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "JUSTIN-WALKER": {
+    "name": "R1 Wurks",
+    "slug": "r1-wurks"
+  },
+  "RICHARD-MORSE": {
+    "name": "R1 Wurks",
+    "slug": "r1-wurks"
+  },
+  "JAMIE-BEASLEY": {
+    "name": "Xray",
+    "slug": "xray"
   }
 }
