@@ -55,7 +55,7 @@ function installSection() {
   } else if (document.body.dataset.championship) {
     const section = entrySection(document.body.dataset.championship);
     const standings = main.querySelector('.championship-panel');
-    standings?.before(section);
+    standings?.after(section);
   }
 }
 
