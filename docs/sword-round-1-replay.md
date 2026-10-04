@@ -11,3 +11,5 @@ Verification: 286,371 recorded crossings from 2,522 races, 19,583 driver records
 Future events need imported lap records, an event-specific plan image, a mapped driving route beginning at the loop, and optionally feature zones. A clean plan and a centreline reference can be supplied separately; they need not both be published.
 
 The replay Facebook preview is an actual 1200 × 630 screen capture of the SWORD 2WD A-final at 12 seconds, with the track and ten cars visible. Static Open Graph/Twitter metadata uses the RaceHub URL.
+
+Finished cars park in official finishing order, starting at the front right and moving left across each row of four. Further rows follow behind. Seeking backwards restores each car to its racing position; lap timing and jumps are unchanged.
