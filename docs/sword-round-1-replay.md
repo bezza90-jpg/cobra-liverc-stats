@@ -13,3 +13,5 @@ Future events need imported lap records, an event-specific plan image, a mapped 
 The replay Facebook preview is an actual 1200 × 630 screen capture of the SWORD 2WD A-final at 12 seconds, with the track and ten cars visible. Static Open Graph/Twitter metadata uses the RaceHub URL.
 
 Finished cars park in official finishing order, starting at the front right and moving left across each row of four. Further rows follow behind. Seeking backwards restores each car to its racing position; lap timing and jumps are unchanged.
+
+Retired cars retain the existing early-ending detection and fire effect. They park outside the left track boundary with a small overlap, first retirement lowest by the timing loop, later retirements above. Retirement order uses recorded elapsed time and remains stable when seeking.
