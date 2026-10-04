@@ -1,4 +1,4 @@
-import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=3';
+import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261004-display';
 const $ = id => document.getElementById(id);
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
 const formatDate = value => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(`${value}T12:00:00Z`));
@@ -54,7 +54,7 @@ function podiumIllustration(rows, photoName, className) {
     const manufacturer = String(chassis?.name || driverManufacturers[key] || '').trim();
     const slug = String(chassis?.slug || manufacturer.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
     const validAvatar = typeof avatar === 'string' && /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/.test(avatar);
-    const source = validAvatar ? `../${avatar}` : slug ? `../assets/manufacturers/${slug}.png` : '../assets/cobra-logo.png';
+    const source = validAvatar ? `../assets/car-avatar-thumbnails/${avatar.split('/').pop().replace(/\.png$/i,'.webp')}` : slug ? `../assets/manufacturers/${slug}.png` : '../assets/cobra-logo.png';
     const fallback = manufacturer || 'COBRA';
     return `<div class="podium-illustration-place podium-illustration-${place}">
       <span class="podium-illustration-rank">${place}${place === 1 ? 'st' : place === 2 ? 'nd' : 'rd'}</span>
@@ -77,7 +77,7 @@ function finalCard([raceId, race]) {
   const replacement = typeof override?.image === 'string' && /^podium-photos\/[a-zA-Z0-9-]+\.(?:jpg|jpeg|png|webp)$/.test(override.image)
     ? new URL(`../${override.image}`, import.meta.url).href : '';
   const originalPhotoUrl = replacement || approvedPhoto?.imageUrl || `../podium-photos/${encodeURIComponent(photoName)}`;
-  const photoUrl = hidePhoto ? '' : approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 900) : originalPhotoUrl;
+  const photoUrl = hidePhoto ? '' : replacement ? '../podium-photo-thumbnails/'+override.image.split('/').pop().replace(/\.(?:jpe?g|png|webp)$/i,'.webp') : approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 900) : originalPhotoUrl;
   const fullPhotoUrl = approvedPhoto && !replacement ? resizedDriveImage(originalPhotoUrl, 2400) : originalPhotoUrl;
   const photoSrcset = approvedPhoto && !replacement
     ? `${resizedDriveImage(originalPhotoUrl, 480)} 480w, ${resizedDriveImage(originalPhotoUrl, 900)} 900w, ${resizedDriveImage(originalPhotoUrl, 1400)} 1400w`
@@ -91,7 +91,7 @@ function finalCard([raceId, race]) {
     : '<tr><td colspan="5" class="podium-no-results">No classified top-three result is available.</td></tr>';
   return `<article class="podium-card">
     <div class="podium-photo" data-full-image="${escapeHtml(fullPhotoUrl)}" data-original-image="${escapeHtml(originalUrl)}" data-photo-title="${escapeHtml(photoTitle)}" data-photo-caption="${escapeHtml(caption)}">
-      ${hidePhoto ? '' : `<img src="${escapeHtml(photoUrl)}"${photoSrcset ? ` srcset="${escapeHtml(photoSrcset)}" sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 1100px) 50vw, 520px"` : ''} alt="${escapeHtml(photoTitle)}" loading="lazy" decoding="async"><button class="podium-photo-expand" type="button">Enlarge photo</button>`}
+      ${hidePhoto ? '' : `<img src="${escapeHtml(photoUrl)}"${replacement ? ` data-display-fallback="${escapeHtml(originalPhotoUrl)}"` : ''}${photoSrcset ? ` srcset="${escapeHtml(photoSrcset)}" sizes="(max-width: 650px) calc(100vw - 32px), (max-width: 1100px) 50vw, 520px"` : ''} alt="${escapeHtml(photoTitle)}" loading="lazy" decoding="async"><button class="podium-photo-expand" type="button">Enlarge photo</button>`}
       ${podiumIllustration(rows, photoName, race.c)}
     </div>
     <div class="podium-card-copy">
@@ -137,7 +137,7 @@ function renderEvent(eventId, updateAddress = true) {
       photo.setAttribute('aria-pressed', 'false');
     };
     const markFailed = () => {
-      const photo = image.closest('.podium-photo');
+      if(image.dataset.displayFallback){image.src=image.dataset.displayFallback;delete image.dataset.displayFallback;return;}const photo = image.closest('.podium-photo');
       photo.querySelector('.podium-photo-expand')?.remove();
       image.remove();
     };
