@@ -66,7 +66,9 @@ async function loadRace(autoplay=false){
  const drivers=race.drivers.sort((a,b)=>a.number-b.number).map((d,i)=>({...prepare(d),color:palette[i%palette.length]}));const fitted=layout(race);$('play').disabled=false;$('downloadReplay').disabled=!recordingFormat();
  $('message').textContent=race.omitted?.length?`Not animated because lap records do not match the result: ${race.omitted.join(', ')}. See official results for the complete classification.`:'';
  const finishSlots=new Map([...drivers].sort((a,b)=>a.finalPosition-b.finalPosition||a.number-b.number).map((d,i)=>[d.id,i]));
- const duration=Math.max(...drivers.map(d=>d.total));let time=0,playing=false,last=0,lastTable=-1,focus=drivers.find(d=>d.key===selectedDriver)?.id||'';
+ const duration=Math.max(...drivers.map(d=>d.total));
+ const retiredSlots=new Map(drivers.filter(d=>d.total<duration-Math.max(30,d.typical*2)).sort((a,b)=>a.total-b.total||a.number-b.number).map((d,i)=>[d.id,i]));
+ let time=0,playing=false,last=0,lastTable=-1,focus=drivers.find(d=>d.key===selectedDriver)?.id||'';
  $('raceDate').textContent=new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(race.date+'T12:00:00Z'));$('raceName').textContent=`${race.event} · ${race.round} · ${race.name}`;$('source').href=race.source;$('timeline').max=duration;$('endTime').textContent=clock(duration);
  $('cars').replaceChildren();document.querySelectorAll('#circuit filter').forEach(n=>n.remove());const path=$('route'),length=path.getTotalLength(),cars=new Map();
  const planned=$('layoutSelect').value!=='oval';
@@ -100,10 +102,12 @@ async function loadRace(autoplay=false){
  function render(force=false){const standings=ordered(drivers,time),leader=standings[0];$('clock').textContent=clock(time);$('timeline').value=time;$('timeline').setAttribute('aria-valuetext',clock(time));$('raceStatus').textContent=time>=duration?'Race complete':playing?'Playing':time?'Paused':'Ready to replay';
  for(const s of standings){const d=s.driver,dist=visualFraction(d,time,pace)*length,p=path.getPointAtLength(dist),p2=path.getPointAtLength((dist+1)%length);const angle=Math.atan2(p2.y-p.y,p2.x-p.x)*180/Math.PI;const group=cars.get(d.id);const gridLane=Number.isFinite(d.startFraction)?(drivers.indexOf(d)%2?18:-18)*Math.max(0,1-time/Math.min(2,d.laps[0].seconds)):0;const lane=gridLane+(drivers.indexOf(d)%3-1)*4*Math.min(1,time/2);const x=p.x-Math.sin(angle*Math.PI/180)*lane,y=p.y+Math.cos(angle*Math.PI/180)*lane;// Official finishing order fills bays from the front right; seeking restores racing positions.
  const slot=finishSlots.get(d.id),label=document.querySelector('.loop-label');
- const parkedX=Math.min(Number(label.getAttribute('x'))+55,1160)+(3-slot%4)*110;
+ let parkedX=Math.min(Number(label.getAttribute('x'))+55,1160)+(3-slot%4)*110;
  const parkingBase=Math.min(Number(label.getAttribute('y'))+52,935-(Math.ceil(drivers.length/4)-1)*72);
- const parkedY=parkingBase+Math.floor(slot/4)*72;
- const endedEarly=d.total < duration-Math.max(30,d.typical*2);
+ let parkedY=parkingBase+Math.floor(slot/4)*72;
+ const endedEarly=retiredSlots.has(d.id);
+ // First retirement is lowest beside the loop; later retirements stack upward.
+ if(endedEarly){const base=Number(label.getAttribute('y'))+40;const spacing=Math.min(105,(base-100)/Math.max(1,retiredSlots.size-1));parkedX=Math.max(52,(planned?trackPlans[race.eventId]?.border?.x||87:87)-40);parkedY=base-retiredSlots.get(d.id)*spacing;}
  group.setAttribute('transform',s.finished?`translate(${parkedX},${parkedY}) scale(1.44)`:`translate(${x},${y}) rotate(${angle}) scale(1.44)`);
  // Translate inside the rotated car group: upside-down headings lift downward.
  group.querySelector('.car-artwork').setAttribute('transform',`translate(0,${s.finished?0:-jumpLift(dist/length)})`);
