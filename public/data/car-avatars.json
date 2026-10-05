@@ -130,5 +130,8 @@
   "NEIL-SMITH": {
     "2-Wheel Drive Buggy": "assets/car-avatars/NEIL-SMITH-AUTO-2WD.png",
     "4-Wheel Drive Buggy": "assets/car-avatars/NEIL-SMITH-AUTO-4WD.png"
+  },
+  "DAN-PULLEY": {
+    "4-Wheel Drive Buggy": "assets/car-avatars/DAN-PULLEY-AUTO-4WD.png"
   }
 }
