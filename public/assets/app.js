@@ -668,17 +668,22 @@ function leaveJourneyFullscreen() {
   if (document.fullscreenElement === overlay) document.exitFullscreen().catch(() => {});
 }
 
-function buildJourneyTimeline(endDate) {
+function buildJourneyTimeline(endDate, driverKeys = null) {
   const startMs = Date.parse('2022-01-01T00:00:00Z');
   const endMs = Math.max(startMs, Date.parse(`${endDate}T20:00:00Z`));
   const frames = new Map();
-  for (const slot of new Map([...journeyRoundSlots.values()].map(slot => [`${slot.date}|${slot.name}|${slot.start}`, slot])).values()) {
-    if (slot.start >= startMs && slot.end <= endMs) {
-      frames.set(slot.start, { time: slot.start, round: slot.name });
-      frames.set(slot.end, { time: slot.end, round: slot.name });
+  let first = Infinity;
+  for (const run of state.data.raceResults) {
+    if (completedLaps(run)<=0 || journeyExcludedDrivers.has(run[1]) || (driverKeys && !driverKeys.has(run[1]))) continue;
+    const slot=journeyRoundSlots.get(run[0]);
+    if(slot && slot.start>=startMs && slot.end<=endMs){
+      first=Math.min(first,slot.start);
+      frames.set(slot.end,{time:slot.end,round:slot.name});
     }
   }
-  return [...frames.values()].sort((a, b) => a.time - b.time);
+  // A single starting point and recorded endpoints avoid idle gaps between rounds.
+  if(Number.isFinite(first)) frames.set(first,{time:first,round:''});
+  return frames.size ? [...frames.values()].sort((a,b)=>a.time-b.time) : [{time:startMs,round:''}];
 }
 
 function journeyCutoffDate() {
@@ -716,8 +721,7 @@ function buildJourneyRaceTimeline({ starts, days }) {
   for (const run of state.data.raceResults) {
     const first = starts.get(run[1]);
     const slot = journeyRoundSlots.get(run[0]);
-    if (first === undefined || !slot) continue;
-    frames.push((slot.start - first) / 86400000);
+    if (first === undefined || !slot || completedLaps(run)<=0) continue;
     frames.push((slot.end - first) / 86400000);
   }
   return [...new Set(frames.map(value => Math.max(0, Math.min(days, value)).toFixed(7)))].map(Number).sort((a, b) => a - b);
@@ -955,6 +959,13 @@ function toggleJourneyPlayback() {
   }
   const slider = $('journeyDateSlider');
   const raceMode = journeyRaceMode();
+  if(!raceMode && (!journeyPlaybackHasStarted || Number(slider.value)>=Number(slider.max))){
+    const keys=journeySelectedKeys.size ? journeySelectedKeys : journeySelectedKey ? new Set([journeySelectedKey]) : null;
+    const endDate=[state.data.meta.latestEventDate,...Object.values(state.data.raceById).map(r=>r.d)].filter(Boolean).sort().at(-1);
+    journeyTimelineDates=buildJourneyTimeline(endDate,keys);
+    slider.max=String(journeyTimelineDates.length-1);slider.value=slider.max;
+    journeyMotionCache=null;
+  }
   const start = raceMode ? '2022-01-01' : selectedJourneyStart();
   const startIndex = raceMode ? 0 : journeyTimelineDates.findIndex(frame => frame.time >= Date.parse(`${start}T00:00:00Z`));
   const configuredStart = Math.max(0, startIndex);
