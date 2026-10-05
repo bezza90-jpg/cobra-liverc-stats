@@ -100,12 +100,19 @@ async function order(eventId,number,site,key) {
   const data=await request(path,site,key); if (!data.order) throw Error('A Wix order could not be read.'); return data.order;
 }
 async function writeIfChanged(file,value) {
+  const previous=JSON.parse(await readFile(file,'utf8').catch(()=> 'null'));
+  if (entrySnapshot(previous)===entrySnapshot(value)) return false;
   const output=JSON.stringify(value,null,2)+'\n';
   if (await readFile(file,'utf8').catch(()=> '')===output) return false;
   const temp=new URL(file.href+'.tmp'); await writeFile(temp,output); await rename(temp,file); return true;
 }
+export function entrySnapshot(value) {
+  if (!value) return '';
+  const {updatedAt,...snapshot}=value;
+  return JSON.stringify(snapshot);
+}
 export async function sync({site,key}) {
-  if (!site || !key) return {configured:false,changed:false};
+  if (!site || !key) throw Error('Wix sync credentials are missing; entries have not been refreshed.');
   const calendar=JSON.parse(await readFile(new URL('../public/data/event-calendar.json',import.meta.url),'utf8'));
   const today=londonDate();
   const meeting=(calendar.events || []).filter(event=>event.date>=today && event.bookingUrl).sort((a,b)=>a.date.localeCompare(b.date))[0];
