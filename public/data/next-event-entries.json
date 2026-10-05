@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-05T18:42:16.357Z",
+  "updatedAt": "2026-10-05T21:34:34.648Z",
   "entries": [
     {
       "driverKey": "DANIEL-GRIFFITHS",
@@ -15,12 +15,28 @@
       "transponder": "2604190"
     },
     {
+      "driverKey": "IAN-TOWNSEND",
+      "driverName": "IAN TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "4571829"
+    },
+    {
       "driverKey": "RICKY-NEWCOMBE",
       "driverName": "RICKY NEWCOMBE",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
       "transponder": "3319908"
+    },
+    {
+      "driverKey": "ROGER-MILLS",
+      "driverName": "ROGER MILLS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "9115761"
     },
     {
       "driverKey": "RUSSELL-THOMAS",
@@ -61,6 +77,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "3581757"
+    },
+    {
+      "driverKey": "NOAH-MCBRIDE",
+      "driverName": "NOAH MCBRIDE",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "8205771"
     },
     {
       "driverKey": "JAMIE-DAVIES",
