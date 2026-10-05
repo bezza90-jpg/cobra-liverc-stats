@@ -4,6 +4,39 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-05T17:14:01.576Z",
-  "entries": []
+  "updatedAt": "2026-10-05T17:52:53.666Z",
+  "entries": [
+    {
+      "driverKey": "RUSSELL-THOMAS",
+      "driverName": "RUSSELL THOMAS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "0777999"
+    },
+    {
+      "driverKey": "RUSSELL-THOMAS",
+      "driverName": "RUSSELL THOMAS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "0777999"
+    },
+    {
+      "driverKey": "BEN-EVANS",
+      "driverName": "BEN EVANS",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "3581757"
+    },
+    {
+      "driverKey": "JAMIE-DAVIES",
+      "driverName": "JAMIE DAVIES",
+      "className": "Trucks",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "6973172"
+    }
+  ]
 }
