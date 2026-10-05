@@ -3,8 +3,14 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-05T18:00:02.383Z",
+  "updatedAt": "2026-10-05T18:17:26.189Z",
   "entries": [
+    {
+      "driverName": "DANIEL GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2604190",
+      "chassis": "Team Associated"
+    },
     {
       "driverName": "RICKY NEWCOMBE",
       "className": "2-Wheel Drive Buggy",
@@ -16,6 +22,12 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "0777999",
       "chassis": "XRay"
+    },
+    {
+      "driverName": "SPENCER FARLEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7305713",
+      "chassis": "Schumacher"
     },
     {
       "driverName": "RICKY NEWCOMBE",
