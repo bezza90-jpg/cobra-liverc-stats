@@ -3,13 +3,25 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-05T17:48:16.736Z",
+  "updatedAt": "2026-10-05T18:00:02.383Z",
   "entries": [
+    {
+      "driverName": "RICKY NEWCOMBE",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3319908",
+      "chassis": "Schumacher"
+    },
     {
       "driverName": "RUSSELL THOMAS",
       "className": "2-Wheel Drive Buggy",
       "transponder": "0777999",
       "chassis": "XRay"
+    },
+    {
+      "driverName": "RICKY NEWCOMBE",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "2396977",
+      "chassis": "Schumacher"
     },
     {
       "driverName": "RUSSELL THOMAS",
