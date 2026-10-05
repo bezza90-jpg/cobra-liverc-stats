@@ -133,5 +133,9 @@
   },
   "DAN-PULLEY": {
     "4-Wheel Drive Buggy": "assets/car-avatars/DAN-PULLEY-AUTO-4WD.png"
+  },
+  "KEVIN-GREENWAY": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/KEVIN-GREENWAY-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/KEVIN-GREENWAY-AUTO-4WD.png"
   }
 }
