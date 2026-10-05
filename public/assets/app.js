@@ -6,7 +6,8 @@ import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
 import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
 import { loadMap } from './load-map.js?v=20260928-local';
-import { journeyRoadDistanceKm, journeyRoadRoute } from './journey-route.js?v=20260924-mapfix1';
+import { journeyRoadDistanceKm, journeyRoadRoute, journeyRoadMilestones } from './journey-route.js?v=20261005-roads';
+import {createDistanceRoute} from './journey-route-geometry.js?v=20261005-roads';
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
 import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261004-display';
 
@@ -504,33 +505,7 @@ function geoKm(a, b) {
   return 6371 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
 }
 
-function journeyRouteAt(distanceKm) {
-  const capped = Math.max(0, Math.min(distanceKm, journeyRoadDistanceKm));
-  const segmentLengths = [];
-  let geographicTotal = 0;
-  for (let index = 1; index < journeyRoadRoute.length; index += 1) {
-    const length = geoKm(journeyRoadRoute[index - 1], journeyRoadRoute[index]);
-    segmentLengths.push(length);
-    geographicTotal += length;
-  }
-  const target = geographicTotal * capped / journeyRoadDistanceKm;
-  const travelled = [journeyRoadRoute[0]];
-  let accumulated = 0;
-  for (let index = 1; index < journeyRoadRoute.length; index += 1) {
-    const length = segmentLengths[index - 1];
-    if (accumulated + length >= target) {
-      const fraction = length ? (target - accumulated) / length : 0;
-      const start = journeyRoadRoute[index - 1];
-      const end = journeyRoadRoute[index];
-      const point = [start[0] + (end[0] - start[0]) * fraction, start[1] + (end[1] - start[1]) * fraction];
-      travelled.push(point);
-      return { point, travelled };
-    }
-    travelled.push(journeyRoadRoute[index]);
-    accumulated += length;
-  }
-  return { point: journeyRoadRoute.at(-1), travelled: journeyRoadRoute.slice() };
-}
+const journeyRouteAt=createDistanceRoute(journeyRoadRoute,journeyRoadDistanceKm);
 
 function journeyRoundOrder(round) {
   const text = String(round || '');
@@ -569,11 +544,7 @@ function buildJourneyRoundSlots() {
   return slots;
 }
 
-const journeyMilestoneData = [
-  ['Cardiff', 0], ['Calais', 417], ['Belgium E40', 530], ['Aachen A4', 780],
-  ['Frankfurt A3', 1120], ['Passau', 1700], ['ERT Steyregg', 1830],
-  ['Vienna', 2040], ['Budapest', 2300], ['Belgrade', 2700], ['Sofia', 2960], ['Istanbul', 3200]
-];
+const journeyMilestoneData = journeyRoadMilestones;
 
 function journeyDriverDistances(cutoffTime = Infinity, raceStarts = null, elapsedDays = 0) {
   const stats = new Map();
@@ -795,7 +766,7 @@ function updateJourneyMovingMarkers() {
   for (const driver of drivers) {
     const marker = journeyDriverMarkers.get(driver.driverKey);
     if (!marker || Math.abs(driver.km - (journeyLastMotionKm.get(driver.driverKey) ?? -1)) < .001) continue;
-    marker.setLatLng(journeyRouteAt(driver.km).point);
+    marker.setLatLng(journeyRouteAt(driver.km,false).point);
     journeyLastMotionKm.set(driver.driverKey, driver.km);
     marker.setTooltipContent(`<b>${fmt.format(kmToMiles(driver.km))} miles</b><br>${escapeHtml(driver.name)}`);
     marker.setPopupContent(`<div class="journey-driver-popup"><b>${escapeHtml(driver.name)}</b><strong>${fmt.format(kmToMiles(driver.km))} miles</strong><span>${fmt.format(driver.laps)} laps · ${driver.events} events · ${driver.runs} runs</span><span>${driver.classes.map(cls=>classLabels[cls]||cls).map(escapeHtml).join(', ')}</span>${driver.lastEvent ? `<small>Latest: ${escapeHtml(driver.lastEvent)} · ${dateFmt.format(new Date(`${driver.lastDate}T12:00:00Z`))}</small>` : ''}</div>`);
@@ -827,13 +798,13 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const selectedName = state.data.driverByKey[activeKey] || 'Selected driver';
   const selected = drivers.find(driver => driver.driverKey === activeKey) || { driverKey: activeKey, name: selectedName, km: 0, laps: 0, runs: 0, events: 0, classes: [], lastDate: '', lastEvent: '' };
   if (!allDriversView && (journeyFollowSelected || focusDriver)) {
-    const point = journeyRouteAt(selected.km).point;
+    const point = journeyRouteAt(selected.km,false).point;
     if (focusDriver && journeyMap.getZoom() < 8) journeyMap.setView(point, 8, { animate: false });
     else if (journeyMap.getCenter().distanceTo(window.L.latLng(point)) > 150) journeyMap.panTo(point, { animate: false });
   }
   updateJourneyDateLabel(raceMode);
   $('journeyMapTitle').textContent = raceMode ? `Race: ${journeySelectedKeys.size} drivers · ${Math.floor(journeyRaceElapsedDays)} career days` : allDriversView ? `All drivers — ${drivers.length} on the route` : `${selected.name} — ${fmt.format(kmToMiles(selected.km))} miles`;
-  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the illustrated route.`;
+  const routeStatus = selected.km > journeyRoadDistanceKm ? `They have reached Istanbul and covered a further ${fmt.format(kmToMiles(selected.km - journeyRoadDistanceKm))} miles.` : `Their pin shows the equivalent point reached along the saved road route.`;
   $('journeyMapCopy').textContent = raceMode ? `All selected drivers set off from Cardiff together. Their miles advance round by round from each driver's first recorded COBRA run in 2022 or later. All classes count.` : allDriversView ? 'Each pin shows a driver’s combined distance since January 2022. Click a car or pin to follow that driver, search by name, or play the journey through time.' : `Combined distance from every recorded practice, qualifying and final round since 1 January 2022. ${routeStatus} Click any pin for its driver summary, search for a driver, or play the journey through time.`;
 
   journeyMapLayers.clearLayers();
@@ -844,7 +815,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   journeyTravelledLine = allDriversView ? null : window.L.polyline(selectedRoute.travelled, { color: '#08a31a', weight: 7, opacity: .9 }).addTo(journeyMapLayers);
 
   for (const [name, km] of journeyMilestoneData) {
-    const point = journeyRouteAt(km).point;
+    const point = journeyRouteAt(km,false).point;
     window.L.circleMarker(point, { radius: 4, color: '#fff', weight: 1, fillColor: selected.km >= km ? '#08a31a' : '#778078', fillOpacity: 1 })
       .bindTooltip(`${escapeHtml(name)} · ${fmt.format(kmToMiles(km))} miles`, { direction: 'top' }).addTo(journeyMapLayers);
   }
@@ -882,7 +853,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
   const cellWidth = journeyMap.getZoom() < 6 ? 125 : 105;
   const cellHeight = journeyMap.getZoom() < 6 ? 58 : 44;
   for (const driver of candidates) {
-    const xy = journeyMap.latLngToContainerPoint(journeyRouteAt(driver.km).point);
+    const xy = journeyMap.latLngToContainerPoint(journeyRouteAt(driver.km,false).point);
     if (xy.x < 0 || xy.x > mapWidth || xy.y < 0 || xy.y > mapHeight) continue;
     const cell = `${Math.floor(xy.x / cellWidth)},${Math.floor(xy.y / cellHeight)}`;
     if (!occupied.has(cell) || driver.driverKey === activeKey) {
@@ -891,7 +862,7 @@ function renderJourneyMap({ resetView = false, focusDriver = false } = {}) {
     }
   }
   for (const driver of displayedDrivers) {
-    const route = journeyRouteAt(driver.km);
+    const route = journeyRouteAt(driver.km,false);
     const selectedDriver = driver.driverKey === activeKey;
     journeyAvatars.load(driver.driverKey);
     const avatar = journeyAvatarImages.get(driver.driverKey);
