@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-05T18:40:16.211Z",
+  "updatedAt": "2026-10-05T21:31:36.034Z",
   "entries": [
     {
       "driverName": "DANIEL GRIFFITHS",
@@ -12,10 +12,22 @@
       "chassis": "Team Associated"
     },
     {
+      "driverName": "IAN TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4571829",
+      "chassis": "Team Associated"
+    },
+    {
       "driverName": "RICKY NEWCOMBE",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3319908",
       "chassis": "Schumacher"
+    },
+    {
+      "driverName": "ROGER MILLS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9115761",
+      "chassis": "Team Associated"
     },
     {
       "driverName": "RUSSELL THOMAS",
@@ -45,6 +57,12 @@
       "driverName": "BEN EVANS",
       "className": "Junior Racers",
       "transponder": "3581757",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "NOAH MCBRIDE",
+      "className": "Junior Racers",
+      "transponder": "8205771",
       "chassis": "Team Associated"
     },
     {
