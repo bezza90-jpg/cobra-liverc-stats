@@ -1,6 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate} from './sync-wix-event-entries.mjs';
+import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync} from './sync-wix-event-entries.mjs';
+
+test('unchanged entries do not require publishing just because the check time changed',()=>{
+  const data={eventDate:'2026-10-11',entries:[{driverName:'TEST DRIVER',className:'Trucks'}]};
+  assert.equal(entrySnapshot({...data,updatedAt:'old'}),entrySnapshot({...data,updatedAt:'new'}));
+  assert.notEqual(entrySnapshot(data),entrySnapshot({...data,entries:[]}));
+  assert.notEqual(entrySnapshot(data),entrySnapshot({...data,eventDate:'2026-10-18'}));
+});
+test('missing credentials fail instead of silently reporting success',async()=>{
+  await assert.rejects(sync({}),/credentials are missing/);
+});
 
 test('Wix booking page slug and exact transponder form mapping',()=>{
   assert.equal(bookingSlug('https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-1'),'cobra-sword-round-1');

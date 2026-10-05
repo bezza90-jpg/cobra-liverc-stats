@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: cobra-wix-event-entries
@@ -15,6 +16,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,3 +40,7 @@ jobs:
             git pull --rebase origin main
             git push origin HEAD:main
           fi
+      - name: Publish changed entries and verify the live website
+        run: node scripts/publish-wix-entries.mjs
+        env:
+          GH_TOKEN: ${{ github.token }}
