@@ -14,3 +14,11 @@ test('tracker skips empty rounds and idle starts, retaining recorded endpoints f
  assert.deepEqual(followed.map(f=>f.time),[slots.get('first').start,slots.get('first').end,slots.get('last').end]);
  assert.equal(all.at(-1).time,slots.get('last').end);
 });
+
+test('simultaneous class runs interpolate together and preserve their combined endpoint mileage',()=>{
+ const smooth=source.slice(source.indexOf('function journeyDriverDistancesSmoothed('),source.indexOf('\nfunction stopJourneyPlayback()'));
+ const rows=[{start:0,time:10,total:1,race:{e:'event',c:'2WD',d:'2022-01-01'}},{start:0,time:10,total:3,race:{e:'event',c:'4WD',d:'2022-01-01'}},{start:10,time:20,total:8,race:{e:'event',c:'2WD',d:'2022-01-02'}}];
+ const context=vm.createContext({journeySmoothTracks:new Map([['A',rows]]),state:{data:{driverByKey:{A:'Driver A'},eventById:{}}}});
+ vm.runInContext(smooth,context);
+ for(const [time,expected] of [[5,1.5],[10,3],[15,5.5],[20,8]]) assert.equal(vm.runInContext(`journeyDriverDistancesSmoothed(${time})[0].km`,context),expected);
+});

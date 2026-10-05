@@ -642,7 +642,10 @@ function journeyDriverDistancesSmoothed(cutoffTime, raceStarts=null, elapsedDays
     if (now<rows[0].start) continue;
     let index=rows.findIndex(row=>row.time>=now);
     if (index<0) index=rows.length-1;
-    const next=rows[index], previous=index ? rows[index-1] : {time:rows[0].start,total:0};
+    let groupStart=index;
+    while(groupStart>0 && rows[groupStart-1].time===rows[index].time) groupStart--;
+    while(index+1<rows.length && rows[index+1].time===rows[index].time) index++;
+    const next=rows[index], previous=groupStart ? rows[groupStart-1] : {time:rows[0].start,total:0};
     const fraction=next.time===previous.time ? 1 : Math.max(0,Math.min(1,(now-previous.time)/(next.time-previous.time)));
     const km=previous.total+(next.total-previous.total)*fraction;
     if (km<=0) continue;
