@@ -4,8 +4,16 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-05T17:52:53.666Z",
+  "updatedAt": "2026-10-05T18:02:00.019Z",
   "entries": [
+    {
+      "driverKey": "RICKY-NEWCOMBE",
+      "driverName": "RICKY NEWCOMBE",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "3319908"
+    },
     {
       "driverKey": "RUSSELL-THOMAS",
       "driverName": "RUSSELL THOMAS",
@@ -13,6 +21,14 @@
       "countryCode": "GB",
       "chassis": "Xray",
       "transponder": "0777999"
+    },
+    {
+      "driverKey": "RICKY-NEWCOMBE",
+      "driverName": "RICKY NEWCOMBE",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "2396977"
     },
     {
       "driverKey": "RUSSELL-THOMAS",
