@@ -23,7 +23,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=9';
+  link.href = '../assets/event-entries.css?v=10';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -106,6 +106,24 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
   title.textContent = currentEventPage ? 'Driver entries' : (data.title || 'Next COBRA event');
   const eventDate = data.date ? new Date(data.date + 'T12:00:00Z').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'UTC'}) : '';
   summary.textContent = `${data.entries.length} ${data.entries.length === 1 ? 'entry' : 'entries'} published in LiveRC${!currentEventPage && eventDate ? ` · ${eventDate}` : ''}`;
+  let updated = root.querySelector('[data-entry-updated]');
+  if (!updated) {
+    updated = element('p', 'event-entries-updated');
+    updated.dataset.entryUpdated = '';
+    summary.after(updated);
+  }
+  const lastUpdated = new Date(data.updatedAt || '');
+  updated.replaceChildren();
+  if (Number.isNaN(lastUpdated.getTime())) {
+    updated.textContent = 'Last updated: unavailable';
+  } else {
+    const time = element('time', '', lastUpdated.toLocaleString('en-GB', {
+      day:'numeric', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit',
+      hourCycle:'h23', timeZone:'Europe/London'
+    }));
+    time.dateTime = lastUpdated.toISOString();
+    updated.append('Last updated: ', time, ' (UK time)');
+  }
   content.replaceChildren();
   const meeting = nextMeeting(calendar.events || [], type);
   const spaces = eventSpaces(data, meeting, capacity);
