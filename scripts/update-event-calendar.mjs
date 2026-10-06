@@ -37,14 +37,21 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
     entries: entries.map(entry => {
       const sourceKey=driverKey(entry.driverName);
       const key = canonicalDriverKey(sourceKey);
-      const override = driverOverrides[key] || driverOverrides[sourceKey] || {};
+      const driverOverride = driverOverrides[key] || driverOverrides[sourceKey] || {};
+      // Chassis is an event-class property.  Prefer the current class value
+      // supplied by Wix/LiveRC; only a deliberate class-specific override may
+      // replace it. Legacy driver-wide overrides remain a fallback for rows
+      // with no class chassis at all.
+      const classOverride = driverOverride.classes?.[entry.className] || {};
+      const liveChassis = entry.chassis || chassis[key]?.name || chassis[sourceKey]?.name || '';
+      const override = Object.keys(classOverride).length ? {...driverOverride, ...classOverride} : (entry.chassis ? {} : driverOverride);
       return {
         driverKey: key,
         driverName: canonicalDriverName(key,entry.driverName),
         ...(key !== sourceKey ? {bookingName:entry.driverName} : {}),
         className: entry.className,
         countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
-        chassis: chassisChoice(override, entry.chassis || chassis[key]?.name || chassis[sourceKey]?.name || ''),
+        chassis: chassisChoice(override, liveChassis),
         transponder: entry.transponder
       };
     })
