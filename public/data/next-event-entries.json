@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-06T02:55:49.559Z",
+  "updatedAt": "2026-10-06T11:14:07.184Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -38,6 +38,14 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "2604190"
+    },
+    {
+      "driverKey": "DAVID-DAWSON",
+      "driverName": "David Dawson",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "3048462"
     },
     {
       "driverKey": "IAN-TOWNSEND",
