@@ -5,8 +5,18 @@ const key = row => `${String(row.driverName || '').trim().toUpperCase()}|${Strin
 const wix = await file('wix-current-event-entries.json').catch(() => null);
 const published = await file('next-event-entries.json');
 if (wix?.entries?.length && (!wix.eventDate || wix.eventDate === published.date)) {
-  const actual = new Set((published.entries || []).flatMap(row => [key(row), row.bookingName ? key({...row, driverName:row.bookingName}) : null]).filter(Boolean));
-  const missing = wix.entries.filter(row => row.driverName && row.className && !actual.has(key(row)));
-  if (missing.length) throw Error(`Current Wix entries missing from the public list: ${missing.map(row => `${row.driverName} — ${row.className}`).join(', ')}`);
+  const actual = new Map();
+  for (const row of published.entries || []) {
+    actual.set(key(row), row);
+    if (row.bookingName) actual.set(key({...row, driverName:row.bookingName}), row);
+  }
+  const problems = wix.entries.filter(row => {
+    if (!row.driverName || !row.className) return false;
+    const shown = actual.get(key(row));
+    if (!shown) return true;
+    return (row.chassis && String(shown.chassis || '').toUpperCase() !== String(row.chassis).toUpperCase()) ||
+      (/^\d{7}$/.test(String(row.transponder || '')) && String(shown.transponder || '') !== String(row.transponder));
+  });
+  if (problems.length) throw Error(`Current Wix entries differ from the public list: ${problems.map(row => `${row.driverName} — ${row.className}`).join(', ')}`);
 }
-console.log('Current Wix entries are all present in the public entry list.');
+console.log('Current Wix entries, chassis and transponders match the public entry list.');
