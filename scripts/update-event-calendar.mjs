@@ -51,7 +51,8 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
         ...(key !== sourceKey ? {bookingName:entry.driverName} : {}),
         className: entry.className,
         countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
-        chassis: chassisChoice(override, liveChassis),
+        chassis: entry.chassisSource === 'wix' ? entry.chassis : chassisChoice(override, liveChassis),
+        ...(entry.chassisSource ? {chassisSource:entry.chassisSource} : {}),
         transponder: entry.transponder
       };
     })
@@ -64,7 +65,8 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
   // event date is therefore sufficient; a supplied LiveRC ID must still agree.
   const sameDate = String(wixSnapshot?.eventDate || '') && String(wixSnapshot.eventDate) === String(meeting?.date || '');
   const sameLiveRcEvent = String(wixSnapshot?.liveRcEventId || '') === String(meeting?.eventId || '');
-  if (!wixSnapshot || (!sameDate && !sameLiveRcEvent)) return liveEntries;
+  if (!wixSnapshot || (!sameDate && !sameLiveRcEvent) ||
+      (wixSnapshot.liveRcEventId && !sameLiveRcEvent) || (wixSnapshot.eventDate && !sameDate)) return liveEntries;
   const merged=new Map();
   const key=row => `${canonicalDriverKey(driverKey(row.driverName))}|${String(row.className || '').trim().toUpperCase()}`;
   const identity=row=>canonicalDriverKey(driverKey(row.driverName));
@@ -77,7 +79,7 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
     // is racing in a senior car class. Respect the senior event assignment.
     if (row.className==='Junior Racers' && (liveNames.has(identity(row)) || wixSeniorNames.has(identity(row)))) continue;
     let id=key(row), current=merged.get(id);
-    const transponder=/^[0-9]{7}$/.test(String(row.transponder || '')) ? String(row.transponder) : '';
+    const transponder=/^[0-9]{7}$/.test(String(row.transponder || '')) && String(row.transponder)!=='1234567' ? String(row.transponder) : '';
     // A booking name can differ from the established LiveRC name. When one
     // valid transponder uniquely identifies an existing driver in the same
     // class, merge into that row instead of publishing a duplicate entrant.
@@ -88,8 +90,10 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
       if (transponderMatches.length===1) [id,current]=transponderMatches[0];
     }
     const currentChassis=String(row.chassis || '').trim();
-    if (current) merged.set(id,{...current,...(transponder ? {transponder} : {}),...(currentChassis ? {chassis:currentChassis} : {})});
-    else merged.set(id,{driverName:row.driverName,className:row.className,transponder,...(currentChassis ? {chassis:currentChassis} : {})});
+    const liveNumber=/^[0-9]{7}$/.test(String(current?.transponder || '')) && String(current.transponder)!=='1234567' ? String(current.transponder) : '';
+    const number=row.transponderSource==='history' ? liveNumber || transponder : transponder || liveNumber;
+    if (current) merged.set(id,{...current,transponder:number,...(currentChassis ? {chassis:currentChassis,chassisSource:'wix'} : {})});
+    else merged.set(id,{driverName:row.driverName,className:row.className,transponder:number,...(currentChassis ? {chassis:currentChassis,chassisSource:'wix'} : {})});
   }
   return [...merged.values()];
 }

@@ -1,5 +1,5 @@
 import {addReserveActions} from './event-reserves.js';
-import {entriesForMeeting,applyConfirmedChassis} from './event-entry-merge.js?v=20261005-rollover';
+import {entriesForMeeting,applyConfirmedChassis} from './event-entry-merge.js?v=20261006-wix-priority';
 import {eventSpaces} from './event-capacity.js';
 import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
 import {entryIdentity} from './event-entry-identity.js';
@@ -318,10 +318,11 @@ if (roots.length) {
     ,fetch('../data/car-avatars.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatar-source-revisions.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/confirmed-event-chassis.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed]) => {
+    ,fetch('../data/transponder-history.json', {cache:'no-cache'}).then(r=>r.ok?r.json():[]).catch(()=>([]))
+  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed,history]) => {
     roots.forEach(root => {
       const meeting=nextMeeting(calendar.events || [],expectedType(root));
-      const combined=applyConfirmedChassis(entriesForMeeting(data,wix,meeting),confirmed);
+      const combined=applyConfirmedChassis(entriesForMeeting(data,wix,meeting,history),confirmed);
       render(root,{...combined,entries:combined.entries.map(entry=>entryIdentity(entry,aliases))},capacity,calendar,avatars,revisions);
     });
   })
