@@ -140,5 +140,9 @@
   },
   "CHRISTOPHER-BAKER": {
     "4-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-4WD.png"
+  },
+  "RICKY-NEWCOMBE": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/RICKY-NEWCOMBE-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/RICKY-NEWCOMBE-AUTO-4WD.png"
   }
 }
