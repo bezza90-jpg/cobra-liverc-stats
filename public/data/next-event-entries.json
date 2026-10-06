@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-06T17:08:38.597Z",
+  "updatedAt": "2026-10-06T18:39:00.924Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -152,6 +152,14 @@
       "transponder": "4115135"
     },
     {
+      "driverKey": "MATT-WOODIWISS",
+      "driverName": "Matt Woodiwiss",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "8008844"
+    },
+    {
       "driverKey": "MATTHEW-HODGES",
       "driverName": "Matthew Hodges",
       "className": "4-Wheel Drive Buggy",
@@ -232,6 +240,14 @@
       "countryCode": "GB",
       "chassis": "Schumacher",
       "transponder": ""
+    },
+    {
+      "driverKey": "MATT-WOODIWISS",
+      "driverName": "Matt Woodiwiss",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "3753291"
     },
     {
       "driverKey": "STEVEN-GRIFFITHS",
