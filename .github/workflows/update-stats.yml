@@ -68,6 +68,10 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
+      - name: Confirm all current Wix entries are listed
+        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        run: node scripts/check-current-wix-entries.mjs
+
       - name: Set up Python for approved car photos
         if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0'
         uses: actions/setup-python@v5
