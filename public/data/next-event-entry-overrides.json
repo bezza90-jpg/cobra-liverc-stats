@@ -13,7 +13,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:03:30.777192+00:00",
+      "updatedAt": "2026-09-29T19:03:30.777192+01:00",
       "previousManualChassis": "Xray",
       "replacedByLiveRC": "Xray"
     },
@@ -21,7 +21,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:03:47.586957+00:00",
+      "updatedAt": "2026-09-29T19:03:47.586957+01:00",
       "previousManualChassis": "Xray",
       "replacedByLiveRC": "Xray"
     },
@@ -29,7 +29,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:09:59.958765+00:00",
+      "updatedAt": "2026-09-29T19:09:59.958765+01:00",
       "previousManualChassis": "Team Associated",
       "replacedByLiveRC": "Team Associated"
     },
@@ -37,7 +37,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:10:25.647988+00:00",
+      "updatedAt": "2026-09-29T19:10:25.647988+01:00",
       "previousManualChassis": "R1 Wurks",
       "replacedByLiveRC": "R1 Wurks"
     },
@@ -45,7 +45,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:10:35.367502+00:00",
+      "updatedAt": "2026-09-29T19:10:35.367502+01:00",
       "previousManualChassis": "Xray",
       "replacedByLiveRC": "Xray"
     },
@@ -53,7 +53,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:10:57.456139+00:00",
+      "updatedAt": "2026-09-29T19:10:57.456139+01:00",
       "previousManualChassis": "Xray",
       "replacedByLiveRC": "Xray"
     },
@@ -61,7 +61,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:11:25.714997+00:00",
+      "updatedAt": "2026-09-29T19:11:25.714997+01:00",
       "previousManualChassis": "Schumacher",
       "replacedByLiveRC": "Schumacher"
     },
@@ -69,7 +69,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:11:30.105032+00:00",
+      "updatedAt": "2026-09-29T19:11:30.105032+01:00",
       "previousManualChassis": "Schumacher",
       "replacedByLiveRC": "Schumacher"
     },
@@ -77,13 +77,13 @@
       "chassis": "Team Associated",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:11:37.054466+00:00"
+      "updatedAt": "2026-09-29T19:11:37.054466+01:00"
     },
     "RICHARD-MORSE": {
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:11:47.964187+00:00",
+      "updatedAt": "2026-09-29T19:11:47.964187+01:00",
       "previousManualChassis": "R1 Wurks",
       "replacedByLiveRC": "R1 Wurks"
     },
@@ -91,7 +91,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-29T18:13:28.369792+00:00",
+      "updatedAt": "2026-09-29T19:13:28.369792+01:00",
       "previousManualChassis": "Xray",
       "replacedByLiveRC": "Xray"
     },
@@ -99,7 +99,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "R1 Wurks",
-      "updatedAt": "2026-09-29T19:10:33.934331+00:00",
+      "updatedAt": "2026-09-29T20:10:33.934331+01:00",
       "previousManualChassis": "Team Associated",
       "replacedByLiveRC": "Team Associated"
     },
@@ -107,7 +107,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-30T01:48:25.985645+00:00",
+      "updatedAt": "2026-09-30T02:48:25.985645+01:00",
       "previousManualChassis": "Team Associated",
       "replacedByLiveRC": "Team Associated"
     },
@@ -115,7 +115,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Team Associated",
-      "updatedAt": "2026-09-30T13:13:16.915828+00:00",
+      "updatedAt": "2026-09-30T14:13:16.915828+01:00",
       "previousManualChassis": "Xray",
       "replacedByLiveRC": "Xray"
     },
@@ -123,7 +123,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Team Associated",
-      "updatedAt": "2026-09-30T15:36:52.710631+00:00",
+      "updatedAt": "2026-09-30T16:36:52.710631+01:00",
       "previousManualChassis": "Yokomo",
       "replacedByLiveRC": "Yokomo"
     },
@@ -131,7 +131,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Yokomo",
-      "updatedAt": "2026-09-30T17:33:18.864485+00:00",
+      "updatedAt": "2026-09-30T18:33:18.864485+01:00",
       "previousManualChassis": "Xray",
       "replacedByLiveRC": "Xray"
     },
@@ -139,7 +139,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "",
-      "updatedAt": "2026-09-30T17:38:20.610252+00:00",
+      "updatedAt": "2026-09-30T18:38:20.610252+01:00",
       "previousManualChassis": "Xray",
       "replacedByLiveRC": "Xray"
     },
@@ -147,7 +147,7 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Schumacher",
-      "updatedAt": "2026-10-01T01:03:43.783035+00:00",
+      "updatedAt": "2026-10-01T02:03:43.783035+01:00",
       "previousManualChassis": "TLR",
       "replacedByLiveRC": "Team Associated"
     },
@@ -155,9 +155,15 @@
       "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Agama",
-      "updatedAt": "2026-10-01T15:54:47.529224+00:00",
+      "updatedAt": "2026-10-01T16:54:47.529224+01:00",
       "previousManualChassis": "Team Associated",
       "replacedByLiveRC": "Team Associated"
+    },
+    "MARK-GIAQUINTO": {
+      "chassis": "Kyosho",
+      "mode": "until-liverc-change",
+      "livercAtSave": "Xray",
+      "updatedAt": "2026-10-06T01:39:11.4712127Z"
     }
   }
 }
