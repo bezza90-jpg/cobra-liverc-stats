@@ -52,7 +52,12 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
 }
 
 export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
-  if (!wixSnapshot || String(wixSnapshot.liveRcEventId || '') !== String(meeting?.eventId || '')) return liveEntries;
+  // Site Manager owns the current booking event and may know its Wix date
+  // before LiveRC has assigned or exposed the matching event ID.  A matching
+  // event date is therefore sufficient; a supplied LiveRC ID must still agree.
+  const sameDate = String(wixSnapshot?.eventDate || '') && String(wixSnapshot.eventDate) === String(meeting?.date || '');
+  const sameLiveRcEvent = String(wixSnapshot?.liveRcEventId || '') === String(meeting?.eventId || '');
+  if (!wixSnapshot || (!sameDate && !sameLiveRcEvent)) return liveEntries;
   const merged=new Map();
   const key=row => `${canonicalDriverKey(driverKey(row.driverName))}|${String(row.className || '').trim().toUpperCase()}`;
   const identity=row=>canonicalDriverKey(driverKey(row.driverName));

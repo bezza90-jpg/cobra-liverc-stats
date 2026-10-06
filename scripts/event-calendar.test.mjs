@@ -56,6 +56,11 @@ test('Wix bookings appear before LiveRC and merge without duplicates',()=>{
  assert.equal(merged.find(row=>row.driverName==='NEW DRIVER').transponder,'7654321');
  assert.equal(merged.find(row=>row.driverName==='DUBIOUS DRIVER').transponder,'');
 });
+test('a Site Manager booking snapshot is used when it matches the current event date before LiveRC is ready',()=>{
+ const meeting={eventId:'518555',date:'2026-10-11'};
+ const wix={eventDate:'2026-10-11',entries:[{driverName:'MATT HODGES',className:'4-Wheel Drive Buggy',transponder:''}]};
+ assert.deepEqual(mergeWixEntries(meeting,[],wix),wix.entries);
+});
 test('Junior-price booking does not duplicate a driver assigned to a senior class',()=>{
  const meeting={eventId:'123'};
  const live=[{driverName:'HAIDEN HICKS',className:'2-Wheel Drive Buggy',transponder:'3422662'}];
