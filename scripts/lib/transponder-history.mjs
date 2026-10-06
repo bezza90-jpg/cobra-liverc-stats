@@ -10,5 +10,6 @@ export function transponderHistory(entries, today = new Date().toISOString().sli
 }
 export function usePreviousTransponders(entries, history) {
   const known = new Map(history.map(row=>[key(row),row.transponder]));
-  return entries.map(row=>({...row,transponder:validTransponder(row.transponder)?row.transponder:known.get(key(row))||''}));
+  return entries.map(row=>({...row,transponder:validTransponder(row.transponder)?row.transponder:known.get(key(row))||'',
+    transponderSource:validTransponder(row.transponder)?'wix':known.get(key(row))?'history':'none'}));
 }

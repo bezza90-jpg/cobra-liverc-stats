@@ -8,7 +8,8 @@
       "driverName": "Ainsley Evans",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8615491",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Bob Gelstharp",
@@ -19,43 +20,50 @@
       "driverName": "Chris Gunter",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6865166",
-      "chassis": "XRay"
+      "chassis": "XRay",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Christopher Baker",
       "className": "2-Wheel Drive Buggy",
       "transponder": "9194873",
-      "chassis": "R1 Wurks"
+      "chassis": "R1 Wurks",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Daniel Griffiths",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2604190",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "David Dawson",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3048462",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Ian Townsend",
       "className": "2-Wheel Drive Buggy",
       "transponder": "4571829",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Kevin Greenway",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6958172",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Mark Giaquinto",
       "className": "2-Wheel Drive Buggy",
       "transponder": "4115135",
-      "chassis": "Kyosho"
+      "chassis": "Kyosho",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Matthew Hodges",
@@ -66,25 +74,29 @@
       "driverName": "Ricky Newcombe",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3319908",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Roger Mills",
       "className": "2-Wheel Drive Buggy",
       "transponder": "9115761",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Russell Thomas",
       "className": "2-Wheel Drive Buggy",
       "transponder": "0777999",
-      "chassis": "XRay"
+      "chassis": "XRay",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Spencer Farley",
       "className": "2-Wheel Drive Buggy",
       "transponder": "7305713",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Steve Curtis-Rich",
@@ -95,19 +107,22 @@
       "driverName": "Steven Griffiths",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8943115",
-      "chassis": "XRay"
+      "chassis": "XRay",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Chris Gunter",
       "className": "4-Wheel Drive Buggy",
       "transponder": "6099608",
-      "chassis": "XRay"
+      "chassis": "XRay",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Christopher Baker",
       "className": "4-Wheel Drive Buggy",
       "transponder": "9194873",
-      "chassis": "XRay"
+      "chassis": "XRay",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Jamie Davies",
@@ -118,19 +133,22 @@
       "driverName": "Kevin Greenway",
       "className": "4-Wheel Drive Buggy",
       "transponder": "2485324",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Mark Giaquinto",
       "className": "4-Wheel Drive Buggy",
       "transponder": "4115135",
-      "chassis": "Kyosho"
+      "chassis": "Kyosho",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Matt Woodiwiss",
       "className": "4-Wheel Drive Buggy",
       "transponder": "8008844",
-      "chassis": "XRay"
+      "chassis": "XRay",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Matthew Hodges",
@@ -141,31 +159,36 @@
       "driverName": "Ricky Newcombe",
       "className": "4-Wheel Drive Buggy",
       "transponder": "2396977",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "transponderSource": "history"
     },
     {
       "driverName": "Russell Thomas",
       "className": "4-Wheel Drive Buggy",
       "transponder": "0777999",
-      "chassis": "XRay"
+      "chassis": "XRay",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Ben Evans",
       "className": "Junior Racers",
       "transponder": "3581757",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Noah MCBRIDE",
       "className": "Junior Racers",
       "transponder": "8205771",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Jamie Davies",
       "className": "Trucks",
       "transponder": "6973172",
-      "chassis": "XRay"
+      "chassis": "XRay",
+      "transponderSource": "history"
     },
     {
       "driverName": "Paul Curtis",
@@ -176,13 +199,15 @@
       "driverName": "ADAM MCBRIDE",
       "className": "Vintage",
       "transponder": "7241911",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Ainsley Evans",
       "className": "Vintage",
       "transponder": "3422662",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Bob Gelstharp",
@@ -193,13 +218,15 @@
       "driverName": "Matt Woodiwiss",
       "className": "Vintage",
       "transponder": "3753291",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
     },
     {
       "driverName": "Steven Griffiths",
       "className": "Vintage",
       "transponder": "9685307",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     }
   ]
 }

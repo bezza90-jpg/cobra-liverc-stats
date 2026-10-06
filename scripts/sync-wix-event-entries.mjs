@@ -9,9 +9,9 @@ export const TICKETS={
   '2WD SWORD Entry':['2-Wheel Drive Buggy','2WD Transponder Number','2WD Chassis'],
   '4WD Entry':['4-Wheel Drive Buggy','4WD Transponder Number','4WD Chassis'],
   '4WD SWORD Entry':['4-Wheel Drive Buggy','4WD Transponder Number','4WD Chassis'],
-  'Vintage Entry':['Vintage','Vintage Transponder Number'],
-  'Mother Trucker Entry':['Trucks','Truck Transponder Number'],
-  'Mother Truckers Entry':['Trucks','Truck Transponder Number']
+  'Vintage Entry':['Vintage','Vintage Transponder Number','Vintage Chassis'],
+  'Mother Trucker Entry':['Trucks','Truck Transponder Number','Truck Chassis'],
+  'Mother Truckers Entry':['Trucks','Truck Transponder Number','Truck Chassis']
 };
 
 export function bookingSlug(url) {
