@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-06T19:48:42.543Z",
+  "updatedAt": "2026-10-06T20:22:09.909Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -12,6 +12,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "8615491"
     },
     {
@@ -29,6 +30,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
+      "chassisSource": "wix",
       "transponder": "6865166"
     },
     {
@@ -37,6 +39,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "9194873"
     },
     {
@@ -45,6 +48,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "2604190"
     },
     {
@@ -53,6 +57,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "3048462"
     },
     {
@@ -61,6 +66,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "4571829"
     },
     {
@@ -69,6 +75,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix",
       "transponder": "6958172"
     },
     {
@@ -77,6 +84,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Kyosho",
+      "chassisSource": "wix",
       "transponder": "4115135"
     },
     {
@@ -93,6 +101,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix",
       "transponder": "3319908"
     },
     {
@@ -101,6 +110,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "9115761"
     },
     {
@@ -109,6 +119,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
+      "chassisSource": "wix",
       "transponder": "0777999"
     },
     {
@@ -117,6 +128,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix",
       "transponder": "7305713"
     },
     {
@@ -133,6 +145,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix",
       "transponder": "8943115"
     },
     {
@@ -141,6 +154,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
+      "chassisSource": "wix",
       "transponder": "6099608"
     },
     {
@@ -149,6 +163,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "9194873"
     },
     {
@@ -165,6 +180,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix",
       "transponder": "2485324"
     },
     {
@@ -173,6 +189,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Kyosho",
+      "chassisSource": "wix",
       "transponder": "4115135"
     },
     {
@@ -181,6 +198,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
+      "chassisSource": "wix",
       "transponder": "8008844"
     },
     {
@@ -197,6 +215,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix",
       "transponder": "2396977"
     },
     {
@@ -205,6 +224,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
+      "chassisSource": "wix",
       "transponder": "0777999"
     },
     {
@@ -213,6 +233,7 @@
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "3581757"
     },
     {
@@ -221,6 +242,7 @@
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "8205771"
     },
     {
@@ -229,6 +251,7 @@
       "className": "Trucks",
       "countryCode": "GB",
       "chassis": "Xray",
+      "chassisSource": "wix",
       "transponder": "6973172"
     },
     {
@@ -246,6 +269,7 @@
       "className": "Vintage",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "7241911"
     },
     {
@@ -254,6 +278,7 @@
       "className": "Vintage",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "3422662"
     },
     {
@@ -271,6 +296,7 @@
       "className": "Vintage",
       "countryCode": "GB",
       "chassis": "Xray",
+      "chassisSource": "wix",
       "transponder": "3753291"
     },
     {
@@ -279,6 +305,7 @@
       "className": "Vintage",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix",
       "transponder": "9685307"
     }
   ]
