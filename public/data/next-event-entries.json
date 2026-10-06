@@ -4,163 +4,103 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-05T23:20:12.674Z",
+  "updatedAt": "2026-10-06T01:10:30.497Z",
   "entries": [
     {
-      "driverKey": "ADAM-MCBRIDE",
-      "driverName": "ADAM MCBRIDE",
-      "className": "Vintage",
-      "chassis": "Team Associated",
-      "transponder": "7241911"
-    },
-    {
-      "driverKey": "AINSLEY-EVANS",
-      "driverName": "Ainsley Evans",
-      "className": "2-Wheel Drive Buggy",
-      "chassis": "Team Associated",
-      "transponder": "8615491"
-    },
-    {
-      "driverKey": "AINSLEY-EVANS",
-      "driverName": "Ainsley Evans",
-      "className": "Vintage",
-      "chassis": "Team Associated",
-      "transponder": "3422662"
-    },
-    {
-      "driverKey": "BEN-EVANS",
-      "driverName": "Ben Evans",
-      "className": "Junior Racers",
-      "chassis": "Team Associated",
-      "transponder": "3581757"
-    },
-    {
-      "driverKey": "CHRIS-GUNTER",
-      "driverName": "Chris Gunter",
-      "className": "2-Wheel Drive Buggy",
-      "chassis": "XRay",
-      "transponder": "6865166"
-    },
-    {
-      "driverKey": "CHRIS-GUNTER",
-      "driverName": "Chris Gunter",
-      "className": "4-Wheel Drive Buggy",
-      "chassis": "XRay",
-      "transponder": "6099608"
-    },
-    {
       "driverKey": "DANIEL-GRIFFITHS",
-      "driverName": "Daniel Griffiths",
+      "driverName": "DANIEL GRIFFITHS",
       "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "2604190"
     },
     {
       "driverKey": "IAN-TOWNSEND",
-      "driverName": "Ian Townsend",
+      "driverName": "IAN TOWNSEND",
       "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "4571829"
     },
     {
-      "driverKey": "JAMIE-DAVIES",
-      "driverName": "Jamie Davies",
-      "className": "Trucks",
-      "chassis": "XRay",
-      "transponder": "6973172"
-    },
-    {
-      "driverKey": "KEVIN-GREENWAY",
-      "driverName": "Kevin Greenway",
-      "className": "2-Wheel Drive Buggy",
-      "chassis": "Schumacher",
-      "transponder": "6958172"
-    },
-    {
-      "driverKey": "KEVIN-GREENWAY",
-      "driverName": "Kevin Greenway",
-      "className": "4-Wheel Drive Buggy",
-      "chassis": "Schumacher",
-      "transponder": "2485324"
-    },
-    {
-      "driverKey": "MARK-GIAQUINTO",
-      "driverName": "Mark Giaquinto",
-      "className": "2-Wheel Drive Buggy",
-      "chassis": "Kyosho",
-      "transponder": "4115135"
-    },
-    {
-      "driverKey": "MARK-GIAQUINTO",
-      "driverName": "Mark Giaquinto",
-      "className": "4-Wheel Drive Buggy",
-      "chassis": "Kyosho",
-      "transponder": "4115135"
-    },
-    {
-      "driverKey": "NOAH-MCBRIDE",
-      "driverName": "Noah MCBRIDE",
-      "className": "Junior Racers",
-      "chassis": "Team Associated",
-      "transponder": "8205771"
-    },
-    {
       "driverKey": "RICKY-NEWCOMBE",
-      "driverName": "Ricky Newcombe",
+      "driverName": "RICKY NEWCOMBE",
       "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
       "chassis": "Schumacher",
       "transponder": "3319908"
     },
     {
-      "driverKey": "RICKY-NEWCOMBE",
-      "driverName": "Ricky Newcombe",
-      "className": "4-Wheel Drive Buggy",
-      "chassis": "Schumacher",
-      "transponder": "2396977"
-    },
-    {
       "driverKey": "ROGER-MILLS",
-      "driverName": "Roger Mills",
+      "driverName": "ROGER MILLS",
       "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "9115761"
     },
     {
       "driverKey": "RUSSELL-THOMAS",
-      "driverName": "Russell Thomas",
+      "driverName": "RUSSELL THOMAS",
       "className": "2-Wheel Drive Buggy",
-      "chassis": "XRay",
-      "transponder": "0777999"
-    },
-    {
-      "driverKey": "RUSSELL-THOMAS",
-      "driverName": "Russell Thomas",
-      "className": "4-Wheel Drive Buggy",
-      "chassis": "XRay",
+      "countryCode": "GB",
+      "chassis": "Xray",
       "transponder": "0777999"
     },
     {
       "driverKey": "SPENCER-FARLEY",
-      "driverName": "Spencer Farley",
+      "driverName": "SPENCER FARLEY",
       "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
       "chassis": "Schumacher",
       "transponder": "7305713"
     },
     {
-      "driverKey": "STEVEN-GRIFFITHS",
-      "driverName": "Steven Griffiths",
-      "className": "2-Wheel Drive Buggy",
-      "chassis": "XRay",
-      "transponder": "8943115"
+      "driverKey": "RICKY-NEWCOMBE",
+      "driverName": "RICKY NEWCOMBE",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "2396977"
     },
     {
-      "driverKey": "STEVEN-GRIFFITHS",
-      "driverName": "Steven Griffiths",
-      "className": "Vintage",
+      "driverKey": "RUSSELL-THOMAS",
+      "driverName": "RUSSELL THOMAS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "0777999"
+    },
+    {
+      "driverKey": "BEN-EVANS",
+      "driverName": "BEN EVANS",
+      "className": "Junior Racers",
+      "countryCode": "GB",
       "chassis": "Team Associated",
-      "transponder": "9685307"
+      "transponder": "3581757"
+    },
+    {
+      "driverKey": "NOAH-MCBRIDE",
+      "driverName": "NOAH MCBRIDE",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "8205771"
+    },
+    {
+      "driverKey": "JAMIE-DAVIES",
+      "driverName": "JAMIE DAVIES",
+      "className": "Trucks",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "6973172"
+    },
+    {
+      "driverKey": "ADAM-MCBRIDE",
+      "driverName": "ADAM MCBRIDE",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "7241911"
     }
-  ],
-  "entryCount": 22,
-  "lastUpdated": "2026-10-06T00:00:00Z"
+  ]
 }
