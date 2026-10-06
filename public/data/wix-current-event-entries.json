@@ -2,7 +2,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventSlug": "cobra-club-day-2",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-06T18:34:40.366166Z",
+  "updatedAt": "2026-10-06T19:38:45.893211Z",
   "entries": [
     {
       "driverName": "Ainsley Evans",
@@ -20,6 +20,12 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "6865166",
       "chassis": "XRay"
+    },
+    {
+      "driverName": "Christopher Baker",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9194873",
+      "chassis": "R1 Wurks"
     },
     {
       "driverName": "Daniel Griffiths",
@@ -96,6 +102,17 @@
       "className": "4-Wheel Drive Buggy",
       "transponder": "6099608",
       "chassis": "XRay"
+    },
+    {
+      "driverName": "Christopher Baker",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "9194873",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "Jamie Davies",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "8144353"
     },
     {
       "driverName": "Kevin Greenway",
