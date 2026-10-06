@@ -1,6 +1,6 @@
 import {readFile} from 'node:fs/promises';
 
-const file = name => JSON.parse(await readFile(new URL(`../public/data/${name}`, import.meta.url), 'utf8'));
+const file = async name => JSON.parse(await readFile(new URL(`../public/data/${name}`, import.meta.url), 'utf8'));
 const key = row => `${String(row.driverName || '').trim().toUpperCase()}|${String(row.className || '').trim().toUpperCase()}`;
 const wix = await file('wix-current-event-entries.json').catch(() => null);
 const published = await file('next-event-entries.json');
