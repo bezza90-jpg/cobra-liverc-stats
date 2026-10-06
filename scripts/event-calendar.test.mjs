@@ -95,6 +95,13 @@ test('Wix chassis stays attached to the entered class',()=>{
  assert.equal(published.entries.find(row=>row.className==='4-Wheel Drive Buggy').chassis,'Schumacher');
 });
 
+test('a Wix chassis is class-specific and cannot be replaced by another class’s driver setting',()=>{
+ const meeting={eventId:'123'};
+ const rows=[{driverName:'MATT WOODIWISS',className:'Vintage',chassis:'Schumacher',transponder:'3753291'}];
+ const result=enrichNextEventEntries(meeting,rows,{}, {drivers:{'MATT-WOODIWISS':{chassis:'XRay'}}});
+ assert.equal(result.entries[0].chassis,'Schumacher');
+});
+
 test('a Wix nickname merges with the unique same-class LiveRC transponder',()=>{
  const meeting={eventId:'123'};
  const live=[
