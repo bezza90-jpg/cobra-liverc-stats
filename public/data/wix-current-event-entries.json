@@ -2,7 +2,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventSlug": "cobra-club-day-2",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-06T09:52:28.391522Z",
+  "updatedAt": "2026-10-06T18:34:40.366166Z",
   "entries": [
     {
       "driverName": "Ainsley Evans",
@@ -110,6 +110,12 @@
       "chassis": "Kyosho"
     },
     {
+      "driverName": "Matt Woodiwiss",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "8008844",
+      "chassis": "XRay"
+    },
+    {
       "driverName": "Matthew Hodges",
       "className": "4-Wheel Drive Buggy",
       "transponder": ""
@@ -165,6 +171,12 @@
       "driverName": "Bob Gelstharp",
       "className": "Vintage",
       "transponder": ""
+    },
+    {
+      "driverName": "Matt Woodiwiss",
+      "className": "Vintage",
+      "transponder": "3753291",
+      "chassis": "Schumacher"
     },
     {
       "driverName": "Steven Griffiths",
