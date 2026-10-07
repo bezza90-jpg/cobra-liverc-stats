@@ -137,7 +137,10 @@ def prepare_avatar(photo_bytes):
         cutout = original
     else:
         from rembg import new_session, remove
-        cutout = remove(original.convert("RGB"), session=new_session("u2netp")).convert("RGBA")
+        # Use the full object model: the compact model leaves workshop items
+        # connected to the car in busy RC photographs.  It only supplies the
+        # alpha mask; the published RGB pixels remain from the submitted photo.
+        cutout = remove(original.convert("RGB"), session=new_session("u2net")).convert("RGBA")
     bbox = cutout.getchannel("A").getbbox()
     if not bbox:
         raise ValueError("No foreground car was found in the reviewed photograph.")
