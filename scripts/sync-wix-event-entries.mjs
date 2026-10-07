@@ -141,6 +141,17 @@ export async function sync({site,key}) {
     ticketAudit[group]=(ticketAudit[group] || 0)+1;
   }
   console.log('Wix order-ticket audit: '+JSON.stringify(ticketAudit));
+  const doubleFields={};
+  for (const currentOrder of orders.values()) for (const ticket of currentOrder.tickets || []) if (ticket.name==='Adult Double Class') {
+    for (const field of ticket.guestDetails?.form?.inputValues || []) {
+      const value=String(field.value ?? (field.values || []).join(', '));
+      if (/2WD|4WD|Vintage|Truck/i.test(value) && !/@/.test(value)) {
+        const group=field.inputName+'|'+value; doubleFields[group]=(doubleFields[group] || 0)+1;
+      }
+    }
+  }
+  console.log('Wix double-class selection fields: '+JSON.stringify(doubleFields));
+  console.log('Wix form input labels: '+JSON.stringify((event.form?.controls || []).flatMap(control=>(control.inputs || []).map(input=>({name:input.name,label:input.label})))));
   const history=transponderHistory(JSON.parse(await readFile(new URL('../data/raw/entries.json',import.meta.url),'utf8')),today);
   const entries=usePreviousTransponders(rows.filter(row=>row.guestType==='TICKET_HOLDER').map(row=>publicEntry(row,orders.get(row.orderNumber) || {},mapping)).filter(Boolean),history);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
