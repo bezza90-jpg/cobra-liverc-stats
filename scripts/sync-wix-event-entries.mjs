@@ -25,7 +25,7 @@ export function londonDate(now=new Date()) {
 }
 export function formMapping(event) {
   const result={};
-  const wanted=new Set(Object.values(TICKETS).flatMap(([,number,chassis])=>[number,chassis]).filter(Boolean));
+  const wanted=new Set(['Classes to enter',...Object.values(TICKETS).flatMap(([,number,chassis])=>[number,chassis]).filter(Boolean)]);
   for (const control of event?.form?.controls || []) for (const input of control.inputs || []) {
     const match=[...wanted].find(label=>label.toLowerCase()===String(input.label || '').trim().toLowerCase());
     if (match && input.name) result[match]=input.name;
@@ -33,7 +33,7 @@ export function formMapping(event) {
   return result;
 }
 function answers(form) {
-  return Object.fromEntries((form?.inputValues || []).map(field=>[field.inputName,String(field.value ?? (field.values || []).join(', ')).trim()]));
+  return Object.fromEntries((form?.inputValues || []).map(field=>[field.inputName,String(field.values?.length ? field.values.join(', ') : (field.value ?? '')).trim()]));
 }
 function sameName(a,b) {
   const clean=value=>String(value || '').toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -50,25 +50,47 @@ export function publicDriverName(firstValue,lastValue) {
   const collapsed=words.filter((word,index)=>index<2 || word!==words[index-1]);
   return collapsed.join(' ');
 }
-export function publicEntry(guest,order,mapping) {
+export function publicEntries(guest,order,mapping) {
   const details=guest.guestDetails || {};
-  if (guest.inactive || ['NOT_ATTENDING','CANCELED','CANCELLED'].includes(guest.attendanceStatus)) return null;
-  if (guest.attendanceStatus!=='ATTENDING' || !['PAID','FREE'].includes(order.status)) return null;
+  if (guest.inactive || ['NOT_ATTENDING','CANCELED','CANCELLED'].includes(guest.attendanceStatus)) return [];
+  if (guest.attendanceStatus!=='ATTENDING' || !['PAID','FREE'].includes(order.status)) return [];
   const ticket=(order.tickets || []).find(row=>row.ticketNumber===guest.ticketNumber);
-  if (!ticket || ticket.canceled || ticket.archived) return null;
+  if (!ticket) throw Error('An attending paid ticket could not be matched; retaining the published roster.');
+  if (ticket.canceled || ticket.archived || order.archived) return [];
+  const values={...(sameName(order,details) ? answers(order.checkoutForm) : {}),...answers(ticket.guestDetails?.form),...answers(details.formResponse)};
   const ticketName=ticket.name || ticket.ticketName || '';
-  const definition=TICKETS[ticketName]; if (!definition) return null;
-  const [className,label,chassisLabel]=definition;
-  const ticketForm=ticket.guestDetails?.form;
-  const form=details.formResponse || ticketForm || (sameName(order,details) ? order.checkoutForm : null);
-  const values=answers(form);
-  const number=values[mapping[label] || label] || '';
-  const chassis=chassisLabel ? String(values[mapping[chassisLabel] || chassisLabel] || '').trim().slice(0,80) : '';
+  let definitions=TICKETS[ticketName] ? [TICKETS[ticketName]] : [];
+  if (ticketName==='Adult Double Class') {
+    const selected=String(values[mapping['Classes to enter'] || 'Classes to enter'] || '').split(/[,;\n]+/).map(value=>value.trim()).filter(Boolean);
+    const classDefinitions={'2WD':TICKETS['2WD Entry'],'4WD':TICKETS['4WD Entry'],'VINTAGE':TICKETS['Vintage Entry'],'TRUCKS':TICKETS['Mother Trucker Entry']};
+    definitions=selected.map(value=>{
+      const name=value.toUpperCase().replace(/\s+/g,' ');
+      const aliases={'2-WHEEL DRIVE BUGGY':'2WD','4-WHEEL DRIVE BUGGY':'4WD','2WD ENTRY':'2WD','4WD ENTRY':'4WD','VINTAGE ENTRY':'VINTAGE','TRUCK':'TRUCKS','MOTHER TRUCKER ENTRY':'TRUCKS','MOTHER TRUCKERS ENTRY':'TRUCKS'};
+      return classDefinitions[aliases[name] || name];
+    });
+    if (definitions.length!==2 || definitions.some(value=>!value) || definitions[0][0]===definitions[1][0]) throw Error('A paid double-class ticket has incomplete or unrecognised class selections; retaining the published roster.');
+  }
+  if (!definitions.length) throw Error('Unrecognised attending paid Wix ticket type: '+ticketName+'; retaining the published roster.');
   const driverName=publicDriverName(details.firstName,details.lastName);
-  if (!driverName) return null;
-  return {driverName,className,
-    transponder:/^[0-9]{7}$/.test(number) && number!=='1234567' ? number : '',
-    ...(chassis ? {chassis} : {})};
+  if (!driverName) throw Error('An attending paid ticket has incomplete driver details; retaining the published roster.');
+  return definitions.map(([className,label,chassisLabel])=>{
+    const number=values[mapping[label] || label] || '';
+    const chassis=chassisLabel ? String(values[mapping[chassisLabel] || chassisLabel] || '').trim().slice(0,80) : '';
+    return {driverName,className,transponder:/^[0-9]{7}$/.test(number) && number!=='1234567' ? number : '',...(chassis ? {chassis} : {})};
+  });
+}
+export function publicEntry(guest,order,mapping) { return publicEntries(guest,order,mapping)[0] || null; }
+
+export function entriesFromOrders(orders,guests,mapping) {
+  const guestByTicket=new Map(guests.filter(row=>row.guestType==='TICKET_HOLDER').map(row=>[row.ticketNumber,row]));
+  return orders.flatMap(order=>{
+    if (!['PAID','FREE'].includes(order.status) || order.archived) return [];
+    if (!Array.isArray(order.tickets)) throw Error('Paid Wix order has no ticket data; retaining the published roster.');
+    return order.tickets.flatMap(ticket=>{
+      const guest=guestByTicket.get(ticket.ticketNumber) || {ticketNumber:ticket.ticketNumber,attendanceStatus:'ATTENDING',guestDetails:ticket.guestDetails || {}};
+      return publicEntries(guest,order,mapping);
+    });
+  });
 }
 
 async function request(path,site,key,payload) {
@@ -99,8 +121,30 @@ async function order(eventId,number,site,key) {
   const path=`/events/v1/events/${encodeURIComponent(eventId)}/orders/${encodeURIComponent(number)}?fieldset=DETAILS&fieldset=FORM&fieldset=TICKETS`;
   const data=await request(path,site,key); if (!data.order) throw Error('A Wix order could not be read.'); return data.order;
 }
+
+async function listOrders(eventId,site,key) {
+  const result=[];
+  for (let offset=0;offset<100000;offset+=100) {
+    const data=await request('/events/v1/orders?eventId='+encodeURIComponent(eventId)+'&offset='+offset+'&limit=100&fieldset=DETAILS&fieldset=FORM&fieldset=TICKETS',site,key);
+    if (!Array.isArray(data.orders) || !Number.isInteger(data.total)) throw Error('Wix order list was incomplete; retaining the published roster.');
+    result.push(...data.orders);
+    if (result.length===data.total) return result;
+    if (result.length>data.total || data.orders.length<100) throw Error('Wix order pagination was incomplete; retaining the published roster.');
+  }
+  throw Error('Wix order list exceeded paging limit.');
+}
+
+export function assertRosterContinuity(previous, next) {
+  if (!previous || !previous.wixEventId || previous.wixEventId!==next.wixEventId || previous.eventDate!==next.eventDate) return;
+  const key=row=>String(row.driverName || '').trim().replace(/\s+/g,' ').toUpperCase()+'|'+String(row.className || '').trim().toUpperCase();
+  const current=new Set((next.entries || []).map(key));
+  const missing=(previous.entries || []).filter(row=>!current.has(key(row)));
+  if (missing.length) throw Error('Wix sync would remove '+missing.length+' previously published class entries from the same event; keeping the last complete roster. Diagnose cancellations, renamed tickets or incomplete API data before approving removals.');
+}
+
 async function writeIfChanged(file,value) {
   const previous=JSON.parse(await readFile(file,'utf8').catch(()=> 'null'));
+  assertRosterContinuity(previous,value);
   if (entrySnapshot(previous)===entrySnapshot(value)) return false;
   const output=JSON.stringify(value,null,2)+'\n';
   if (await readFile(file,'utf8').catch(()=> '')===output) return false;
@@ -121,39 +165,11 @@ export async function sync({site,key}) {
   const event=events.find(row=>row.slug===slug);
   if (!event) throw Error(`No upcoming Wix event matched ${slug}.`);
   const mapping=formMapping(event), rows=await guests(event.id,site,key);
-  const orderNumbers=[...new Set(rows.map(row=>row.orderNumber).filter(Boolean))];
-  const orders=new Map();
-  for (let index=0;index<orderNumbers.length;index+=4) {
-    await Promise.all(orderNumbers.slice(index,index+4).map(async number=>orders.set(number,await order(event.id,number,site,key))));
-  }
-  // Audit all guest types without changing paid-entry eligibility or publishing private details.
-  const audit={};
-  for (const row of rows) {
-    const currentOrder=orders.get(row.orderNumber) || {};
-    const ticket=(currentOrder.tickets || []).find(t=>t.ticketNumber===row.ticketNumber);
-    const group=[row.guestType || 'MISSING_TYPE',row.attendanceStatus || 'MISSING_ATTENDANCE',currentOrder.status || 'MISSING_STATUS',ticket ? (ticket.canceled || ticket.archived ? 'INACTIVE_TICKET' : 'TICKET_MATCH') : 'NO_TICKET_MATCH',ticket?.name || ticket?.ticketName || 'NO_TICKET_NAME','GUEST_TICKETS_'+(row.tickets || []).length,row.guestDetails?.firstName && row.guestDetails?.lastName ? 'HAS_NAME' : 'MISSING_NAME'].join('|');
-    audit[group]=(audit[group] || 0)+1;
-  }
-  console.log('Wix extraction audit: '+JSON.stringify(audit));
-  const ticketAudit={};
-  for (const currentOrder of orders.values()) for (const ticket of currentOrder.tickets || []) {
-    const group=[currentOrder.status,ticket.name || ticket.ticketName || 'MISSING_NAME',ticket.canceled ? 'CANCELED' : 'ACTIVE',ticket.archived ? 'ARCHIVED' : 'CURRENT',ticket.guestDetails?.firstName && ticket.guestDetails?.lastName ? 'HAS_GUEST_NAME' : 'NO_GUEST_NAME'].join('|');
-    ticketAudit[group]=(ticketAudit[group] || 0)+1;
-  }
-  console.log('Wix order-ticket audit: '+JSON.stringify(ticketAudit));
-  const doubleFields={};
-  for (const currentOrder of orders.values()) for (const ticket of currentOrder.tickets || []) if (ticket.name==='Adult Double Class') {
-    for (const field of ticket.guestDetails?.form?.inputValues || []) {
-      const value=String(field.value ?? (field.values || []).join(', '));
-      if (/2WD|4WD|Vintage|Truck/i.test(value) && !/@/.test(value)) {
-        const group=field.inputName+'|'+value; doubleFields[group]=(doubleFields[group] || 0)+1;
-      }
-    }
-  }
-  console.log('Wix double-class selection fields: '+JSON.stringify(doubleFields));
-  console.log('Wix form input labels: '+JSON.stringify((event.form?.controls || []).flatMap(control=>(control.inputs || []).map(input=>({name:input.name,label:input.label})))));
+  const orders=await listOrders(event.id,site,key);
+  const counts={}; for (const order of orders) counts[order.status]=(counts[order.status] || 0)+1;
+  console.log('Wix order statuses: '+JSON.stringify(counts));
   const history=transponderHistory(JSON.parse(await readFile(new URL('../data/raw/entries.json',import.meta.url),'utf8')),today);
-  const entries=usePreviousTransponders(rows.filter(row=>row.guestType==='TICKET_HOLDER').map(row=>publicEntry(row,orders.get(row.orderNumber) || {},mapping)).filter(Boolean),history);
+  const entries=usePreviousTransponders(entriesFromOrders(orders,rows,mapping),history);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
   const value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
   return {configured:true,changed:await writeIfChanged(new URL('../public/data/wix-current-event-entries.json',import.meta.url),value),entries:value.entries.length};
