@@ -25,6 +25,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Validate Wix entry extraction and roster protection
+        run: node --test scripts/sync-wix-event-entries.test.mjs
       - name: Read current Wix event bookings
         run: node scripts/sync-wix-event-entries.mjs
         env:
