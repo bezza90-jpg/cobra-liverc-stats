@@ -131,10 +131,16 @@ export async function sync({site,key}) {
   for (const row of rows) {
     const currentOrder=orders.get(row.orderNumber) || {};
     const ticket=(currentOrder.tickets || []).find(t=>t.ticketNumber===row.ticketNumber);
-    const group=[row.guestType || 'MISSING_TYPE',row.attendanceStatus || 'MISSING_ATTENDANCE',currentOrder.status || 'MISSING_STATUS',ticket ? (ticket.canceled || ticket.archived ? 'INACTIVE_TICKET' : 'TICKET_MATCH') : 'NO_TICKET_MATCH',row.guestDetails?.firstName && row.guestDetails?.lastName ? 'HAS_NAME' : 'MISSING_NAME'].join('|');
+    const group=[row.guestType || 'MISSING_TYPE',row.attendanceStatus || 'MISSING_ATTENDANCE',currentOrder.status || 'MISSING_STATUS',ticket ? (ticket.canceled || ticket.archived ? 'INACTIVE_TICKET' : 'TICKET_MATCH') : 'NO_TICKET_MATCH',ticket?.name || ticket?.ticketName || 'NO_TICKET_NAME','GUEST_TICKETS_'+(row.tickets || []).length,row.guestDetails?.firstName && row.guestDetails?.lastName ? 'HAS_NAME' : 'MISSING_NAME'].join('|');
     audit[group]=(audit[group] || 0)+1;
   }
   console.log('Wix extraction audit: '+JSON.stringify(audit));
+  const ticketAudit={};
+  for (const currentOrder of orders.values()) for (const ticket of currentOrder.tickets || []) {
+    const group=[currentOrder.status,ticket.name || ticket.ticketName || 'MISSING_NAME',ticket.canceled ? 'CANCELED' : 'ACTIVE',ticket.archived ? 'ARCHIVED' : 'CURRENT',ticket.guestDetails?.firstName && ticket.guestDetails?.lastName ? 'HAS_GUEST_NAME' : 'NO_GUEST_NAME'].join('|');
+    ticketAudit[group]=(ticketAudit[group] || 0)+1;
+  }
+  console.log('Wix order-ticket audit: '+JSON.stringify(ticketAudit));
   const history=transponderHistory(JSON.parse(await readFile(new URL('../data/raw/entries.json',import.meta.url),'utf8')),today);
   const entries=usePreviousTransponders(rows.filter(row=>row.guestType==='TICKET_HOLDER').map(row=>publicEntry(row,orders.get(row.orderNumber) || {},mapping)).filter(Boolean),history);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
