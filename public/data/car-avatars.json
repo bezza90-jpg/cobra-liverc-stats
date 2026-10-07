@@ -96,7 +96,8 @@
   },
   "JON-TUCKER": "assets/car-avatars/JON-TUCKER.png",
   "SPENCER-FARLEY": {
-    "4-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-4WD.png"
+    "4-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-4WD.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-2WD.png"
   },
   "JOSH-WILLIAMS": {
     "2-Wheel Drive Buggy": "assets/car-avatars/JOSH-WILLIAMS-AUTO-2WD.png"
