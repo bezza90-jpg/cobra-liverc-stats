@@ -1,0 +1,41 @@
+{
+  "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
+  "liveRcEventId": "518555",
+  "eventDate": "2026-10-11",
+  "eventTitle": "Club Day 11th October 2026",
+  "source": "Admin entries explicitly confirmed by Matt on 7 October 2026, including Jamie Davies Trucks added via Site Manager",
+  "entries": [
+    {
+      "driverName": "Bob Gelstharp",
+      "className": "2-Wheel Drive Buggy"
+    },
+    {
+      "driverName": "Matthew Hodges",
+      "className": "2-Wheel Drive Buggy"
+    },
+    {
+      "driverName": "Steve Curtis-Rich",
+      "className": "2-Wheel Drive Buggy"
+    },
+    {
+      "driverName": "Jamie Davies",
+      "className": "4-Wheel Drive Buggy"
+    },
+    {
+      "driverName": "Matthew Hodges",
+      "className": "4-Wheel Drive Buggy"
+    },
+    {
+      "driverName": "Paul Curtis",
+      "className": "Trucks"
+    },
+    {
+      "driverName": "Bob Gelstharp",
+      "className": "Vintage"
+    },
+    {
+      "driverName": "Jamie Davies",
+      "className": "Trucks"
+    }
+  ]
+}
