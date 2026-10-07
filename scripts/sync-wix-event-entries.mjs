@@ -88,7 +88,7 @@ async function upcomingEvents(site,key) {
 async function guests(eventId,site,key) {
   const result=[]; let cursor='';
   for (let page=0;page<1000;page++) {
-    const query=cursor ? {cursorPaging:{limit:100,cursor}} : {filter:{eventId:{$eq:eventId},guestType:{$eq:'TICKET_HOLDER'}},cursorPaging:{limit:100}};
+    const query=cursor ? {cursorPaging:{limit:100,cursor}} : {filter:{eventId:{$eq:eventId}},cursorPaging:{limit:100}};
     const data=await request('/events/v2/guests/query',site,key,{query,fields:['GUEST_DETAILS']});
     if (!Array.isArray(data.guests)) throw Error('Wix guest response was incomplete.');
     result.push(...data.guests); cursor=data.pagingMetadata?.cursors?.next || ''; if (!cursor) return result;
@@ -126,8 +126,17 @@ export async function sync({site,key}) {
   for (let index=0;index<orderNumbers.length;index+=4) {
     await Promise.all(orderNumbers.slice(index,index+4).map(async number=>orders.set(number,await order(event.id,number,site,key))));
   }
+  // Audit all guest types without changing paid-entry eligibility or publishing private details.
+  const audit={};
+  for (const row of rows) {
+    const currentOrder=orders.get(row.orderNumber) || {};
+    const ticket=(currentOrder.tickets || []).find(t=>t.ticketNumber===row.ticketNumber);
+    const group=[row.guestType || 'MISSING_TYPE',row.attendanceStatus || 'MISSING_ATTENDANCE',currentOrder.status || 'MISSING_STATUS',ticket ? (ticket.canceled || ticket.archived ? 'INACTIVE_TICKET' : 'TICKET_MATCH') : 'NO_TICKET_MATCH',row.guestDetails?.firstName && row.guestDetails?.lastName ? 'HAS_NAME' : 'MISSING_NAME'].join('|');
+    audit[group]=(audit[group] || 0)+1;
+  }
+  console.log('Wix extraction audit: '+JSON.stringify(audit));
   const history=transponderHistory(JSON.parse(await readFile(new URL('../data/raw/entries.json',import.meta.url),'utf8')),today);
-  const entries=usePreviousTransponders(rows.map(row=>publicEntry(row,orders.get(row.orderNumber) || {},mapping)).filter(Boolean),history);
+  const entries=usePreviousTransponders(rows.filter(row=>row.guestType==='TICKET_HOLDER').map(row=>publicEntry(row,orders.get(row.orderNumber) || {},mapping)).filter(Boolean),history);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
   const value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
   return {configured:true,changed:await writeIfChanged(new URL('../public/data/wix-current-event-entries.json',import.meta.url),value),entries:value.entries.length};
