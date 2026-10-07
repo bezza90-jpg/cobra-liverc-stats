@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-07T16:42:14.088Z",
+  "updatedAt": "2026-10-07T16:50:55.114Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -14,6 +14,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "8615491"
+    },
+    {
+      "driverKey": "BOBTECH",
+      "driverName": "Bob \"Bobtech\" Gelstharp",
+      "bookingName": "BOB GELSTHARP",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "3624077"
     },
     {
       "driverKey": "CHRIS-GUNTER",
@@ -79,6 +88,14 @@
       "transponder": "4115135"
     },
     {
+      "driverKey": "MATTHEW-HODGES",
+      "driverName": "MATTHEW HODGES",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "5504378"
+    },
+    {
       "driverKey": "RICKY-NEWCOMBE",
       "driverName": "RICKY NEWCOMBE",
       "className": "2-Wheel Drive Buggy",
@@ -115,6 +132,14 @@
       "transponder": "7305713"
     },
     {
+      "driverKey": "STEVE-CURTIS-RICH",
+      "driverName": "STEVE CURTIS-RICH",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": "6196241"
+    },
+    {
       "driverKey": "STEVEN-GRIFFITHS",
       "driverName": "STEVEN GRIFFITHS",
       "className": "2-Wheel Drive Buggy",
@@ -142,6 +167,14 @@
       "transponder": "9194873"
     },
     {
+      "driverKey": "JAMIE-DAVIES",
+      "driverName": "JAMIE DAVIES",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "8144353"
+    },
+    {
       "driverKey": "KEVIN-GREENWAY",
       "driverName": "KEVIN GREENWAY",
       "className": "4-Wheel Drive Buggy",
@@ -167,6 +200,14 @@
       "chassis": "Xray",
       "chassisSource": "wix",
       "transponder": "8008844"
+    },
+    {
+      "driverKey": "MATTHEW-HODGES",
+      "driverName": "MATTHEW HODGES",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "3647613"
     },
     {
       "driverKey": "RICKY-NEWCOMBE",
@@ -223,6 +264,15 @@
       "transponder": "6973172"
     },
     {
+      "driverKey": "BRUCE",
+      "driverName": "Paul \"Bruce\" Curtis",
+      "bookingName": "PAUL CURTIS",
+      "className": "Trucks",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "8320717"
+    },
+    {
       "driverKey": "ADAM-MCBRIDE",
       "driverName": "ADAM MCBRIDE",
       "className": "Vintage",
@@ -239,6 +289,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "3422662"
+    },
+    {
+      "driverKey": "BOBTECH",
+      "driverName": "Bob \"Bobtech\" Gelstharp",
+      "bookingName": "BOB GELSTHARP",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "transponder": ""
     },
     {
       "driverKey": "DANE-WINTERSON",
