@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync,assertRosterContinuity,publicEntries,entriesFromOrders} from './sync-wix-event-entries.mjs';
+import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync,assertRosterContinuity,publicEntries,entriesFromOrders,mergeAdminEntries} from './sync-wix-event-entries.mjs';
 
 test('unchanged entries do not require publishing just because the check time changed',()=>{
   const data={eventDate:'2026-10-11',entries:[{driverName:'TEST DRIVER',className:'Trucks'}]};
@@ -70,4 +70,17 @@ test('double-class selections can come from the matching buyer checkout form',()
 test('unrecognised paid ticket or missing class selection blocks partial publication',()=>{
   assert.throws(()=>publicEntries(attendingGuest,{status:'PAID',tickets:[{...ticket,name:'New Racing Ticket'}]},{}),/Unrecognised attending paid/);
   assert.throws(()=>publicEntries(attendingGuest,{status:'PAID',tickets:[{...ticket,name:'Adult Double Class'}]},{}),/incomplete or unrecognised/);
+});
+
+test('confirmed admin entries survive Wix refresh and keep separate source counts',()=>{
+  const value={wixEventId:'event',liveRcEventId:'123',eventDate:'2026-10-11',entries:[{driverName:'New Driver',className:'Trucks'}]};
+  const admin={...value,entries:[{driverName:'Matthew Hodges',className:'2-Wheel Drive Buggy'},{driverName:'Matthew Hodges',className:'4-Wheel Drive Buggy'}]};
+  const merged=mergeAdminEntries(value,admin);
+  assert.equal(merged.entries.length,3);assert.deepEqual(merged.entrySources,{wix:1,admin:2});
+  assert.equal(mergeAdminEntries({...value,wixEventId:'next'},admin).entries.length,1);
+});
+test('Wix and admin references to the same class entry do not duplicate the driver',()=>{
+  const value={wixEventId:'event',liveRcEventId:'123',eventDate:'2026-10-11',entries:[{driverName:'MATTHEW HODGES',className:'2-Wheel Drive Buggy',transponder:'2345678'}]};
+  const admin={...value,entries:[{driverName:'Matthew Hodges',className:'2-Wheel Drive Buggy',transponder:''}]};
+  const merged=mergeAdminEntries(value,admin);assert.equal(merged.entries.length,1);assert.equal(merged.entries[0].transponder,'2345678');
 });
