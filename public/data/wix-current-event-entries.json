@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-07T16:24:05.476Z",
+  "updatedAt": "2026-10-07T16:40:41.756Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -11,6 +11,12 @@
       "transponder": "8615491",
       "chassis": "Team Associated",
       "transponderSource": "wix"
+    },
+    {
+      "driverName": "BOB GELSTHARP",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3624077",
+      "transponderSource": "history"
     },
     {
       "driverName": "CHRIS GUNTER",
@@ -62,6 +68,12 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "MATTHEW HODGES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5504378",
+      "transponderSource": "history"
+    },
+    {
       "driverName": "RICKY NEWCOMBE",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3319908",
@@ -90,6 +102,12 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "STEVE CURTIS-RICH",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6196241",
+      "transponderSource": "history"
+    },
+    {
       "driverName": "STEVEN GRIFFITHS",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8943115",
@@ -111,6 +129,12 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "JAMIE DAVIES",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "8144353",
+      "transponderSource": "history"
+    },
+    {
       "driverName": "KEVIN GREENWAY",
       "className": "4-Wheel Drive Buggy",
       "transponder": "2485324",
@@ -130,6 +154,12 @@
       "transponder": "8008844",
       "chassis": "XRay",
       "transponderSource": "wix"
+    },
+    {
+      "driverName": "MATTHEW HODGES",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "3647613",
+      "transponderSource": "history"
     },
     {
       "driverName": "RICKY NEWCOMBE",
@@ -171,6 +201,12 @@
       "className": "Trucks",
       "transponder": "6973172",
       "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "PAUL CURTIS",
+      "className": "Trucks",
+      "transponder": "8320717",
       "transponderSource": "history"
     },
     {
@@ -186,6 +222,12 @@
       "transponder": "3422662",
       "chassis": "Associated",
       "transponderSource": "wix"
+    },
+    {
+      "driverName": "BOB GELSTHARP",
+      "className": "Vintage",
+      "transponder": "",
+      "transponderSource": "none"
     },
     {
       "driverName": "DANE WINTERSON",
@@ -208,5 +250,9 @@
       "chassis": "Associated",
       "transponderSource": "wix"
     }
-  ]
+  ],
+  "entrySources": {
+    "wix": 29,
+    "admin": 7
+  }
 }
