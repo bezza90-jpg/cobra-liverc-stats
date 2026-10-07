@@ -90,7 +90,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.rembg/models
-          key: cobra-car-avatar-isnet-general-use-v1
+          key: cobra-car-avatar-u2netp-v1
 
       - name: Prepare approved car avatars
         if: steps.car_photos.outputs.pending == 'yes'

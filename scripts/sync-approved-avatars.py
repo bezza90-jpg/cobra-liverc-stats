@@ -137,10 +137,7 @@ def prepare_avatar(photo_bytes):
         cutout = original
     else:
         from rembg import new_session, remove
-        # RC cars have thin wings, exposed suspension and separate wheels.  The
-        # general-use ISNet model keeps these source pixels more reliably than
-        # the portrait-oriented lightweight model used previously.
-        cutout = remove(original.convert("RGB"), session=new_session("isnet-general-use")).convert("RGBA")
+        cutout = remove(original.convert("RGB"), session=new_session("u2netp")).convert("RGBA")
     bbox = cutout.getchannel("A").getbbox()
     if not bbox:
         raise ValueError("No foreground car was found in the reviewed photograph.")
