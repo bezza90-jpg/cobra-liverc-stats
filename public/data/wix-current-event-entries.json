@@ -3,8 +3,29 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-07T15:53:00.849Z",
+  "updatedAt": "2026-10-07T16:24:05.476Z",
   "entries": [
+    {
+      "driverName": "AINSLEY EVANS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8615491",
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "CHRIS GUNTER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6865166",
+      "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "CHRISTOPHER BAKER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9194873",
+      "chassis": "R1 Wurks",
+      "transponderSource": "wix"
+    },
     {
       "driverName": "DANIEL GRIFFITHS",
       "className": "2-Wheel Drive Buggy",
@@ -24,6 +45,20 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "4571829",
       "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "KEVIN GREENWAY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6958172",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MARK GIAQUINTO",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4115135",
+      "chassis": "Kyosho",
       "transponderSource": "wix"
     },
     {
@@ -55,6 +90,48 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "STEVEN GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8943115",
+      "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "CHRIS GUNTER",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6099608",
+      "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "CHRISTOPHER BAKER",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "9194873",
+      "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "KEVIN GREENWAY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "2485324",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MARK GIAQUINTO",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4115135",
+      "chassis": "Kyosho",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MATT WOODIWISS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "8008844",
+      "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "RICKY NEWCOMBE",
       "className": "4-Wheel Drive Buggy",
       "transponder": "2396977",
@@ -83,6 +160,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "DANE WINTERSON",
+      "className": "Trucks",
+      "transponder": "7485870",
+      "chassis": "TLR",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "JAMIE DAVIES",
       "className": "Trucks",
       "transponder": "6973172",
@@ -93,6 +177,34 @@
       "driverName": "ADAM MCBRIDE",
       "className": "Vintage",
       "transponder": "7241911",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "AINSLEY EVANS",
+      "className": "Vintage",
+      "transponder": "3422662",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "DANE WINTERSON",
+      "className": "Vintage",
+      "transponder": "9689423",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MATT WOODIWISS",
+      "className": "Vintage",
+      "transponder": "3753291",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "STEVEN GRIFFITHS",
+      "className": "Vintage",
+      "transponder": "9685307",
       "chassis": "Associated",
       "transponderSource": "wix"
     }
