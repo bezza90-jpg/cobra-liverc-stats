@@ -134,17 +134,18 @@ async function listOrders(eventId,site,key) {
   throw Error('Wix order list exceeded paging limit.');
 }
 
-export function assertRosterContinuity(previous, next) {
+export function assertRosterContinuity(previous, next, approvedRemovals=[]) {
   if (!previous || !previous.wixEventId || previous.wixEventId!==next.wixEventId || previous.eventDate!==next.eventDate) return;
   const key=row=>String(row.driverName || '').trim().replace(/\s+/g,' ').toUpperCase()+'|'+String(row.className || '').trim().toUpperCase();
   const current=new Set((next.entries || []).map(key));
-  const missing=(previous.entries || []).filter(row=>!current.has(key(row)));
+  const approved=new Set(approvedRemovals.map(key));
+  const missing=(previous.entries || []).filter(row=>!current.has(key(row)) && !approved.has(key(row)));
   if (missing.length) throw Error('Wix sync would remove '+missing.length+' previously published class entries from the same event; keeping the last complete roster. Diagnose cancellations, renamed tickets or incomplete API data before approving removals.');
 }
 
-async function writeIfChanged(file,value) {
+async function writeIfChanged(file,value,approvedRemovals=[]) {
   const previous=JSON.parse(await readFile(file,'utf8').catch(()=> 'null'));
-  assertRosterContinuity(previous,value);
+  assertRosterContinuity(previous,value,approvedRemovals);
   if (entrySnapshot(previous)===entrySnapshot(value)) return false;
   const output=JSON.stringify(value,null,2)+'\n';
   if (await readFile(file,'utf8').catch(()=> '')===output) return false;
@@ -154,13 +155,16 @@ async function writeIfChanged(file,value) {
 export function mergeAdminEntries(value,admin) {
   if (!admin || admin.wixEventId!==value.wixEventId || admin.eventDate!==value.eventDate || String(admin.liveRcEventId)!==String(value.liveRcEventId)) return value;
   const key=row=>String(row.driverName || '').trim().replace(/\s+/g,' ').toUpperCase()+'|'+row.className;
-  const entries=[...value.entries], keys=new Set(entries.map(key));
+  const removals=admin.removeEntries || [];
+  for (const row of removals) if (!row.driverName || !['2-Wheel Drive Buggy','4-Wheel Drive Buggy','Junior Racers','Trucks','Vintage'].includes(row.className)) throw Error('Invalid confirmed admin removal; retaining the published roster.');
+  const removedKeys=new Set(removals.map(key));
+  const entries=value.entries.filter(row=>!removedKeys.has(key(row))), keys=new Set(entries.map(key));
   let added=0;
   for (const row of admin.entries || []) {
     if (!row.driverName || !['2-Wheel Drive Buggy','4-Wheel Drive Buggy','Junior Racers','Trucks','Vintage'].includes(row.className)) throw Error('Invalid confirmed admin entry; retaining the published roster.');
     if (!keys.has(key(row))) {entries.push({...row,driverName:row.driverName.toUpperCase()});keys.add(key(row));added++;}
   }
-  return {...value,entries,entrySources:{wix:value.entries.length,admin:added}};
+  return {...value,entries,entrySources:{wix:entries.length-added,admin:added}};
 }
 
 export function entrySnapshot(value) {
@@ -189,7 +193,7 @@ export async function sync({site,key}) {
   value=mergeAdminEntries(value,admin);
   value.entries=usePreviousTransponders(value.entries,history).sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName));
   console.log('Published entry sources: '+JSON.stringify(value.entrySources || {wix:value.entries.length,admin:0}));
-  return {configured:true,changed:await writeIfChanged(new URL('../public/data/wix-current-event-entries.json',import.meta.url),value),entries:value.entries.length};
+  return {configured:true,changed:await writeIfChanged(new URL('../public/data/wix-current-event-entries.json',import.meta.url),value,admin?.removeEntries || []),entries:value.entries.length};
 }
 if (process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href) {
   const result=await sync({site:process.env.WIX_SITE_ID,key:process.env.WIX_API_KEY});
