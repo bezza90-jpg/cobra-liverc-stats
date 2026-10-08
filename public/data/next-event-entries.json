@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-08T17:13:42.721Z",
+  "updatedAt": "2026-10-08T19:22:59.434Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -68,6 +68,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "3276703"
+    },
+    {
+      "driverKey": "GREG-PARKER",
+      "driverName": "GREG PARKER",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "7684548"
     },
     {
       "driverKey": "IAN-TOWNSEND",
@@ -183,6 +192,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "9194873"
+    },
+    {
+      "driverKey": "GREG-PARKER",
+      "driverName": "GREG PARKER",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "7322122"
     },
     {
       "driverKey": "JAMIE-DAVIES",
