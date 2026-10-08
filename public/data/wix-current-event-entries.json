@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-08T20:15:40.242Z",
+  "updatedAt": "2026-10-08T20:50:34.640Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -37,6 +37,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "2604190",
       "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "DANIEL HURRELL",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3498962",
+      "chassis": "Schumacher",
       "transponderSource": "wix"
     },
     {
@@ -232,6 +239,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "LEE MARSON",
+      "className": "Trucks",
+      "transponder": "2879705",
+      "chassis": "TLR",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "PAUL CURTIS",
       "className": "Trucks",
       "transponder": "8320717",
@@ -272,12 +286,6 @@
       "transponderSource": "wix"
     },
     {
-      "driverName": "LEE MARSON",
-      "className": "Vintage",
-      "transponder": "2879705",
-      "transponderSource": "wix"
-    },
-    {
       "driverName": "MARK HICKS",
       "className": "Vintage",
       "transponder": "4622715",
@@ -301,6 +309,6 @@
   ],
   "entrySources": {
     "wix": 35,
-    "admin": 8
+    "admin": 9
   }
 }
