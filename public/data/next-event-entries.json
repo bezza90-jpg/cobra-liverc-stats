@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-08T20:17:19.650Z",
+  "updatedAt": "2026-10-08T20:21:45.209Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -343,6 +343,15 @@
       "chassis": "Tlr",
       "chassisSource": "wix",
       "transponder": "9689423"
+    },
+    {
+      "driverKey": "HAIDEN-HICKS",
+      "driverName": "HAIDEN HICKS",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "8077301"
     },
     {
       "driverKey": "LEE-MARSON",
