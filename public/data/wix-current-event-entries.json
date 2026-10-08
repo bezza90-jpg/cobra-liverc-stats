@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-08T15:39:38.365Z",
+  "updatedAt": "2026-10-08T17:07:04.831Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -43,6 +43,13 @@
       "driverName": "DAVID DAWSON",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3048462",
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "GREG LANE",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3276703",
       "chassis": "Team Associated",
       "transponderSource": "wix"
     },
@@ -278,7 +285,7 @@
     }
   ],
   "entrySources": {
-    "wix": 33,
+    "wix": 34,
     "admin": 7
   }
 }
