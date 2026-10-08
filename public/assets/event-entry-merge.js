@@ -25,6 +25,7 @@ export function mergeCurrentWixEntries(data, wix = {}, previousTransponders = []
   if (!bookings.length || (wix.eventDate && data.date && wix.eventDate !== data.date) ||
       (wix.liveRcEventId && data.eventId && String(wix.liveRcEventId) !== String(data.eventId))) return data;
   const seniorNames = new Set([...published, ...bookings].filter(row => row.className && row.className !== 'Junior Racers').map(identity));
+  const bookedSeniorNames = new Set(bookings.filter(row => row.className && row.className !== 'Junior Racers').map(identity));
   const history = new Map(previousTransponders.filter(row => validNumber(row.transponder) &&
     (!row.eventDate || !data.date || row.eventDate < data.date)).slice()
     .sort((a,b) => String(a.eventDate || '').localeCompare(String(b.eventDate || '')))
@@ -35,7 +36,7 @@ export function mergeCurrentWixEntries(data, wix = {}, previousTransponders = []
   const bookingKeys = new Set(bookings.map(key));
   for (const booking of bookings) {
     if (!booking?.driverName || !booking?.className) continue;
-    if (booking.className === 'Junior Racers' && seniorNames.has(identity(booking))) continue;
+    if (booking.className === 'Junior Racers' && seniorNames.has(identity(booking)) && !bookedSeniorNames.has(identity(booking))) continue;
     if (keys.has(key(booking))) {
       const index = merged.findIndex(row => key(row) === key(booking));
       merged[index] = bookingDetails(merged[index], booking, history);
