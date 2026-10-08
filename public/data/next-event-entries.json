@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-07T23:27:24.688Z",
+  "updatedAt": "2026-10-08T15:47:56.644Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -316,6 +316,23 @@
       "chassis": "Tlr",
       "chassisSource": "wix",
       "transponder": "9689423"
+    },
+    {
+      "driverKey": "LEE-MARSON",
+      "driverName": "LEE MARSON",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "transponder": "2879705"
+    },
+    {
+      "driverKey": "MARK-HICKS",
+      "driverName": "MARK HICKS",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "4622715"
     },
     {
       "driverKey": "MATT-WOODIWISS",
