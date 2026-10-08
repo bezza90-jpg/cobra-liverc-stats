@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-08T17:07:04.831Z",
+  "updatedAt": "2026-10-08T19:21:03.137Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -51,6 +51,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "3276703",
       "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "GREG PARKER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7684548",
+      "chassis": "XRay",
       "transponderSource": "wix"
     },
     {
@@ -140,6 +147,13 @@
       "className": "4-Wheel Drive Buggy",
       "transponder": "9194873",
       "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "GREG PARKER",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7322122",
+      "chassis": "Schumacher",
       "transponderSource": "wix"
     },
     {
@@ -285,7 +299,7 @@
     }
   ],
   "entrySources": {
-    "wix": 34,
+    "wix": 36,
     "admin": 7
   }
 }
