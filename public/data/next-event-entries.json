@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-08T20:52:54.589Z",
+  "updatedAt": "2026-10-08T20:57:35.002Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -95,6 +95,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "4571829"
+    },
+    {
+      "driverKey": "KEITH-HALSEY",
+      "driverName": "KEITH HALSEY",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "2869785"
     },
     {
       "driverKey": "KEVIN-GREENWAY",
@@ -218,6 +227,15 @@
       "countryCode": "GB",
       "chassis": "Xray",
       "transponder": "8144353"
+    },
+    {
+      "driverKey": "KEITH-HALSEY",
+      "driverName": "KEITH HALSEY",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "7893750"
     },
     {
       "driverKey": "KEVIN-GREENWAY",
