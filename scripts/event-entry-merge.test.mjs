@@ -18,6 +18,12 @@ test('new junior remains visible and a fresh senior assignment replaces their ol
  assert.deepEqual(result.entries.map(e=>e.driverName),['NATHAN NOTLEY','NEW JUNIOR']);
  assert.equal(result.entries[0].className,'4-Wheel Drive Buggy');
 });
+test('an explicit Wix junior booking remains when the same driver also books an adult class',()=>{
+ const wix={eventDate:meeting.date,entries:[{driverName:'MARK HICKS',className:'Junior Racers'},{driverName:'MARK HICKS',className:'Vintage'}]};
+ const result=mergeCurrentWixEntries({...meeting,entries:[]},wix);
+ assert.deepEqual(result.entries.map(e=>e.className),['Junior Racers','Vintage']);
+ assert.equal(result.entries.every(e=>e.driverName==='MARK HICKS'),true);
+});
 test('a booking feed from another event cannot change the current race classes',()=>{
  const data={...meeting,entries:[]};
  assert.equal(mergeCurrentWixEntries(data,{eventDate:meeting.date,liveRcEventId:'other',entries:[{driverName:'NEW JUNIOR',className:'Junior Racers'}]}),data);
