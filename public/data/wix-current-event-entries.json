@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-08T20:50:34.640Z",
+  "updatedAt": "2026-10-08T20:55:04.839Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -72,6 +72,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "4571829",
       "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "KEITH HALSEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2869785",
+      "chassis": "Schumacher",
       "transponderSource": "wix"
     },
     {
@@ -168,6 +175,13 @@
       "className": "4-Wheel Drive Buggy",
       "transponder": "8144353",
       "transponderSource": "history"
+    },
+    {
+      "driverName": "KEITH HALSEY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7893750",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
     },
     {
       "driverName": "KEVIN GREENWAY",
@@ -308,7 +322,7 @@
     }
   ],
   "entrySources": {
-    "wix": 35,
+    "wix": 37,
     "admin": 9
   }
 }
