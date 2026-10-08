@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-07T20:41:40.640Z",
+  "updatedAt": "2026-10-08T15:39:38.365Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -190,6 +190,12 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "MARK HICKS",
+      "className": "Junior Racers",
+      "transponder": "",
+      "transponderSource": "none"
+    },
+    {
       "driverName": "NOAH MCBRIDE",
       "className": "Junior Racers",
       "transponder": "8205771",
@@ -244,6 +250,19 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "LEE MARSON",
+      "className": "Vintage",
+      "transponder": "2879705",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MARK HICKS",
+      "className": "Vintage",
+      "transponder": "4622715",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "MATT WOODIWISS",
       "className": "Vintage",
       "transponder": "3753291",
@@ -259,7 +278,7 @@
     }
   ],
   "entrySources": {
-    "wix": 30,
+    "wix": 33,
     "admin": 7
   }
 }
