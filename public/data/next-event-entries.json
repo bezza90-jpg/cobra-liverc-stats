@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-08T20:48:30.590Z",
+  "updatedAt": "2026-10-08T20:52:54.589Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -50,6 +50,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "2604190"
+    },
+    {
+      "driverKey": "DANIEL-HURRELL",
+      "driverName": "DANIEL HURRELL",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "3498962"
     },
     {
       "driverKey": "DAVID-DAWSON",
@@ -300,6 +309,15 @@
       "transponder": "6973172"
     },
     {
+      "driverKey": "LEE-MARSON",
+      "driverName": "LEE MARSON",
+      "className": "Trucks",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix",
+      "transponder": "2879705"
+    },
+    {
       "driverKey": "BRUCE",
       "driverName": "Paul \"Bruce\" Curtis",
       "bookingName": "PAUL CURTIS",
@@ -352,14 +370,6 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "8077301"
-    },
-    {
-      "driverKey": "LEE-MARSON",
-      "driverName": "LEE MARSON",
-      "className": "Vintage",
-      "countryCode": "GB",
-      "chassis": "Tlr",
-      "transponder": "2879705"
     },
     {
       "driverKey": "MARK-HICKS",
