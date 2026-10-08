@@ -3,7 +3,14 @@
   "liveRcEventId": "518555",
   "eventDate": "2026-10-11",
   "eventTitle": "Club Day 11th October 2026",
-  "source": "Admin entries explicitly confirmed by Matt on 7 October 2026, including Jamie Davies Trucks added via Site Manager",
+  "source": "Admin entries explicitly confirmed by Matt on 7-8 October 2026, including Jamie Davies Trucks added via Site Manager and the event-specific Hicks booking correction",
+  "removeEntries": [
+    {
+      "driverName": "Mark Hicks",
+      "className": "Junior Racers",
+      "reason": "Booking was for his son Haiden Hicks in Vintage"
+    }
+  ],
   "entries": [
     {
       "driverName": "Bob Gelstharp",
@@ -36,6 +43,12 @@
     {
       "driverName": "Jamie Davies",
       "className": "Trucks"
+    },
+    {
+      "driverName": "Haiden Hicks",
+      "className": "Vintage",
+      "transponder": "8077301",
+      "chassis": "Kyosho"
     }
   ]
 }

@@ -84,3 +84,20 @@ test('Wix and admin references to the same class entry do not duplicate the driv
   const admin={...value,entries:[{driverName:'Matthew Hodges',className:'2-Wheel Drive Buggy',transponder:''}]};
   const merged=mergeAdminEntries(value,admin);assert.equal(merged.entries.length,1);assert.equal(merged.entries[0].transponder,'2345678');
 });
+test('an event-scoped correction can replace one mistaken class entry without changing valid classes',()=>{
+  const value={wixEventId:'event',liveRcEventId:'123',eventDate:'2026-10-11',entries:[
+    {driverName:'MARK HICKS',className:'Junior Racers'},
+    {driverName:'MARK HICKS',className:'Vintage',transponder:'4622715',chassis:'Schumacher'}
+  ]};
+  const admin={...value,removeEntries:[{driverName:'Mark Hicks',className:'Junior Racers'}],entries:[
+    {driverName:'Haiden Hicks',className:'Vintage',transponder:'8077301',chassis:'Kyosho'}
+  ]};
+  const merged=mergeAdminEntries(value,admin);
+  assert.deepEqual(merged.entries.map(row=>[row.driverName,row.className,row.transponder,row.chassis]),[
+    ['MARK HICKS','Vintage','4622715','Schumacher'],
+    ['HAIDEN HICKS','Vintage','8077301','Kyosho']
+  ]);
+  assert.deepEqual(merged.entrySources,{wix:1,admin:1});
+  assert.doesNotThrow(()=>assertRosterContinuity(value,merged,admin.removeEntries));
+  assert.throws(()=>assertRosterContinuity(value,merged,[]),/would remove 1/);
+});
