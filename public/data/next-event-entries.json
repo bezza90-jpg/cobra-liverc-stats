@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-08T16:51:55.715Z",
+  "updatedAt": "2026-10-08T17:09:22.789Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -59,6 +59,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "3048462"
+    },
+    {
+      "driverKey": "GREG-LANE",
+      "driverName": "GREG LANE",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "3276703"
     },
     {
       "driverKey": "IAN-TOWNSEND",
