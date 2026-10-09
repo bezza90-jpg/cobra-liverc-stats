@@ -1,6 +1,7 @@
 // Shared reserve availability; personal details and offer tokens never enter public data.
 export function validReserveEndpoint(value) {
-  return /^https://script.google.com/macros/s/[A-Za-z0-9_-]+/exec$/.test(String(value || ''));
+  const text=String(value || '');
+  return text.startsWith('https://script.google.com/macros/s/') && text.endsWith('/exec');
 }
 export function applicationUrl(endpoint,eventId,className) {
   if (!validReserveEndpoint(endpoint)) return '';
