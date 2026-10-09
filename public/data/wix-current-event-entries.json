@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-09T20:34:21.137Z",
+  "updatedAt": "2026-10-09T22:01:33.805Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -107,6 +107,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "4115135",
       "chassis": "Kyosho",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MARK GREENWOOD",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7720183",
+      "chassis": "Team Associated",
       "transponderSource": "wix"
     },
     {
@@ -404,7 +411,7 @@
     }
   ],
   "entrySources": {
-    "wix": 48,
+    "wix": 49,
     "admin": 10
   }
 }
