@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-09T10:05:50.606Z",
+  "updatedAt": "2026-10-09T11:16:44.280Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -336,6 +336,15 @@
       "transponder": "7485870"
     },
     {
+      "driverKey": "DAVE-CLUTTERBUCK",
+      "driverName": "DAVE CLUTTERBUCK",
+      "className": "Trucks",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "5712036"
+    },
+    {
       "driverKey": "JAMIE-DAVIES",
       "driverName": "JAMIE DAVIES",
       "className": "Trucks",
@@ -406,6 +415,15 @@
       "chassis": "Tlr",
       "chassisSource": "wix",
       "transponder": "9689423"
+    },
+    {
+      "driverKey": "DAVE-CLUTTERBUCK",
+      "driverName": "DAVE CLUTTERBUCK",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "2675946"
     },
     {
       "driverKey": "HAIDEN-HICKS",
