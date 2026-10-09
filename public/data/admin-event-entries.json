@@ -3,7 +3,7 @@
   "liveRcEventId": "518555",
   "eventDate": "2026-10-11",
   "eventTitle": "Club Day 11th October 2026",
-  "source": "Admin entries explicitly confirmed by Matt on 7-9 October 2026, including Jamie Davies Trucks added via Site Manager and the event-specific Hicks, Lee Marson and Haiden Hicks booking corrections",
+  "source": "Admin entries and event-specific booking corrections confirmed by Matt on 7-9 October 2026, including Shaun Ogden Vintage as a reserve request while retaining his paid 2WD entry",
   "removeEntries": [
     {
       "driverName": "Mark Hicks",
@@ -19,6 +19,11 @@
       "driverName": "Haiden Hicks",
       "className": "Junior Racers",
       "reason": "Junior ticket was used for payment, but Haiden is racing in Trucks for this event"
+    },
+    {
+      "driverName": "Shaun Ogden",
+      "className": "Vintage",
+      "reason": "Vintage details were supplied for the reserve list; Shaun paid for 2WD only"
     }
   ],
   "entries": [
