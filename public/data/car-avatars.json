@@ -152,5 +152,8 @@
   },
   "COHEN-MANNING": {
     "2-Wheel Drive Buggy": "assets/car-avatars/COHEN-MANNING-AUTO-2WD.png"
+  },
+  "GARETH-MANNING": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/GARETH-MANNING-AUTO-2WD.png"
   }
 }
