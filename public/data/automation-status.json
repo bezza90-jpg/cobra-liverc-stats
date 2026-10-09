@@ -1,26 +1,26 @@
 {
   "liverc": {
-    "lastAttempt": "2026-10-09T05:46:25.452Z",
+    "lastAttempt": "2026-10-09T07:08:17.881Z",
     "status": "success",
-    "lastSuccess": "2026-10-09T05:46:25.452Z",
+    "lastSuccess": "2026-10-09T07:08:17.881Z",
     "queued": "Source backlog retained; count not measured"
   },
   "youtube": {
-    "lastAttempt": "2026-10-09T05:46:29.495Z",
+    "lastAttempt": "2026-10-09T07:08:21.558Z",
     "status": "success",
-    "lastSuccess": "2026-10-09T05:46:29.495Z",
+    "lastSuccess": "2026-10-09T07:08:21.558Z",
     "queued": "Source backlog retained; count not measured"
   },
   "avatars": {
     "status": "success",
-    "lastAttempt": "2026-10-09T05:46:32.512654+00:00",
+    "lastAttempt": "2026-10-09T07:08:26.343805+00:00",
     "queued": 0,
-    "lastSuccess": "2026-10-09T05:46:32.512654+00:00"
+    "lastSuccess": "2026-10-09T07:08:26.343805+00:00"
   },
   "podiums": {
-    "lastAttempt": "2026-10-09T05:48:07.098Z",
+    "lastAttempt": "2026-10-09T07:10:07.906Z",
     "status": "success",
-    "lastSuccess": "2026-10-09T05:48:07.098Z",
+    "lastSuccess": "2026-10-09T07:10:07.906Z",
     "queued": "Source backlog retained; count not measured"
   }
 }
