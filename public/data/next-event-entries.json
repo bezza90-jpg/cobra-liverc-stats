@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-09T20:35:55.775Z",
+  "updatedAt": "2026-10-09T20:40:31.357Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -396,6 +396,15 @@
       "chassis": "Xray",
       "chassisSource": "wix",
       "transponder": "6973172"
+    },
+    {
+      "driverKey": "JONATHAN-MAY",
+      "driverName": "JONATHAN MAY",
+      "className": "Trucks",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "8360237"
     },
     {
       "driverKey": "LEE-MARSON",
