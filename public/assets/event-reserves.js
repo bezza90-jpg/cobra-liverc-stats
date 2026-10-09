@@ -1,6 +1,6 @@
 // Shared reserve availability; personal details and offer tokens never enter public data.
 export function validReserveEndpoint(value) {
-  return /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(String(value || ''));
+  return /^https://script.google.com/macros/s/[A-Za-z0-9_-]+/exec$/.test(String(value || ''));
 }
 export function applicationUrl(endpoint,eventId,className) {
   if (!validReserveEndpoint(endpoint)) return '';
@@ -21,18 +21,21 @@ export async function addReserveActions(cards,meeting) {
   let config;try{const response=await fetch('../data/reserve-service.json',{cache:'no-cache'});if(!response.ok)return;config=await response.json();}catch{return;}
   if (!config.enabled || !validReserveEndpoint(config.endpoint)) return;
   const result=await reserveAvailability(config.endpoint,meeting.eventId);
-  if (!result) return;
   for (const card of cards.children) {
-    const state=result.classes?.find(c=>c.className===card.dataset.className);
-    if (!state) continue;
-    if (state.held>0 && Number.isInteger(state.remaining) && state.remaining>=0) {
+    const state=result?.classes?.find(c=>c.className===card.dataset.className);
+    if (state?.held>0 && Number.isInteger(state.remaining) && state.remaining>=0) {
       const count=Math.min(Number(card.dataset.remaining),state.remaining);
       card.querySelector('b').textContent=count?`${count} spaces remaining`:'Class full / places held';
     }
-    if (state.applicationOpen===true && Number(card.dataset.remaining)===0) {
+    if (Number(card.dataset.remaining)===0) {
       const link=document.createElement('a');link.className='event-entry-source';link.textContent='Apply for reserve place';
-      link.href=applicationUrl(config.endpoint,meeting.eventId,state.className);link.target='_top';card.append(link);
+      link.href=applicationUrl(config.endpoint,meeting.eventId,card.dataset.className);link.target='_top';card.append(link);
+      if (meeting.type==='club') {
+        const price=document.createElement('small');
+        price.textContent='If offered a place: £10 for a first class, or £5 to add a second class (£15 total).';
+        card.append(price);
+      }
     }
-    if (state.held>0) {const note=document.createElement('small');note.textContent='A place is held for a private reserve offer.';card.append(note);}
+    if (state?.held>0) {const note=document.createElement('small');note.textContent='A place is held for a private reserve offer.';card.append(note);}
   }
 }
