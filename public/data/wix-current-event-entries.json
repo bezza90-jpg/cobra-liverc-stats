@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-09T09:03:44.790Z",
+  "updatedAt": "2026-10-09T10:03:13.725Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -153,6 +153,13 @@
       "driverName": "STEVEN GRIFFITHS",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8943115",
+      "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "STEWART WOODEND",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4770946",
       "chassis": "XRay",
       "transponderSource": "wix"
     },
@@ -339,10 +346,16 @@
       "transponder": "9685307",
       "chassis": "Associated",
       "transponderSource": "wix"
+    },
+    {
+      "driverName": "STEWART WOODEND",
+      "className": "Vintage",
+      "transponder": "",
+      "transponderSource": "none"
     }
   ],
   "entrySources": {
-    "wix": 40,
+    "wix": 42,
     "admin": 9
   }
 }
