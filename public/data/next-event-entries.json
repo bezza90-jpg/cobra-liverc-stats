@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-09T16:13:48.532Z",
+  "updatedAt": "2026-10-09T17:06:07.431Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -97,6 +97,15 @@
       "transponder": "4571829"
     },
     {
+      "driverKey": "JUSTIN-WALSH",
+      "driverName": "JUSTIN WALSH",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Yokomo",
+      "chassisSource": "wix",
+      "transponder": "8416618"
+    },
+    {
       "driverKey": "KEITH-HALSEY",
       "driverName": "KEITH HALSEY",
       "className": "2-Wheel Drive Buggy",
@@ -184,6 +193,15 @@
       "chassis": "Xray",
       "chassisSource": "wix",
       "transponder": "0777999"
+    },
+    {
+      "driverKey": "SHAUN-OGDEN",
+      "driverName": "SHAUN OGDEN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Yokomo",
+      "chassisSource": "wix",
+      "transponder": "6923545"
     },
     {
       "driverKey": "SPENCER-FARLEY",
