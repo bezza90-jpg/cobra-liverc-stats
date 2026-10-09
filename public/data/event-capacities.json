@@ -1,10 +1,14 @@
 {
-  "types": {"sword":{"Junior Racers":12,"4-Wheel Drive Buggy":30,"2-Wheel Drive Buggy":80}},
+  "types": {
+    "sword": {"Junior Racers":12,"4-Wheel Drive Buggy":30,"2-Wheel Drive Buggy":80},
+    "club": {"Junior Racers":10,"4-Wheel Drive Buggy":20,"2-Wheel Drive Buggy":40,"Trucks":10,"Vintage":10}
+  },
   "reservedByType": {
     "sword": {
       "2-Wheel Drive Buggy":["MATTHEW-HODGES","BOBTECH","STEVE-CURTIS-RICH","MIKE-HYSIAK"],
       "4-Wheel Drive Buggy":["MATTHEW-HODGES","BOBTECH","STEVE-CURTIS-RICH","MIKE-HYSIAK","BRUCE"]
-    }
+    },
+    "club": {}
   },
   "events": {
     "518554": {
