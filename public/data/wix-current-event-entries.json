@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-09T19:57:02.998Z",
+  "updatedAt": "2026-10-09T20:34:21.137Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -308,6 +308,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "JONATHAN MAY",
+      "className": "Trucks",
+      "transponder": "8360237",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "LEE MARSON",
       "className": "Trucks",
       "transponder": "2879705",
@@ -397,7 +404,7 @@
     }
   ],
   "entrySources": {
-    "wix": 47,
+    "wix": 48,
     "admin": 10
   }
 }
