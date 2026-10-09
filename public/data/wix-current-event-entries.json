@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-09T16:04:32.391Z",
+  "updatedAt": "2026-10-09T17:03:11.741Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -75,6 +75,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "JUSTIN WALSH",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8416618",
+      "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "KEITH HALSEY",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2869785",
@@ -140,6 +147,13 @@
       "driverName": "RUSSELL THOMAS",
       "className": "2-Wheel Drive Buggy",
       "transponder": "0777999",
+      "chassis": "XRay",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "SHAUN OGDEN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6923545",
       "chassis": "XRay",
       "transponderSource": "wix"
     },
@@ -376,7 +390,7 @@
     }
   ],
   "entrySources": {
-    "wix": 44,
+    "wix": 46,
     "admin": 10
   }
 }
