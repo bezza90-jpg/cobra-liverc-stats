@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-08T21:31:41.028Z",
+  "updatedAt": "2026-10-09T07:07:30.331Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -232,6 +232,12 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "HAIDEN HICKS",
+      "className": "Junior Racers",
+      "transponder": "3422662",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "NOAH MCBRIDE",
       "className": "Junior Racers",
       "transponder": "8205771",
@@ -322,7 +328,7 @@
     }
   ],
   "entrySources": {
-    "wix": 37,
+    "wix": 38,
     "admin": 9
   }
 }
