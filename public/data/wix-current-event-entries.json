@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-09T10:03:13.725Z",
+  "updatedAt": "2026-10-09T11:14:23.929Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -266,6 +266,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "DAVE CLUTTERBUCK",
+      "className": "Trucks",
+      "transponder": "5712036",
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "JAMIE DAVIES",
       "className": "Trucks",
       "transponder": "6973172",
@@ -320,6 +327,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "DAVE CLUTTERBUCK",
+      "className": "Vintage",
+      "transponder": "2675946",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "HAIDEN HICKS",
       "className": "Vintage",
       "transponder": "8077301",
@@ -355,7 +369,7 @@
     }
   ],
   "entrySources": {
-    "wix": 42,
+    "wix": 44,
     "admin": 9
   }
 }
