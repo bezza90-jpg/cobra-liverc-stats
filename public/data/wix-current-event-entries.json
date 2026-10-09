@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-09T18:09:09.854Z",
+  "updatedAt": "2026-10-09T19:57:02.998Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -121,6 +121,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "5504378",
       "transponderSource": "history"
+    },
+    {
+      "driverName": "MIKE HYSIAK",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9073997",
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "PAUL ROSE",
@@ -390,7 +397,7 @@
     }
   ],
   "entrySources": {
-    "wix": 46,
+    "wix": 47,
     "admin": 10
   }
 }
