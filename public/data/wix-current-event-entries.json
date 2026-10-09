@@ -3,7 +3,7 @@
   "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
   "eventTitle": "Club Day 11th October 2026",
   "eventDate": "2026-10-11",
-  "updatedAt": "2026-10-09T07:54:50.219Z",
+  "updatedAt": "2026-10-09T09:03:44.790Z",
   "entries": [
     {
       "driverName": "AINSLEY EVANS",
@@ -279,6 +279,13 @@
       "transponderSource": "history"
     },
     {
+      "driverName": "ROB WEST",
+      "className": "Trucks",
+      "transponder": "5648670",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "ADAM MCBRIDE",
       "className": "Vintage",
       "transponder": "7241911",
@@ -335,7 +342,7 @@
     }
   ],
   "entrySources": {
-    "wix": 39,
+    "wix": 40,
     "admin": 9
   }
 }
