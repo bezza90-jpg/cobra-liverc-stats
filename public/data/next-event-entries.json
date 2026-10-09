@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-09T09:05:47.794Z",
+  "updatedAt": "2026-10-09T10:05:50.606Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -201,6 +201,15 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "8943115"
+    },
+    {
+      "driverKey": "STEWART-WOODEND",
+      "driverName": "STEWART WOODEND",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "4770946"
     },
     {
       "driverKey": "CHRIS-GUNTER",
@@ -433,6 +442,14 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "9685307"
+    },
+    {
+      "driverKey": "STEWART-WOODEND",
+      "driverName": "STEWART WOODEND",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": ""
     }
   ]
 }
