@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-09T07:10:06.867Z",
+  "updatedAt": "2026-10-09T07:57:12.333Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -139,6 +139,15 @@
       "countryCode": "GB",
       "chassis": "Team Associated",
       "transponder": "5504378"
+    },
+    {
+      "driverKey": "PAUL-ROSE",
+      "driverName": "PAUL ROSE",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "8584388"
     },
     {
       "driverKey": "RICKY-NEWCOMBE",
