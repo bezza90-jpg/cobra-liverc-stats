@@ -23,7 +23,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=10';
+  link.href = '../assets/event-entries.css?v=11';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
