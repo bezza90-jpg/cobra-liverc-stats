@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-09T23:27:03.289Z",
+  "updatedAt": "2026-10-10T08:11:21.870Z",
   "entries": [
     {
       "driverKey": "AINSLEY-EVANS",
@@ -175,6 +175,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "9073997"
+    },
+    {
+      "driverKey": "MR-SR-ASHTON",
+      "driverName": "MR SR ASHTON",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho",
+      "chassisSource": "wix",
+      "transponder": "9569399"
     },
     {
       "driverKey": "PAUL-ROSE",
