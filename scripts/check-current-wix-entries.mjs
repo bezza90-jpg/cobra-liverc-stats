@@ -22,7 +22,8 @@ if (wix?.entries?.length && (!wix.eventDate || wix.eventDate === published.date)
     // When there are too few juniors for their own heat, LiveRC places them in
     // the 2WD rookie heat. Their Junior ticket is still valid and must not block
     // race-day publication merely because the displayed class changed.
-    const shown = actual.get(key(row)) || (row.className === 'Junior Racers' ? actualByName.get(nameKey(row)) : null);
+    const shown = actual.get(key(row));
+    if (!shown && row.className === 'Junior Racers' && actualByName.get(nameKey(row))) return false;
     if (!shown) return true;
     return (row.chassis && String(shown.chassis || '').toUpperCase() !== String(row.chassis).toUpperCase()) ||
       (/^\d{7}$/.test(String(row.transponder || '')) && row.transponder !== '1234567' && row.transponderSource !== 'history' && String(shown.transponder || '') !== String(row.transponder));
