@@ -187,7 +187,10 @@ def validate_class_targets(current):
 
 
 def manually_kept(pair, revision):
-    return read_json(ROOT / 'public/data/car-avatar-manual-revisions.json').get(pair) == revision
+    # A reviewed manual image remains authoritative even if the approval feed
+    # still returns an older file ID. Only an explicit manual publish may replace
+    # it; scheduled processing and retries must not overwrite it.
+    return bool(read_json(ROOT / 'public/data/car-avatar-manual-revisions.json').get(pair))
 
 
 def needs_processing(current, previous, photo_ids, retry_id=''):
