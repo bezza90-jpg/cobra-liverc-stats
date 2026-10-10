@@ -3,7 +3,7 @@
   "liveRcEventId": "518555",
   "eventDate": "2026-10-11",
   "eventTitle": "Club Day 11th October 2026",
-  "source": "Admin entries and event-specific booking corrections confirmed by Matt on 7-9 October 2026, including Shaun Ogden Vintage as a reserve request while retaining his paid 2WD entry",
+  "source": "Admin entries and event-specific booking corrections confirmed by Matt on 7-10 October 2026, including Shaun Ogden Vintage as a reserve request while retaining his paid 2WD entry and the Steve Ashton booking-name correction",
   "removeEntries": [
     {
       "driverName": "Mark Hicks",
@@ -24,6 +24,11 @@
       "driverName": "Shaun Ogden",
       "className": "Vintage",
       "reason": "Vintage details were supplied for the reserve list; Shaun paid for 2WD only"
+    },
+    {
+      "driverName": "MR SR ASHTON",
+      "className": "2-Wheel Drive Buggy",
+      "reason": "Booking name corrected to Steve Ashton for this event"
     }
   ],
   "entries": [
@@ -75,6 +80,12 @@
       "driverName": "Haiden Hicks",
       "className": "Trucks",
       "transponder": "3422662"
+    },
+    {
+      "driverName": "Steve Ashton",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9569399",
+      "chassis": "Kyosho"
     }
   ]
 }
