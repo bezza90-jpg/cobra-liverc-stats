@@ -9,7 +9,7 @@ Verified against the repository on **26 September 2026**. This describes the cur
 | Trigger | Timing | What happens |
 | --- | --- | --- |
 | Daily update | Every day at **18:00** | Check LiveRC, refresh the event calendar and statistics, index YouTube videos when configured, check approved car avatars, rebuild podium illustrations, validate and publish. |
-| Sunday race updates | **15:07–18:52**, at minutes **07, 22, 37 and 52** each hour | Check whether the LiveRC calendar lists a meeting today. If so, update LiveRC data, event information and podium illustrations, then validate and publish. Skip YouTube indexing and avatar processing. |
+| Sunday race updates | **08:03–20:53**, every **10 minutes** | Check whether the LiveRC calendar lists a meeting today. If so, update LiveRC data, event information, Virtual Replay races and podium illustrations, then validate and publish. Skip YouTube indexing and avatar processing. |
 | Website changes | A push to the **main** branch | Run the full update and publishing workflow. Local edits alone do not publish anything. |
 | Manual update | When an administrator selects **Run workflow** in GitHub Actions | Run the full update and publishing workflow without waiting for the next scheduled time. |
 

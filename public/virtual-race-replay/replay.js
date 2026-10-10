@@ -15,7 +15,7 @@ let comparisonKeys=params.getAll('compare').map(canonicalDriverKey);
 const key=name=>name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');
 function avatarFor(d,cls){const v=avatars[d.key||key(d.name)];const asset=typeof v==='string'?v:v?.[cls]||v?.default||'';return asset?'../assets/car-avatar-thumbnails/'+asset.split('/').pop().replace(/\.png$/i,'.webp'):'';}
 function layout(race){
- const matched=$('layoutSelect').value!=='oval'?trackPlans[race.eventId]:null;
+ const matched=$('layoutSelect').value!=='oval'?(trackPlans[race.eventId]||trackPlans['date:'+race.date]):null;
  const confirmed=matched?.routeStatus==='confirmed'?matched:null;
  renderPlan($('circuit'),null);
  const real=race.eventId==='518551'&&$('layoutSelect').value!=='oval';

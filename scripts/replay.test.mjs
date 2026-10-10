@@ -29,9 +29,10 @@ const routes=[
 ];
 const plans=JSON.parse(readFileSync(new URL('track-plans.json',base),'utf8'));
 const catalog=JSON.parse(readFileSync(new URL('catalog.json',base),'utf8'));
-assert.equal(Object.keys(plans).length,25);
+assert.equal(Object.keys(plans).length,26);
 for(const [id,plan] of Object.entries(plans)){
- assert.equal(catalog.events.find(e=>e.id===id)?.date,plan.date,`${id}: event date match`);
+ if(id.startsWith('date:'))assert.equal(id,`date:${plan.date}`,`${id}: date template match`);
+ else assert.equal(catalog.events.find(e=>e.id===id)?.date,plan.date,`${id}: event date match`);
  assert(existsSync(new URL(plan.image,base)),`${id}: missing image`);
  const loop=planPoint(plan.loop,plan);
  assert(loop.x>=87&&loop.x<=1525&&loop.y>=125&&loop.y<=891,`${id}: cropped loop outside template`);

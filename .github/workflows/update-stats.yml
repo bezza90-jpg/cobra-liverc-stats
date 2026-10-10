@@ -13,8 +13,9 @@ on:
     # Refresh the next meeting after the UK date rollover.
     - cron: "10 0 * * *"
       timezone: "Europe/London"
-    # Sunday race afternoons, every 15 minutes. LiveRC calendar gates the expensive work.
-    - cron: "7,22,37,52 15-18 * * 0"
+    # Sunday race days, every 10 minutes from 08:00 to 20:59 UK time.
+    # The LiveRC calendar gates the expensive work when COBRA is not racing.
+    - cron: "3,13,23,33,43,53 8-20 * * 0"
       timezone: "Europe/London"
   push:
     branches: [main]
@@ -48,19 +49,19 @@ jobs:
 
       - name: Check whether COBRA is racing today
         id: race_day
-        if: github.event_name == 'schedule' && github.event.schedule == '7,22,37,52 15-18 * * 0'
+        if: github.event_name == 'schedule' && github.event.schedule == '3,13,23,33,43,53 8-20 * * 0'
         run: node scripts/check-race-day.mjs | tee /dev/stderr | tail -n 1 >> "$GITHUB_OUTPUT"
 
       - name: Set up Node.js
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Check LiveRC and rebuild statistics
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
-          if [[ "${{ github.event.schedule }}" == '7,22,37,52 15-18 * * 0' ]]; then
+          if [[ "${{ github.event.schedule }}" == '3,13,23,33,43,53 8-20 * * 0' ]]; then
             node scripts/automation-run.mjs liverc
           else
             npm run update
@@ -69,18 +70,18 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
       - name: Confirm all current Wix entries are listed
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         run: node scripts/check-current-wix-entries.mjs
 
       - name: Set up Python for approved car photos
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0'
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
       - name: Check for new approved car photos
         id: car_photos
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0'
         run: |
           pending=$(python scripts/sync-approved-avatars.py --check)
           echo "pending=$pending" >> "$GITHUB_OUTPUT"
@@ -104,16 +105,16 @@ jobs:
           python scripts/build-display-images.py
 
       - name: Rebuild illustrated podiums
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
           node scripts/automation-run.mjs podiums
 
       - name: Validate dashboard data
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         run: npm run build:navigation && npm run check
 
       - name: Save updated results
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
           if [[ -n "$(git status --porcelain data/raw public/data public/podium-defaults public/podium-photo-thumbnails public/assets/manufacturers public/assets/car-avatars public/assets/car-avatar-thumbnails public/virtual-race-replay public/index.html 'public/*/index.html')" ]]; then
             git config user.name "COBRA statistics updater"
@@ -144,7 +145,7 @@ jobs:
           fi
 
       - name: Cache chart sharing pages
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         id: chart_cache
         uses: actions/cache@v4
         with:
@@ -152,23 +153,23 @@ jobs:
           key: chart-shares-v1-${{ hashFiles('scripts/build-chart-shares.mjs', 'scripts/site-shell.mjs', 'docs/wix-menu-reference.json', 'public/virtual-race-replay/races/*.json') }}
 
       - name: Build chart sharing pages and preview images
-        if: steps.chart_cache.outputs.cache-hit != 'true' && (github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes')
+        if: steps.chart_cache.outputs.cache-hit != 'true' && (github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes')
         run: |
           npm install --no-save --package-lock=false --ignore-scripts @napi-rs/canvas@0.1.100
           node scripts/build-chart-shares.mjs
 
       - name: Build current event sharing preview
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
           npm install --no-save --package-lock=false --ignore-scripts @napi-rs/canvas@0.1.100
           node scripts/build-event-preview.mjs
 
       - name: Configure GitHub Pages
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/configure-pages@v5
 
       - name: Upload website
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
@@ -176,7 +177,7 @@ jobs:
 
       - name: Deploy website
         id: deployment
-        if: github.event_name != 'schedule' || github.event.schedule != '7,22,37,52 15-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/deploy-pages@v4
         with:
           artifact_name: github-pages-${{ github.run_attempt }}
