@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-11T07:43:04.574Z",
+  "updatedAt": "2026-10-11T07:55:00.499Z",
   "entries": [
     {
       "driverKey": "DAVE-CLUTTERBUCK",
@@ -457,6 +457,14 @@
       "chassis": "Xray",
       "chassisSource": "wix",
       "transponder": "8008844"
+    },
+    {
+      "driverKey": "STUART-CARLING",
+      "driverName": "STUART CARLING",
+      "className": "Trucks",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "2795330"
     },
     {
       "driverKey": "DAVE-CLUTTERBUCK",
