@@ -1,8 +1,8 @@
 {
   "liverc": {
-    "lastAttempt": "2026-10-11T18:46:01.501Z",
+    "lastAttempt": "2026-10-11T19:00:47.180Z",
     "status": "success",
-    "lastSuccess": "2026-10-11T18:46:01.501Z",
+    "lastSuccess": "2026-10-11T19:00:47.180Z",
     "queued": "Source backlog retained; count not measured"
   },
   "youtube": {
@@ -18,9 +18,9 @@
     "lastSuccess": "2026-10-11T18:14:03.141899+00:00"
   },
   "podiums": {
-    "lastAttempt": "2026-10-11T18:47:43.422Z",
+    "lastAttempt": "2026-10-11T19:02:02.158Z",
     "status": "success",
-    "lastSuccess": "2026-10-11T18:47:43.422Z",
+    "lastSuccess": "2026-10-11T19:02:02.158Z",
     "queued": "Source backlog retained; count not measured"
   }
 }
