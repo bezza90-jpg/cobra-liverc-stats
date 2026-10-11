@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-11T08:56:53.145Z",
+  "updatedAt": "2026-10-11T09:10:11.663Z",
   "entries": [
     {
       "driverKey": "DAVE-CLUTTERBUCK",
@@ -235,7 +235,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
-      "transponder": ""
+      "transponder": "3581757"
     },
     {
       "driverKey": "BOBTECH",
@@ -341,7 +341,7 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
-      "transponder": ""
+      "transponder": "8205771"
     },
     {
       "driverKey": "ROGER-MILLS",
