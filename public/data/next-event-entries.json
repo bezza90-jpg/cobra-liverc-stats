@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-11T10:52:22.260Z",
+  "updatedAt": "2026-10-11T11:00:52.788Z",
   "entries": [
     {
       "driverKey": "DAVE-CLUTTERBUCK",
@@ -191,6 +191,14 @@
       "chassis": "Kyosho",
       "chassisSource": "wix",
       "transponder": "9569399"
+    },
+    {
+      "driverKey": "TOM-BARBER",
+      "driverName": "TOM BARBER",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "",
+      "transponder": "9429911"
     },
     {
       "driverKey": "MARK-COX",
