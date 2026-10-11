@@ -29,7 +29,7 @@ const routes=[
 ];
 const plans=JSON.parse(readFileSync(new URL('track-plans.json',base),'utf8'));
 const catalog=JSON.parse(readFileSync(new URL('catalog.json',base),'utf8'));
-assert.equal(Object.keys(plans).length,26);
+assert.equal(Object.keys(plans).length,27);
 for(const [id,plan] of Object.entries(plans)){
  if(id.startsWith('date:'))assert.equal(id,`date:${plan.date}`,`${id}: date template match`);
  else assert.equal(catalog.events.find(e=>e.id===id)?.date,plan.date,`${id}: event date match`);
@@ -79,3 +79,6 @@ for(const file of readdirSync(new URL('races/',base))){
  }
 }
 console.log(`Verified ${crossings} recorded crossings in ${races} replays / ${drivers} driver records, on all ${maps.length} route variants. All heat cars start together, including ${shortOpenings} short opening records.`);
+
+
+
