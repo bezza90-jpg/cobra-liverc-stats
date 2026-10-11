@@ -164,5 +164,8 @@
   },
   "PAUL-ROSE": {
     "2-Wheel Drive Buggy": "assets/car-avatars/PAUL-ROSE-AUTO-2WD.png"
+  },
+  "CHRIS-GUNTER": {
+    "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png"
   }
 }
