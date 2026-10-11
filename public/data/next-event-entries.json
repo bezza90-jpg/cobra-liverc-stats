@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-11T10:09:34.834Z",
+  "updatedAt": "2026-10-11T10:25:05.437Z",
   "entries": [
     {
       "driverKey": "DAVE-CLUTTERBUCK",
@@ -191,15 +191,6 @@
       "chassis": "Kyosho",
       "chassisSource": "wix",
       "transponder": "9569399"
-    },
-    {
-      "driverKey": "CHRISTOPHER-BAKER",
-      "driverName": "CHRISTOPHER BAKER",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "R1 Wurks",
-      "chassisSource": "wix",
-      "transponder": "9194873"
     },
     {
       "driverKey": "MARK-COX",
@@ -529,6 +520,15 @@
       "transponder": "7485870"
     },
     {
+      "driverKey": "CHRISTOPHER-BAKER",
+      "driverName": "CHRISTOPHER BAKER",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "9194873"
+    },
+    {
       "driverKey": "SPENCER-FARLEY",
       "driverName": "SPENCER FARLEY",
       "className": "2-Wheel Drive Buggy",
@@ -542,7 +542,7 @@
       "driverName": "CHRISTOPHER BAKER",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "R1 Wurks",
+      "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "9194873"
     },
