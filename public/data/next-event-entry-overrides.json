@@ -160,10 +160,12 @@
       "replacedByLiveRC": "Team Associated"
     },
     "MARK-GIAQUINTO": {
-      "chassis": "Kyosho",
+      "chassis": "",
       "mode": "until-liverc-change",
       "livercAtSave": "Xray",
-      "updatedAt": "2026-10-06T01:39:11.4712127Z"
+      "updatedAt": "2026-10-06T01:39:11.4712127Z",
+      "previousManualChassis": "Kyosho",
+      "replacedByLiveRC": "Kyosho"
     }
   }
 }

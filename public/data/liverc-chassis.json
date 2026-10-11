@@ -12,8 +12,8 @@
     "slug": "team-associated"
   },
   "MATT-WOODIWISS": {
-    "name": "Xray",
-    "slug": "xray"
+    "name": "Schumacher",
+    "slug": "schumacher"
   },
   "AINSLEY-EVANS": {
     "name": "Team Associated",
@@ -116,8 +116,8 @@
     "slug": "team-associated"
   },
   "CHRISTOPHER-BAKER": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Xray",
+    "slug": "xray"
   },
   "JOHN-HAMILTON": {
     "name": "Team Associated",
@@ -144,8 +144,8 @@
     "slug": "team-associated"
   },
   "STEVEN-GRIFFITHS": {
-    "name": "Schumacher",
-    "slug": "schumacher"
+    "name": "Team Associated",
+    "slug": "team-associated"
   },
   "SIMON-FISHER": {
     "name": "Team Associated",
@@ -156,8 +156,8 @@
     "slug": "xray"
   },
   "MARK-GIAQUINTO": {
-    "name": "Xray",
-    "slug": "xray"
+    "name": "Kyosho",
+    "slug": "kyosho"
   },
   "ROGER-MILLS": {
     "name": "Team Associated",
@@ -232,8 +232,8 @@
     "slug": "schumacher"
   },
   "HAIDEN-HICKS": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Kyosho",
+    "slug": "kyosho"
   },
   "DANIEL-GRIFFITHS": {
     "name": "Team Associated",
@@ -336,12 +336,12 @@
     "slug": "xray"
   },
   "SHAUN-OGDEN": {
-    "name": "Yokomo",
-    "slug": "yokomo"
+    "name": "Team Associated",
+    "slug": "team-associated"
   },
   "DANE-WINTERSON": {
-    "name": "Tlr",
-    "slug": "tlr"
+    "name": "Team Associated",
+    "slug": "team-associated"
   },
   "GARETH-CAPPER": {
     "name": "Team Associated",
@@ -440,8 +440,8 @@
     "slug": "pr"
   },
   "JUSTIN-WALSH": {
-    "name": "Yokomo",
-    "slug": "yokomo"
+    "name": "Xray",
+    "slug": "xray"
   },
   "MATT-ALCOCK": {
     "name": "Team Associated",
@@ -536,8 +536,8 @@
     "slug": "yokomo"
   },
   "DANIEL-HURRELL": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Schumacher",
+    "slug": "schumacher"
   },
   "CHRIS-GREEN": {
     "name": "Team Associated",
@@ -644,8 +644,8 @@
     "slug": "schumacher"
   },
   "STEVE-ASHTON": {
-    "name": "Schumacher",
-    "slug": "schumacher"
+    "name": "Kyosho",
+    "slug": "kyosho"
   },
   "NATHAN-POWNEY": {
     "name": "Tlr",
@@ -668,8 +668,8 @@
     "slug": "team-associated"
   },
   "KEITH-HALSEY": {
-    "name": "Xray",
-    "slug": "xray"
+    "name": "Schumacher",
+    "slug": "schumacher"
   },
   "IEUAN-PAYNE": {
     "name": "Schumacher",
@@ -762,5 +762,17 @@
   "JAMIE-BEASLEY": {
     "name": "Xray",
     "slug": "xray"
+  },
+  "RICKY-NEWCOMBE": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "MARTIN-OWEN": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "JONATHAN-MAY": {
+    "name": "Schumacher",
+    "slug": "schumacher"
   }
 }
