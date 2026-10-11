@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-11T12:41:55.105Z",
+  "updatedAt": "2026-10-11T12:59:00.072Z",
   "entries": [
     {
       "driverKey": "DAVE-CLUTTERBUCK",
@@ -75,7 +75,7 @@
       "className": "Vintage",
       "countryCode": "GB",
       "chassis": "Team Associated",
-      "transponder": "8448453"
+      "transponder": "6923545"
     },
     {
       "driverKey": "DANE-WINTERSON",
