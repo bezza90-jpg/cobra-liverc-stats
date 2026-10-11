@@ -4,7 +4,7 @@
   "date": "2026-10-11",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518555",
-  "updatedAt": "2026-10-11T08:26:39.264Z",
+  "updatedAt": "2026-10-11T08:44:45.616Z",
   "entries": [
     {
       "driverKey": "DAVE-CLUTTERBUCK",
@@ -94,6 +94,95 @@
       "chassis": "Xray",
       "chassisSource": "wix",
       "transponder": "3753291"
+    },
+    {
+      "driverKey": "CHRISTOPHER-BAKER",
+      "driverName": "CHRISTOPHER BAKER",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "9194873"
+    },
+    {
+      "driverKey": "MARK-GIAQUINTO",
+      "driverName": "MARK GIAQUINTO",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho",
+      "chassisSource": "wix",
+      "transponder": "4115135"
+    },
+    {
+      "driverKey": "KEVIN-GREENWAY",
+      "driverName": "KEVIN GREENWAY",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "2485324"
+    },
+    {
+      "driverKey": "CHRIS-GUNTER",
+      "driverName": "CHRIS GUNTER",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "6099608"
+    },
+    {
+      "driverKey": "KEITH-HALSEY",
+      "driverName": "KEITH HALSEY",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "7893750"
+    },
+    {
+      "driverKey": "MATTHEW-HODGES",
+      "driverName": "MATTHEW HODGES",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "transponder": "3647613"
+    },
+    {
+      "driverKey": "RICKY-NEWCOMBE",
+      "driverName": "RICKY NEWCOMBE",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "2396977"
+    },
+    {
+      "driverKey": "GREG-PARKER",
+      "driverName": "GREG PARKER",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "7322122"
+    },
+    {
+      "driverKey": "RUSSELL-THOMAS",
+      "driverName": "RUSSELL THOMAS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "0777999"
+    },
+    {
+      "driverKey": "MATT-WOODIWISS",
+      "driverName": "MATT WOODIWISS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "8008844"
     },
     {
       "driverKey": "STEVE-ASHTON",
@@ -362,103 +451,6 @@
       "transponder": "2869785"
     },
     {
-      "driverKey": "CHRISTOPHER-BAKER",
-      "driverName": "CHRISTOPHER BAKER",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "chassisSource": "wix",
-      "transponder": "9194873"
-    },
-    {
-      "driverKey": "JAMIE-DAVIES",
-      "driverName": "JAMIE DAVIES",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Xray",
-      "transponder": "8144353"
-    },
-    {
-      "driverKey": "MARK-GIAQUINTO",
-      "driverName": "MARK GIAQUINTO",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Kyosho",
-      "chassisSource": "wix",
-      "transponder": "4115135"
-    },
-    {
-      "driverKey": "KEVIN-GREENWAY",
-      "driverName": "KEVIN GREENWAY",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "2485324"
-    },
-    {
-      "driverKey": "CHRIS-GUNTER",
-      "driverName": "CHRIS GUNTER",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Xray",
-      "chassisSource": "wix",
-      "transponder": "6099608"
-    },
-    {
-      "driverKey": "KEITH-HALSEY",
-      "driverName": "KEITH HALSEY",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Xray",
-      "chassisSource": "wix",
-      "transponder": "7893750"
-    },
-    {
-      "driverKey": "MATTHEW-HODGES",
-      "driverName": "MATTHEW HODGES",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "transponder": "3647613"
-    },
-    {
-      "driverKey": "RICKY-NEWCOMBE",
-      "driverName": "RICKY NEWCOMBE",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "2396977"
-    },
-    {
-      "driverKey": "GREG-PARKER",
-      "driverName": "GREG PARKER",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "7322122"
-    },
-    {
-      "driverKey": "RUSSELL-THOMAS",
-      "driverName": "RUSSELL THOMAS",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Xray",
-      "chassisSource": "wix",
-      "transponder": "0777999"
-    },
-    {
-      "driverKey": "MATT-WOODIWISS",
-      "driverName": "MATT WOODIWISS",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Xray",
-      "chassisSource": "wix",
-      "transponder": "8008844"
-    },
-    {
       "driverKey": "STUART-CARLING",
       "driverName": "STUART CARLING",
       "className": "Trucks",
@@ -545,6 +537,14 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "7305713"
+    },
+    {
+      "driverKey": "JAMIE-DAVIES",
+      "driverName": "JAMIE DAVIES",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "transponder": "8144353"
     },
     {
       "driverKey": "STEWART-WOODEND",
