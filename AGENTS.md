@@ -12,18 +12,21 @@ rotate or mirror without Matt's authorization; a mirror must mirror all text too
 Show the exact final version to Matt in this chat and wait for his explicit preview
 approval. "Approved" in the sheet alone is not approval of a cut-out.
 
-Record the exact submission ID, reviewed Drive file ID, SHA256 of the reviewed PNG,
-method=imagegen, approvedBy=Matt, previewApproved=true and rightFacing=true under
+Record SHA256 digests of the exact submission ID and reviewed Drive file ID as
+submissionIdHash and reviewedFileIdHash; keep raw IDs in the private sheet. Record
+SHA256 of the reviewed PNG as sha256, method=imagegen, approvedBy=Matt,
+previewApproved=true and rightFacing=true under
 the driver-key/class pair in public/data/car-avatar-review-policy.json reviews.
 Only after that acceptance, update publishedAssets (Git blob hashes for the exact
 final PNG and thumbnail) and assignments for that pair. Do not blanket refresh the
 policy from the current tree: it would accept unreviewed replacements. Keep all
 other classes and existing accepted images untouched. verify-avatar-review.py
 must pass before deployment. Existing manual-revision pins are authoritative.
+After explicit acceptance and manual publication, set manualPublish=true in the
+review record so scheduled jobs and stale retries preserve that exact version.
 
-The rejected Chris Gunter cut-out with reviewed Drive ID
-1QzkNKhLX13OgS0tqu56T0Kz0omlJaSor must never be republished. Keep it in
-blockedRevisions; a later accepted version must have a new file ID.
+The rejected Chris Gunter cut-out recorded in the review policy blocklist must never be
+republished. Keep it blocked; a later accepted version must have a new file ID.
 
 For Pending rows, use column M claim locking and re-read A:M immediately before
 each write, download, image edit, upload and publish. Skip active claims held by
