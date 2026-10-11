@@ -21,7 +21,7 @@ class SyncTests(unittest.TestCase):
         self.data.mkdir(parents=True)
         reviews = {}
         for pair, revision, ident in [('DALE|Trucks','file1','id1'),('MARK|Trucks','file2','id2'),('PAUL-CURTIS|2-Wheel Drive Buggy','file1','id1'),('DALE|2-Wheel Drive Buggy','rev','id')]:
-            reviews[pair] = {'submissionId':ident,'reviewedFileId':revision,'sha256':hashlib.sha256(b'photo').hexdigest(),'method':'imagegen','approvedBy':'Matt','previewApproved':True,'rightFacing':True}
+            reviews[pair] = {'submissionIdHash':hashlib.sha256(ident.encode()).hexdigest(),'reviewedFileIdHash':hashlib.sha256(revision.encode()).hexdigest(),'sha256':hashlib.sha256(b'photo').hexdigest(),'method':'imagegen','approvedBy':'Matt','previewApproved':True,'rightFacing':True}
         (self.data/'car-avatar-review-policy.json').write_text(json.dumps({'version':1,'reviews':reviews,'blockedRevisions':['rejected']}))
         self.patches = [patch.object(sync, 'ROOT', self.root), patch.object(sync, 'MANIFEST', self.data/'car-avatars.json'), patch.object(sync, 'REVISIONS', self.data/'revisions.json'), patch.object(sync, 'REPORT', self.data/'report.json'), patch.object(sync, 'ALIASES', self.data/'aliases.json'), patch.object(sync, 'THUMBNAILS', self.root/'public/assets/car-avatar-thumbnails')]
         for p in self.patches: p.start()
@@ -144,6 +144,27 @@ class SyncTests(unittest.TestCase):
         with self.assertRaises(ValueError):sync.require_chat_review('DALE|Trucks','file1','id1',b'photo')
 
     def test_rejected_chris_revision_never_downloaded_or_published(self):
+        state=('url',{'CHRIS|4-Wheel Drive Buggy':'rejected'}, {}, {'CHRIS|4-Wheel Drive Buggy':'id'})
+        self.assertFalse(sync.needs_processing(state[1],state[2],state[3]))
+        with patch.object(sync,'state',return_value=state),patch.object(sync,'request_jsonp') as fetch:
+            sync.publish('id');fetch.assert_not_called()
+
+    def test_chat_published_hash_record_protects_image_against_stale_feed_and_retry(self):
+        pair='DALE|Trucks'
+        policy=json.loads((self.data/'car-avatar-review-policy.json').read_text())
+        policy['reviews'][pair]['manualPublish']=True
+        (self.data/'car-avatar-review-policy.json').write_text(json.dumps(policy))
+        sync.MANIFEST.write_text(json.dumps({'DALE':{'Trucks':'accepted.png'}}))
+        self.assertTrue(sync.manually_kept(pair,'stale-file'))
+        with patch.object(sync,'state',return_value=('url',{pair:'stale-file'},{pair:'file1'},{pair:'id1'})),patch.object(sync,'request_jsonp') as fetch:
+            sync.publish('id1');fetch.assert_not_called()
+        self.assertEqual(json.loads(sync.MANIFEST.read_text()),{'DALE':{'Trucks':'accepted.png'}})
+
+    def test_rejected_revision_hash_stays_blocked(self):
+        policy=json.loads((self.data/'car-avatar-review-policy.json').read_text())
+        policy['blockedRevisions']=[]
+        policy['blockedRevisionHashes']=[hashlib.sha256(b'rejected').hexdigest()]
+        (self.data/'car-avatar-review-policy.json').write_text(json.dumps(policy))
         state=('url',{'CHRIS|4-Wheel Drive Buggy':'rejected'}, {}, {'CHRIS|4-Wheel Drive Buggy':'id'})
         self.assertFalse(sync.needs_processing(state[1],state[2],state[3]))
         with patch.object(sync,'state',return_value=state),patch.object(sync,'request_jsonp') as fetch:

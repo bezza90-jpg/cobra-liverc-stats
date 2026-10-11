@@ -40,13 +40,15 @@ def review_policy():
 
 
 def blocked_revision(revision):
-    return revision in review_policy()['blockedRevisions']
+    policy = review_policy()
+    return (revision in policy['blockedRevisions']
+            or hashlib.sha256(revision.encode()).hexdigest() in policy.get('blockedRevisionHashes', []))
 
 
 def require_chat_review(pair, revision, submission_id, photo_bytes=None):
     review = review_policy()['reviews'].get(pair, {})
-    if (blocked_revision(revision) or review.get('reviewedFileId') != revision
-            or review.get('submissionId') != submission_id
+    if (blocked_revision(revision) or review.get('reviewedFileIdHash') != hashlib.sha256(revision.encode()).hexdigest()
+            or review.get('submissionIdHash') != hashlib.sha256(submission_id.encode()).hexdigest()
             or review.get('method') != 'imagegen'
             or review.get('approvedBy') != 'Matt'
             or review.get('previewApproved') is not True
@@ -216,7 +218,13 @@ def manually_kept(pair, revision):
     # A reviewed manual image remains authoritative even if the approval feed
     # still returns an older file ID. Only an explicit manual publish may replace
     # it; scheduled processing and retries must not overwrite it.
-    return bool(read_json(ROOT / 'public/data/car-avatar-manual-revisions.json').get(pair))
+    if read_json(ROOT / 'public/data/car-avatar-manual-revisions.json').get(pair):
+        return True
+    review = review_policy()['reviews'].get(pair, {})
+    return (review.get('manualPublish') is True
+            and review.get('previewApproved') is True
+            and review.get('approvedBy') == 'Matt'
+            and review.get('method') == 'imagegen')
 
 
 def needs_processing(current, previous, photo_ids, retry_id=''):

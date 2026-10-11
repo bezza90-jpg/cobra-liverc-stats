@@ -1,9 +1,41 @@
 {
   "version": 1,
-  "blockedRevisions": [
-    "1QzkNKhLX13OgS0tqu56T0Kz0omlJaSor"
-  ],
-  "reviews": {},
+  "blockedRevisions": [],
+  "reviews": {
+    "BRUCE|Trucks": {
+      "submissionIdHash": "dbb8ab86443d9320d4fed94fe0e85af8637b616120283a7101026187a9f159d1",
+      "reviewedFileIdHash": "d49e749f6916e563df2219633c9c9c579cae947e9f9141a86c0c4734d93923e9",
+      "sha256": "79249e43db968e8d3aa411f46b58c7faa5842897b996ba00661975c471659201",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-11T17:39:25.360045+00:00"
+    },
+    "ROGER-MILLS|2-Wheel Drive Buggy": {
+      "submissionIdHash": "79b43c673d5c8cf84a8ea762f4e9702840516ae15fc3a6e2b6def2914e778fa8",
+      "reviewedFileIdHash": "7fda91a3e6fd84b05d27e885a52cc03914d7cf65b645f2c7c2de3fa924d57281",
+      "sha256": "ba4dbf37ab47d36cd27e16388d64c52735fe1236dd334a99377d042d771df4d0",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-11T17:39:27.428603+00:00"
+    },
+    "CHRIS-GUNTER|4-Wheel Drive Buggy": {
+      "submissionIdHash": "03358749024c6ca299dd38d2cba69374d7a0c630c7ca88b7fac1612870c0f754",
+      "reviewedFileIdHash": "0ea50ff3fab5d05ba0ec372ae85c3ff30be57d86ecbecbb6cd5c71a4c8034258",
+      "sha256": "71bf274fccf35dadbd56c5e7fc95347d8acb74f7d8b7a497355d4739dbaad4f8",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-11T17:39:29.889229+00:00"
+    }
+  },
   "publishedAssets": {
     "assets/car-avatar-thumbnails/AINSLEY-EVANS-AUTO-2WD.webp": "b0422754d5791f3c089aacc74990c23aadd75a49",
     "assets/car-avatar-thumbnails/AINSLEY-EVANS-AUTO-VINTAGE.webp": "648bad64078b98b8a969b0f20ed8c2a9492827a1",
@@ -155,12 +187,18 @@
     "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-2WD.png": "a894a56203a9454c62b3e8bf44b23820c2ff6f1b",
     "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-4WD.png": "c5afd7154220ff17ff21818deeedd0ac99986cf4",
     "assets/car-avatars/STEVE-CURTIS-RICH.png": "882751c1d280b6791dea2d8e48fd9eb7c6e08a17",
-    "assets/car-avatars/STUART-IRONS-AUTO-2WD.png": "30c227720b4c023e05c123c27e7c5ab1f8163f15"
+    "assets/car-avatars/STUART-IRONS-AUTO-2WD.png": "30c227720b4c023e05c123c27e7c5ab1f8163f15",
+    "assets/car-avatars/BRUCE-AUTO-TRUCKS.png": "5fdff0ec65edbd49618108764a5475d59b64eb91",
+    "assets/car-avatar-thumbnails/BRUCE-AUTO-TRUCKS.webp": "c6de3e6e9d48ffde4e193ac8264378aee8f1bae8",
+    "assets/car-avatars/ROGER-MILLS-AUTO-2WD.png": "bcf25824ba99b60ac0a308412cfda467021cd95b",
+    "assets/car-avatar-thumbnails/ROGER-MILLS-AUTO-2WD.webp": "f27bb9d644138ea0275e737d78bfd890bd214439",
+    "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png": "f9a15dabdb66f27896bcb079b0097210fd7eef40",
+    "assets/car-avatar-thumbnails/CHRIS-GUNTER-AUTO-4WD.webp": "d38bd88502742410fe810d1653e72fd45e9fbfb9"
   },
   "assignments": {
     "BRUCE": {
       "2-Wheel Drive Buggy": "assets/car-avatars/BRUCE-AUTO-2WD.png",
-      "Trucks": "assets/car-avatars/BRUCE.png",
+      "Trucks": "assets/car-avatars/BRUCE-AUTO-TRUCKS.png",
       "4-Wheel Drive Buggy": "assets/car-avatars/BRUCE-AUTO-4WD.png"
     },
     "MATTHEW-HODGES": {
@@ -323,7 +361,15 @@
     },
     "PAUL-ROSE": {
       "2-Wheel Drive Buggy": "assets/car-avatars/PAUL-ROSE-AUTO-2WD.png"
+    },
+    "ROGER-MILLS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/ROGER-MILLS-AUTO-2WD.png"
+    },
+    "CHRIS-GUNTER": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png"
     }
-  }
+  },
+  "blockedRevisionHashes": [
+    "0eb98fe7bcb92db4a1dca104825bddac39b444e701bbbf783803125ed05acf13"
+  ]
 }
-
