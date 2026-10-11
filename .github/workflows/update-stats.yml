@@ -86,22 +86,16 @@ jobs:
           pending=$(python scripts/sync-approved-avatars.py --check)
           echo "pending=$pending" >> "$GITHUB_OUTPUT"
 
-      - name: Cache background removal model
-        if: steps.car_photos.outputs.pending == 'yes'
-        uses: actions/cache@v4
-        with:
-          path: ~/.rembg/models
-          key: cobra-car-avatar-u2netp-v1
-
-      - name: Prepare approved car avatars
+      - name: Publish chat-reviewed transparent car avatars
         if: steps.car_photos.outputs.pending == 'yes'
         run: |
-          python -m pip install "rembg[cpu]" pillow
+          python -m pip install pillow
           python scripts/sync-approved-avatars.py
 
       - name: Prepare small car display images
         run: |
           python -m pip install pillow
+          python -m unittest discover -s scripts -p 'test*avatar*.py'
           python scripts/build-display-images.py
 
       - name: Rebuild illustrated podiums
@@ -168,6 +162,9 @@ jobs:
         if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/configure-pages@v5
 
+      - name: Enforce reviewed avatar files before deployment
+        run: python3 scripts/verify-avatar-review.py
+
       - name: Upload website
         if: github.event_name != 'schedule' || github.event.schedule != '3,13,23,33,43,53 8-20 * * 0' || steps.race_day.outputs.run == 'yes'
         uses: actions/upload-pages-artifact@v3
@@ -197,3 +194,4 @@ jobs:
           if failures:
               raise SystemExit('Some avatars need attention. Successful updates have been deployed; use Site Manager Approvals to retry.')
           PY
+

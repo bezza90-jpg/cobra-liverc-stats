@@ -1,0 +1,37 @@
+# Car avatar review safeguards
+
+Matt requires processing in his interactive car-approvals chat, using the built-in
+image editing tool for background extraction. Never use rembg, U2NET, browser
+model/canvas masks, thresholding, GrabCut or automatic background-removal fallback.
+Do not approve a source photo and let the publishing job process it later.
+
+Before publishing a NEW or changed avatar, visually compare the ORIGINAL with the
+AI transparent result. Preserve every visible wheel, tyre, wing, suspension part,
+aerial, body edge, decal, text and proportion. The car must point right. Do not
+rotate or mirror without Matt's authorization; a mirror must mirror all text too.
+Show the exact final version to Matt in this chat and wait for his explicit preview
+approval. "Approved" in the sheet alone is not approval of a cut-out.
+
+Record the exact submission ID, reviewed Drive file ID, SHA256 of the reviewed PNG,
+method=imagegen, approvedBy=Matt, previewApproved=true and rightFacing=true under
+the driver-key/class pair in public/data/car-avatar-review-policy.json reviews.
+Only after that acceptance, update publishedAssets (Git blob hashes for the exact
+final PNG and thumbnail) and assignments for that pair. Do not blanket refresh the
+policy from the current tree: it would accept unreviewed replacements. Keep all
+other classes and existing accepted images untouched. verify-avatar-review.py
+must pass before deployment. Existing manual-revision pins are authoritative.
+
+The rejected Chris Gunter cut-out with reviewed Drive ID
+1QzkNKhLX13OgS0tqu56T0Kz0omlJaSor must never be republished. Keep it in
+blockedRevisions; a later accepted version must have a new file ID.
+
+For Pending rows, use column M claim locking and re-read A:M immediately before
+each write, download, image edit, upload and publish. Skip active claims held by
+others. Clear only your own lock on failure or while waiting for preview approval.
+Do not hold a claim while waiting for Matt. Before final approval, re-claim and
+re-verify the row and reviewed version, verify deployment/public image, then write
+only Reviewed File ID, Reviewed At and Approved and clear M in one batch.
+
+Background tasks only notify of new Pending items; they must never process or
+approve avatars. Repository publishing validates accepted files; it never creates
+a cut-out. Do not bypass or weaken these checks to make an unreviewed publish pass.

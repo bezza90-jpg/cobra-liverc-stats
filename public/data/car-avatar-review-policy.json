@@ -1,0 +1,329 @@
+{
+  "version": 1,
+  "blockedRevisions": [
+    "1QzkNKhLX13OgS0tqu56T0Kz0omlJaSor"
+  ],
+  "reviews": {},
+  "publishedAssets": {
+    "assets/car-avatar-thumbnails/AINSLEY-EVANS-AUTO-2WD.webp": "b0422754d5791f3c089aacc74990c23aadd75a49",
+    "assets/car-avatar-thumbnails/AINSLEY-EVANS-AUTO-VINTAGE.webp": "648bad64078b98b8a969b0f20ed8c2a9492827a1",
+    "assets/car-avatar-thumbnails/BEN-EVANS-AUTO-2WD.webp": "9b1c981393ff7bcfa833aa9fe9480d2d30b761df",
+    "assets/car-avatar-thumbnails/BOB-GELSTHARP-AUTO-4WD.webp": "16d612821dbdbf0a45eb2a73012fafd4e2b98b0a",
+    "assets/car-avatar-thumbnails/BOB-GELSTHARP-AUTO-VINTAGE.webp": "f00d2b8dd0e5e21c948529b19d2a405036244b04",
+    "assets/car-avatar-thumbnails/BOBTECH-AUTO-2WD.webp": "fd87fb4098a3988ecf1084387bcd423689b8cdaa",
+    "assets/car-avatar-thumbnails/BOBTECH-AUTO-TRUCKS.webp": "91c09c4d6a0486ce75be69a96e9527ef029108ba",
+    "assets/car-avatar-thumbnails/BRUCE-AUTO-2WD.webp": "f527028d7aa600aa71bad3716e9550989cfd7257",
+    "assets/car-avatar-thumbnails/BRUCE-AUTO-4WD.webp": "0a25971049e3b3a470c4df7c6b18e06d6029cd55",
+    "assets/car-avatar-thumbnails/BRUCE.webp": "199c280789723f8eeaa05debc3419809294639cd",
+    "assets/car-avatar-thumbnails/CHRIS-LEONARD-AUTO-2WD.webp": "9beb538fb231b17aa3d582955ad82d1c07c5efd6",
+    "assets/car-avatar-thumbnails/CHRIS-LEONARD-AUTO-4WD.webp": "8a019d6a43115a9ba556721e47c08a48a0e8e811",
+    "assets/car-avatar-thumbnails/CHRISTOPHER-BAKER-AUTO-2WD.webp": "b6ccbd4744ed4072b21be6e8f25e9fd0b0381f40",
+    "assets/car-avatar-thumbnails/CHRISTOPHER-BAKER-AUTO-4WD.webp": "101877445a49e3d8a91800b692ab8f5237b2fde2",
+    "assets/car-avatar-thumbnails/COHEN-MANNING-AUTO-2WD.webp": "03f32dbd3b06fc1ae1adcf743bc76b491f39612a",
+    "assets/car-avatar-thumbnails/DALE-PRESTON-AUTO-2WD.webp": "991bb647b35f8ecdbbec912b623eb4e85156f981",
+    "assets/car-avatar-thumbnails/DAN-PULLEY-AUTO-4WD.webp": "f02e0a8ccb0e8c5c0e15efdc34b39ef2203fe451",
+    "assets/car-avatar-thumbnails/DANIEL-HURRELL-AUTO-2WD.webp": "10e0d5b8ba44c6e2017ab0eb2153a315fca25e7e",
+    "assets/car-avatar-thumbnails/DAVID-DAWSON-AUTO-2WD.webp": "728acd8cadd891dae32d2ee6c03b8226a59cc5d5",
+    "assets/car-avatar-thumbnails/DAVID-MILFORD-AUTO-2WD.webp": "47f7df08bee275d0e1c64873219efb4668b6bcaf",
+    "assets/car-avatar-thumbnails/DAVID-MILFORD-AUTO-4WD.webp": "7d05ea2fbc49f53b5b8e32474590f257070da211",
+    "assets/car-avatar-thumbnails/EDWARD-ROSS-AUTO-2WD.webp": "98111bf3e9ca3611df44260511d14c7554c100db",
+    "assets/car-avatar-thumbnails/GARETH-MANNING-AUTO-2WD.webp": "89731418ecd6bcc1acde132699af04fcdaa8af12",
+    "assets/car-avatar-thumbnails/GREG-LANE-AUTO-2WD.webp": "6f817a31986da821d6caf924e1e094d4723c42ff",
+    "assets/car-avatar-thumbnails/HARRY-DAVIS-AUTO-2WD.webp": "0ec95b3253fc395a3a301e8f9b24939bd79ce93d",
+    "assets/car-avatar-thumbnails/IAN-PEAKMAN-AUTO-2WD.webp": "282c6cbef4c197872f292f0d7de79fe42381ac34",
+    "assets/car-avatar-thumbnails/IAN-PEAKMAN-AUTO-4WD.webp": "6838932a4fb312b3cf27d8494a5eeedf207323f4",
+    "assets/car-avatar-thumbnails/JAMIE-DAVIES-AUTO-2WD.webp": "4327114db899c7ba43f2401da3fc41cddf9d3067",
+    "assets/car-avatar-thumbnails/JAMIE-DAVIES-AUTO-4WD.webp": "be83cd19e0498a132b4c55caad7af55f01b88630",
+    "assets/car-avatar-thumbnails/JAMIE-DAVIES-AUTO-TRUCKS.webp": "9e88842298c7501f1883bacf8ce85b1b094b0315",
+    "assets/car-avatar-thumbnails/JOHN-MORDEN-AUTO-2WD.webp": "2471775c5eeaf60b9e3fb0eb455021d9ffb9b1f2",
+    "assets/car-avatar-thumbnails/JON-PAISLEY-AUTO-2WD.webp": "c5b97b2dec00a6f9d2430bee6bfd3fffd4e0c13d",
+    "assets/car-avatar-thumbnails/JON-PAISLEY-AUTO-4WD.webp": "d59faf0df4c026447d28788afd9e3460572447dd",
+    "assets/car-avatar-thumbnails/JON-PAISLEY-AUTO-VINTAGE.webp": "e20b0cb11a36edc056a2e1fccc984022549a11d8",
+    "assets/car-avatar-thumbnails/JON-TUCKER.webp": "a6a6beddd31d0947f3dfc3da6db950edb1d997f2",
+    "assets/car-avatar-thumbnails/JOSH-WILLIAMS-AUTO-2WD.webp": "e36f16b846d59f6ca73c8f7939b7a129f20be8bb",
+    "assets/car-avatar-thumbnails/JUSTIN-WALKER-AUTO-2WD.webp": "26708ce75e0580dd631322281904c8ec611e6549",
+    "assets/car-avatar-thumbnails/KEVIN-GREENWAY-AUTO-2WD.webp": "98dd35cb274c4500ff4c2765269886a1b724018a",
+    "assets/car-avatar-thumbnails/KEVIN-GREENWAY-AUTO-4WD.webp": "30f2511f3b8d4641932f9f2bb54e8cb422502020",
+    "assets/car-avatar-thumbnails/LEE-KILLWORTH-AUTO-2WD.webp": "d2933ac454b346170eb3a43e2d87706b0982ed9b",
+    "assets/car-avatar-thumbnails/LEE-KILLWORTH-AUTO-4WD.webp": "c79fa12bd49a4f46b3d764f8788f3d2e380e69b0",
+    "assets/car-avatar-thumbnails/LEE-MARSON-AUTO-TRUCKS.webp": "e22c1023d03e66fa2bccd80a14616be38e7ab5d1",
+    "assets/car-avatar-thumbnails/LEWIS-HOPKINS-AUTO-2WD.webp": "edf19d826c6224c685d08e225c13a404e10d6558",
+    "assets/car-avatar-thumbnails/LEWIS-HOPKINS-AUTO-4WD.webp": "9137c97a4c60c7dbe14334244ac86c7a6b00514b",
+    "assets/car-avatar-thumbnails/MARK-COX-AUTO-2WD.webp": "417853cfd7c8510c3fd6c0af748dac5acddd9d20",
+    "assets/car-avatar-thumbnails/MARK-GIAQUINTO-AUTO-4WD.webp": "5fd76b03ee6f24625cef067dc8b408ecaa580706",
+    "assets/car-avatar-thumbnails/MARK-GREENWOOD-AUTO-2WD.webp": "24b006bfadb5af2ad2001e7ce6c35872474c39c6",
+    "assets/car-avatar-thumbnails/MARTIN-PITMAN-AUTO-2WD.webp": "c5c746ed379a436cbc50c416f640b381ac07bddb",
+    "assets/car-avatar-thumbnails/MATT-WOODIWISS-AUTO-2WD.webp": "28e3f0dd923cf474af25d48d4cf8a038da8d834f",
+    "assets/car-avatar-thumbnails/MATTHEW-HODGES-2WD.webp": "3867dd3e735e31ab2e5e7671d2f68cb1b0dda0b1",
+    "assets/car-avatar-thumbnails/MATTHEW-HODGES-4WD.webp": "bbe955b26e0a6c06e83ba4dc312d6470a439eb25",
+    "assets/car-avatar-thumbnails/MATTHEW-HODGES-AUTO-4WD.webp": "03aa08b9c1378cb968710848caebc7a6b015790a",
+    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-AUTO-4WD.webp": "ba2bc2727ae1534f7c7613a75181794aec77de04",
+    "assets/car-avatar-thumbnails/MIKE-DRISCOLL.webp": "8fd49493e21c1ccfa75492d398fb537f144bc075",
+    "assets/car-avatar-thumbnails/MIKE-HYSIAK-AUTO-2WD.webp": "ae3a5f526eab20ba2cac23b81a017b38a0bae0b0",
+    "assets/car-avatar-thumbnails/NEIL-SMITH-AUTO-2WD.webp": "dacd488216c068bc4d405ef96d7dabf8d94982e3",
+    "assets/car-avatar-thumbnails/NEIL-SMITH-AUTO-4WD.webp": "8c1b940acf5f2fe64f77fabfbd84ab8381024541",
+    "assets/car-avatar-thumbnails/PAUL-ROSE-AUTO-2WD.webp": "0b38b73bbc63fe0622dd411faaf7c7d6f1008770",
+    "assets/car-avatar-thumbnails/RICHARD-HARRISON-AUTO-2WD.webp": "0b4788a72d582f5bdd5a3ebe64528f625640743d",
+    "assets/car-avatar-thumbnails/RICHARD-HARRISON-AUTO-4WD.webp": "4885145714de91f3d6f10fcc1daaef4681e3f5f9",
+    "assets/car-avatar-thumbnails/RICHARD-MORSE-AUTO-2WD.webp": "f43fb14bb4ec878d378cbfaacac4df0f7d733abd",
+    "assets/car-avatar-thumbnails/RICKY-NEWCOMBE-AUTO-2WD.webp": "53c97fff4cc1a34c4965cd4c74d1cf2e503161de",
+    "assets/car-avatar-thumbnails/RICKY-NEWCOMBE-AUTO-4WD.webp": "4b26648b211342168314e1173ae8f4f4caff2881",
+    "assets/car-avatar-thumbnails/ROY-DAVIES-AUTO-2WD.webp": "2498f29f24eb88c8e719c4e1158e41b646590c10",
+    "assets/car-avatar-thumbnails/RUSS-WILLIAMS-AUTO-2WD.webp": "7116cb22e10cbf1d5bacbcbb347f7b9ca6fb73df",
+    "assets/car-avatar-thumbnails/RUSS-WILLIAMS-AUTO-4WD.webp": "dddcddf4dc67547cb36765cc8ba0acae1048e181",
+    "assets/car-avatar-thumbnails/SEB-FISHER-AUTO-2WD.webp": "46ca106c096540a19fcc704ab7f9fd47e48b93ec",
+    "assets/car-avatar-thumbnails/SIMON-FISHER-AUTO-2WD.webp": "e4b6aa79997c66ae41017f7b34ffd9e79cad812e",
+    "assets/car-avatar-thumbnails/SPENCER-FARLEY-AUTO-2WD.webp": "7f578c043d53784556053a724303aa621e008f28",
+    "assets/car-avatar-thumbnails/SPENCER-FARLEY-AUTO-4WD.webp": "25d74659f010f11daa2c199658f4c878b802cdd8",
+    "assets/car-avatar-thumbnails/STEVE-CURTIS-RICH-AUTO-2WD.webp": "9c97866ef2fce2f982ec71ee393d51792a349eac",
+    "assets/car-avatar-thumbnails/STEVE-CURTIS-RICH-AUTO-4WD.webp": "d7ecedafba247a4c6646f1c9e0ab48937ff37e32",
+    "assets/car-avatar-thumbnails/STEVE-CURTIS-RICH.webp": "e9de4c7bb22a8f08135a273afc10442fdfd4c89c",
+    "assets/car-avatar-thumbnails/STUART-IRONS-AUTO-2WD.webp": "7d8c41ce11fd2f5dfddda7c1ad3287b0309de41b",
+    "assets/car-avatar-thumbnails/matt-hodges-car.webp": "3867dd3e735e31ab2e5e7671d2f68cb1b0dda0b1",
+    "assets/car-avatars/AINSLEY-EVANS-AUTO-2WD.png": "b7899bc94ee6010e99acd53362261063fd3d8f06",
+    "assets/car-avatars/AINSLEY-EVANS-AUTO-VINTAGE.png": "af259205906f9dc1095ba13032f4a55327e9881a",
+    "assets/car-avatars/BEN-EVANS-AUTO-2WD.png": "8de861d47d6c9af11c52a484863e5173824503d1",
+    "assets/car-avatars/BOB-GELSTHARP-AUTO-4WD.png": "ca02356c326ae2cac4070c63ce122d10a801719c",
+    "assets/car-avatars/BOB-GELSTHARP-AUTO-VINTAGE.png": "ea2041493ccda58c01589f02d4f331330a630220",
+    "assets/car-avatars/BOBTECH-AUTO-2WD.png": "5c59f4fe2828a441f04ac683cecc623eb069ccce",
+    "assets/car-avatars/BOBTECH-AUTO-TRUCKS.png": "95ba2a00a65496057817c5c68ead72a47cd9c3f7",
+    "assets/car-avatars/BRUCE-AUTO-2WD.png": "5432eee1b3d3259aa614d41ecbffd8397883ff8a",
+    "assets/car-avatars/BRUCE-AUTO-4WD.png": "1701dab370ffab12d9bcaf24df3187e4cd63aec0",
+    "assets/car-avatars/BRUCE.png": "0df282a3c2798cc44ea6c4fcd0ca1a36bfea0371",
+    "assets/car-avatars/CHRIS-LEONARD-AUTO-2WD.png": "a336bb8e83813bdeddb16dd30a67eabc3281457b",
+    "assets/car-avatars/CHRIS-LEONARD-AUTO-4WD.png": "0fa6318593c482d2629e231c244671754dbad34a",
+    "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-2WD.png": "5becc425e4fb1a0413c15d0e8704739ae04e412f",
+    "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-4WD.png": "9ea242096af9262376fccfe0ec1e38a9336f6706",
+    "assets/car-avatars/COHEN-MANNING-AUTO-2WD.png": "bb50f8a59b62caba8aa52e3fc01bd6fc4be63ba6",
+    "assets/car-avatars/DALE-PRESTON-AUTO-2WD.png": "3bf21a8c95c25fb36c54e39b64f2bff1c499ca72",
+    "assets/car-avatars/DAN-PULLEY-AUTO-4WD.png": "6c0c9bc3738455aecbde88439b1695bd9f2aae1a",
+    "assets/car-avatars/DANIEL-HURRELL-AUTO-2WD.png": "3ee06c39386323cf3f0e03dcff06680544768732",
+    "assets/car-avatars/DAVID-DAWSON-AUTO-2WD.png": "30aa9cf97b0fcd6cdaa0d0b6ec5df4972a5e52f4",
+    "assets/car-avatars/DAVID-MILFORD-AUTO-2WD.png": "d6bf25159bcb18b3c0691fc4617e094157d19948",
+    "assets/car-avatars/DAVID-MILFORD-AUTO-4WD.png": "e3e0d38502d0504ff20c019ea24783c4acd748a6",
+    "assets/car-avatars/EDWARD-ROSS-AUTO-2WD.png": "53df9a238f2a9a6a4aa1766a521fd79467a59264",
+    "assets/car-avatars/GARETH-MANNING-AUTO-2WD.png": "8fd559ef3c25b16181ec1000aeff871a400b952b",
+    "assets/car-avatars/GREG-LANE-AUTO-2WD.png": "11d3f43ae5bce8a056295601aee9d92075a027b4",
+    "assets/car-avatars/HARRY-DAVIS-AUTO-2WD.png": "3c4392a47b4cb72f1ab2165c82f6a7ea70cad84e",
+    "assets/car-avatars/IAN-PEAKMAN-AUTO-2WD.png": "1c762b1adce95959d9702921dade3c7e5d152340",
+    "assets/car-avatars/IAN-PEAKMAN-AUTO-4WD.png": "fa624b258acbb3f7c348e5f0e267b3f18402f395",
+    "assets/car-avatars/JAMIE-DAVIES-AUTO-2WD.png": "43f31c417edbd0f9e20c1ad9291d672f2c96747e",
+    "assets/car-avatars/JAMIE-DAVIES-AUTO-4WD.png": "c15abdc61e1fc760431d7eea4173deb06d6fa595",
+    "assets/car-avatars/JAMIE-DAVIES-AUTO-TRUCKS.png": "734cd42f505d370d0a07e4df7caf92cc19b882d2",
+    "assets/car-avatars/JOHN-MORDEN-AUTO-2WD.png": "ec39af0886bdcc4540f764d84dc3cac3886c858e",
+    "assets/car-avatars/JON-PAISLEY-AUTO-2WD.png": "ab51f6f0d358e8bc36ff2131e8c552cd1ce0da60",
+    "assets/car-avatars/JON-PAISLEY-AUTO-4WD.png": "93d8298e10b9acd1fcc9b7425a7324f2cca86b72",
+    "assets/car-avatars/JON-PAISLEY-AUTO-VINTAGE.png": "9ed497bd3ccfec15086c368cf9a401ec279e82fa",
+    "assets/car-avatars/JON-TUCKER.png": "aec1b5868beab6d756fd1a1cf2fe18410de86a68",
+    "assets/car-avatars/JOSH-WILLIAMS-AUTO-2WD.png": "38ceaf5c3fecbf9205a839c3c0f12ebcb62a5f5d",
+    "assets/car-avatars/JUSTIN-WALKER-AUTO-2WD.png": "0d61839e4e636cacc8ded350562280a62a21dfef",
+    "assets/car-avatars/KEVIN-GREENWAY-AUTO-2WD.png": "e2111eaf4f966d531b3ce52c496aca4f0b017036",
+    "assets/car-avatars/KEVIN-GREENWAY-AUTO-4WD.png": "6b0477ebe9f90c380a83fbce9b1f3334fd77cc41",
+    "assets/car-avatars/LEE-KILLWORTH-AUTO-2WD.png": "c53a39978e395ddb144c7de35fb6916634204add",
+    "assets/car-avatars/LEE-KILLWORTH-AUTO-4WD.png": "7a157f49ed271f0d32914507356601c9a03ace04",
+    "assets/car-avatars/LEE-MARSON-AUTO-TRUCKS.png": "acc4b9fcadf9cafe5927ff1d76b17b247dbcf0cf",
+    "assets/car-avatars/LEWIS-HOPKINS-AUTO-2WD.png": "78e1cfb80c83759a63ae8845a5dd83089b697283",
+    "assets/car-avatars/LEWIS-HOPKINS-AUTO-4WD.png": "5e64d3ac1bed58baf9b2e1c408a403d1e68b9216",
+    "assets/car-avatars/MARK-COX-AUTO-2WD.png": "69ae523a35adf527ed091355e9a1c6ebc321ac2e",
+    "assets/car-avatars/MARK-GIAQUINTO-AUTO-4WD.png": "d3fe4988bd2b319922d2f2b9efbc7eca3836727e",
+    "assets/car-avatars/MARK-GREENWOOD-AUTO-2WD.png": "1a967e79a72f86a21f9f9b70beaa15269845d369",
+    "assets/car-avatars/MARTIN-PITMAN-AUTO-2WD.png": "5bc43bd57a635fec56124f698e6689519ff6f961",
+    "assets/car-avatars/MATT-WOODIWISS-AUTO-2WD.png": "6312d20d859e1fb7d66557021316b759ddaec1e1",
+    "assets/car-avatars/MATTHEW-HODGES-2WD.png": "dd4754f1aa6226076c174a47bac946fa56a2061c",
+    "assets/car-avatars/MATTHEW-HODGES-4WD.png": "bd679a8de86bcd86f6415bae6eba4b64ed98e7a2",
+    "assets/car-avatars/MATTHEW-HODGES-AUTO-4WD.png": "5769710a028a3970f8b2b115894235749be947a7",
+    "assets/car-avatars/MIKE-DRISCOLL-AUTO-4WD.png": "9a2106e943a367d02f31ec3d246c93149d1fa947",
+    "assets/car-avatars/MIKE-DRISCOLL.png": "d2c3f37b23d98c4dde8a4b0e9b52fb6d888165e1",
+    "assets/car-avatars/MIKE-HYSIAK-AUTO-2WD.png": "2b27d8036dddf1ba94cd37c95a9fc96c4a30e0a3",
+    "assets/car-avatars/NEIL-SMITH-AUTO-2WD.png": "982d2e2a3eb6d24a2cba2c648edd33555ace06d3",
+    "assets/car-avatars/NEIL-SMITH-AUTO-4WD.png": "16179dfa0c00a80c5552b51a890e6e87c70e3dd7",
+    "assets/car-avatars/PAUL-ROSE-AUTO-2WD.png": "5e77bf1abe7f1df2ceb512d39e222f32476129eb",
+    "assets/car-avatars/RICHARD-HARRISON-AUTO-2WD.png": "6237be93dfdd406bed7c307d8aef63c26ef46b07",
+    "assets/car-avatars/RICHARD-HARRISON-AUTO-4WD.png": "5665363b5772bbf39ebfccfc77e941851c930fa7",
+    "assets/car-avatars/RICHARD-MORSE-AUTO-2WD.png": "598bb6a3f85e58e8c9ecaf6d662853536349b700",
+    "assets/car-avatars/RICKY-NEWCOMBE-AUTO-2WD.png": "9f8cda7cc1fb20875b98556676145aed82d88898",
+    "assets/car-avatars/RICKY-NEWCOMBE-AUTO-4WD.png": "ae6e5b6d66f3531be93d700fed9d94698701d402",
+    "assets/car-avatars/ROY-DAVIES-AUTO-2WD.png": "9eaed270412350238cabebe831d94595d130b510",
+    "assets/car-avatars/RUSS-WILLIAMS-AUTO-2WD.png": "dde8f234179dbd553ba3eab4a9df191a0b975f48",
+    "assets/car-avatars/RUSS-WILLIAMS-AUTO-2WD.webp": "f9193c3d798bf1159cd5084157309e065a0e9fd9",
+    "assets/car-avatars/RUSS-WILLIAMS-AUTO-4WD.png": "bc1e756f3073614e3340103b256c01d46ec114e8",
+    "assets/car-avatars/RUSS-WILLIAMS-AUTO-4WD.webp": "fc65640df67fe5b08c0b5e00d2f445d8bf7c9b4a",
+    "assets/car-avatars/SEB-FISHER-AUTO-2WD.png": "3378d5961fbb53ea0670964e0411d15fa7b12a0e",
+    "assets/car-avatars/SIMON-FISHER-AUTO-2WD.png": "762dbf42aa51864f8ad24de9f0eb943003219f2f",
+    "assets/car-avatars/SPENCER-FARLEY-AUTO-2WD.png": "414f37585e3c4ee343b6e373ca6f241277827371",
+    "assets/car-avatars/SPENCER-FARLEY-AUTO-4WD.png": "7cb6a4eb0c0b8ab601fd7bcb95575343f6e3eb02",
+    "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-2WD.png": "a894a56203a9454c62b3e8bf44b23820c2ff6f1b",
+    "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-4WD.png": "c5afd7154220ff17ff21818deeedd0ac99986cf4",
+    "assets/car-avatars/STEVE-CURTIS-RICH.png": "882751c1d280b6791dea2d8e48fd9eb7c6e08a17",
+    "assets/car-avatars/STUART-IRONS-AUTO-2WD.png": "30c227720b4c023e05c123c27e7c5ab1f8163f15"
+  },
+  "assignments": {
+    "BRUCE": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/BRUCE-AUTO-2WD.png",
+      "Trucks": "assets/car-avatars/BRUCE.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/BRUCE-AUTO-4WD.png"
+    },
+    "MATTHEW-HODGES": {
+      "default": "assets/matt-hodges-car.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/MATTHEW-HODGES-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/MATTHEW-HODGES-AUTO-4WD.png"
+    },
+    "MIKE-DRISCOLL": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-DRISCOLL.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/MIKE-DRISCOLL-AUTO-4WD.png"
+    },
+    "STEVE-CURTIS-RICH": {
+      "default": "assets/car-avatars/STEVE-CURTIS-RICH.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/STEVE-CURTIS-RICH-AUTO-4WD.png"
+    },
+    "BOBTECH": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/BOBTECH-AUTO-2WD.png",
+      "Vintage": "assets/car-avatars/BOB-GELSTHARP-AUTO-VINTAGE.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/BOB-GELSTHARP-AUTO-4WD.png",
+      "Trucks": "assets/car-avatars/BOBTECH-AUTO-TRUCKS.png"
+    },
+    "GREG-LANE": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/GREG-LANE-AUTO-2WD.png"
+    },
+    "JAMIE-DAVIES": {
+      "Trucks": "assets/car-avatars/JAMIE-DAVIES-AUTO-TRUCKS.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/JAMIE-DAVIES-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/JAMIE-DAVIES-AUTO-4WD.png"
+    },
+    "CHRIS-LEONARD": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-LEONARD-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-LEONARD-AUTO-4WD.png"
+    },
+    "JON-PAISLEY": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/JON-PAISLEY-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/JON-PAISLEY-AUTO-4WD.png",
+      "Vintage": "assets/car-avatars/JON-PAISLEY-AUTO-VINTAGE.png"
+    },
+    "ROY-DAVIES": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/ROY-DAVIES-AUTO-2WD.png"
+    },
+    "SIMON-FISHER": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/SIMON-FISHER-AUTO-2WD.png"
+    },
+    "SEB-FISHER": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/SEB-FISHER-AUTO-2WD.png"
+    },
+    "MATT-WOODIWISS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MATT-WOODIWISS-AUTO-2WD.png"
+    },
+    "DALE-PRESTON": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/DALE-PRESTON-AUTO-2WD.png"
+    },
+    "MARK-GIAQUINTO": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/MARK-GIAQUINTO-AUTO-4WD.png"
+    },
+    "JOHN-MORDEN": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/JOHN-MORDEN-AUTO-2WD.png"
+    },
+    "MARTIN-PITMAN": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MARTIN-PITMAN-AUTO-2WD.png"
+    },
+    "AINSLEY-EVANS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/AINSLEY-EVANS-AUTO-2WD.png",
+      "Vintage": "assets/car-avatars/AINSLEY-EVANS-AUTO-VINTAGE.png"
+    },
+    "MARK-GREENWOOD": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MARK-GREENWOOD-AUTO-2WD.png"
+    },
+    "JUSTIN-WALKER": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/JUSTIN-WALKER-AUTO-2WD.png"
+    },
+    "MIKE-HYSIAK": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-HYSIAK-AUTO-2WD.png"
+    },
+    "STUART-IRONS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/STUART-IRONS-AUTO-2WD.png"
+    },
+    "EDWARD-ROSS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/EDWARD-ROSS-AUTO-2WD.png"
+    },
+    "LEE-KILLWORTH": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/LEE-KILLWORTH-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/LEE-KILLWORTH-AUTO-4WD.png"
+    },
+    "LEE-MARSON": {
+      "Trucks": "assets/car-avatars/LEE-MARSON-AUTO-TRUCKS.png"
+    },
+    "BEN-EVANS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/BEN-EVANS-AUTO-2WD.png"
+    },
+    "RICHARD-MORSE": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/RICHARD-MORSE-AUTO-2WD.png"
+    },
+    "JON-TUCKER": "assets/car-avatars/JON-TUCKER.png",
+    "SPENCER-FARLEY": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-4WD.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-2WD.png"
+    },
+    "JOSH-WILLIAMS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/JOSH-WILLIAMS-AUTO-2WD.png"
+    },
+    "LEWIS-HOPKINS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/LEWIS-HOPKINS-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/LEWIS-HOPKINS-AUTO-4WD.png"
+    },
+    "DAVID-MILFORD": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/DAVID-MILFORD-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/DAVID-MILFORD-AUTO-4WD.png"
+    },
+    "MARK-COX": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MARK-COX-AUTO-2WD.png"
+    },
+    "HARRY-DAVIS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/HARRY-DAVIS-AUTO-2WD.png"
+    },
+    "RUSS-WILLIAMS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/RUSS-WILLIAMS-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/RUSS-WILLIAMS-AUTO-4WD.png"
+    },
+    "RICHARD-HARRISON": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/RICHARD-HARRISON-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/RICHARD-HARRISON-AUTO-4WD.png"
+    },
+    "IAN-PEAKMAN": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/IAN-PEAKMAN-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/IAN-PEAKMAN-AUTO-4WD.png"
+    },
+    "NEIL-SMITH": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/NEIL-SMITH-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/NEIL-SMITH-AUTO-4WD.png"
+    },
+    "DAN-PULLEY": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/DAN-PULLEY-AUTO-4WD.png"
+    },
+    "KEVIN-GREENWAY": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/KEVIN-GREENWAY-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/KEVIN-GREENWAY-AUTO-4WD.png"
+    },
+    "CHRISTOPHER-BAKER": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-4WD.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-2WD.png"
+    },
+    "RICKY-NEWCOMBE": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/RICKY-NEWCOMBE-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/RICKY-NEWCOMBE-AUTO-4WD.png"
+    },
+    "COHEN-MANNING": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/COHEN-MANNING-AUTO-2WD.png"
+    },
+    "GARETH-MANNING": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/GARETH-MANNING-AUTO-2WD.png"
+    },
+    "DAVID-DAWSON": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/DAVID-DAWSON-AUTO-2WD.png"
+    },
+    "DANIEL-HURRELL": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/DANIEL-HURRELL-AUTO-2WD.png"
+    },
+    "PAUL-ROSE": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/PAUL-ROSE-AUTO-2WD.png"
+    }
+  }
+}
+

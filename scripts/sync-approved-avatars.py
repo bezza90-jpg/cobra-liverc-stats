@@ -3,6 +3,7 @@
 import argparse
 import base64
 import io
+import hashlib
 import json
 import os
 import re
@@ -29,6 +30,31 @@ KEY = re.compile(r"^[A-Z0-9_-]+$")
 ID = re.compile(r"^[0-9a-f-]{36}$", re.I)
 FILE_ID = re.compile(r"^[A-Za-z0-9_-]{10,}$")
 HIDDEN_DRIVER_KEYS = {"BOB-BOBTECH-GELSTHARP"}
+
+
+def review_policy():
+    policy = read_json(ROOT / 'public/data/car-avatar-review-policy.json')
+    if policy.get('version') != 1 or not isinstance(policy.get('reviews'), dict) or not isinstance(policy.get('blockedRevisions'), list):
+        raise ValueError('Avatar review policy missing or invalid; existing images preserved.')
+    return policy
+
+
+def blocked_revision(revision):
+    return revision in review_policy()['blockedRevisions']
+
+
+def require_chat_review(pair, revision, submission_id, photo_bytes=None):
+    review = review_policy()['reviews'].get(pair, {})
+    if (blocked_revision(revision) or review.get('reviewedFileId') != revision
+            or review.get('submissionId') != submission_id
+            or review.get('method') != 'imagegen'
+            or review.get('approvedBy') != 'Matt'
+            or review.get('previewApproved') is not True
+            or review.get('rightFacing') is not True
+            or not re.fullmatch(r'[0-9a-f]{64}', str(review.get('sha256', '')))):
+        raise ValueError('Exact image requires Matt\'s preview approval in chat; automatic background removal is prohibited.')
+    if photo_bytes is not None and hashlib.sha256(photo_bytes).hexdigest() != review['sha256']:
+        raise ValueError('Reviewed image bytes changed; existing image preserved.')
 
 
 def read_json(path):
@@ -119,6 +145,8 @@ def prepare_avatar(photo_bytes):
     from PIL import Image, ImageOps
 
     with Image.open(io.BytesIO(photo_bytes)) as loaded:
+        if loaded.format != 'PNG':
+            raise ValueError('Only a reviewed transparent PNG may be published.')
         original = ImageOps.exif_transpose(loaded).convert("RGBA")
     original.thumbnail((1800, 1800), Image.Resampling.LANCZOS)
     # The review canvas can pad an unprocessed rectangular photo with transparency.
@@ -136,10 +164,7 @@ def prepare_avatar(photo_bytes):
         # Preserve the cutout explicitly reviewed and approved in the browser.
         cutout = original
     else:
-        from rembg import new_session, remove
-        # Keep the established automated RC-car processing model. It supplies
-        # the alpha mask only; published RGB pixels remain from the submission.
-        cutout = remove(original.convert("RGB"), session=new_session("u2netp")).convert("RGBA")
+        raise ValueError('The reviewed PNG has no cut-out transparency. Basic background removal is disabled; return to chat review.')
     bbox = cutout.getchannel("A").getbbox()
     if not bbox:
         raise ValueError("No foreground car was found in the reviewed photograph.")
@@ -177,6 +202,7 @@ def write_thumbnail(avatar_path):
 def validate_class_targets(current):
     targets = set()
     for pair in current:
+        if blocked_revision(current[pair]): continue
         if manually_kept(pair, current[pair]): continue
         source, cls = pair.split('|', 1)
         driver = canonical_driver_key(source)
@@ -199,8 +225,9 @@ def needs_processing(current, previous, photo_ids, retry_id=''):
     if retry_id and retry_id not in photo_ids.values():
         print('::warning::Retry submission is no longer in the current approved feed; skipping its stale retry.', file=sys.stderr)
         retry_id = ''
-    if any(not manually_kept(pair,revision) and previous.get(pair)!=revision for pair,revision in current.items()) or set(previous)-set(current) or retry_id: return True
+    if any(not blocked_revision(revision) and not manually_kept(pair,revision) and previous.get(pair)!=revision for pair,revision in current.items()) or set(previous)-set(current) or retry_id: return True
     for pair in current:
+        if blocked_revision(current[pair]): continue
         if manually_kept(pair, current[pair]): continue
         key, cls = pair.split('|', 1)
         key = canonical_driver_key(key)
@@ -224,6 +251,7 @@ def publish(retry_id=''):
     failures = {}
     changes = 0
     for pair, revision in current.items():
+        if blocked_revision(revision): continue
         if manually_kept(pair, revision): continue
         source_driver_key, cls = pair.split("|", 1)
         origin_key = canonical_driver_key(source_driver_key)
@@ -234,16 +262,20 @@ def publish(retry_id=''):
             continue
         ident = photo_ids[pair]
         try:
+            # An Approved spreadsheet cell is insufficient. Fail before fetching
+            # any image unless this exact version was previewed and accepted.
+            require_chat_review(pair, revision, ident)
             photo = request_jsonp(url, {"action": "image", "id": ident})
             if str(photo.get("id")) != ident or (photo.get('revision') and photo['revision'] != revision):
                 raise ValueError("The approved photo changed during processing. Retry the refresh.")
             decoded = base64.b64decode(photo["base64"], validate=True)
             if not decoded or len(decoded) > 3_000_000:
                 raise ValueError("The approved photo is too large.")
+            require_chat_review(pair, revision, ident, decoded)
             avatar_bytes = prepare_avatar(decoded)
         except Exception as error:
             # Keep the previous avatar and continue other submissions. Do not leak URLs/tokens.
-            message = str(error) if isinstance(error, ValueError) else type(error).__name__ + ' while downloading or removing the background; see workflow log.'
+            message = str(error) if isinstance(error, ValueError) else type(error).__name__ + ' while downloading or validating the reviewed PNG; see workflow log.'
             failures[pair] = {'id': ident, 'revision': revision, 'error': message[:300]}
             print(f'::warning::Avatar {ident}: {message[:300]}', file=sys.stderr)
             continue
@@ -329,3 +361,4 @@ if __name__ == "__main__":
         publish(args.retry_id)
         report=read_json(REPORT)
         automation_status('needs-attention' if report.get('failures') else 'success',len(report.get('failures',{})))
+
