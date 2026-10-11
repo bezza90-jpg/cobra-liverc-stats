@@ -1,6 +1,7 @@
 import base64
 import importlib.util
 import io
+import hashlib
 import json
 import tempfile
 import unittest
@@ -18,6 +19,10 @@ class SyncTests(unittest.TestCase):
         self.root = Path(self.tmp.name)
         self.data = self.root / 'public/data'
         self.data.mkdir(parents=True)
+        reviews = {}
+        for pair, revision, ident in [('DALE|Trucks','file1','id1'),('MARK|Trucks','file2','id2'),('PAUL-CURTIS|2-Wheel Drive Buggy','file1','id1'),('DALE|2-Wheel Drive Buggy','rev','id')]:
+            reviews[pair] = {'submissionId':ident,'reviewedFileId':revision,'sha256':hashlib.sha256(b'photo').hexdigest(),'method':'imagegen','approvedBy':'Matt','previewApproved':True,'rightFacing':True}
+        (self.data/'car-avatar-review-policy.json').write_text(json.dumps({'version':1,'reviews':reviews,'blockedRevisions':['rejected']}))
         self.patches = [patch.object(sync, 'ROOT', self.root), patch.object(sync, 'MANIFEST', self.data/'car-avatars.json'), patch.object(sync, 'REVISIONS', self.data/'revisions.json'), patch.object(sync, 'REPORT', self.data/'report.json'), patch.object(sync, 'ALIASES', self.data/'aliases.json'), patch.object(sync, 'THUMBNAILS', self.root/'public/assets/car-avatar-thumbnails')]
         for p in self.patches: p.start()
     def tearDown(self):
@@ -29,7 +34,7 @@ class SyncTests(unittest.TestCase):
         pair='DALE|Trucks'
         (self.data/'car-avatar-manual-revisions.json').write_text(json.dumps({pair:'revision'}))
         self.assertFalse(sync.needs_processing({pair:'revision'}, {pair:'revision'}, {pair:'id'}))
-        self.assertTrue(sync.needs_processing({pair:'newrevision'}, {pair:'revision'}, {pair:'id'}))
+        self.assertFalse(sync.needs_processing({pair:'newrevision'}, {pair:'revision'}, {pair:'id'}))
     def test_merged_same_class_old_revisions_do_not_collide(self):
         (self.data/'aliases.json').write_text(json.dumps({'OLD':{'driverKey':'MASTER'}}))
         held={'OLD|Trucks':'old','MASTER|Trucks':'master'}
@@ -106,15 +111,47 @@ class SyncTests(unittest.TestCase):
         with patch.object(sync,'state',return_value=('url',{},dict(current),{})):sync.publish()
         self.assertEqual(json.loads(sync.MANIFEST.read_text())['MARK'],{'Vintage':'other'})
 
-    def test_rectangular_photo_with_transparent_padding_runs_removal(self):
+    def test_rectangular_photo_with_transparent_padding_is_rejected_without_removal(self):
         original = Image.new('RGBA', (100,100))
         original.paste(Image.new('RGBA',(80,60),(20,30,40,255)),(10,20))
         output=io.BytesIO();original.save(output,'PNG')
         from types import SimpleNamespace
         calls=[]
         fake=SimpleNamespace(new_session=lambda _:None, remove=lambda im,session:(calls.append(True) or im.convert('RGBA')))
-        with patch.dict('sys.modules',{'rembg':fake}): sync.prepare_avatar(output.getvalue())
-        self.assertEqual(calls,[True])
+        with patch.dict('sys.modules',{'rembg':fake}), self.assertRaisesRegex(ValueError, 'Basic background removal is disabled'):
+            sync.prepare_avatar(output.getvalue())
+        self.assertEqual(calls,[])
+
+    def test_opaque_photo_is_rejected(self):
+        output=io.BytesIO();Image.new('RGB',(100,100)).save(output,'JPEG')
+        with self.assertRaisesRegex(ValueError,'transparent PNG'):sync.prepare_avatar(output.getvalue())
+
+    def test_approved_feed_alone_cannot_publish_or_fetch_new_image(self):
+        sync.MANIFEST.write_text(json.dumps({'DALE':{'Vintage':'keep.png'}}))
+        state=('url',{'CHRIS|4-Wheel Drive Buggy':'unreviewed'}, {}, {'CHRIS|4-Wheel Drive Buggy':'submission'})
+        with patch.object(sync,'state',return_value=state),patch.object(sync,'request_jsonp') as fetch:
+            sync.publish('submission');fetch.assert_not_called()
+        self.assertEqual(json.loads(sync.MANIFEST.read_text()),{'DALE':{'Vintage':'keep.png'}})
+        self.assertIn('CHRIS|4-Wheel Drive Buggy',json.loads(sync.REPORT.read_text())['failures'])
+
+    def test_exact_chat_review_and_bytes_required(self):
+        sync.require_chat_review('DALE|Trucks','file1','id1',b'photo')
+        for revision, ident, data in [('different','id1',b'photo'),('file1','other',b'photo'),('file1','id1',b'changed')]:
+            with self.assertRaises(ValueError):sync.require_chat_review('DALE|Trucks',revision,ident,data)
+        policy=json.loads((self.data/'car-avatar-review-policy.json').read_text())
+        policy['reviews']['DALE|Trucks']['method']='rembg'
+        (self.data/'car-avatar-review-policy.json').write_text(json.dumps(policy))
+        with self.assertRaises(ValueError):sync.require_chat_review('DALE|Trucks','file1','id1',b'photo')
+
+    def test_rejected_chris_revision_never_downloaded_or_published(self):
+        state=('url',{'CHRIS|4-Wheel Drive Buggy':'rejected'}, {}, {'CHRIS|4-Wheel Drive Buggy':'id'})
+        self.assertFalse(sync.needs_processing(state[1],state[2],state[3]))
+        with patch.object(sync,'state',return_value=state),patch.object(sync,'request_jsonp') as fetch:
+            sync.publish('id');fetch.assert_not_called()
+
+    def test_missing_review_policy_fails_closed(self):
+        (self.data/'car-avatar-review-policy.json').unlink()
+        with self.assertRaises(ValueError):sync.needs_processing({'DALE|Trucks':'file1'}, {}, {'DALE|Trucks':'id1'})
     def test_existing_true_cutout_preserved(self):
         original=Image.new('RGBA',(30,30))
         original.putpixel((0,0),(1,2,3,255));original.putpixel((29,29),(1,2,3,255))
@@ -134,3 +171,4 @@ class SyncTests(unittest.TestCase):
             self.assertIn('A',image.getbands())
 
 if __name__=='__main__': unittest.main()
+
