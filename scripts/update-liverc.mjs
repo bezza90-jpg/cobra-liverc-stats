@@ -100,7 +100,7 @@ async function importEvent(event) {
       isFinal: parsed.isFinal, sourceUrl: raceLink.sourceUrl
     });
     try {
-      const replay=parseReplay(raceHtml,races.at(-1));
+      const replay=parseReplay(raceHtml,races.at(-1),parsed.results);
       const folder=path.join(root,'public/virtual-race-replay/races');await mkdir(folder,{recursive:true});
       await writeFile(path.join(folder,replay.id+'.json'),JSON.stringify(replay));
     } catch(error) { console.warn('Replay unavailable for '+raceLink.liveRcRaceId+': '+error.message); }
