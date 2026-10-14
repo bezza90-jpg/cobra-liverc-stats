@@ -1,5 +1,5 @@
 {
-  "checkedDate": "2026-10-14",
+  "checkedDate": "2026-10-15",
   "events": [
     {
       "title": "COBRA SWORD Round 6",
@@ -54,6 +54,12 @@
       "date": "2026-12-13",
       "type": "sword",
       "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-3"
+    },
+    {
+      "title": "COBRA club day",
+      "date": "2027-02-07",
+      "type": "club",
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-5"
     },
     {
       "title": "COBRA club day",
