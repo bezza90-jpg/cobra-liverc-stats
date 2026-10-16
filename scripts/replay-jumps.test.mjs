@@ -1,10 +1,9 @@
-Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {jumpProfile} from '../public/virtual-race-replay/jumps.js';
 import {prepare,visualFraction} from '../public/virtual-race-replay/engine.js';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
-import {trackPlanFromDesign} from '../public/virtual-race-replay/track-designs.js';
+import {trackPlanFromDesign,hasMeasuredJumpMotion} from '../public/virtual-race-replay/track-designs.js';
 import {readFile} from 'node:fs/promises';
 const samples=Array.from({length:101},(_,i)=>({x:i,y:0}));
 const zones=[[[20,-5],[40,-5],[40,5],[20,5]]];
@@ -80,9 +79,14 @@ test('event design automatically supplies its measured ramp profiles',async()=>{
  const design=JSON.parse(await readFile(new URL('../public/virtual-race-replay/designs/518555.json',import.meta.url),'utf8'));
  const plan=trackPlanFromDesign(design,{date:'2026-10-11'});
  assert.equal(plan.date,'2026-10-11');assert.equal(plan.routeLengthMetres,151.5);assert.equal(plan.jumpFeatures.length,3);
+ assert(hasMeasuredJumpMotion(plan));
  assert.deepEqual(plan.jumpFeatures.map(feature=>[feature.takeoffHeightMm,feature.landingHeightMm]),[[217,276],[463,446],[217,323]]);
  assert.equal(plan.jumpSurfaces.filter(surface=>surface.profile==='roller').length,2);
  assert(plan.jumpSurfaces.some(surface=>surface.profile==='tabletop-up'&&surface.heightMm===463));
  assert(plan.jumpFeatures.some(feature=>feature.name==='cnc_tt'&&feature.landingProfile==='tabletop-down'));
 });
 
+test('historic hand-drawn plans retain ordinary flat car motion',async()=>{
+ const historic=JSON.parse(await readFile(new URL('../public/virtual-race-replay/track-plans.json',import.meta.url),'utf8'));
+ for(const [id,plan] of Object.entries(historic))assert.equal(hasMeasuredJumpMotion(plan),false,`${id} must not infer jumps from a hand-drawn plan`);
+});
