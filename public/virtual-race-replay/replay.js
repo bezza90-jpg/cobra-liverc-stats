@@ -2,7 +2,7 @@ import {canonicalDriverKey} from '../assets/driver-identity.js';
 import {renderLapCharts} from '../assets/lap-charts.js?v=20260928-same-tab';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
-import {jumpProfile} from './jumps.js?v=20261017-tabletop';
+import {jumpProfile} from './jumps.js?v=20261017-landers';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261017-finals-grid';
 import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-measured';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
