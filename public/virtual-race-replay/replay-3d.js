@@ -1,5 +1,5 @@
 import {prepare,ordered,positionAt,visualFraction} from './engine.js';
-import {paceMap} from './pace.js';
+import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261016-3d';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
 import {trackPlanFromDesign} from './track-designs.js?v=20261016-3d';
@@ -8,7 +8,7 @@ const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padStart(4,'0')}`;
 const params=new URLSearchParams(location.search),eventId=params.get('event')||'518555';
-let eventData,design,viewer,race,drivers=[],pace,lift,time=0,duration=0,playing=false,last=0,frame=0;
+let eventData,design,viewer,race,drivers=[],pace,lift,lifts={},time=0,duration=0,playing=false,last=0,frame=0;
 
 async function json(url){const response=await fetch(url);if(!response.ok)throw Error(`Could not load ${url}`);return response.json();}
 function surname(name){let clean=String(name||'').replace(/["“”]/g,'').trim().split(/\s+/);return clean.at(-1)||name;}
@@ -19,8 +19,14 @@ function configurePhysics(){
   const plan=trackPlanFromDesign(design),samples=planSamples(plan);
   const features=plan.jumpFeatures.map(feature=>({...feature,takeoff:feature.takeoff.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),landing:feature.landing.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
   const surfaces=plan.jumpSurfaces.map(surface=>({...surface,polygon:surface.polygon.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
-  lift=jumpProfile(samples,[],.323,features,{surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81});
-  pace=paceMap(rawRoute());
+  const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55};
+  lifts={
+    1:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1}),
+    2:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1.08}),
+    3:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1.15})
+  };
+  lift=lifts[1];
+  pace=paceMap(rawRoute(),{profile:'race',minimumSpeed:.56,maximumSpeed:1.75});
 }
 function configureGrid(){
   if(!race.isFinal)return;
@@ -29,12 +35,13 @@ function configureGrid(){
   drivers.forEach(driver=>{let target={x:right.point.x-(Math.max(1,driver.startPosition||driver.number)-1)*.62,y:right.point.y};driver.startFraction=routeFractionNear(target);});
 }
 function carState(driver,index){
-  let routeLength=Number(design.routeLengthMetres)||153.9,fraction=visualFraction(driver,time,pace),point=viewer.routeAt(fraction),ahead=viewer.routeAt(fraction+.001),position=positionAt(driver,time),speed=Math.max(2,Math.min(25,routeLength/Math.max(1,position.lapTime||driver.typical))),z=Math.max(0,lift(fraction,speed));
+  const activeLift=lifts[viewer?.heightScale]||lift;
+  let routeLength=Number(design.routeLengthMetres)||153.9,fraction=visualFraction(driver,time,pace),point=viewer.routeAt(fraction),ahead=viewer.routeAt(fraction+.001),position=positionAt(driver,time),speed=Math.max(2,Math.min(25,routeLength/Math.max(1,position.lapTime||driver.typical)*(pace.speedAtDistance?.(fraction)||1))),z=Math.max(0,activeLift(fraction,speed));
   // Read the ramp over roughly a buggy wheelbase rather than at a single
   // sample boundary.  The body follows real ramp angles but cannot flip
   // vertically when entering/leaving a surface or during a gravity arc.
-  let pitchSample=.0015,beforeLift=Math.max(0,lift(fraction-pitchSample,speed)),afterLift=Math.max(0,lift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),lane=(index%3-1)*.11*Math.min(1,time/2),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
-  if(time>=duration){fraction=((drivers.slice().sort((a,b)=>a.finalPosition-b.finalPosition).findIndex(item=>item.id===driver.id)+1)*.006)%1;point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=lift(fraction,speed);pitch=0;}
+  let pitchSample=.0015,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),lane=(index%3-1)*.11*Math.min(1,time/2),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
+  if(time>=duration){fraction=((drivers.slice().sort((a,b)=>a.finalPosition-b.finalPosition).findIndex(item=>item.id===driver.id)+1)*.006)%1;point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
   return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:.68,width:.44,height:.22,color:driver.color,label:surname(driver.name),number:driver.number};
 }
 function render(force=false){
@@ -53,6 +60,7 @@ async function start(){
   try{
     [eventData,design]=await Promise.all([json(`events/${eventId}.json`),json(`designs/${eventId}.json`)]);
     viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:true});configurePhysics();
+    viewer.container.querySelector('[data-height]')?.addEventListener('change',()=>requestAnimationFrame(()=>render(true)));
     for(const item of eventData.races){let option=new Option(`${item.round} · ${item.name}`,item.id);$('raceSelect').append(option);}
     let requested=params.get('race'),initial=eventData.races.some(item=>item.id===requested)?requested:'7121723';$('raceSelect').value=initial;await loadRace(initial);
   }catch(error){$('status').textContent=error.message;$('status').className='error';console.error(error);}
