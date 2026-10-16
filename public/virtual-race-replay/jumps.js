@@ -56,7 +56,7 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
     const verticalSpeed=(endHeight-startHeight+.5*gravity*flightTime*flightTime)/Math.max(.001,flightTime);
     return Math.max(0,startHeight+verticalSpeed*time-.5*gravity*time*time)*pixelsPerMetre;
    }
-   const u=(f-landing.from)/(landing.to-landing.from);return surfaceProfile('down',u)*endHeight*pixelsPerMetre;
+   const u=(f-landing.from)/(landing.to-landing.from);return surfaceProfile(landing.profile||'down',u)*endHeight*pixelsPerMetre;
   }
   for(const surface of shaped){
    const {from,to,reverse}=surface.interval;if(f<from||f>to)continue;
@@ -69,4 +69,3 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
   return height*Math.sin(Math.PI*u)**2;
  };
 }
-
