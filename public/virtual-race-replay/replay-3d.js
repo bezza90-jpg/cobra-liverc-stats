@@ -34,7 +34,8 @@ function configureGrid(){
   if(!race.isFinal)return;
   const route=viewer.scene.route,candidates=route.map((point,index)=>({point,index})).filter(({point})=>point.y>15&&point.tx>0);
   const right=candidates.sort((a,b)=>b.point.x-a.point.x)[Math.min(12,candidates.length-1)]||{index:Math.floor(route.length*.25),point:route[Math.floor(route.length*.25)]};
-  drivers.forEach(driver=>{let target={x:right.point.x-(Math.max(1,driver.startPosition||driver.number)-1)*.62,y:right.point.y};driver.startFraction=routeFractionNear(target);});
+  const heading=Math.atan2(right.point.ty,right.point.tx),forward={x:Math.cos(heading),y:Math.sin(heading)},ahead=route[(right.index+Math.max(8,Math.round(route.length*.012)))%route.length],turnCross=forward.x*(ahead.y-right.point.y)-forward.y*(ahead.x-right.point.x),insideSign=Math.sign(turnCross)||-1;
+  drivers.forEach(driver=>{let slot=Math.max(0,Number(driver.startPosition||driver.number||1)-1),target={x:right.point.x-forward.x*slot*2,y:right.point.y-forward.y*slot*2};driver.startFraction=routeFractionNear(target);driver.gridLane=(slot%2?-insideSign:insideSign)*.42;});
 }
 function carState(driver,index){
   const activeLift=lifts[viewer?.heightScale]||lift;
@@ -42,7 +43,7 @@ function carState(driver,index){
   // Read the ramp over roughly a buggy wheelbase rather than at a single
   // sample boundary.  The body follows real ramp angles but cannot flip
   // vertically when entering/leaving a surface or during a gravity arc.
-  let pitchSample=.0015,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),lane=(index%3-1)*.11*Math.min(1,time/2),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
+  let pitchSample=.0015,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),gridBlend=Number.isFinite(driver.startFraction)?Math.max(0,1-time/Math.min(2,driver.laps[0].seconds)):0,lane=(driver.gridLane||0)*gridBlend+(index%3-1)*.11*(1-gridBlend),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
   if(time>=duration){fraction=((drivers.slice().sort((a,b)=>a.finalPosition-b.finalPosition).findIndex(item=>item.id===driver.id)+1)*.006)%1;point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
   return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,wheelColor:driver.wheelColor,label:surname(driver.name),number:driver.number};
 }
