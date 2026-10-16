@@ -235,7 +235,7 @@ class Viewer{
     let routePoint=Number.isFinite(car.fraction)?this.routeAt(car.fraction):null,centre=vec(Number(car.x??routePoint?.x)||0,Number(car.y??routePoint?.y)||0,Number(car.z)||0),yaw=Number.isFinite(car.yaw)?car.yaw:Math.atan2(routePoint?.ty||0,routePoint?.tx||1),pitch=Number(car.pitch)||0;
     let forward=vec(Math.cos(yaw)*Math.cos(pitch),Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch)),right=vec(-Math.sin(yaw),Math.cos(yaw),0),up=norm(cross(forward,right)),length=Number(car.length)||.46,width=Number(car.width)||.30,height=Number(car.height)||.15;
     centre=add(centre,mul(up,.02+height/2));const corner=(f,r,u)=>add(centre,add(mul(forward,f*length/2),add(mul(right,r*width/2),mul(up,u*height/2))));
-    let body=car.color||'#85ed40',dark=colour(body,.52),light=colour(body,1.12),glass='#172c39',edge='#030806',faces=[];
+    let body=car.color||'#85ed40',accent=car.accentColor||colour(body,1.12),wheel=car.wheelColor||'#929b95',dark=colour(body,.52),light=colour(body,1.12),glass='#172c39',edge='#030806',faces=[];
     const quad=(points,fill,kind='car')=>faces.push(polygon(points.map(point=>corner(...point)),fill,edge,kind));
     const box=(f0,f1,r0,r1,u0,u1,fill,kind='car')=>{
       quad([[f0,r0,u0],[f1,r0,u0],[f1,r0,u1],[f0,r0,u1]],colour(fill,.66),kind);
@@ -244,16 +244,23 @@ class Viewer{
       quad([[f1,r0,u0],[f1,r1,u0],[f1,r1,u1],[f1,r0,u1]],colour(fill,1.04),kind);
       quad([[f0,r0,u1],[f1,r0,u1],[f1,r1,u1],[f0,r1,u1]],fill,kind);
     };
-    // Tyres and silver hubs give the tiny model an unmistakable RC-car silhouette.
-    for(let f of [-.55,.55])for(let r of [-1.02,1.02]){
-      box(f-.22,f+.22,r-.21,r+.21,-1.08,.18,'#111614','car-wheel');
-      let side=r<0?r-.225:r+.225,ring=[];for(let i=0;i<10;i++){let angle=i*Math.PI*2/10;ring.push(corner(f+Math.cos(angle)*.145,side,-.45+Math.sin(angle)*.40));}
-      faces.push(polygon(ring,'#929b95','#090d0b','car-hub'));
+    // Large exposed tyres, suspension arms and coloured rims give the model
+    // the open-wheel silhouette of a 1/10 off-road buggy.
+    for(let f of [-.57,.60]){
+      box(f-.07,f+.07,-.96,.96,-.73,-.56,dark,'car-suspension');
+      for(let r of [-1.10,1.10]){
+      box(f-.25,f+.25,r-.24,r+.24,-1.12,.16,'#111614','car-wheel');
+      let side=r<0?r-.255:r+.255,ring=[];for(let i=0;i<12;i++){let angle=i*Math.PI*2/12;ring.push(corner(f+Math.cos(angle)*.17,side,-.47+Math.sin(angle)*.43));}
+      faces.push(polygon(ring,wheel,'#090d0b','car-hub'));
+      }
     }
-    // Low chassis, pointed nose and a tapered buggy shell.
-    box(-.78,.72,-.76,.76,-.78,-.28,dark,'car-chassis');
-    box(.42,.88,-.72,.72,-.68,-.22,light,'car-nose');
-    let sections=[[-.62,.62,-.22],[-.32,.56,.54],[.04,.48,.82],[.42,.58,.22],[.65,.64,-.16]];
+    // The chassis and shell stay narrow between the wheels, with a pointed
+    // nose and a raised central cockpit rather than a full-width sedan body.
+    box(-.78,.68,-.46,.46,-.78,-.31,dark,'car-chassis');
+    box(.36,.94,-.34,.34,-.69,-.18,accent,'car-nose');
+    box(-.48,.12,-.64,-.38,-.60,-.12,body,'car-sidepod');
+    box(-.48,.12,.38,.64,-.60,-.12,body,'car-sidepod');
+    let sections=[[-.60,.38,-.18],[-.34,.45,.48],[-.04,.40,.92],[.25,.35,.62],[.48,.31,.10],[.66,.26,-.16]];
     for(let i=0;i<sections.length-1;i++){
       let [fa,wa,ua]=sections[i],[fb,wb,ub]=sections[i+1];
       quad([[fa,-wa,ua],[fb,-wb,ub],[fb,wb,ub],[fa,wa,ua]],i===1?glass:body,'car-shell');
@@ -261,10 +268,10 @@ class Viewer{
       quad([[fa,wa,-.25],[fa,wa,ua],[fb,wb,ub],[fb,wb,-.25]],colour(body,.74),'car-shell');
     }
     // Rear wing and mounts, proportioned like a 1/10 off-road buggy.
-    box(-.98,-.82,-1.12,1.12,.54,.73,body,'car-wing');
-    box(-.87,-.80,-.55,-.42,-.24,.58,dark,'car-wing-mount');
-    box(-.87,-.80,.42,.55,-.24,.58,dark,'car-wing-mount');
-    quad([[-.08,-.43,.835],[.25,-.43,.48],[.25,.43,.48],[-.08,.43,.835]],glass,'car-window');
+    box(-1.02,-.84,-1.18,1.18,.58,.80,accent,'car-wing');
+    box(-.89,-.82,-.48,-.36,-.24,.62,dark,'car-wing-mount');
+    box(-.89,-.82,.36,.48,-.24,.62,dark,'car-wing-mount');
+    quad([[-.25,-.37,.69],[.20,-.32,.57],[.20,.32,.57],[-.25,.37,.69]],glass,'car-window');
     return faces;
   }
   showError(message){let warning=this.container.querySelector('[data-stat="warning"]');warning.textContent=message;warning.className='c3-error';}
