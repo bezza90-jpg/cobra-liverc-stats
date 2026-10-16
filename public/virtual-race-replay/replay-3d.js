@@ -3,12 +3,14 @@ import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-tabletop';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
 import {trackPlanFromDesign} from './track-designs.js?v=20261016-3d';
+import {avatarThumbnailPath,loadAvatarColours} from './avatar-colours.js?v=20261017-1';
 
 const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padStart(4,'0')}`;
 const params=new URLSearchParams(location.search),eventId=params.get('event')||'518555';
-let eventData,design,viewer,race,drivers=[],pace,lift,lifts={},time=0,duration=0,playing=false,last=0,frame=0;
+let eventData,design,avatarManifest={},viewer,race,drivers=[],pace,lift,lifts={},time=0,duration=0,playing=false,last=0,frame=0;
+const avatarColourCache=new Map();
 
 async function json(url){const response=await fetch(url);if(!response.ok)throw Error(`Could not load ${url}`);return response.json();}
 function surname(name){let clean=String(name||'').replace(/["“”]/g,'').trim().split(/\s+/);return clean.at(-1)||name;}
@@ -42,7 +44,7 @@ function carState(driver,index){
   // vertically when entering/leaving a surface or during a gravity arc.
   let pitchSample=.0015,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),lane=(index%3-1)*.11*Math.min(1,time/2),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
   if(time>=duration){fraction=((drivers.slice().sort((a,b)=>a.finalPosition-b.finalPosition).findIndex(item=>item.id===driver.id)+1)*.006)%1;point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
-  return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:.68,width:.44,height:.22,color:driver.color,label:surname(driver.name),number:driver.number};
+  return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:.68,width:.44,height:.22,color:driver.color,accentColor:driver.accentColor,wheelColor:driver.wheelColor,label:surname(driver.name),number:driver.number};
 }
 function render(force=false){
   let cars=drivers.map(carState),focus=$('focus').value,follow=cars.find(car=>String(car.id)===focus);viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':playing?'Playing':'Paused';
@@ -52,12 +54,14 @@ function tick(timestamp){if(!playing)return;let delta=Math.min(.12,(timestamp-la
 function setTime(value){time=Math.max(0,Math.min(duration,Number(value)||0));render(true);}
 function syncUrl(){let url=new URL(location.href);url.searchParams.set('event',eventId);url.searchParams.set('race',race.id);history.replaceState({},'',url);$('back2d').href=`./?event=${eventId}&race=${race.id}`;}
 async function loadRace(id){
-  cancelAnimationFrame(frame);playing=false;$('play').textContent='▶ Play';race=await json(`races/${id}.json`);drivers=race.drivers.slice().sort((a,b)=>a.number-b.number).map((driver,index)=>({...prepare(driver),color:palette[index%palette.length]}));duration=Math.max(...drivers.map(driver=>driver.total));$('timeline').max=String(duration);$('endTime').textContent=clock(duration);$('raceTitle').textContent=`${race.name} · ${race.round}`;$('official').href=race.source;
+  cancelAnimationFrame(frame);playing=false;$('play').textContent='▶ Play';race=await json(`races/${id}.json`);drivers=race.drivers.slice().sort((a,b)=>a.number-b.number).map((driver,index)=>({...prepare(driver),color:palette[index%palette.length]}));
+  await Promise.all(drivers.map(async driver=>{let url=avatarThumbnailPath(avatarManifest,driver.key,race.className);if(!url)return;let profile=avatarColourCache.get(url);if(profile===undefined){try{profile=await loadAvatarColours(url);}catch{profile=null;}avatarColourCache.set(url,profile);}if(profile)Object.assign(driver,profile);}));
+  duration=Math.max(...drivers.map(driver=>driver.total));$('timeline').max=String(duration);$('endTime').textContent=clock(duration);$('raceTitle').textContent=`${race.name} · ${race.round}`;$('official').href=race.source;
   $('focus').replaceChildren(new Option('All drivers',''),...drivers.map(driver=>new Option(`${driver.number}. ${driver.name}`,driver.id)));configureGrid();time=0;syncUrl();render(true);
 }
 async function start(){
   try{
-    [eventData,design]=await Promise.all([json(`events/${eventId}.json`),json(`designs/${eventId}.json`)]);
+    [eventData,design,avatarManifest]=await Promise.all([json(`events/${eventId}.json`),json(`designs/${eventId}.json`),json('../data/car-avatars.json').catch(()=>({}))]);
     viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:true});configurePhysics();
     viewer.container.querySelector('[data-height]')?.addEventListener('change',()=>requestAnimationFrame(()=>render(true)));
     for(const item of eventData.races){let option=new Option(`${item.round} · ${item.name}`,item.id);$('raceSelect').append(option);}
