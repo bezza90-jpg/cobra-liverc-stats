@@ -2,8 +2,9 @@ import {canonicalDriverKey} from '../assets/driver-identity.js';
 import {renderLapCharts} from '../assets/lap-charts.js?v=20260928-same-tab';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
-import {jumpProfile} from './jumps.js?v=20261004-jumps';
+import {jumpProfile} from './jumps.js?v=20261016-gravity';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261004-presentation';
+import {trackPlanFromDesign} from './track-designs.js?v=20261016-gravity';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
 import {prepare,ordered,timeAtProgress,visualFraction} from './engine.js';
 const $=id=>document.getElementById(id),svgNS='http://www.w3.org/2000/svg';
@@ -14,8 +15,16 @@ let catalog,trackPlans={},avatars={},event,selectedDriver=canonicalDriverKey(par
 let comparisonKeys=params.getAll('compare').map(canonicalDriverKey);
 const key=name=>name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');
 function avatarFor(d,cls){const v=avatars[d.key||key(d.name)];const asset=typeof v==='string'?v:v?.[cls]||v?.default||'';return asset?'../assets/car-avatar-thumbnails/'+asset.split('/').pop().replace(/\.png$/i,'.webp'):'';}
+const planForRace=race=>trackPlans[race.eventId]||trackPlans['date:'+race.date];
+const loopPointFor=plan=>plan.loopRoute?routePoint(plan.loopRoute,plan):planPoint(plan.loop,plan);
+async function loadEventDesign(selected){
+ try{
+  const response=await fetch(`designs/${selected.id}.json`);if(response.status===404)return;if(!response.ok)throw Error(`Track design unavailable (${response.status})`);
+  const base=trackPlans[selected.id]||trackPlans['date:'+selected.date]||{};trackPlans[selected.id]=trackPlanFromDesign(await response.json(),base);
+ }catch(error){console.warn('The 3D track design could not be loaded.',error);}
+}
 function layout(race){
- const matched=$('layoutSelect').value!=='oval'?(trackPlans[race.eventId]||trackPlans['date:'+race.date]):null;
+ const matched=$('layoutSelect').value!=='oval'?planForRace(race):null;
  const confirmed=matched?.routeStatus==='confirmed'?matched:null;
  renderPlan($('circuit'),null);
  const real=race.eventId==='518551'&&$('layoutSelect').value!=='oval';
@@ -34,7 +43,7 @@ function layout(race){
  $('circuit').setAttribute('aria-label','Replay following the dated March track plan, starting at the confirmed lower-left timing loop');
  }
  if(confirmed){
-  const route=routePath(confirmed.points,confirmed),loop=planPoint(confirmed.loop,confirmed);
+  const route=routePath(confirmed.points,confirmed),loop=loopPointFor(confirmed);
   $('route').setAttribute('d',route);document.querySelector('.centreline').setAttribute('d',route);
   document.querySelector('.track>img').src=confirmed.presentation?confirmed.image:'track-plan.png';document.querySelector('.track>img').alt=`${confirmed.date} COBRA circuit template`;
   renderPlan($('circuit'),confirmed);
@@ -54,7 +63,7 @@ function options(el,items,blank){el.replaceChildren();if(blank){const o=document
 function listRaces(){return event.races.filter(r=>!selectedDriver||r.drivers.some(d=>d.key===selectedDriver));}
 function raceOptions(preferred){const races=listRaces();options($('raceSelect'),races.map(r=>[r.id,`${r.round} · ${r.name}`]));$('raceSelect').value=races.some(r=>r.id===preferred)?preferred:races[0]?.id||'';$('dayPlay').disabled=!selectedDriver||!races.length;$('dayStatus').textContent=selectedDriver?`${races.length} available races for this driver, in session order.`:'Choose a driver to follow their day.';return races;}
 function syncUrl(){const url=new URL(location.href);url.searchParams.set('event',event.id);url.searchParams.set('race',$('raceSelect').value);if(selectedDriver)url.searchParams.set('driver',selectedDriver);else url.searchParams.delete('driver');if($('layoutSelect').value==='oval')url.searchParams.set('layout','oval');else url.searchParams.delete('layout');url.searchParams.delete('compare');comparisonKeys.forEach(k=>url.searchParams.append('compare',k));history.replaceState(null,'',url);}
-let eventToken=0;async function changeEvent(preferred){const token=++eventToken;pauseCurrent();dayMode=false;const selected=catalog.events.find(e=>e.id===$('eventSelect').value);$('play').disabled=true;$('message').textContent='Loading event…';try{const response=await fetch(`events/${selected.id}.json`);if(!response.ok)throw Error('Event unavailable');const loaded=await response.json();if(token!==eventToken)return;event=loaded;}catch(error){if(token===eventToken)$('message').textContent=error.message;return;}const drivers=new Map(event.races.flatMap(r=>r.drivers).map(d=>[d.key,d.name]));if(!drivers.has(selectedDriver))selectedDriver='';options($('focus'),[...drivers].sort((a,b)=>a[1].localeCompare(b[1])),'All drivers');$('focus').value=selectedDriver;raceOptions(preferred);dayMode=false;loadRace();}
+let eventToken=0;async function changeEvent(preferred){const token=++eventToken;pauseCurrent();dayMode=false;const selected=catalog.events.find(e=>e.id===$('eventSelect').value);$('play').disabled=true;$('message').textContent='Loading event…';try{const response=await fetch(`events/${selected.id}.json`);if(!response.ok)throw Error('Event unavailable');const loaded=await response.json();await loadEventDesign(selected);if(token!==eventToken)return;event=loaded;}catch(error){if(token===eventToken)$('message').textContent=error.message;return;}const drivers=new Map(event.races.flatMap(r=>r.drivers).map(d=>[d.key,d.name]));if(!drivers.has(selectedDriver))selectedDriver='';options($('focus'),[...drivers].sort((a,b)=>a[1].localeCompare(b[1])),'All drivers');$('focus').value=selectedDriver;raceOptions(preferred);dayMode=false;loadRace();}
 function nextRace(auto=false){const races=listRaces(),idx=races.findIndex(r=>r.id===$('raceSelect').value);if(idx+1<races.length){$('raceSelect').value=races[idx+1].id;loadRace(auto);}else{dayMode=false;$('dayStatus').textContent='Driver day replay complete.';}}
 async function loadRace(autoplay=false){
  pauseCurrent();cancelAnimationFrame(frame);$('replayLapCharts').innerHTML='<h2>Lap times by driver</h2><p role="status">Loading recorded laps…</p>';const token=++loadToken;const id=$('raceSelect').value;syncUrl();$('message').textContent='Loading lap records…';$('play').disabled=true;$('downloadReplay').disabled=true;$('downloadStatus').textContent='';
@@ -74,10 +83,12 @@ async function loadRace(autoplay=false){
  const planned=$('layoutSelect').value!=='oval';
  const mainStraight=fitted?.mainStraight||(planned&&race.eventId==='518551'?{from:{x:223,y:190},to:{x:1350,y:190}}:planned&&race.eventId==='499054'?{from:{x:190,y:180},to:{x:1410,y:180}}:{from:{x:250,y:170},to:{x:1330,y:170}});
  const samples=Array.from({length:601},(_,i)=>path.getPointAtLength(i*length/600));
- const jumpPlan=planned&&trackPlans[race.eventId]?.routeStatus==='confirmed'?trackPlans[race.eventId]:null;
+ const availablePlan=planForRace(race),jumpPlan=planned&&availablePlan?.routeStatus==='confirmed'?availablePlan:null;
  const jumpPolygons=(jumpPlan?.jumpZones||[]).map(polygon=>polygon.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]}));
  const jumpFeatures=(jumpPlan?.jumpFeatures||[]).map(feature=>Object.fromEntries(['takeoff','landing'].map(key=>[key,feature[key].map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})])));
- const jumpLift=jumpProfile(samples,jumpPolygons,50,jumpFeatures);
+ for(let i=0;i<jumpFeatures.length;i++)Object.assign(jumpFeatures[i],Object.fromEntries(Object.entries(jumpPlan.jumpFeatures[i]).filter(([name])=>!['takeoff','landing'].includes(name))));
+ const jumpSurfaces=(jumpPlan?.jumpSurfaces||[]).map(surface=>({...surface,polygon:surface.polygon.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})}));
+ const jumpLift=jumpProfile(samples,jumpPolygons,50,jumpFeatures,{surfaces:jumpSurfaces,routeLengthMetres:jumpPlan?.routeLengthMetres||151.5,referenceHeightMm:323,gravity:9.81});
  const illustrative=fitted?false:!planned||!['518551','499054'].includes(race.eventId);
  const pace=paceMap(samples,{mainStraight,straightSpeed:illustrative?2.5:1.65});
  document.getElementById('grid-reference')?.remove();
@@ -107,10 +118,11 @@ async function loadRace(autoplay=false){
  let parkedY=parkingBase+Math.floor(slot/4)*72;
  const endedEarly=retiredSlots.has(d.id);
  // First retirement is lowest beside the loop; later retirements stack upward.
- if(endedEarly){const base=Number(label.getAttribute('y'))+40;const spacing=Math.min(105,(base-100)/Math.max(1,retiredSlots.size-1));parkedX=Math.max(52,(planned?trackPlans[race.eventId]?.border?.x||87:87)-40);parkedY=base-retiredSlots.get(d.id)*spacing;}
+ if(endedEarly){const base=Number(label.getAttribute('y'))+40;const spacing=Math.min(105,(base-100)/Math.max(1,retiredSlots.size-1));parkedX=Math.max(52,(planned?planForRace(race)?.border?.x||87:87)-40);parkedY=base-retiredSlots.get(d.id)*spacing;}
  group.setAttribute('transform',s.finished?`translate(${parkedX},${parkedY}) scale(1.44)`:`translate(${x},${y}) rotate(${angle}) scale(1.44)`);
  // Translate inside the rotated car group: upside-down headings lift downward.
- group.querySelector('.car-artwork').setAttribute('transform',`translate(0,${s.finished?0:-jumpLift(dist/length)})`);
+ const visualSpeed=(jumpPlan?.routeLengthMetres||151.5)/Math.max(1,d.typical||s.lapTime||15);
+ group.querySelector('.car-artwork').setAttribute('transform',`translate(0,${s.finished?0:-jumpLift(dist/length,visualSpeed)})`);
  group.querySelector('.car-nameplate').setAttribute('transform',s.finished?'translate(0,-37)':`rotate(${-angle}) translate(0,-42)`);
  group.querySelector('image').setAttribute('transform',s.finished&&endedEarly?'scale(1,-1)':'scale(1,1)');
  group.classList.toggle('retired',s.finished&&endedEarly);
@@ -144,3 +156,4 @@ try{
  $('nextRace').onclick=()=>nextRace(dayMode);
  changeEvent(params.get('race')||initial.defaultRace);
 }catch(error){$('message').textContent=error.message;$('play').disabled=true;}
+
