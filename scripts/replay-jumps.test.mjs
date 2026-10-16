@@ -52,8 +52,9 @@ test('3D kicker boost raises the middle of the flight without moving either land
 test('3D tabletop flight clears the down ramp and touches down 20 cm before its end',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'cnc_tt',takeoffProfile:'tabletop-up',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:463,landingHeightMm:446,gravity:9.81};
  const normal=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323});
- const higher=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,tabletopFlightTimeScale:1.45});
+ const higher=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,tabletopFlightTimeScale:1.8});
  assert(higher(.38,8)>normal(.38,8));
+ assert(higher(.40,8)>850,'tabletop arc should visibly clear the flat top');
  assert(higher(.55,8)>0);assert(higher(.58,8)>higher(.60,8));assert.equal(higher(.25,8),normal(.25,8));assert(Math.abs(higher(.61,8))<1e-9);assert.equal(higher(.62,8),0);
 });
 
