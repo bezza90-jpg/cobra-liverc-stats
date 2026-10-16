@@ -1,4 +1,3 @@
-Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 (function(root){
 'use strict';
 
@@ -353,4 +352,3 @@ function mount(container,options){if(typeof container==='string')container=docum
 
 root.CobraTrack3D={mount,buildScene,normalizeDesign,sampleRoute,heightProfile,CATALOG};
 })(typeof window!=='undefined'?window:globalThis);
-
