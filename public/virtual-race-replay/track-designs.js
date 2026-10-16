@@ -60,4 +60,6 @@ export function trackPlanFromDesign(input,base={}){
  };
 }
 
+export const hasMeasuredJumpMotion=plan=>Number(plan?.designVersion)>0;
+
 export {RAMP_CATALOG};
