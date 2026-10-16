@@ -1,6 +1,7 @@
+Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 import {prepare,ordered,positionAt,visualFraction} from './engine.js';
 import {paceMap} from './pace.js?v=20261017-race';
-import {jumpProfile} from './jumps.js?v=20261016-3d';
+import {jumpProfile} from './jumps.js?v=20261017-tabletop';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
 import {trackPlanFromDesign} from './track-designs.js?v=20261016-3d';
 
@@ -19,7 +20,7 @@ function configurePhysics(){
   const plan=trackPlanFromDesign(design),samples=planSamples(plan);
   const features=plan.jumpFeatures.map(feature=>({...feature,takeoff:feature.takeoff.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),landing:feature.landing.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
   const surfaces=plan.jumpSurfaces.map(surface=>({...surface,polygon:surface.polygon.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
-  const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55};
+  const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55,tabletopFlightTimeScale:1.45};
   lifts={
     1:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1}),
     2:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1.08}),
@@ -45,8 +46,7 @@ function carState(driver,index){
   return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:.68,width:.44,height:.22,color:driver.color,label:surname(driver.name),number:driver.number};
 }
 function render(force=false){
-  let cars=drivers.map(carState);viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':playing?'Playing':'Paused';
-  const focus=$('focus').value,follow=cars.find(car=>car.id===focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};
+  let cars=drivers.map(carState),focus=$('focus').value,follow=cars.find(car=>String(car.id)===focus);viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':playing?'Playing':'Paused';
   if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);$('order').replaceChildren(...ordered(drivers,time).map((entry,index)=>{let li=document.createElement('li');li.textContent=`${entry.driver.name} · car ${entry.driver.number}`;if(index===0)li.className='leader';return li;}));}
 }
 function tick(timestamp){if(!playing)return;let delta=Math.min(.12,(timestamp-last)/1000||0);last=timestamp;time=Math.min(duration,time+delta*Number($('speed').value));if(time>=duration)playing=false;render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';if(playing)frame=requestAnimationFrame(tick);}
@@ -71,3 +71,4 @@ $('focus').addEventListener('change',()=>{if(!$('focus').value)viewer.target={x:
 $('play').addEventListener('click',()=>{playing=!playing;$('play').textContent=playing?'Ⅱ Pause':'▶ Play';if(playing){if(time>=duration)time=0;last=performance.now();frame=requestAnimationFrame(tick);}});
 $('restart').addEventListener('click',()=>setTime(0));$('back').addEventListener('click',()=>setTime(time-10));$('forward').addEventListener('click',()=>setTime(time+10));$('timeline').addEventListener('input',event=>setTime(event.target.value));
 start();
+
