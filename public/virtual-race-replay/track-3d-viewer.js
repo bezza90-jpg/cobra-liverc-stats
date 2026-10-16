@@ -231,16 +231,38 @@ class Viewer{
   carFaces(car){
     let routePoint=Number.isFinite(car.fraction)?this.routeAt(car.fraction):null,centre=vec(Number(car.x??routePoint?.x)||0,Number(car.y??routePoint?.y)||0,Number(car.z)||0),yaw=Number.isFinite(car.yaw)?car.yaw:Math.atan2(routePoint?.ty||0,routePoint?.tx||1),pitch=Number(car.pitch)||0;
     let forward=vec(Math.cos(yaw)*Math.cos(pitch),Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch)),right=vec(-Math.sin(yaw),Math.cos(yaw),0),up=norm(cross(forward,right)),length=Number(car.length)||.46,width=Number(car.width)||.30,height=Number(car.height)||.15;
-    centre=add(centre,mul(up,.055+height/2));const corner=(f,r,u)=>add(centre,add(mul(forward,f*length/2),add(mul(right,r*width/2),mul(up,u*height/2))));
-    let p={};for(let f of [-1,1])for(let r of [-1,1])for(let u of [-1,1])p[`${f},${r},${u}`]=corner(f,r,u);let body=car.color||'#85ed40',dark=colour(body,.55),glass='#182e3a';
-    return[
-      polygon([p['-1,-1,-1'],p['1,-1,-1'],p['1,-1,1'],p['-1,-1,1']],dark,'#06100a','car'),
-      polygon([p['-1,1,-1'],p['-1,1,1'],p['1,1,1'],p['1,1,-1']],dark,'#06100a','car'),
-      polygon([p['-1,-1,-1'],p['-1,-1,1'],p['-1,1,1'],p['-1,1,-1']],colour(body,.72),'#06100a','car'),
-      polygon([p['1,-1,-1'],p['1,1,-1'],p['1,1,1'],p['1,-1,1']],colour(body,1.08),'#06100a','car'),
-      polygon([p['-1,-1,1'],p['1,-1,1'],p['1,1,1'],p['-1,1,1']],body,'#06100a','car'),
-      polygon([corner(-.12,-.78,1.03),corner(.34,-.78,1.03),corner(.34,.78,1.03),corner(-.12,.78,1.03)],glass,'#06100a','car-window')
-    ];
+    centre=add(centre,mul(up,.02+height/2));const corner=(f,r,u)=>add(centre,add(mul(forward,f*length/2),add(mul(right,r*width/2),mul(up,u*height/2))));
+    let body=car.color||'#85ed40',dark=colour(body,.52),light=colour(body,1.12),glass='#172c39',edge='#030806',faces=[];
+    const quad=(points,fill,kind='car')=>faces.push(polygon(points.map(point=>corner(...point)),fill,edge,kind));
+    const box=(f0,f1,r0,r1,u0,u1,fill,kind='car')=>{
+      quad([[f0,r0,u0],[f1,r0,u0],[f1,r0,u1],[f0,r0,u1]],colour(fill,.66),kind);
+      quad([[f0,r1,u0],[f0,r1,u1],[f1,r1,u1],[f1,r1,u0]],colour(fill,.72),kind);
+      quad([[f0,r0,u0],[f0,r0,u1],[f0,r1,u1],[f0,r1,u0]],colour(fill,.60),kind);
+      quad([[f1,r0,u0],[f1,r1,u0],[f1,r1,u1],[f1,r0,u1]],colour(fill,1.04),kind);
+      quad([[f0,r0,u1],[f1,r0,u1],[f1,r1,u1],[f0,r1,u1]],fill,kind);
+    };
+    // Tyres and silver hubs give the tiny model an unmistakable RC-car silhouette.
+    for(let f of [-.55,.55])for(let r of [-1.02,1.02]){
+      box(f-.22,f+.22,r-.21,r+.21,-1.08,.18,'#111614','car-wheel');
+      let side=r<0?r-.225:r+.225,ring=[];for(let i=0;i<10;i++){let angle=i*Math.PI*2/10;ring.push(corner(f+Math.cos(angle)*.145,side,-.45+Math.sin(angle)*.40));}
+      faces.push(polygon(ring,'#929b95','#090d0b','car-hub'));
+    }
+    // Low chassis, pointed nose and a tapered buggy shell.
+    box(-.78,.72,-.76,.76,-.78,-.28,dark,'car-chassis');
+    box(.42,.88,-.72,.72,-.68,-.22,light,'car-nose');
+    let sections=[[-.62,.62,-.22],[-.32,.56,.54],[.04,.48,.82],[.42,.58,.22],[.65,.64,-.16]];
+    for(let i=0;i<sections.length-1;i++){
+      let [fa,wa,ua]=sections[i],[fb,wb,ub]=sections[i+1];
+      quad([[fa,-wa,ua],[fb,-wb,ub],[fb,wb,ub],[fa,wa,ua]],i===1?glass:body,'car-shell');
+      quad([[fa,-wa,-.25],[fb,-wb,-.25],[fb,-wb,ub],[fa,-wa,ua]],dark,'car-shell');
+      quad([[fa,wa,-.25],[fa,wa,ua],[fb,wb,ub],[fb,wb,-.25]],colour(body,.74),'car-shell');
+    }
+    // Rear wing and mounts, proportioned like a 1/10 off-road buggy.
+    box(-.98,-.82,-1.12,1.12,.54,.73,body,'car-wing');
+    box(-.87,-.80,-.55,-.42,-.24,.58,dark,'car-wing-mount');
+    box(-.87,-.80,.42,.55,-.24,.58,dark,'car-wing-mount');
+    quad([[-.08,-.43,.835],[.25,-.43,.48],[.25,.43,.48],[-.08,.43,.835]],glass,'car-window');
+    return faces;
   }
   showError(message){let warning=this.container.querySelector('[data-stat="warning"]');warning.textContent=message;warning.className='c3-error';}
   updateStats(){
