@@ -1,6 +1,6 @@
 const RAMP_CATALOG={
- cnc_tt:{width:2.44,parts:[[0,1.325,'tabletop-up',463],[1.325,2.44,'flat',446],[3.765,2.442,'tabletop-down',446]]},
- cnc_tt_long_up:{width:2.44,parts:[[0,2.4,'tabletop-up',446],[2.4,2.44,'flat',446],[4.84,2.442,'tabletop-down',446]]},
+ cnc_tt:{width:2.44,parts:[[0,1.325,'tabletop-up',463],[1.325,2.44,'flat',446],[3.765,2.442,'tabletop-down',446]],flight:[0,2]},
+ cnc_tt_long_up:{width:2.44,parts:[[0,2.4,'tabletop-up',446],[2.4,2.44,'flat',446],[4.84,2.442,'tabletop-down',446]],flight:[0,2]},
  cnc_small:{width:2.44,parts:[[0,1.299,'roller',171]]},
  cnc_big:{width:2.44,parts:[[0,1.584,'roller',276]]},
  cnc_kick:{width:2.44,parts:[[0,.667,'kicker',217]]},
@@ -47,7 +47,7 @@ export function trackPlanFromDesign(input,base={}){
   });
   if(spec.flight){
    const takeoff=built[spec.flight[0]],landing=built[spec.flight[1]];
-   jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81});
+   jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81});
   }
  }
  const points=input.points.map(point=>toPlan({x:Number(point.x),y:Number(point.y)}));
