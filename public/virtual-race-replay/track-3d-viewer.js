@@ -93,7 +93,7 @@ function heightProfile(label,t,height){
   if(label.includes('ROLLER')||label==='ROLL')return height*Math.sin(t*Math.PI);
   // THR egg and wedge pieces are landers: their high end is followed by a
   // continuous descent to floor level, rather than a hump rising from it.
-  if(label.includes('EGG'))return height*Math.pow(1-t,1.35);
+  if(label.includes('EGG'))return height*Math.pow(Math.cos(t*Math.PI/2),1.25);
   if(label.includes('WEDGE'))return height*(1-(t*t*(3-2*t)));
   if(label.includes('FLAT')||label.includes('TOP')||label.includes('TABLE'))return height;
   if(label.includes('DOWN')||label.includes('LAND'))return height*Math.cos(t*Math.PI/2);
@@ -134,9 +134,9 @@ function addFingerRamp(scene,item,spec){
 }
 
 function addBotDot(scene,item,spec){
-  let radius=(spec.width||.4572)/2,height=Number(spec.height||.10),base=.036,steps=6,rings=5,top=localPoint(item,0,0,base+height);
+  let radius=(spec.width||.4572)/2,height=Number(spec.height||.10),base=.036,sectors=6,slicesPerSector=6,steps=sectors*slicesPerSector,rings=5,top=localPoint(item,0,0,base+height);
   for(let i=0;i<steps;i++){
-    let a=i/steps*TAU,b=(i+1)/steps*TAU,colourValue=i%2?'#f7f7f3':'#e11f2b';
+    let a=i/steps*TAU,b=(i+1)/steps*TAU,colourValue=Math.floor(i/slicesPerSector)%2?'#f7f7f3':'#e11f2b';
     const domePoint=(angle,fraction)=>localPoint(item,Math.cos(angle)*radius*fraction,Math.sin(angle)*radius*fraction,base+height*Math.sqrt(Math.max(0,1-fraction*fraction)));
     scene.polygons.push(polygon([top,domePoint(a,1/rings),domePoint(b,1/rings)],colourValue,'#681017','dot'));
     for(let ring=1;ring<rings;ring++){
