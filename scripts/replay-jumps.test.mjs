@@ -1,3 +1,4 @@
+Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {jumpProfile} from '../public/virtual-race-replay/jumps.js';
@@ -48,13 +49,21 @@ test('3D kicker boost raises the middle of the flight without moving either land
  assert.equal(higher(.25,8),normal(.25,8));assert(Math.abs(higher(.50,8)-normal(.50,8))<1e-9);
 });
 
+test('3D tabletop flight clears the down ramp and touches down 20 cm before its end',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'cnc_tt',takeoffProfile:'tabletop-up',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:463,landingHeightMm:446,gravity:9.81};
+ const normal=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323});
+ const higher=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,tabletopFlightTimeScale:1.45});
+ assert(higher(.38,8)>normal(.38,8));
+ assert(higher(.55,8)>0);assert(higher(.58,8)>higher(.60,8));assert.equal(higher(.25,8),normal(.25,8));assert(Math.abs(higher(.61,8))<1e-9);assert.equal(higher(.62,8),0);
+});
+
 test('clearer height views progressively raise airborne arcs without moving their endpoints',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'tabletop',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:323,gravity:9.81};
  const trueScale=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,flightTimeScale:1});
  const twice=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,flightTimeScale:1.08});
  const threeTimes=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,flightTimeScale:1.15});
  assert(threeTimes(.38,8)>twice(.38,8));assert(twice(.38,8)>trueScale(.38,8));
- assert.equal(threeTimes(.25,8),trueScale(.25,8));assert(Math.abs(threeTimes(.50,8)-trueScale(.50,8))<1e-9);
+ assert.equal(threeTimes(.25,8),trueScale(.25,8));assert(Math.abs(threeTimes(.59,8)-trueScale(.59,8))<1e-9);
 });
 
 test('measured ramp surfaces use their own heights and direction',()=>{
@@ -76,3 +85,4 @@ test('event design automatically supplies its measured ramp profiles',async()=>{
  assert(plan.jumpSurfaces.some(surface=>surface.profile==='tabletop-up'&&surface.heightMm===463));
  assert(plan.jumpFeatures.some(feature=>feature.name==='cnc_tt'&&feature.landingProfile==='tabletop-down'));
 });
+
