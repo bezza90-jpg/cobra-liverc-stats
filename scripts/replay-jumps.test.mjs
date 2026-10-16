@@ -72,9 +72,11 @@ test('measured ramp surfaces use their own heights and direction',()=>{
  assert.equal(lift(.2),0);assert(lift(.3)>170);assert(Math.abs(lift(.39))<1e-10);
 });
 
-test('egg lander has a rounded crest and eases smoothly to the floor',()=>{
+test('egg and wedge landers rise from the floor without a square leading wall',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],lift=jumpProfile(samples,[],323,[],{routeLengthMetres:10,referenceHeightMm:323,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'egg-lander',heightMm:323}]});
- assert(lift(.21)>315);assert(lift(.3)>lift(.4));assert(lift(.4)>lift(.55));assert(Math.abs(lift(.59))<15);
+ const wedge=jumpProfile(samples,[],276,[],{routeLengthMetres:10,referenceHeightMm:276,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'wedge-lander',heightMm:276}]});
+ assert.equal(lift(.2),0);assert(lift(.22)>0&&lift(.22)<lift(.26));assert(lift(.28)>315);assert(lift(.36)>lift(.48));assert(Math.abs(lift(.59))<15);
+ assert.equal(wedge(.2),0);assert(wedge(.22)>0&&wedge(.22)<wedge(.25));assert(wedge(.26)>260);assert(wedge(.36)>wedge(.5));assert(Math.abs(wedge(.59))<15);
 });
 
 test('event design automatically supplies its measured ramp profiles',async()=>{
