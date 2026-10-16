@@ -4,7 +4,12 @@ root=Path(__file__).resolve().parents[1]
 changed=[]
 for source in (root/'public/assets/car-avatars').glob('*.png'):
     target=root/'public/assets/car-avatar-thumbnails'/f'{source.stem}.webp'
-    if target.exists() and target.stat().st_mtime>=source.stat().st_mtime: continue
+    # Published avatar thumbnails are review-pinned assets.  A checkout gives
+    # source and target files fresh mtimes, so timestamp comparisons can
+    # silently re-encode an already approved thumbnail with a newer Pillow
+    # build.  Only create a missing thumbnail; replacements must travel with
+    # the reviewed avatar update that also refreshes the approval manifest.
+    if target.exists(): continue
     target.parent.mkdir(parents=True,exist_ok=True)
     try:
         with Image.open(source) as image:
