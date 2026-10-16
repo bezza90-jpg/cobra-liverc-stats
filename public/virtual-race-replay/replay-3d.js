@@ -29,9 +29,13 @@ function configureGrid(){
   drivers.forEach(driver=>{let target={x:right.point.x-(Math.max(1,driver.startPosition||driver.number)-1)*.62,y:right.point.y};driver.startFraction=routeFractionNear(target);});
 }
 function carState(driver,index){
-  let fraction=visualFraction(driver,time,pace),point=viewer.routeAt(fraction),ahead=viewer.routeAt(fraction+.001),position=positionAt(driver,time),speed=Math.max(2,Math.min(25,design.routeLengthMetres/Math.max(1,position.lapTime||driver.typical))),z=lift(fraction,speed),beforeLift=lift(fraction-.0008,speed),afterLift=lift(fraction+.0008,speed),pitch=Math.atan2(afterLift-beforeLift,design.routeLengthMetres*.0016),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),lane=(index%3-1)*.11*Math.min(1,time/2),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
+  let routeLength=Number(design.routeLengthMetres)||153.9,fraction=visualFraction(driver,time,pace),point=viewer.routeAt(fraction),ahead=viewer.routeAt(fraction+.001),position=positionAt(driver,time),speed=Math.max(2,Math.min(25,routeLength/Math.max(1,position.lapTime||driver.typical))),z=Math.max(0,lift(fraction,speed));
+  // Read the ramp over roughly a buggy wheelbase rather than at a single
+  // sample boundary.  The body follows real ramp angles but cannot flip
+  // vertically when entering/leaving a surface or during a gravity arc.
+  let pitchSample=.0015,beforeLift=Math.max(0,lift(fraction-pitchSample,speed)),afterLift=Math.max(0,lift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),lane=(index%3-1)*.11*Math.min(1,time/2),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
   if(time>=duration){fraction=((drivers.slice().sort((a,b)=>a.finalPosition-b.finalPosition).findIndex(item=>item.id===driver.id)+1)*.006)%1;point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=lift(fraction,speed);pitch=0;}
-  return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,color:driver.color,label:surname(driver.name),number:driver.number};
+  return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:.68,width:.44,height:.22,color:driver.color,label:surname(driver.name),number:driver.number};
 }
 function render(force=false){
   let cars=drivers.map(carState);viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':playing?'Playing':'Paused';
