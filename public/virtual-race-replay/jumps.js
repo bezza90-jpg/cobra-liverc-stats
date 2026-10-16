@@ -1,3 +1,4 @@
+Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 // Decorative lift depends only on route distance, so seeking and exports agree.
 // It never changes the timing engine, car heading or centreline position.
 export function insidePolygon(point,polygon){
@@ -52,9 +53,10 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
    const {takeoff,landing}=feature;if(f<takeoff.from||f>landing.to)continue;
    const startHeight=(Number(feature.takeoffHeightMm)||217)/1000,endHeight=(Number(feature.landingHeightMm)||startHeight*1000)/1000;
    if(f<takeoff.to){const u=(f-takeoff.from)/(takeoff.to-takeoff.from);return surfaceProfile('kicker',u)*startHeight*pixelsPerMetre;}
-   if(f<=landing.from){
-    const gap=(landing.from-takeoff.to)*routeLengthMetres,x=(f-takeoff.to)*routeLengthMetres,speed=clamp(Number(speedMps)||8,2,25),isKicker=String(feature.takeoffProfile||feature.name||'').toLowerCase().includes('kicker'),viewScale=Math.max(1,Number(options.flightTimeScale)||1),kickerScale=isKicker?Math.max(1,Number(options.kickerFlightTimeScale)||1):1,flightTime=gap/speed*viewScale*kickerScale,time=x/Math.max(.001,gap)*flightTime,gravity=Number(feature.gravity)||Number(options.gravity)||9.81;
-    const verticalSpeed=(endHeight-startHeight+.5*gravity*flightTime*flightTime)/Math.max(.001,flightTime);
+   const profileName=String(feature.takeoffProfile||feature.name||'').toLowerCase(),isKicker=profileName.includes('kicker'),isTabletop=profileName.includes('tabletop'),flightEnd=isTabletop?Math.max(landing.from,landing.to-.2/routeLengthMetres):landing.from;
+   if(f<=flightEnd){
+    const landingProgress=(flightEnd-landing.from)/Math.max(.000001,landing.to-landing.from),targetHeight=isTabletop?surfaceProfile(feature.landingProfile||'down',landingProgress)*endHeight:endHeight,gap=(flightEnd-takeoff.to)*routeLengthMetres,x=(f-takeoff.to)*routeLengthMetres,speed=clamp(Number(speedMps)||8,2,25),viewScale=Math.max(1,Number(options.flightTimeScale)||1),featureScale=isKicker?Math.max(1,Number(options.kickerFlightTimeScale)||1):isTabletop?Math.max(1,Number(options.tabletopFlightTimeScale)||1):1,flightTime=gap/speed*viewScale*featureScale,time=x/Math.max(.001,gap)*flightTime,gravity=Number(feature.gravity)||Number(options.gravity)||9.81;
+    const verticalSpeed=(targetHeight-startHeight+.5*gravity*flightTime*flightTime)/Math.max(.001,flightTime);
     return Math.max(0,startHeight+verticalSpeed*time-.5*gravity*time*time)*pixelsPerMetre;
    }
    const u=(f-landing.from)/(landing.to-landing.from);return surfaceProfile(feature.landingProfile||'down',u)*endHeight*pixelsPerMetre;
@@ -70,3 +72,4 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
   return height*Math.sin(Math.PI*u)**2;
  };
 }
+
