@@ -1,4 +1,4 @@
-import {prepare,ordered,positionAt,visualFraction} from './engine.js';
+import {prepare,ordered,positionAt,visualFraction,finishFraction} from './engine.js?v=20261017-finish';
 import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-tabletop';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
@@ -21,7 +21,7 @@ function configurePhysics(){
   const plan=trackPlanFromDesign(design),samples=planSamples(plan);
   const features=plan.jumpFeatures.map(feature=>({...feature,takeoff:feature.takeoff.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),landing:feature.landing.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
   const surfaces=plan.jumpSurfaces.map(surface=>({...surface,polygon:surface.polygon.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
-  const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55,tabletopFlightTimeScale:1.45};
+  const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55,tabletopFlightTimeScale:1.8};
   lifts={
     1:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1}),
     2:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1.08}),
@@ -44,7 +44,7 @@ function carState(driver,index){
   // sample boundary.  The body follows real ramp angles but cannot flip
   // vertically when entering/leaving a surface or during a gravity arc.
   let pitchSample=.0015,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),gridBlend=Number.isFinite(driver.startFraction)?Math.max(0,1-time/Math.min(2,driver.laps[0].seconds)):0,lane=(driver.gridLane||0)*gridBlend+(index%3-1)*.11*(1-gridBlend),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
-  if(time>=duration){fraction=((drivers.slice().sort((a,b)=>a.finalPosition-b.finalPosition).findIndex(item=>item.id===driver.id)+1)*.006)%1;point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
+  if(time>=duration){fraction=finishFraction(driver,drivers);point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
   return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,wheelColor:driver.wheelColor,label:surname(driver.name),number:driver.number};
 }
 function render(force=false){
