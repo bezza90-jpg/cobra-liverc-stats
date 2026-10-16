@@ -60,6 +60,18 @@ const maps=routes.map(r=>{
  console.log(`${r.name}: speed ${min.toFixed(3)}–${max.toFixed(3)}x lap average; infield max ${technicalMax.toFixed(3)}x; route ${Math.round(length)} units`);
  return pace;
 });
+{
+ const {points}=sample(routes[0].d),pace=paceMap(points,{profile:'race',minimumSpeed:.56,maximumSpeed:1.75});
+ let previous=0,min=Infinity,max=0;
+ for(let j=1;j<=30000;j++){
+  const distance=pace(j/30000),speed=(distance-previous)*30000;
+  assert(speed>=.56-1e-5&&speed<=1.75+1e-5,`race pace speed ${speed}`);
+  assert(Math.abs(speed-pace.speedAtDistance(distance))<.012,`race pace local speed ${speed}`);
+  min=Math.min(min,speed);max=Math.max(max,speed);previous=distance;
+ }
+ assert(min<.7&&max>1.5,`race pace should visibly accelerate and brake (${min}-${max})`);
+ console.log(`Race-day video pace: speed ${min.toFixed(3)}-${max.toFixed(3)}x lap average`);
+}
 let races=0,drivers=0,crossings=0,shortOpenings=0;
 for(const file of readdirSync(new URL('races/',base))){
  if(!file.endsWith('.json'))continue;
