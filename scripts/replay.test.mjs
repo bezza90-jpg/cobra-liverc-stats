@@ -42,10 +42,11 @@ for(const [id,plan] of Object.entries(plans)){
  routes.push({name:`${plan.date} ${plan.routeStatus==='confirmed'?'confirmed':'draft'}`,d:routePath(points,plan),...straightFor(points,plan)});
 }
 const maps=routes.map(r=>{
- const grid=gridPositions(r,12),straightLength=Math.hypot(r.to.x-r.from.x,r.to.y-r.from.y);
+ const straightLength=Math.hypot(r.to.x-r.from.x,r.to.y-r.from.y),metre=(r.scaleWidth||planBorder.width)/30,gridCount=Math.max(2,Math.min(12,Math.floor((straightLength/metre-.25)/2)+1)),grid=gridPositions(r,gridCount);
  for(let i=0;i<grid.length;i++){
   assert(Math.hypot(grid[i].x-r.to.x,grid[i].y-r.to.y)<straightLength,`${r.name}: grid must fit the straight`);
-  if(i>=2)assert(Math.abs(Math.hypot(grid[i].x-grid[i-2].x,grid[i].y-grid[i-2].y)-2*(r.scaleWidth||planBorder.width)/30)<1e-8,`${r.name}: two metre same-side spacing`);
+  assert.equal(Math.sign(grid[i].lane),i%2?-1:1,`${r.name}: pole must be inside and sides alternate`);
+  if(i)assert(Math.abs(Math.hypot(grid[i].x-grid[i-1].x,grid[i].y-grid[i-1].y)-2*metre)<1e-8,`${r.name}: consecutive grid positions must be two metres apart`);
  }
  const {points,length}=sample(r.d),straightSpeed=r.name==='Oval'?2.5:1.65,pace=paceMap(points,{mainStraight:r,straightSpeed});
  assert.equal(pace(0),0);assert.equal(pace(1),1);for(let k=0;k<=100;k++)assert(Math.abs(pace(pace.timeAtDistance(k/100))-k/100)<1e-10);
