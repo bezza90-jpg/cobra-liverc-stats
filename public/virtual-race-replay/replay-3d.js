@@ -1,4 +1,3 @@
-Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 import {prepare,ordered,positionAt,visualFraction} from './engine.js';
 import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-tabletop';
@@ -71,4 +70,3 @@ $('focus').addEventListener('change',()=>{if(!$('focus').value)viewer.target={x:
 $('play').addEventListener('click',()=>{playing=!playing;$('play').textContent=playing?'Ⅱ Pause':'▶ Play';if(playing){if(time>=duration)time=0;last=performance.now();frame=requestAnimationFrame(tick);}});
 $('restart').addEventListener('click',()=>setTime(0));$('back').addEventListener('click',()=>setTime(time-10));$('forward').addEventListener('click',()=>setTime(time+10));$('timeline').addEventListener('input',event=>setTime(event.target.value));
 start();
-
