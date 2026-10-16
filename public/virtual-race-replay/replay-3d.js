@@ -44,7 +44,7 @@ function carState(driver,index){
   // vertically when entering/leaving a surface or during a gravity arc.
   let pitchSample=.0015,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),lane=(index%3-1)*.11*Math.min(1,time/2),normal={x:-Math.sin(yaw),y:Math.cos(yaw)};
   if(time>=duration){fraction=((drivers.slice().sort((a,b)=>a.finalPosition-b.finalPosition).findIndex(item=>item.id===driver.id)+1)*.006)%1;point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
-  return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:.68,width:.44,height:.22,color:driver.color,accentColor:driver.accentColor,wheelColor:driver.wheelColor,label:surname(driver.name),number:driver.number};
+  return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,wheelColor:driver.wheelColor,label:surname(driver.name),number:driver.number};
 }
 function render(force=false){
   let cars=drivers.map(carState),focus=$('focus').value,follow=cars.find(car=>String(car.id)===focus);viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':playing?'Playing':'Paused';
