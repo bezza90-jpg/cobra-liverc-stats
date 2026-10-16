@@ -1,11 +1,10 @@
-Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 import {canonicalDriverKey} from '../assets/driver-identity.js';
 import {renderLapCharts} from '../assets/lap-charts.js?v=20260928-same-tab';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
 import {jumpProfile} from './jumps.js?v=20261017-tabletop';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261004-presentation';
-import {trackPlanFromDesign} from './track-designs.js?v=20261016-gravity';
+import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-measured';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
 import {prepare,ordered,timeAtProgress,visualFraction} from './engine.js';
 const $=id=>document.getElementById(id),svgNS='http://www.w3.org/2000/svg';
@@ -84,7 +83,7 @@ async function loadRace(autoplay=false){
  const planned=$('layoutSelect').value!=='oval';
  const mainStraight=fitted?.mainStraight||(planned&&race.eventId==='518551'?{from:{x:223,y:190},to:{x:1350,y:190}}:planned&&race.eventId==='499054'?{from:{x:190,y:180},to:{x:1410,y:180}}:{from:{x:250,y:170},to:{x:1330,y:170}});
  const samples=Array.from({length:601},(_,i)=>path.getPointAtLength(i*length/600));
- const availablePlan=planForRace(race),jumpPlan=planned&&availablePlan?.routeStatus==='confirmed'?availablePlan:null;
+ const availablePlan=planForRace(race),jumpPlan=planned&&availablePlan?.routeStatus==='confirmed'&&hasMeasuredJumpMotion(availablePlan)?availablePlan:null;
  const jumpPolygons=(jumpPlan?.jumpZones||[]).map(polygon=>polygon.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]}));
  const jumpFeatures=(jumpPlan?.jumpFeatures||[]).map(feature=>Object.fromEntries(['takeoff','landing'].map(key=>[key,feature[key].map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})])));
  for(let i=0;i<jumpFeatures.length;i++)Object.assign(jumpFeatures[i],Object.fromEntries(Object.entries(jumpPlan.jumpFeatures[i]).filter(([name])=>!['takeoff','landing'].includes(name))));
@@ -157,4 +156,3 @@ try{
  $('nextRace').onclick=()=>nextRace(dayMode);
  changeEvent(params.get('race')||initial.defaultRace);
 }catch(error){$('message').textContent=error.message;$('play').disabled=true;}
-
