@@ -16,7 +16,8 @@ function surfaceProfile(name,t){
  if(name.includes('triple')||name.includes('ripple'))return Math.sin(t*Math.PI*3)**2;
  if(name.includes('roller'))return Math.sin(t*Math.PI);
  if(name.includes('kicker')||name.includes('up'))return smooth(t);
- if(name.includes('egg')||name.includes('wedge')||name.includes('down'))return 1-smooth(t);
+ if(name.includes('egg'))return Math.pow(Math.cos(t*Math.PI/2),1.25);
+ if(name.includes('wedge')||name.includes('down'))return 1-smooth(t);
  if(name.includes('flat')||name.includes('top'))return 1;
  return Math.sin(t*Math.PI)**2;
 }
@@ -52,7 +53,7 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
    const startHeight=(Number(feature.takeoffHeightMm)||217)/1000,endHeight=(Number(feature.landingHeightMm)||startHeight*1000)/1000;
    if(f<takeoff.to){const u=(f-takeoff.from)/(takeoff.to-takeoff.from);return surfaceProfile('kicker',u)*startHeight*pixelsPerMetre;}
    if(f<=landing.from){
-    const gap=(landing.from-takeoff.to)*routeLengthMetres,x=(f-takeoff.to)*routeLengthMetres,speed=clamp(Number(speedMps)||8,2,25),flightTime=gap/speed,time=x/speed,gravity=Number(feature.gravity)||Number(options.gravity)||9.81;
+    const gap=(landing.from-takeoff.to)*routeLengthMetres,x=(f-takeoff.to)*routeLengthMetres,speed=clamp(Number(speedMps)||8,2,25),isKicker=String(feature.takeoffProfile||feature.name||'').toLowerCase().includes('kicker'),viewScale=Math.max(1,Number(options.flightTimeScale)||1),kickerScale=isKicker?Math.max(1,Number(options.kickerFlightTimeScale)||1):1,flightTime=gap/speed*viewScale*kickerScale,time=x/Math.max(.001,gap)*flightTime,gravity=Number(feature.gravity)||Number(options.gravity)||9.81;
     const verticalSpeed=(endHeight-startHeight+.5*gravity*flightTime*flightTime)/Math.max(.001,flightTime);
     return Math.max(0,startHeight+verticalSpeed*time-.5*gravity*time*time)*pixelsPerMetre;
    }
