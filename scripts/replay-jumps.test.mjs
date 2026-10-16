@@ -5,6 +5,7 @@ import {prepare,visualFraction} from '../public/virtual-race-replay/engine.js';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
 import {trackPlanFromDesign,hasMeasuredJumpMotion} from '../public/virtual-race-replay/track-designs.js';
 import {readFile} from 'node:fs/promises';
+import {analyseAvatarPixels,avatarThumbnailPath} from '../public/virtual-race-replay/avatar-colours.js';
 const samples=Array.from({length:101},(_,i)=>({x:i,y:0}));
 const zones=[[[20,-5],[40,-5],[40,5],[20,5]]];
 test('jump is bounded, smooth at entry/exit and absent on ordinary track',()=>{
@@ -89,4 +90,12 @@ test('event design automatically supplies its measured ramp profiles',async()=>{
 test('historic hand-drawn plans retain ordinary flat car motion',async()=>{
  const historic=JSON.parse(await readFile(new URL('../public/virtual-race-replay/track-plans.json',import.meta.url),'utf8'));
  for(const [id,plan] of Object.entries(historic))assert.equal(hasMeasuredJumpMotion(plan),false,`${id} must not infer jumps from a hand-drawn plan`);
+});
+
+test('3D avatar colours retain shell, accent and wheel cues',()=>{
+ const width=10,height=10,data=new Uint8ClampedArray(width*height*4);
+ const paint=(from,to,r,g,b)=>{for(let y=from;y<to;y++)for(let x=0;x<width;x++){let i=(y*width+x)*4;data.set([r,g,b,255],i);}};
+ paint(0,6,225,35,30);paint(6,10,245,210,25);for(let y=2;y<5;y++)for(let x=0;x<2;x++){let i=(y*width+x)*4;data.set([25,70,220,255],i);}
+ const colours=analyseAvatarPixels(data,width,height);assert.match(colours.color,/^#[0-9a-f]{6}$/);assert.notEqual(colours.color,colours.accentColor);assert.notEqual(colours.color,colours.wheelColor);
+ assert.equal(avatarThumbnailPath({DRIVER:{'2-Wheel Drive Buggy':'assets/car-avatars/DRIVER-AUTO-2WD.png'}},'DRIVER','2-Wheel Drive Buggy'),'../assets/car-avatar-thumbnails/DRIVER-AUTO-2WD.webp');
 });
