@@ -91,10 +91,14 @@ function heightProfile(label,t,height){
   label=String(label).toUpperCase();
   if(label.includes('TRIPLE')||label.includes('RIPPLE'))return height*Math.pow(Math.sin(t*Math.PI*3),2);
   if(label.includes('ROLLER')||label==='ROLL')return height*Math.sin(t*Math.PI);
-  // THR egg and wedge pieces are landers: their high end is followed by a
-  // continuous descent to floor level, rather than a hump rising from it.
-  if(label.includes('EGG'))return height*Math.pow(Math.cos(t*Math.PI/2),1.25);
-  if(label.includes('WEDGE'))return height*(1-(t*t*(3-2*t)));
+  // The THR landers have no square leading wall. Their nose rises from the
+  // carpet into a rounded crest before the longer landing face returns to it.
+  if(label.includes('EGG')||label.includes('WEDGE')){
+    let rise=label.includes('EGG')?.2:.15;
+    if(t<=rise){let u=t/rise;return height*(u*u*(3-2*u));}
+    let u=(t-rise)/(1-rise);
+    return label.includes('EGG')?height*Math.pow(Math.cos(u*Math.PI/2),1.25):height*(1-(u*u*(3-2*u)));
+  }
   if(label.includes('FLAT')||label.includes('TOP')||label.includes('TABLE'))return height;
   if(label.includes('DOWN')||label.includes('LAND'))return height*Math.cos(t*Math.PI/2);
   if(label==='K'||label.includes('KICK'))return height*(1-Math.cos(t*Math.PI/2));
@@ -104,7 +108,7 @@ function heightProfile(label,t,height){
 
 function addRampPart(scene,item,spec,part,index){
   let [offset,length,label]=part,width=Number(spec.width||2.4),height=Number(spec.partHeights?.[index]??spec.height??.04);
-  let segments=/EGG/i.test(label)?28:/ROLLER|RIPPLE/i.test(label)?18:8,topRows=[];
+  let segments=/EGG|WEDGE/i.test(label)?28:/ROLLER|RIPPLE/i.test(label)?18:8,topRows=[];
   let shadowShift=height*.62,shadowLift=.034;
   scene.polygons.push(polygon([
     add(localPoint(item,offset,-width/2,shadowLift),vec(shadowShift,shadowShift*.48,0)),
