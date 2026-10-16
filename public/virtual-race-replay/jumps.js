@@ -1,4 +1,3 @@
-Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 // Decorative lift depends only on route distance, so seeking and exports agree.
 // It never changes the timing engine, car heading or centreline position.
 export function insidePolygon(point,polygon){
@@ -72,4 +71,3 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
   return height*Math.sin(Math.PI*u)**2;
  };
 }
-
