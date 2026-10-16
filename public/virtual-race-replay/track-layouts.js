@@ -4,10 +4,10 @@ export const planBorder={x:87,y:125,width:1438,height:766};
 const identity={x:0,y:0,width:1,height:1};
 export function gridPositions(straight,count){
  const dx=straight.to.x-straight.from.x,dy=straight.to.y-straight.from.y,length=Math.hypot(dx,dy),ux=dx/length,uy=dy/length;
- // Alternating sides: a one-metre stagger gives two metres between cars on
- // each side, using the template's thirty-metre width as the scale reference.
- const step=(straight.scaleWidth||planBorder.width)/30,heading=Math.atan2(dy,dx)*180/Math.PI;
- return Array.from({length:count},(_,i)=>({x:straight.to.x-ux*(35+i*step),y:straight.to.y-uy*(35+i*step),lane:i%2?18:-18,heading}));
+ // Finals use the club's real stagger: pole is on the inside, every following
+ // grid position is two metres farther back, and the sides alternate.
+ const metre=(straight.scaleWidth||planBorder.width)/30,step=2*metre,front=.25*metre,lane=.42*metre,heading=Math.atan2(dy,dx)*180/Math.PI;
+ return Array.from({length:count},(_,i)=>({x:straight.to.x-ux*(front+i*step),y:straight.to.y-uy*(front+i*step),lane:(i%2?-1:1)*lane,heading}));
 }
 export function planPoint(point,plan){
  const c=plan.crop||identity;let x=(point.x-c.x)/c.width,y=(point.y-c.y)/c.height;
