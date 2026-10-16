@@ -40,9 +40,31 @@ test('airborne arc accelerates downward at 9.81 metres per second squared',()=>{
  assert(Math.abs(secondDifference+9.81*dt*dt)<1e-6);
 });
 
+test('3D kicker boost raises the middle of the flight without moving either landing point',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'kicker-and-lander',takeoffProfile:'kicker',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:323,gravity:9.81};
+ const normal=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323});
+ const higher=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,kickerFlightTimeScale:1.55});
+ assert(higher(.38,8)>normal(.38,8));
+ assert.equal(higher(.25,8),normal(.25,8));assert(Math.abs(higher(.50,8)-normal(.50,8))<1e-9);
+});
+
+test('clearer height views progressively raise airborne arcs without moving their endpoints',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'tabletop',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:323,gravity:9.81};
+ const trueScale=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,flightTimeScale:1});
+ const twice=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,flightTimeScale:1.08});
+ const threeTimes=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,flightTimeScale:1.15});
+ assert(threeTimes(.38,8)>twice(.38,8));assert(twice(.38,8)>trueScale(.38,8));
+ assert.equal(threeTimes(.25,8),trueScale(.25,8));assert(Math.abs(threeTimes(.50,8)-trueScale(.50,8))<1e-9);
+});
+
 test('measured ramp surfaces use their own heights and direction',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],lift=jumpProfile(samples,[],323,[],{routeLengthMetres:10,referenceHeightMm:323,surfaces:[{polygon:box(20,40),direction:[[20,0],[40,0]],profile:'roller',heightMm:171}]});
  assert.equal(lift(.2),0);assert(lift(.3)>170);assert(Math.abs(lift(.39))<1e-10);
+});
+
+test('egg lander has a rounded crest and eases smoothly to the floor',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],lift=jumpProfile(samples,[],323,[],{routeLengthMetres:10,referenceHeightMm:323,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'egg-lander',heightMm:323}]});
+ assert(lift(.21)>315);assert(lift(.3)>lift(.4));assert(lift(.4)>lift(.55));assert(Math.abs(lift(.59))<15);
 });
 
 test('event design automatically supplies its measured ramp profiles',async()=>{
