@@ -48,9 +48,9 @@ test('measured ramp surfaces use their own heights and direction',()=>{
 test('event design automatically supplies its measured ramp profiles',async()=>{
  const design=JSON.parse(await readFile(new URL('../public/virtual-race-replay/designs/518555.json',import.meta.url),'utf8'));
  const plan=trackPlanFromDesign(design,{date:'2026-10-11'});
- assert.equal(plan.date,'2026-10-11');assert.equal(plan.routeLengthMetres,151.5);assert.equal(plan.jumpFeatures.length,2);
- assert.deepEqual(plan.jumpFeatures.map(feature=>[feature.takeoffHeightMm,feature.landingHeightMm]),[[217,276],[217,323]]);
+ assert.equal(plan.date,'2026-10-11');assert.equal(plan.routeLengthMetres,151.5);assert.equal(plan.jumpFeatures.length,3);
+ assert.deepEqual(plan.jumpFeatures.map(feature=>[feature.takeoffHeightMm,feature.landingHeightMm]),[[217,276],[463,446],[217,323]]);
  assert.equal(plan.jumpSurfaces.filter(surface=>surface.profile==='roller').length,2);
  assert(plan.jumpSurfaces.some(surface=>surface.profile==='tabletop-up'&&surface.heightMm===463));
+ assert(plan.jumpFeatures.some(feature=>feature.name==='cnc_tt'&&feature.landingProfile==='tabletop-down'));
 });
-
