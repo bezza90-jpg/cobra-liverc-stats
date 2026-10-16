@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync,existsSync} from 'node:fs';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
 import {planPoint,routePath,straightFor,routePoint,gridPositions,planBorder} from '../public/virtual-race-replay/track-layouts.js';
-import {prepare,positionAt,visualFraction} from '../public/virtual-race-replay/engine.js';
+import {prepare,positionAt,visualFraction,finishFraction} from '../public/virtual-race-replay/engine.js';
 const base=new URL('../public/virtual-race-replay/',import.meta.url);
 // Sample the actual SVG routes without a browser dependency (quadratic curves
 // are densely flattened before equal-distance resampling).
@@ -29,6 +29,11 @@ const routes=[
 ];
 const plans=JSON.parse(readFileSync(new URL('track-plans.json',base),'utf8'));
 const catalog=JSON.parse(readFileSync(new URL('catalog.json',base),'utf8'));
+{
+ const finishers=[{id:'winner',finalPosition:1,number:2},{id:'second',finalPosition:2,number:1},{id:'third',finalPosition:3,number:3}];
+ assert(finishFraction(finishers[0],finishers)>finishFraction(finishers[1],finishers),'winner must park furthest beyond the finish line');
+ assert(finishFraction(finishers[1],finishers)>finishFraction(finishers[2],finishers),'finishing order must run from front to back');
+}
 assert.equal(Object.keys(plans).length,27);
 for(const [id,plan] of Object.entries(plans)){
  if(id.startsWith('date:'))assert.equal(id,`date:${plan.date}`,`${id}: date template match`);
