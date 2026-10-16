@@ -1,8 +1,9 @@
+Attempting to perform the InitializeDefaultDrives operation on the 'FileSystem' provider failed.
 import {canonicalDriverKey} from '../assets/driver-identity.js';
 import {renderLapCharts} from '../assets/lap-charts.js?v=20260928-same-tab';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
-import {jumpProfile} from './jumps.js?v=20261016-gravity';
+import {jumpProfile} from './jumps.js?v=20261017-tabletop';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261004-presentation';
 import {trackPlanFromDesign} from './track-designs.js?v=20261016-gravity';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
@@ -88,7 +89,7 @@ async function loadRace(autoplay=false){
  const jumpFeatures=(jumpPlan?.jumpFeatures||[]).map(feature=>Object.fromEntries(['takeoff','landing'].map(key=>[key,feature[key].map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})])));
  for(let i=0;i<jumpFeatures.length;i++)Object.assign(jumpFeatures[i],Object.fromEntries(Object.entries(jumpPlan.jumpFeatures[i]).filter(([name])=>!['takeoff','landing'].includes(name))));
  const jumpSurfaces=(jumpPlan?.jumpSurfaces||[]).map(surface=>({...surface,polygon:surface.polygon.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})}));
- const jumpLift=jumpProfile(samples,jumpPolygons,50,jumpFeatures,{surfaces:jumpSurfaces,routeLengthMetres:jumpPlan?.routeLengthMetres||151.5,referenceHeightMm:323,gravity:9.81});
+ const jumpLift=jumpProfile(samples,jumpPolygons,50,jumpFeatures,{surfaces:jumpSurfaces,routeLengthMetres:jumpPlan?.routeLengthMetres||151.5,referenceHeightMm:323,gravity:9.81,tabletopFlightTimeScale:1.45});
  const illustrative=fitted?false:!planned||!['518551','499054'].includes(race.eventId);
  const pace=paceMap(samples,{mainStraight,straightSpeed:illustrative?2.5:1.65});
  document.getElementById('grid-reference')?.remove();
@@ -156,3 +157,4 @@ try{
  $('nextRace').onclick=()=>nextRace(dayMode);
  changeEvent(params.get('race')||initial.defaultRace);
 }catch(error){$('message').textContent=error.message;$('play').disabled=true;}
+
