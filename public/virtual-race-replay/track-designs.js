@@ -18,8 +18,8 @@ const RAMP_CATALOG={
  trestle_24:{width:2.4,parts:[[0,1.2,'up',396],[1.2,2.4,'flat',396],[3.6,2.4,'down',396]]},
  trestle_36:{width:2.4,parts:[[0,1.2,'up',396],[1.2,3.6,'flat',396],[4.8,2.4,'down',396]]},
  trestle_48:{width:2.4,parts:[[0,1.2,'up',396],[1.2,4.8,'flat',396],[6,2.4,'down',396]]},
- jump_trestle_12:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'up',396],[3.367,1.2,'flat',396],[4.567,2.4,'down',396]],flight:[0,1],landingAtEnd:true,landingInsetMetres:.2},
- jump_trestle_24:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'up',396],[3.367,2.4,'flat',396],[5.767,2.4,'down',396]],flight:[0,1],landingAtEnd:true,landingInsetMetres:.2}
+ jump_trestle_12:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'up',396],[3.367,1.2,'flat',396],[4.567,2.4,'down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,minimumClearanceMetres:.85},
+ jump_trestle_24:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'up',396],[3.367,2.4,'flat',396],[5.767,2.4,'down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,minimumClearanceMetres:.95}
 };
 
 const routeLength=points=>points.reduce((total,point,index)=>{

@@ -2,7 +2,7 @@ import {prepare,ordered,positionAt,visualFraction,finishFraction} from './engine
 import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-corner-tabletop';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
-import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-corner-tabletop';
+import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-later-trestle-landing';
 import {avatarThumbnailPath,loadAvatarColours} from './avatar-colours.js?v=20261017-2';
 
 const $=id=>document.getElementById(id);
@@ -27,7 +27,7 @@ function planSamples(plan){let path=document.createElementNS('http://www.w3.org/
 function routeFractionNear(target){let route=viewer.scene.route,best=0,score=Infinity;for(let i=0;i<route.length;i++){let value=(route[i].x-target.x)**2+(route[i].y-target.y)**2;if(value<score){score=value;best=i;}}return best/route.length;}
 function configurePhysics(){
   const plan=trackPlanFromDesign(design),samples=planSamples(plan);
-  const features=plan.jumpFeatures.map(feature=>({...feature,minimumClearanceMetres:String(feature.name).startsWith('jump_trestle_')?.7:0,takeoff:feature.takeoff.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),landing:feature.landing.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
+  const features=plan.jumpFeatures.map(feature=>({...feature,minimumClearanceMetres:Number(feature.minimumClearanceMetres)||(String(feature.name).startsWith('jump_trestle_')?.7:0),takeoff:feature.takeoff.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),landing:feature.landing.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
   const surfaces=plan.jumpSurfaces.map(surface=>({...surface,polygon:surface.polygon.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
   const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65};
   lifts={
