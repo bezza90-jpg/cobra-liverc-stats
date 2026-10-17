@@ -22,6 +22,9 @@
   <meta name="twitter:description" content="Watch recorded COBRA races on measured 3D tracks with ramps, jumps and driver cars.">
   <meta name="twitter:image" content="https://racehub.cobracardiff.co.uk/virtual-race-replay/3d-replay-preview-20261017-v5.png">
   <link rel="icon" href="../assets/cobra.ico">
+  <link rel="preload" href="catalog.json" as="fetch" crossorigin>
+  <link rel="preload" href="../data/car-avatars.json" as="fetch" crossorigin>
+  <link rel="preload" href="track-3d-viewer.js?v=20261017-27" as="script">
   <link rel="stylesheet" href="replay-3d.css?v=20261017-8">
 
 <link data-cobra-shell rel="stylesheet" href="../assets/site-shell.css?v=4"><script data-cobra-shell type="module" src="../assets/site-shell.js?v=4" defer></script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"8bd96a91178344ddb3c5078533d44dde"}'></script><!-- End Cloudflare Web Analytics --></head>
@@ -31,7 +34,8 @@
     <nav class="crumbs" aria-label="Replay views"><a id="back2d" href="./?event=518555&amp;race=7121723">← 2D replay and timings</a><a href="../">Race statistics</a></nav>
     <header class="intro"><div><p class="eyebrow">COBRA · 3D VIRTUAL RACE REPLAY</p><h1 id="eventTitle">3D Virtual Race Replay</h1><p id="raceTitle">Loading recorded race…</p></div><span id="physicsStatus" class="physics">Loading track plan…</span></header>
     <section class="selectors" aria-label="Choose race and playback">
-      <label>Race <select id="raceSelect"></select></label>
+      <label>Event <select id="eventSelect" aria-label="Event"><option>Loading events…</option></select></label>
+      <label>Race <select id="raceSelect" disabled><option>Loading races…</option></select></label>
       <label>Follow driver in flyover <select id="focus"><option value="">All drivers</option></select></label>
       <a id="official" target="_blank" rel="noopener">Official LiveRC result ↗</a>
       <a id="youtube" class="c3-youtube-link" target="_blank" rel="noopener" hidden><svg viewBox="0 0 24 17" aria-hidden="true"><path d="M23.5 2.7A3 3 0 0 0 21.4.6C19.5 0 12 0 12 0S4.5 0 2.6.6A3 3 0 0 0 .5 2.7 31 31 0 0 0 0 8.5a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1C4.5 17 12 17 12 17s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1 31 31 0 0 0 .5-5.8 31 31 0 0 0-.5-5.8Z"/><path class="c3-youtube-play" d="m9.6 12.1 6.3-3.6-6.3-3.6v7.2Z"/></svg><span>View on YouTube</span></a>
@@ -47,6 +51,6 @@
     <p id="replayMethod" class="explain">Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times.</p>
   </main>
   <script src="track-3d-viewer.js?v=20261017-27"></script>
-<script type="module" src="replay-3d.js?v=20261017-37"></script>
+<script type="module" src="replay-3d.js?v=20261017-38"></script>
 <!-- cobra-footer:start --><footer class="cobra-site-footer"><a href="https://www.cobracardiff.co.uk/"><img src="../assets/cobra-header-logo.png" width="220" height="56" alt="COBRA home"></a><p>South Wales TQ HQ<br>BRCA.org Affiliated Club</p><p>Off Road Buggy Racing Club • South Wales</p><nav aria-label="Footer"><a href="../website-guides/">Help &amp; Website Guides</a><a href="https://www.facebook.com/groups/cobracardiff">Facebook</a><a href="https://www.youtube.com/@Bezza90">YouTube</a></nav><p>© 2026 COBRA. Beryl Media Productions. All rights reserved.</p></footer><!-- cobra-footer:end --></body>
 </html>

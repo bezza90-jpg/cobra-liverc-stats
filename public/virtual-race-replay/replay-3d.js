@@ -9,8 +9,8 @@ const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padStart(4,'0')}`;
 const seconds=number=>Number(number||0).toFixed(2);
-const params=new URLSearchParams(location.search),eventId=params.get('event')||'518555';
-let eventData,design,avatarManifest={},raceVideos=[],viewer,race,drivers=[],pace,lift,lifts={},surfaceLifts={},retiredSlots=new Map(),time=0,duration=0,playing=false,last=0,frame=0;
+const params=new URLSearchParams(location.search);
+let eventId=params.get('event')||'',catalogEvents=[],eventData,design,avatarManifest={},raceVideos=[],viewer,race,drivers=[],pace,lift,lifts={},surfaceLifts={},retiredSlots=new Map(),time=0,duration=0,playing=false,last=0,frame=0;
 const avatarColourCache=new Map();
 
 async function json(url){const response=await fetch(url);if(!response.ok)throw Error(`Could not load ${url}`);return response.json();}
@@ -140,23 +140,30 @@ function updateYouTubeLink(){
   link.href=video.url;link.title=video.title||'Watch this race on YouTube';link.setAttribute('aria-label',`${link.title} (opens in a new tab)`);
 }
 async function loadRace(id){
-  cancelAnimationFrame(frame);playing=false;$('play').textContent='▶ Play';race=await json(`races/${id}.json`);drivers=race.drivers.slice().sort((a,b)=>a.number-b.number).map((driver,index)=>({...prepare(driver),color:palette[index%palette.length]}));
-  await Promise.all(drivers.map(async driver=>{let url=avatarThumbnailPath(avatarManifest,driver.key,race.className);if(url){let profile=avatarColourCache.get(url);if(profile===undefined){try{profile=await loadAvatarColours(url);}catch{profile=null;}avatarColourCache.set(url,profile);}if(profile)Object.assign(driver,profile);}let override=avatarColourOverride(driver.key);if(override)Object.assign(driver,override);}));
+  cancelAnimationFrame(frame);playing=false;$('play').textContent='▶ Play';$('status').textContent='Loading race…';race=await json(`races/${id}.json`);drivers=race.drivers.slice().sort((a,b)=>a.number-b.number).map((driver,index)=>({...prepare(driver),color:palette[index%palette.length],...(avatarColourOverride(driver.key)||{})}));
+  const currentDrivers=drivers,currentRaceId=String(race.id);
   duration=Math.max(...drivers.map(driver=>driver.total));retiredSlots=new Map(drivers.filter(driver=>driver.total<duration-Math.max(30,driver.typical*2)).sort((a,b)=>a.total-b.total||a.number-b.number).map((driver,index)=>[driver.id,index]));$('timeline').max=String(duration);viewer.container.querySelector('[data-replay-time]').max=String(duration);$('endTime').textContent=clock(duration);$('raceTitle').textContent=`${race.name} · ${race.round}`;for(const title of viewer.container.querySelectorAll('[data-live-timing-title]'))title.textContent=race.name;$('official').href=race.source;updateYouTubeLink();
   const focusOptions=()=>[new Option('All drivers',''),...drivers.map(driver=>new Option(`${driver.number}. ${driver.name}`,driver.id))];$('focus').replaceChildren(...focusOptions());viewer.container.querySelector('[data-replay-focus]').replaceChildren(...focusOptions());configureGrid();time=0;syncUrl();render(true);
+  Promise.all(currentDrivers.map(async driver=>{if(avatarColourOverride(driver.key))return;let url=avatarThumbnailPath(avatarManifest,driver.key,race.className);if(url){let profile=avatarColourCache.get(url);if(profile===undefined){try{profile=await loadAvatarColours(url);}catch{profile=null;}avatarColourCache.set(url,profile);}if(profile)Object.assign(driver,profile);}})).then(()=>{if(drivers===currentDrivers&&String(race?.id)===currentRaceId)render(true);});
 }
 async function start(){
   try{
-    [eventData,avatarManifest]=await Promise.all([json(`events/${eventId}.json`),json('../data/car-avatars.json').catch(()=>({}))]);json('../data/videos.json?v=20261017-current-races').then(data=>{raceVideos=data.videos||[];updateYouTubeLink();}).catch(()=>{});design=await loadDesign();
+    const [catalog,manifest]=await Promise.all([json('catalog.json'),json('../data/car-avatars.json').catch(()=>({}))]);avatarManifest=manifest;catalogEvents=Array.isArray(catalog.events)?catalog.events:[];
+    const requestedRace=params.get('race'),selectedEvent=catalogEvents.find(item=>String(item.id)===String(eventId))||catalogEvents.find(item=>String(item.id)===String(catalog.raceEvents?.[requestedRace]))||catalogEvents[0];if(!selectedEvent)throw Error('No 3D replay events are available.');eventId=String(selectedEvent.id);
+    $('eventSelect').replaceChildren(...catalogEvents.map(item=>new Option(item.name,item.id)));$('eventSelect').value=eventId;
+    const eventPromise=json(`events/${eventId}.json`);eventData=await eventPromise;
     $('eventTitle').textContent=`${eventData.name} in 3D`;document.title=`${eventData.name} in 3D | COBRA RC Racing Cardiff`;
+    $('raceSelect').replaceChildren(...eventData.races.map(item=>new Option(`${item.round} · ${item.name}`,item.id)));
+    const initial=eventData.races.some(item=>String(item.id)===String(requestedRace))?String(requestedRace):eventData.races.some(item=>String(item.id)===String(selectedEvent.defaultRace))?String(selectedEvent.defaultRace):String(eventData.races[0]?.id||'');if(!initial)throw Error('No recorded races are available for this event.');$('raceSelect').value=initial;$('status').textContent='Loading the 3D track…';
+    json('../data/videos.json?v=20261017-current-races').then(data=>{raceVideos=data.videos||[];updateYouTubeLink();}).catch(()=>{});design=await loadDesign();
     const measured=!design.flatReplay;$('physicsStatus').textContent=measured?'Measured ramps · gravity 9.81 m/s²':'Flat replay · no inferred jumps';
     $('replayMethod').innerHTML=measured?'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times. Their position between timing-loop crossings is estimated along the confirmed Track Designer centre line. Ramp heights are measured; airborne motion uses gravity at 9.81 m/s².':'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times and follow the confirmed event route. This plan does not contain measured ramp positions, so the replay deliberately keeps the cars on the flat circuit.';
     viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:true});addViewerReplayControls();addLiveTiming();placeYouTubeLink();configurePhysics();
-    for(const item of eventData.races){let option=new Option(`${item.round} · ${item.name}`,item.id);$('raceSelect').append(option);}
-    let requested=params.get('race'),initial=eventData.races.some(item=>item.id===requested)?requested:eventData.races[0]?.id;if(!initial)throw Error('No recorded races are available for this event.');$('raceSelect').value=initial;await loadRace(initial);
+    $('raceSelect').disabled=false;await loadRace(initial);
   }catch(error){$('status').textContent=error.message;$('status').className='error';console.error(error);}
 }
 
+$('eventSelect').addEventListener('change',()=>{const next=catalogEvents.find(item=>String(item.id)===$('eventSelect').value);if(!next)return;const url=new URL(location.href);url.searchParams.set('event',next.id);if(next.defaultRace)url.searchParams.set('race',next.defaultRace);else url.searchParams.delete('race');url.searchParams.delete('v');location.assign(url);});
 $('raceSelect').addEventListener('change',()=>loadRace($('raceSelect').value));
 $('focus').addEventListener('change',()=>{const id=$('focus').value;viewer.container.querySelector('[data-replay-focus]').value=id;viewer.setFollowCar(id);if(id)viewer.startFlyover(true);else{const carpet=carpetSize();viewer.target={x:carpet.width/2,y:carpet.height/2,z:0};}render(true);});
 $('play').addEventListener('click',()=>setPlaying(!playing));
