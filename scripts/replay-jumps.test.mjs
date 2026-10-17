@@ -139,6 +139,7 @@ test('3D avatar colours retain shell, accent and wheel cues',()=>{
  paint(0,6,225,35,30);paint(6,10,245,210,25);for(let y=2;y<5;y++)for(let x=0;x<2;x++){let i=(y*width+x)*4;data.set([25,70,220,255],i);}
  const colours=analyseAvatarPixels(data,width,height);assert.match(colours.color,/^#[0-9a-f]{6}$/);assert.notEqual(colours.color,colours.accentColor);assert.notEqual(colours.color,colours.wheelColor);assert.match(colours.secondaryColor,/^#[0-9a-f]{6}$/);assert.match(colours.tertiaryColor,/^#[0-9a-f]{6}$/);assert.match(colours.colorLayout,/^(front-accent|rear-accent|top-accent|lower-accent|mixed)$/);
  assert.equal(avatarThumbnailPath({DRIVER:{'2-Wheel Drive Buggy':'assets/car-avatars/DRIVER-AUTO-2WD.png'}},'DRIVER','2-Wheel Drive Buggy'),'../assets/car-avatar-thumbnails/DRIVER-AUTO-2WD.webp');
+ assert.equal(avatarThumbnailPath({DRIVER:{'4-Wheel Drive Buggy':'assets/car-avatars/DRIVER-AUTO-4WD.png'}},'DRIVER','2-Wheel Drive Buggy'),'../assets/car-avatar-thumbnails/DRIVER-AUTO-4WD.webp');
 });
 
 test('Russ Williams retains the reviewed fuchsia, white and grey 3D scheme',()=>{

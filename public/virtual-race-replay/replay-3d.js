@@ -3,7 +3,7 @@ import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-corner-tabletop';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
 import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-later-trestle-landing';
-import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-3';
+import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-4';
 
 const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
