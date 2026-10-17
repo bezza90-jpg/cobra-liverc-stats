@@ -56,7 +56,19 @@ export function trackPlanFromDesign(input,base={}){
   date:String(input.eventDate||base.date||''),name:String(input.eventName||input.name||base.name||'COBRA track'),
   routeStatus:'confirmed',points,loopRoute:loop,jumpSurfaces,jumpFeatures,
   routeLengthMetres:Number(input.routeLengthMetres||base.routeLengthMetres)||routeLength(input.points),
-  designVersion:Number(input.version||1)
+  designVersion:Number(input.version??1)
+ };
+}
+
+export function designFromTrackPlan(input){
+ if(!input||!Array.isArray(input.points)||input.points.length<8)throw Error('A confirmed track route is required.');
+ const width=30,height=18,toDesign=point=>({x:Number(point[0])/1000*width,y:height-Number(point[1])/650*height,w:1.2});
+ const points=input.points.map(toDesign),first=points[0],next=points[1],heading=Math.atan2(next.y-first.y,next.x-first.x)*180/Math.PI;
+ let length=0;for(let i=0;i<points.length;i++){const nextPoint=points[(i+1)%points.length];length+=Math.hypot(nextPoint.x-points[i].x,nextPoint.y-points[i].y);}
+ return{
+  version:0,flatReplay:true,name:String(input.name||'COBRA track'),eventDate:String(input.date||''),
+  carpet:{width,height,ribbon:2.4},points,items:[],routeLengthMetres:Number(input.routeLengthMetres)||length,
+  loop:{x:first.x,y:first.y,angle:heading+90,length:2.4}
  };
 }
 

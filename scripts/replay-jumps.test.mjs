@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {jumpProfile} from '../public/virtual-race-replay/jumps.js';
 import {prepare,visualFraction} from '../public/virtual-race-replay/engine.js';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
-import {trackPlanFromDesign,hasMeasuredJumpMotion} from '../public/virtual-race-replay/track-designs.js';
+import {trackPlanFromDesign,designFromTrackPlan,hasMeasuredJumpMotion} from '../public/virtual-race-replay/track-designs.js';
 import {readFile} from 'node:fs/promises';
 import {analyseAvatarPixels,avatarThumbnailPath} from '../public/virtual-race-replay/avatar-colours.js';
 const samples=Array.from({length:101},(_,i)=>({x:i,y:0}));
@@ -89,6 +89,24 @@ test('event design automatically supplies its measured ramp profiles',async()=>{
  assert.equal(plan.jumpSurfaces.filter(surface=>surface.profile==='roller').length,2);
  assert(plan.jumpSurfaces.some(surface=>surface.profile==='tabletop-up'&&surface.heightMm===463));
  assert(plan.jumpFeatures.some(feature=>feature.name==='cnc_tt'&&feature.landingProfile==='tabletop-down'));
+});
+
+test('SWORD Round 1 design supplies measured 3D ramps to every race',async()=>{
+ const design=JSON.parse(await readFile(new URL('../public/virtual-race-replay/designs/518554.json',import.meta.url),'utf8'));
+ const plan=trackPlanFromDesign(design,{date:'2026-10-04'});
+ assert.equal(plan.name,'SWORD R1 04/10/26');assert.equal(plan.jumpFeatures.length,2);assert(hasMeasuredJumpMotion(plan));
+ assert.deepEqual(plan.jumpFeatures.map(feature=>feature.name),['jump_trestle_24','cnc_k_wedge']);
+});
+
+test('confirmed hand-drawn plans become flat 3D designs without inferred ramps',()=>{
+ const design=designFromTrackPlan({name:'Historic circuit',date:'2026-02-01',routeStatus:'confirmed',points:[[0,0],[250,0],[500,0],[750,0],[1000,0],[1000,325],[1000,650],[500,650],[0,650],[0,325]]});
+ assert.equal(design.flatReplay,true);assert.equal(design.version,0);assert.equal(design.items.length,0);assert.equal(design.carpet.width,30);assert.equal(design.carpet.height,18);assert.equal(design.points[0].y,18);
+});
+
+test('September season opener has a flat 3D route and no invented jumps',async()=>{
+ const design=JSON.parse(await readFile(new URL('../public/virtual-race-replay/designs/518551.json',import.meta.url),'utf8'));
+ const plan=trackPlanFromDesign(design,{date:'2026-09-20'});
+ assert.equal(design.flatReplay,true);assert.equal(plan.designVersion,0);assert.equal(plan.jumpFeatures.length,0);assert.equal(plan.jumpSurfaces.length,0);assert.equal(hasMeasuredJumpMotion(plan),false);
 });
 
 test('historic hand-drawn plans retain ordinary flat car motion',async()=>{
