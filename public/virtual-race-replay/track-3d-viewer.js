@@ -30,12 +30,12 @@ const CATALOG={
   cnc_ttdown:{name:'Tabletop down ramp',length:2.442,width:2.44,parts:[[0,2.442,'DOWN']],height:.446},
   cnc_k_egg:{name:'Kicker and egg lander',length:4.484,width:2.44,parts:[[0,.667,'K'],[2.167,2.317,'EGG LAND']],partHeights:[.217,.323]},
   cnc_k_wedge:{name:'Kicker and wedge lander',length:4.505,width:2.44,parts:[[0,.667,'K'],[2.167,2.338,'WEDGE LAND']],partHeights:[.217,.276]},
-  trestle_12:{name:'Trestle · 1.2 m top',length:4.8,width:2.4,parts:[[0,1.2,'UP'],[1.2,1.2,'TOP'],[2.4,2.4,'DOWN']],height:.396,boardThickness:.012},
-  trestle_24:{name:'Trestle · 2.4 m top',length:6,width:2.4,parts:[[0,1.2,'UP'],[1.2,2.4,'TOP'],[3.6,2.4,'DOWN']],height:.396,boardThickness:.012},
-  trestle_36:{name:'Trestle · 3.6 m top',length:7.2,width:2.4,parts:[[0,1.2,'UP'],[1.2,3.6,'TOP'],[4.8,2.4,'DOWN']],height:.396,boardThickness:.012},
-  trestle_48:{name:'Trestle · 4.8 m top',length:8.4,width:2.4,parts:[[0,1.2,'UP'],[1.2,4.8,'TOP'],[6,2.4,'DOWN']],height:.396,boardThickness:.012},
-  jump_trestle_12:{name:'Kicker and small trestle',length:6.967,width:2.44,parts:[[0,.667,'K'],[2.167,1.2,'UP'],[3.367,1.2,'TOP'],[4.567,2.4,'DOWN']],partHeights:[.217,.396,.396,.396],boardThickness:.012},
-  jump_trestle_24:{name:'Kicker and trestle',length:8.167,width:2.44,parts:[[0,.667,'K'],[2.167,1.2,'UP'],[3.367,2.4,'TOP'],[5.767,2.4,'DOWN']],partHeights:[.217,.396,.396,.396],boardThickness:.012},
+  trestle_12:{name:'Trestle · 1.2 m top',length:4.8,width:2.4,parts:[[0,1.2,'LINEAR UP'],[1.2,1.2,'TOP'],[2.4,2.4,'LINEAR DOWN']],height:.396,boardThickness:.012},
+  trestle_24:{name:'Trestle · 2.4 m top',length:6,width:2.4,parts:[[0,1.2,'LINEAR UP'],[1.2,2.4,'TOP'],[3.6,2.4,'LINEAR DOWN']],height:.396,boardThickness:.012},
+  trestle_36:{name:'Trestle · 3.6 m top',length:7.2,width:2.4,parts:[[0,1.2,'LINEAR UP'],[1.2,3.6,'TOP'],[4.8,2.4,'LINEAR DOWN']],height:.396,boardThickness:.012},
+  trestle_48:{name:'Trestle · 4.8 m top',length:8.4,width:2.4,parts:[[0,1.2,'LINEAR UP'],[1.2,4.8,'TOP'],[6,2.4,'LINEAR DOWN']],height:.396,boardThickness:.012},
+  jump_trestle_12:{name:'Kicker and small trestle',length:6.967,width:2.44,parts:[[0,.667,'K'],[2.167,1.2,'LINEAR UP'],[3.367,1.2,'TOP'],[4.567,2.4,'LINEAR DOWN']],partHeights:[.217,.396,.396,.396],boardThickness:.012},
+  jump_trestle_24:{name:'Kicker and trestle',length:8.167,width:2.44,parts:[[0,.667,'K'],[2.167,1.2,'LINEAR UP'],[3.367,2.4,'TOP'],[5.767,2.4,'LINEAR DOWN']],partHeights:[.217,.396,.396,.396],boardThickness:.012},
   finger_ramp:{name:'Finger ramp',length:2.4,width:.2,parts:[[0,2.4,'FINGER']],height:.023,crossSlope:true},
   mini_ramp:{name:'Mini ramp',length:.4,width:2.4,parts:[[0,.4,'MINI']],height:.08,heightEstimated:true},
   tt:{name:'Legacy tabletop',length:6.2,width:2.4,parts:[[0,1.4,'UP'],[1.4,2.4,'TABLE'],[3.8,2.4,'DOWN']],height:.446},
@@ -103,6 +103,8 @@ function heightProfile(label,t,height){
     let u=(t-rise)/(1-rise);
     return label.includes('EGG')?height*Math.pow(Math.cos(u*Math.PI/2),1.25):height*(1-(u*u*(3-2*u)));
   }
+  if(label.includes('LINEAR')&&label.includes('UP'))return height*t;
+  if(label.includes('LINEAR')&&label.includes('DOWN'))return height*(1-t);
   if(label.includes('FLAT')||label.includes('TOP')||label.includes('TABLE'))return height;
   if(label.includes('DOWN')||label.includes('LAND'))return height*Math.cos(t*Math.PI/2);
   if(label==='K'||label.includes('KICK'))return height*(1-Math.cos(t*Math.PI/2));
