@@ -1,8 +1,7 @@
 import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress} from './engine.js?v=20261017-finish';
 import {paceMap} from './pace.js?v=20261017-race';
-import {jumpProfile} from './jumps.js?v=20261017-corner-tabletop-2';
-import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
-import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-corner-tabletop-2';
+import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
+import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-trestle-hop-1';
 import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-6';
 
 const $=id=>document.getElementById(id);
@@ -24,14 +23,16 @@ async function loadDesign(){
 }
 function surname(name){let clean=String(name||'').replace(/["“”]/g,'').trim().split(/\s+/);return clean.at(-1)||name;}
 function rawRoute(){let route=viewer.scene.route.map(({x,y})=>({x,y}));return [...route,route[0]];}
-function planSamples(plan){let path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',routePath(plan.points));let length=path.getTotalLength();return Array.from({length:901},(_,i)=>path.getPointAtLength(length*i/900));}
 function routeFractionNear(target){let route=viewer.scene.route,best=0,score=Infinity;for(let i=0;i<route.length;i++){let value=(route[i].x-target.x)**2+(route[i].y-target.y)**2;if(value<score){score=value;best=i;}}return best/route.length;}
 function carpetSize(){return viewer?.design?.carpet||viewer?.scene?.design?.carpet||design?.carpet||{width:30,height:18};}
 function configurePhysics(){
-  const plan=trackPlanFromDesign(design),samples=planSamples(plan);
-  const features=plan.jumpFeatures.map(feature=>({...feature,minimumClearanceMetres:Number(feature.minimumClearanceMetres)||(String(feature.name).startsWith('jump_trestle_')?.7:0),takeoff:feature.takeoff.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),landing:feature.landing.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
-  const surfaces=plan.jumpSurfaces.map(surface=>({...surface,polygon:surface.polygon.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
-  const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65};
+  const plan=trackPlanFromDesign(design),carpet=carpetSize(),toScene=point=>[Number(point[0])/1000*carpet.width,carpet.height-Number(point[1])/650*carpet.height],route=viewer.scene.route,samples=[...route.map(({x,y})=>({x,y})),{x:route[0].x,y:route[0].y}];
+  // The visible 3D route uses the viewer's smooth centre line. Build ramp
+  // intervals against that exact route so lift begins and ends on the drawn
+  // boards rather than on the separately rounded 2D SVG approximation.
+  const features=plan.jumpFeatures.map(feature=>({...feature,minimumClearanceMetres:Number(feature.minimumClearanceMetres)||(String(feature.name).startsWith('jump_trestle_')?.7:0),takeoff:feature.takeoff.map(toScene),landing:feature.landing.map(toScene)}));
+  const surfaces=plan.jumpSurfaces.map(surface=>({...surface,polygon:surface.polygon.map(toScene),direction:surface.direction?.map(toScene)}));
+  const liftOptions={surfaces,routeLengthMetres:viewer.scene.routeLength||plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65};
   lifts={
     1:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1}),
     2:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1.08}),
@@ -55,7 +56,7 @@ function configureGrid(){
 function carState(driver,index){
   const scale=viewer?.heightScale||1,airborneLift=lifts[scale]||lift,surfaceLift=surfaceLifts[scale]||airborneLift,activeLift=driver.openingSurfaceOnly&&time<driver.laps[0].seconds?surfaceLift:airborneLift;
   const trackSurface=.035;
-  let routeLength=Number(design.routeLengthMetres)||153.9,fraction=visualFraction(driver,time,pace),point=viewer.routeAt(fraction),ahead=viewer.routeAt(fraction+.001),position=positionAt(driver,time),speed=Math.max(2,Math.min(25,routeLength/Math.max(1,position.lapTime||driver.typical)*(pace.speedAtDistance?.(fraction)||1))),z=Math.max(0,activeLift(fraction,speed))+trackSurface;
+  let routeLength=Number(design.routeLengthMetres)||153.9,fraction=visualFraction(driver,time,pace),point=viewer.routeAt(fraction),ahead=viewer.routeAt(fraction+.001),position=positionAt(driver,time),speed=Math.max(2,Math.min(25,routeLength/Math.max(1,position.lapTime||driver.typical)*(pace.speedAtDistance?.(fraction)||1))),heightAt=value=>Math.max(0,activeLift(value,speed),surfaceLift(value,speed)),z=heightAt(fraction)+trackSurface;
   // Read the ramp over roughly a buggy wheelbase rather than at a single
   // sample boundary.  The body follows real ramp angles but cannot flip
   // vertically when entering/leaving a surface or during a gravity arc.
@@ -64,7 +65,7 @@ function carState(driver,index){
   // that real ramp angle while the gravity arc controls its height.  While
   // airborne the car stays nearly level, then blends onto the actual landing
   // slope during its final 100 mm instead of diving over the tabletop early.
-  let pitchSample=.0025,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),surfaceBefore=Math.max(0,surfaceLift(fraction-pitchSample,speed)),surfaceAfter=Math.max(0,surfaceLift(fraction+pitchSample,speed)),surfacePitch=Math.max(-.165,Math.min(.32,Math.atan2(surfaceAfter-surfaceBefore,routeLength*pitchSample*2))),clearance=Math.max(0,activeLift(fraction,speed)-surfaceLift(fraction,speed)),pitch=Math.max(-.165,Math.min(.32,rawPitch));
+  let pitchSample=.0025,beforeLift=heightAt(fraction-pitchSample),afterLift=heightAt(fraction+pitchSample),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),surfaceBefore=Math.max(0,surfaceLift(fraction-pitchSample,speed)),surfaceAfter=Math.max(0,surfaceLift(fraction+pitchSample,speed)),surfacePitch=Math.max(-.165,Math.min(.32,Math.atan2(surfaceAfter-surfaceBefore,routeLength*pitchSample*2))),clearance=Math.max(0,heightAt(fraction)-surfaceLift(fraction,speed)),pitch=Math.max(-.165,Math.min(.32,rawPitch));
   if(clearance>.008){let flightPitch=Math.max(-.02,Math.min(.32,rawPitch)),landingBlend=rawPitch<0?Math.max(0,Math.min(1,(.10-clearance)/.092)):0;pitch=flightPitch*(1-landingBlend)+surfacePitch*landingBlend;}
   let yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),gridBlend=Number.isFinite(driver.startFraction)?Math.max(0,1-time/Math.min(2,driver.laps[0].seconds)):0,lane=(driver.gridLane||0)*gridBlend+(index%3-1)*.11*(1-gridBlend),normal={x:-Math.sin(yaw),y:Math.cos(yaw)},retired=position.finished&&retiredSlots.has(driver.id),roll=0;
   if(retired){
