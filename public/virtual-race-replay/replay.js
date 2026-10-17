@@ -88,7 +88,7 @@ async function loadRace(autoplay=false){
  const jumpFeatures=(jumpPlan?.jumpFeatures||[]).map(feature=>Object.fromEntries(['takeoff','landing'].map(key=>[key,feature[key].map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})])));
  for(let i=0;i<jumpFeatures.length;i++)Object.assign(jumpFeatures[i],Object.fromEntries(Object.entries(jumpPlan.jumpFeatures[i]).filter(([name])=>!['takeoff','landing'].includes(name))));
  const jumpSurfaces=(jumpPlan?.jumpSurfaces||[]).map(surface=>({...surface,polygon:surface.polygon.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})}));
- const jumpLift=jumpProfile(samples,jumpPolygons,50,jumpFeatures,{surfaces:jumpSurfaces,routeLengthMetres:jumpPlan?.routeLengthMetres||151.5,referenceHeightMm:323,gravity:9.81,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65});
+ const jumpLift=jumpProfile(samples,jumpPolygons,50,jumpFeatures,{surfaces:jumpSurfaces,routeLengthMetres:jumpPlan?.routeLengthMetres||151.5,referenceHeightMm:323,gravity:9.81,tabletopFlightTimeScale:1.65,tabletopMinimumClearanceMetres:.55});
  const illustrative=fitted?false:!planned||!['518551','499054'].includes(race.eventId);
  const pace=paceMap(samples,{mainStraight,straightSpeed:illustrative?2.5:1.65});
  document.getElementById('grid-reference')?.remove();

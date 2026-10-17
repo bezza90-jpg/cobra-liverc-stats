@@ -66,6 +66,15 @@ test('3D tabletop flight clears the down ramp and touches down 20 cm before its 
  assert(higher(.55,8)>0);assert(higher(.58,8)>higher(.60,8));assert.equal(higher(.25,8),normal(.25,8));assert(Math.abs(higher(.61,8))<1e-9);assert.equal(higher(.62,8),0);
 });
 
+test('2D tabletop uses a slightly lower arc without changing its touchdown',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'cnc_tt',takeoffProfile:'tabletop-up',landingProfile:'tabletop-down',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:463,landingHeightMm:446,gravity:9.81};
+ const original=jumpProfile(samples,[],50,[feature],{routeLengthMetres:10,referenceHeightMm:323,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65});
+ const tuned=jumpProfile(samples,[],50,[feature],{routeLengthMetres:10,referenceHeightMm:323,tabletopFlightTimeScale:1.65,tabletopMinimumClearanceMetres:.55});
+ let originalPeak=0,tunedPeak=0;for(let fraction=.26;fraction<=.61;fraction+=.001){originalPeak=Math.max(originalPeak,original(fraction,8));tunedPeak=Math.max(tunedPeak,tuned(fraction,8));}
+ assert(tunedPeak<originalPeak*.93&&tunedPeak>originalPeak*.88,'2D tabletop peak should be around nine percent lower');
+ assert.equal(tuned(.25,8),original(.25,8));assert(Math.abs(tuned(.61,8)-original(.61,8))<1e-9);assert.equal(tuned(.62,8),original(.62,8));
+});
+
 test('corner tabletop uses a low hop and touches down near the top of its down ramp',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],base={name:'corner_tt_right',takeoffProfile:'tabletop-up',landingProfile:'tabletop-down',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:463,landingHeightMm:446,gravity:9.81};
  const main=jumpProfile(samples,[],323,[base],{routeLengthMetres:10,referenceHeightMm:323,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65});
