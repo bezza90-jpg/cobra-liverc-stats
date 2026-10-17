@@ -88,6 +88,12 @@ test('measured ramp surfaces use their own heights and direction',()=>{
  assert.equal(lift(.2),0);assert(lift(.3)>170);assert(Math.abs(lift(.39))<1e-10);
 });
 
+test('trestle boards use straight planar slopes',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],up=jumpProfile(samples,[],396,[],{routeLengthMetres:10,referenceHeightMm:396,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'linear-up',heightMm:396}]}),down=jumpProfile(samples,[],396,[],{routeLengthMetres:10,referenceHeightMm:396,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'linear-down',heightMm:396}]});
+ assert(up(.3)>80&&up(.3)<130);assert(up(.4)>180&&up(.4)<220);assert(up(.5)>280&&up(.5)<330);
+ assert(down(.3)>270&&down(.3)<330);assert(down(.4)>180&&down(.4)<220);assert(down(.5)>80&&down(.5)<130);
+});
+
 test('egg and wedge landers rise from the floor without a square leading wall',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],lift=jumpProfile(samples,[],323,[],{routeLengthMetres:10,referenceHeightMm:323,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'egg-lander',heightMm:323}]});
  const wedge=jumpProfile(samples,[],276,[],{routeLengthMetres:10,referenceHeightMm:276,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'wedge-lander',heightMm:276}]});
@@ -114,7 +120,8 @@ test('SWORD Round 1 design supplies measured 3D ramps to every race',async()=>{
  const corner=plan.jumpFeatures.find(feature=>feature.name==='corner_tt_right');assert.equal(corner.takeoffProfile,'tabletop-up');assert.equal(corner.landingProfile,'tabletop-down');assert.equal(corner.flightTimeScale,.8);assert.equal(corner.minimumClearanceMetres,.1);
  assert(Math.abs(corner.takeoff[0][0]-82.583)<.01);assert(Math.abs(corner.landing[0][0]-82.544)<.01);assert(corner.landing[1][0]-corner.landing[0][0]>79.9);
  const trestle=plan.jumpFeatures.find(feature=>feature.name==='jump_trestle_24');assert.equal(trestle.landingProfile,'flat');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);assert.equal(trestle.minimumClearanceMetres,.95);
- assert(plan.jumpSurfaces.some(surface=>surface.name==='trestle_12'&&surface.profile==='up'));
+ assert(plan.jumpSurfaces.some(surface=>surface.name==='trestle_12'&&surface.profile==='linear-up'));
+ assert(plan.jumpSurfaces.some(surface=>surface.name==='jump_trestle_24'&&surface.profile==='linear-down'));
 });
 
 test('confirmed hand-drawn plans become flat 3D designs without inferred ramps',()=>{

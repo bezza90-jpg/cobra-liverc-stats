@@ -29,6 +29,8 @@ function surfaceProfile(name,t){
  t=clamp(t,0,1);name=String(name||'').toLowerCase();
  if(name.includes('triple')||name.includes('ripple'))return Math.sin(t*Math.PI*3)**2;
  if(name.includes('roller'))return Math.sin(t*Math.PI);
+ if(name.includes('linear')&&name.includes('up'))return t;
+ if(name.includes('linear')&&name.includes('down'))return 1-t;
  if(name.includes('kicker')||name.includes('up'))return smooth(t);
  if(name.includes('egg')||name.includes('wedge')){
   const rise=name.includes('egg')?.2:.15;
