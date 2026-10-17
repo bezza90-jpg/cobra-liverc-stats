@@ -8,6 +8,7 @@ import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avat
 const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padStart(4,'0')}`;
+const seconds=number=>Number(number||0).toFixed(2);
 const params=new URLSearchParams(location.search),eventId=params.get('event')||'518555';
 let eventData,design,avatarManifest={},viewer,race,drivers=[],pace,lift,lifts={},retiredSlots=new Map(),time=0,duration=0,playing=false,last=0,frame=0;
 const avatarColourCache=new Map();
@@ -64,11 +65,35 @@ function advanceFollowDriver(){
   const order=ordered(drivers,time),index=order.findIndex(entry=>String(entry.driver.id)===focus),below=index>=0?order.slice(index+1):[],above=index>0?order.slice(0,index):[],next=[...below,...above].find(entry=>!entry.finished);if(!next)return;
   const id=String(next.driver.id);$('focus').value=id;viewer.container.querySelector('[data-replay-focus]').value=id;viewer.setFollowCar(id);
 }
+function timingFor(entry){
+  const driver=entry.driver,completed=Math.min(entry.completed,driver.laps.length),finished=entry.finished||time>=driver.total;
+  const elapsed=finished?(Number.isFinite(Number(driver.officialTime))?Number(driver.officialTime):driver.total):(driver.crossings[completed]||0);
+  return`${finished?driver.laps.length:completed} / ${seconds(elapsed)}`;
+}
+function timingRow(entry,index,compact=false){
+  const row=document.createElement(compact?'tr':'li');
+  if(index===0)row.className='leader';
+  if(compact){
+    const position=document.createElement('td'),name=document.createElement('td'),result=document.createElement('td');
+    position.textContent=String(index+1);name.textContent=surname(entry.driver.name);name.title=entry.driver.name;result.textContent=timingFor(entry);row.append(position,name,result);
+  }else{
+    const name=document.createElement('span'),result=document.createElement('strong');
+    name.textContent=`${entry.driver.name} · car ${entry.driver.number}`;result.textContent=timingFor(entry);row.append(name,result);
+  }
+  return row;
+}
+function addLiveTiming(){
+  const wrap=viewer.container.querySelector('.c3-canvas-wrap'),panel=document.createElement('aside'),toolbar=viewer.container.querySelector('.c3-toolbar'),button=document.createElement('button');
+  panel.className='c3-timing-overlay';panel.dataset.liveTiming='';panel.setAttribute('aria-label','Live race timing');panel.innerHTML='<header><strong>Live timing</strong><span>Laps / total seconds</span></header><table><thead><tr><th>Pos</th><th>Driver</th><th>Laps / seconds</th></tr></thead><tbody data-live-timing-body></tbody></table>';
+  button.type='button';button.dataset.timingToggle='';button.className='active';button.textContent='Race timings';button.setAttribute('aria-pressed','true');
+  button.addEventListener('click',()=>{const visible=panel.hidden;panel.hidden=!visible;button.classList.toggle('active',visible);button.setAttribute('aria-pressed',String(visible));});
+  toolbar.insertBefore(button,toolbar.querySelector('.c3-grow'));wrap.append(panel);
+}
 function render(force=false){
   advanceFollowDriver();
   let cars=drivers.map(carState),focus=$('focus').value,follow=cars.find(car=>String(car.id)===focus),followDriver=drivers.find(driver=>String(driver.id)===focus),followStopped=followDriver&&time>=followDriver.total,followState=followStopped?(retiredSlots.has(followDriver.id)?`${surname(followDriver.name)} has retired`:`${surname(followDriver.name)} has finished`):'';viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':followState?`${followState} · race ${playing?'still playing':'paused'}`:playing?'Playing':'Paused';
   const controls=viewer.container.querySelector('[data-replay-controls]');if(controls){controls.querySelector('[data-replay-time]').value=String(time);controls.querySelector('[data-replay-clock]').textContent=clock(time);controls.querySelector('[data-replay-action="play"]').textContent=playing?'Ⅱ Pause':'▶ Play';}
-  if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);$('order').replaceChildren(...ordered(drivers,time).map((entry,index)=>{let li=document.createElement('li');li.textContent=`${entry.driver.name} · car ${entry.driver.number}`;if(index===0)li.className='leader';return li;}));}
+  if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);const currentOrder=ordered(drivers,time);$('order').replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index)));viewer.container.querySelector('[data-live-timing-body]')?.replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,true)));}
 }
 function tick(timestamp){if(!playing){frame=0;return;}let delta=Math.min(.12,(timestamp-last)/1000||0);last=timestamp;time=Math.min(duration,time+delta*Number($('speed').value));if(time>=duration)playing=false;render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';frame=playing?requestAnimationFrame(tick):0;}
 function setPlaying(next){cancelAnimationFrame(frame);frame=0;playing=Boolean(next);if(playing){if(time>=duration)time=0;last=performance.now();frame=requestAnimationFrame(tick);}render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';}
@@ -90,7 +115,7 @@ async function start(){
     $('eventTitle').textContent=`${eventData.name} in 3D`;document.title=`${eventData.name} in 3D | COBRA RC Racing Cardiff`;
     const measured=!design.flatReplay;$('physicsStatus').textContent=measured?'Measured ramps · gravity 9.81 m/s²':'Flat replay · no inferred jumps';
     $('replayMethod').innerHTML=measured?'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times. Their position between timing-loop crossings is estimated along the confirmed Track Designer centre line. Ramp heights are measured; airborne motion uses gravity at 9.81 m/s².':'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times and follow the confirmed event route. This plan does not contain measured ramp positions, so the replay deliberately keeps the cars on the flat circuit.';
-    viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:true});addViewerReplayControls();configurePhysics();
+    viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:true});addViewerReplayControls();addLiveTiming();configurePhysics();
     viewer.container.querySelector('[data-height]')?.addEventListener('change',()=>requestAnimationFrame(()=>render(true)));
     for(const item of eventData.races){let option=new Option(`${item.round} · ${item.name}`,item.id);$('raceSelect').append(option);}
     let requested=params.get('race'),initial=eventData.races.some(item=>item.id===requested)?requested:eventData.races[0]?.id;if(!initial)throw Error('No recorded races are available for this event.');$('raceSelect').value=initial;await loadRace(initial);
