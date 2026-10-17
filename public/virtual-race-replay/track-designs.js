@@ -1,4 +1,6 @@
 const RAMP_CATALOG={
+ corner_tt_left:{width:2.44,parts:[[0,1.325,'tabletop-up',463,0,0],[1.325,2.44,'flat',446,0,0],[2.545,2.4,'tabletop-down',446,1.22,90]],flight:[0,2],flightTimeScale:.8,minimumClearanceMetres:.1},
+ corner_tt_right:{width:2.44,parts:[[0,1.325,'tabletop-up',463,0,0],[1.325,2.44,'flat',446,0,0],[2.545,2.4,'tabletop-down',446,-1.22,-90]],flight:[0,2],flightTimeScale:.8,minimumClearanceMetres:.1},
  cnc_tt:{width:2.44,parts:[[0,1.325,'tabletop-up',463],[1.325,2.44,'flat',446],[3.765,2.442,'tabletop-down',446]],flight:[0,2]},
  cnc_tt_long_up:{width:2.44,parts:[[0,2.4,'tabletop-up',446],[2.4,2.44,'flat',446],[4.84,2.442,'tabletop-down',446]],flight:[0,2]},
  cnc_small:{width:2.44,parts:[[0,1.299,'roller',171]]},
@@ -40,14 +42,15 @@ export function trackPlanFromDesign(input,base={}){
  const jumpSurfaces=[],jumpFeatures=[];
  for(const item of input.items||[]){
   const spec=RAMP_CATALOG[item.key];if(!spec)continue;
-  const built=spec.parts.map(([offset,length,profile,heightMm])=>{
-   const start=transform(item,offset,0),end=transform(item,offset+length,0);
-   const surface={name:item.key,profile,heightMm,polygon:box(item,offset,length,spec.width),direction:[toPlan(start),toPlan(end)]};
+  const built=spec.parts.map(([offset,length,profile,heightMm,lateral=0,angleOffset=0])=>{
+   const origin=transform(item,offset,lateral),piece={...item,x:origin.x,y:origin.y,angle:Number(item.angle||0)+angleOffset};
+   const start=transform(piece,0,0),end=transform(piece,length,0);
+   const surface={name:item.key,profile,heightMm,polygon:box(piece,0,length,spec.width),direction:[toPlan(start),toPlan(end)]};
    jumpSurfaces.push(surface);return surface;
   });
   if(spec.flight){
    const takeoff=built[spec.flight[0]],landing=built[spec.flight[1]];
-   jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81,landingAtEnd:Boolean(spec.landingAtEnd),landingInsetMetres:Number(spec.landingInsetMetres)||0});
+   jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81,landingAtEnd:Boolean(spec.landingAtEnd),landingInsetMetres:Number(spec.landingInsetMetres)||0,flightTimeScale:Number(spec.flightTimeScale)||0,minimumClearanceMetres:Number(spec.minimumClearanceMetres)||0});
   }
  }
  const points=input.points.map(point=>toPlan({x:Number(point.x),y:Number(point.y)}));

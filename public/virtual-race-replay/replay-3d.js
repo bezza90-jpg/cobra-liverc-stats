@@ -1,8 +1,8 @@
 import {prepare,ordered,positionAt,visualFraction,finishFraction} from './engine.js?v=20261017-finish';
 import {paceMap} from './pace.js?v=20261017-race';
-import {jumpProfile} from './jumps.js?v=20261017-trestle-air';
+import {jumpProfile} from './jumps.js?v=20261017-corner-tabletop';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
-import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-trestle-slope';
+import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-corner-tabletop';
 import {avatarThumbnailPath,loadAvatarColours} from './avatar-colours.js?v=20261017-2';
 
 const $=id=>document.getElementById(id);
