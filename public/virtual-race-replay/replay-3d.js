@@ -58,12 +58,19 @@ function carState(driver,index){
   }else if(time>=duration){fraction=finishFraction(driver,drivers);point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
   return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,roll,onFire:retired,firePhase:time*7,length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,secondaryColor:driver.secondaryColor,tertiaryColor:driver.tertiaryColor,wheelColor:driver.wheelColor,colorLayout:driver.colorLayout,label:surname(driver.name),number:driver.number};
 }
+function advanceFollowDriver(){
+  const focus=String($('focus').value||''),current=drivers.find(driver=>String(driver.id)===focus);if(!playing||!current||time<current.total||time>=duration)return;
+  const order=ordered(drivers,time),index=order.findIndex(entry=>String(entry.driver.id)===focus),below=index>=0?order.slice(index+1):[],above=index>0?order.slice(0,index):[],next=[...below,...above].find(entry=>!entry.finished);if(!next)return;
+  const id=String(next.driver.id);$('focus').value=id;viewer.container.querySelector('[data-replay-focus]').value=id;viewer.setFollowCar(id);
+}
 function render(force=false){
-  let cars=drivers.map(carState),focus=$('focus').value,follow=cars.find(car=>String(car.id)===focus);viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':playing?'Playing':'Paused';
+  advanceFollowDriver();
+  let cars=drivers.map(carState),focus=$('focus').value,follow=cars.find(car=>String(car.id)===focus),followDriver=drivers.find(driver=>String(driver.id)===focus),followStopped=followDriver&&time>=followDriver.total,followState=followStopped?(retiredSlots.has(followDriver.id)?`${surname(followDriver.name)} has retired`:`${surname(followDriver.name)} has finished`):'';viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':followState?`${followState} · race ${playing?'still playing':'paused'}`:playing?'Playing':'Paused';
   const controls=viewer.container.querySelector('[data-replay-controls]');if(controls){controls.querySelector('[data-replay-time]').value=String(time);controls.querySelector('[data-replay-clock]').textContent=clock(time);controls.querySelector('[data-replay-action="play"]').textContent=playing?'Ⅱ Pause':'▶ Play';}
   if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);$('order').replaceChildren(...ordered(drivers,time).map((entry,index)=>{let li=document.createElement('li');li.textContent=`${entry.driver.name} · car ${entry.driver.number}`;if(index===0)li.className='leader';return li;}));}
 }
-function tick(timestamp){if(!playing)return;let delta=Math.min(.12,(timestamp-last)/1000||0);last=timestamp;time=Math.min(duration,time+delta*Number($('speed').value));if(time>=duration)playing=false;render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';if(playing)frame=requestAnimationFrame(tick);}
+function tick(timestamp){if(!playing){frame=0;return;}let delta=Math.min(.12,(timestamp-last)/1000||0);last=timestamp;time=Math.min(duration,time+delta*Number($('speed').value));if(time>=duration)playing=false;render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';frame=playing?requestAnimationFrame(tick):0;}
+function setPlaying(next){cancelAnimationFrame(frame);frame=0;playing=Boolean(next);if(playing){if(time>=duration)time=0;last=performance.now();frame=requestAnimationFrame(tick);}render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';}
 function setTime(value){time=Math.max(0,Math.min(duration,Number(value)||0));render(true);}
 function addViewerReplayControls(){
   const toolbar=viewer.container.querySelector('.c3-toolbar'),controls=document.createElement('span');controls.className='c3-replay-controls';controls.dataset.replayControls='';controls.innerHTML='<button type="button" data-replay-action="restart">↺</button><button type="button" data-replay-action="back">−10s</button><button type="button" data-replay-action="play">▶ Play</button><button type="button" data-replay-action="forward">+10s</button><input type="range" min="0" max="1" step="0.01" value="0" aria-label="Race time" data-replay-time><output data-replay-clock>0:00.0</output><label>Speed <select data-replay-speed><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><label>Driver <select data-replay-focus><option value="">All drivers</option></select></label>';
@@ -91,6 +98,6 @@ async function start(){
 
 $('raceSelect').addEventListener('change',()=>loadRace($('raceSelect').value));
 $('focus').addEventListener('change',()=>{viewer.container.querySelector('[data-replay-focus]').value=$('focus').value;if(!$('focus').value)viewer.target={x:design.carpet.width/2,y:design.carpet.height/2,z:0};render(true);});
-$('play').addEventListener('click',()=>{playing=!playing;$('play').textContent=playing?'Ⅱ Pause':'▶ Play';if(playing){if(time>=duration)time=0;last=performance.now();frame=requestAnimationFrame(tick);}});
+$('play').addEventListener('click',()=>setPlaying(!playing));
 $('restart').addEventListener('click',()=>setTime(0));$('back').addEventListener('click',()=>setTime(time-10));$('forward').addEventListener('click',()=>setTime(time+10));$('timeline').addEventListener('input',event=>setTime(event.target.value));
 start();
