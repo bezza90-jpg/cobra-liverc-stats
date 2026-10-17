@@ -137,6 +137,13 @@ html.cobra-search-open{overflow:hidden}.cobra-search-panel[hidden]{display:none}
 @media(max-width:1050px){.cobra-search-button{width:100%;padding:14px;text-align:left}.cobra-search-panel>section{margin-top:14px}.cobra-search-results a{align-items:flex-start}.cobra-search-results small{font-size:12px}}
 @media(max-width:480px){.cobra-search-button{font-size:16px}.cobra-search-results a{padding:13px}.cobra-search-results em{display:none}.cobra-search-panel>section{width:calc(100% - 16px);padding:18px;max-height:calc(100dvh - 16px);margin:8px auto}}
 
+/* Accessible site-wide return control for long results and gallery pages. */
+.cobra-back-to-top{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:9000;display:flex;align-items:center;gap:7px;min-width:76px;min-height:46px;padding:9px 15px;border:1px solid #69df7d;border-radius:999px;background:#07140aeb;color:#fff;box-shadow:0 7px 24px #0005;font:700 15px/1 Arial,Helvetica,sans-serif;cursor:pointer;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .18s ease,transform .18s ease,visibility .18s}.cobra-back-to-top.is-visible{opacity:1;visibility:visible;transform:none}.cobra-back-to-top:hover{background:#087e22}.cobra-back-to-top:focus-visible{outline:3px solid #31df50;outline-offset:3px}.cobra-back-to-top span{font-size:24px;line-height:.7}.cobra-back-to-top b{font:inherit}
+@media(min-width:1400px){.cobra-back-to-top{right:max(16px,calc((100vw - 1180px)/2 - 88px))}}
+html.cobra-embedded .cobra-back-to-top{display:none}
+@media(max-width:620px){.cobra-back-to-top{right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));min-width:46px;width:46px;height:46px;padding:0;justify-content:center}.cobra-back-to-top b{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
+@media(prefers-reduced-motion:reduce){.cobra-back-to-top{transition:none}}
+
 /* The original Wix header is retained for instant rollback. */
 header[data-cobra-original-header]{display:none!important}
 </style>
@@ -168,6 +175,24 @@ shell.dataset.initialized = 'true';
   initSiteSearch(shell);
 }
 
+export function initBackToTop() {
+  if (document.querySelector('.cobra-back-to-top')) return;
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'cobra-back-to-top';
+  button.setAttribute('aria-label', 'Back to top');
+  button.innerHTML = '<span aria-hidden="true">↑</span><b>Top</b>';
+  document.body.append(button);
+  const update = () => {
+    const pageIsLong = document.documentElement.scrollHeight > window.innerHeight * 2.25;
+    button.classList.toggle('is-visible', pageIsLong && window.scrollY > window.innerHeight * .85);
+  };
+  button.addEventListener('click', () => window.scrollTo({top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}));
+  window.addEventListener('scroll', update, {passive: true});
+  window.addEventListener('resize', update, {passive: true});
+  update();
+}
+
 const SEARCH_PAGES = [
   ['Home','COBRA indoor RC racing in Cardiff, club information and the latest highlights.','', 'club racing cardiff home'],
   ['Events and booking','See future COBRA meetings and book your place.','https://www.cobracardiff.co.uk/event-list','events entries guests booking book in'],
@@ -186,7 +211,7 @@ const SEARCH_PAGES = [
   ['About COBRA','Club team, venue, location, food and nearby hotels.','about/','address directions house of sport team committee venue'],
   ['Website guides and videos','Watch help videos and read guides to the COBRA website features.','website-guides/','help tutorial instructions reel feature showcase'],
   ['Track gallery','Browse COBRA track layouts and event photographs.','https://www.cobracardiff.co.uk/track-gallery','track layout pictures photos'],
-  ['Club news','Read the latest COBRA announcements and updates.','https://www.cobracardiff.co.uk/club-news','news updates announcements'],
+  ['Club news','Read the latest COBRA announcements and updates.','club-news/','news updates announcements'],
   ['Media','Watch and browse COBRA race media.','https://www.cobracardiff.co.uk/media','video photos gallery'],
   ['Contact COBRA','Send the club a question or request.','https://www.cobracardiff.co.uk/contact','email message enquiry question help']
 ];
@@ -229,8 +254,9 @@ function initSiteSearch(shell) {
 }
 
 initSiteHeader();
+initBackToTop();
 
-const markup="<!-- cobra-shell:start --><header class=\"cobra-site-header\"><div class=\"cobra-header-inner\"><a class=\"cobra-site-logo\" href=\"https://www.cobracardiff.co.uk/\" aria-label=\"COBRA home\"><img src=\"https://racehub.cobracardiff.co.uk/assets/cobra-header-logo.png\" width=\"271\" height=\"69\" alt=\"COBRA\" fetchpriority=\"high\"></a><a class=\"cobra-book-in\" href=\"https://racehub.cobracardiff.co.uk/book-in/\">Book In</a><details class=\"cobra-mobile-menu\"><summary aria-label=\"Open site menu\">☰ <span>Menu</span></summary><nav class=\"cobra-site-menu\" aria-label=\"Site\"><a href=\"https://www.cobracardiff.co.uk/\">Home</a><details class=\"cobra-menu-group\"><summary>Events</summary><div><a href=\"https://racehub.cobracardiff.co.uk/event/\">Current event</a><a href=\"https://www.cobracardiff.co.uk/event-list\">Events &amp; booking</a></div></details><details class=\"cobra-menu-group\"><summary>Race Day</summary><div><a href=\"https://racehub.cobracardiff.co.uk/schedule/\">Club race schedule</a><a href=\"https://racehub.cobracardiff.co.uk/briefing/\">Drivers briefing</a><a href=\"https://racehub.cobracardiff.co.uk/schedule/?type=sword\">SWORD race schedule</a></div></details><details class=\"cobra-menu-group\"><summary>Results</summary><div><a href=\"https://racehub.cobracardiff.co.uk/club/\">Club Series</a><a href=\"https://racehub.cobracardiff.co.uk/sword/\">SWORD Championship</a><a href=\"https://racehub.cobracardiff.co.uk/podiums/\">Podium gallery</a><a href=\"https://racehub.cobracardiff.co.uk/\">Race statistics</a><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/\">Virtual Race Replay</a></div></details><details class=\"cobra-menu-group\"><summary>COBRA Data</summary><div><a href=\"https://racehub.cobracardiff.co.uk/car-avatars/\">Driver car avatars</a><a href=\"https://racehub.cobracardiff.co.uk/?tracker=1\">Driver distance tracker</a><a href=\"https://racehub.cobracardiff.co.uk/setups/\">Setups &amp; tips</a><a href=\"https://racehub.cobracardiff.co.uk/avatar-upload/\">Upload car avatar</a><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/\">Virtual Race Replay</a></div></details><details class=\"cobra-menu-group\"><summary>About COBRA</summary><div><a href=\"https://racehub.cobracardiff.co.uk/about/\">About &amp; location</a><a href=\"https://www.cobracardiff.co.uk/club-news\">Club news</a><a href=\"https://www.cobracardiff.co.uk/media\">Media</a><a href=\"https://www.cobracardiff.co.uk/track-gallery\">Track gallery</a><a href=\"https://racehub.cobracardiff.co.uk/website-guides/\">Help &amp; Website Guides</a></div></details></nav></details><a class=\"cobra-gpw-logo\" href=\"https://www.cobracardiff.co.uk/grand-prix-wales\"><img src=\"https://racehub.cobracardiff.co.uk/assets/gpw-logo.webp\" width=\"99\" height=\"59\" alt=\"Grand Prix of Wales event logo\"></a></div></header><!-- cobra-shell:end -->";
+const markup="<!-- cobra-shell:start --><header class=\"cobra-site-header\"><div class=\"cobra-header-inner\"><a class=\"cobra-site-logo\" href=\"https://www.cobracardiff.co.uk/\" aria-label=\"COBRA home\"><img src=\"https://racehub.cobracardiff.co.uk/assets/cobra-header-logo.png\" width=\"271\" height=\"69\" alt=\"COBRA\" fetchpriority=\"high\"></a><a class=\"cobra-book-in\" href=\"https://racehub.cobracardiff.co.uk/book-in/\">Book In</a><details class=\"cobra-mobile-menu\"><summary aria-label=\"Open site menu\">☰ <span>Menu</span></summary><nav class=\"cobra-site-menu\" aria-label=\"Site\"><a href=\"https://www.cobracardiff.co.uk/\">Home</a><details class=\"cobra-menu-group\"><summary>Events</summary><div><a href=\"https://racehub.cobracardiff.co.uk/event/\">Current event</a><a href=\"https://www.cobracardiff.co.uk/event-list\">Events &amp; booking</a></div></details><details class=\"cobra-menu-group\"><summary>Race Day</summary><div><a href=\"https://racehub.cobracardiff.co.uk/schedule/\">Club race schedule</a><a href=\"https://racehub.cobracardiff.co.uk/briefing/\">Drivers briefing</a><a href=\"https://racehub.cobracardiff.co.uk/schedule/?type=sword\">SWORD race schedule</a></div></details><details class=\"cobra-menu-group\"><summary>Results</summary><div><a href=\"https://racehub.cobracardiff.co.uk/club/\">Club Series</a><a href=\"https://racehub.cobracardiff.co.uk/sword/\">SWORD Championship</a><a href=\"https://racehub.cobracardiff.co.uk/podiums/\">Podium gallery</a><a href=\"https://racehub.cobracardiff.co.uk/\">Race statistics</a><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/\">2D Virtual Replay</a><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/3d.html\">3D Virtual Replay</a></div></details><details class=\"cobra-menu-group\"><summary>COBRA Data</summary><div><a href=\"https://racehub.cobracardiff.co.uk/car-avatars/\">Driver car avatars</a><a href=\"https://racehub.cobracardiff.co.uk/?tracker=1\">Driver distance tracker</a><a href=\"https://racehub.cobracardiff.co.uk/setups/\">Setups &amp; tips</a><a href=\"https://racehub.cobracardiff.co.uk/avatar-upload/\">Upload car avatar</a><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/\">2D Virtual Replay</a><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/3d.html\">3D Virtual Replay</a></div></details><details class=\"cobra-menu-group\"><summary>About COBRA</summary><div><a href=\"https://racehub.cobracardiff.co.uk/about/\">About &amp; location</a><a href=\"https://racehub.cobracardiff.co.uk/club-news/\">Club news</a><a href=\"https://www.cobracardiff.co.uk/media\">Media</a><a href=\"https://www.cobracardiff.co.uk/track-gallery\">Track gallery</a><a href=\"https://racehub.cobracardiff.co.uk/website-guides/\">Help &amp; Website Guides</a></div></details></nav></details><a class=\"cobra-gpw-logo\" href=\"https://www.cobracardiff.co.uk/grand-prix-wales\"><img src=\"https://racehub.cobracardiff.co.uk/assets/gpw-logo.webp\" width=\"99\" height=\"59\" alt=\"Grand Prix of Wales event logo\"></a></div></header><!-- cobra-shell:end -->";
 const install=()=>{
  const original=document.querySelector('header:not(.cobra-site-header)');
  if(!original || original.hasAttribute('data-cobra-original-header')) return;

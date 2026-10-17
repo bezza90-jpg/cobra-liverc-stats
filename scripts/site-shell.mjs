@@ -4,6 +4,7 @@ const routes = {
   'current-event':'event/', 'club-schedule':'schedule/', 'sword-schedule':'schedule/?type=sword',
   'drivers-briefing':'briefing/', 'club-series-tables':'club/', 'sword-tables':'sword/',
   'Podium-Gallery':'podiums/', 'race-stats':'', 'virtual-race-replay':'virtual-race-replay/',
+  'virtual-race-replay/3d.html':'virtual-race-replay/3d.html',
   'driver-car-avatars':'car-avatars/', 'driver-distance-tracker':'?tracker=1',
   'drivers-setups':'setups/', 'upload-car-avatar':'avatar-upload/', 'about-cobra':'about/',
   'club-news':'club-news/',
