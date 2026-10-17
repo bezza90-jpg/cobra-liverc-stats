@@ -13,7 +13,8 @@ const CATALOG={
   bot_dot_18:{name:'Bot dot',length:.4572,width:.4572,height:.10,shape:'botdot'},
   trunk_4:{name:'White trunking · 4 m',length:4,width:.063,height:.063,shape:'trunking'},
   trunk_2:{name:'White trunking · 2 m',length:2,width:.063,height:.063,shape:'trunking'},
-  corner_tt_right:{name:'Legacy right-corner route marker',shape:'route-marker'},
+  corner_tt_left:{name:'Corner tabletop · left',length:4.945,width:2.44,corner:true,parts:[[0,1.325,'UP',0,0],[1.325,2.44,'TOP',0,0],[2.545,2.4,'DOWN',1.22,90]],partHeights:[.463,.446,.446]},
+  corner_tt_right:{name:'Corner tabletop · right',length:4.945,width:2.44,corner:true,parts:[[0,1.325,'UP',0,0],[1.325,2.44,'TOP',0,0],[2.545,2.4,'DOWN',-1.22,-90]],partHeights:[.463,.446,.446]},
   cnc_tt:{name:'CNC tabletop',length:6.207,width:2.44,parts:[[0,1.325,'UP'],[1.325,2.44,'TABLE'],[3.765,2.442,'DOWN']],partHeights:[.463,.446,.446]},
   cnc_tt_long_up:{name:'CNC tabletop · long up',length:7.282,width:2.44,parts:[[0,2.4,'UP'],[2.4,2.44,'TABLE'],[4.84,2.442,'DOWN']],height:.446},
   long_up:{name:'Long up ramp',length:2.4,width:2.4,parts:[[0,2.4,'UP']],height:.446},
@@ -133,6 +134,11 @@ function addRampPart(scene,item,spec,part,index){
   scene.polygons.push(polygon([localPoint(item,offset+length,-width/2,.03),topRows.at(-1)[0],topRows.at(-1)[1],localPoint(item,offset+length,width/2,.03)],'#701019','#3c070b','ramp-side'));
 }
 
+function cornerPart(item,part){
+  const [offset,length,label,lateral=0,angleOffset=0]=part,origin=localPoint(item,offset,lateral,0);
+  return{item:{...item,x:origin.x,y:origin.y,angle:Number(item.angle||0)+angleOffset},part:[0,length,label]};
+}
+
 function addFingerRamp(scene,item,spec){
   let l=spec.length,w=spec.width,z0=.038,z1=.058;
   let a=localPoint(item,0,-w/2,z0),b=localPoint(item,l,-w/2,z0),c=localPoint(item,l,w/2,z1),d=localPoint(item,0,w/2,z1);
@@ -180,11 +186,15 @@ function buildScene(design){
   scene.lines.push({points:route.map(p=>vec(p.x,p.y,.045)),stroke:'#6f8c7a',width:1.15,dash:[7,8],kind:'centre'});
   for(let item of design.items){
     let spec=CATALOG[item.key];if(!spec){if(item.key!=='label'&&item.key!=='car_avatar')scene.warnings.push(`No 3D profile yet: ${item.key}`);continue;}
-    if(spec.shape==='route-marker')continue;
     if(spec.shape==='botdot'){addBotDot(scene,item,spec);scene.stats.dots++;continue;}
     if(spec.shape==='trunking'){addTrunking(scene,item,spec);continue;}
     if(spec.crossSlope){addFingerRamp(scene,item,spec);scene.stats.ramps++;scene.labels.push({point:localPoint(item,spec.length/2,0,.19),text:spec.name});continue;}
-    for(let [index,part] of (spec.parts||[]).entries())addRampPart(scene,item,spec,part,index);
+    if(spec.corner){
+      for(let [index,part] of spec.parts.entries()){
+        const piece=cornerPart(item,part),pieceSpec={...spec,partHeights:[spec.partHeights[index]]};
+        addRampPart(scene,piece.item,pieceSpec,piece.part,0);
+      }
+    }else for(let [index,part] of (spec.parts||[]).entries())addRampPart(scene,item,spec,part,index);
     if(spec.parts?.length){
       scene.stats.ramps++;
       let maximum=Math.max(Number(spec.height||0),...(spec.partHeights||[]).map(Number));

@@ -66,6 +66,14 @@ test('3D tabletop flight clears the down ramp and touches down 20 cm before its 
  assert(higher(.55,8)>0);assert(higher(.58,8)>higher(.60,8));assert.equal(higher(.25,8),normal(.25,8));assert(Math.abs(higher(.61,8))<1e-9);assert.equal(higher(.62,8),0);
 });
 
+test('corner tabletop uses a lower controlled hop than the main tabletop',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],base={name:'corner_tt_right',takeoffProfile:'tabletop-up',landingProfile:'tabletop-down',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:463,landingHeightMm:446,gravity:9.81};
+ const main=jumpProfile(samples,[],323,[base],{routeLengthMetres:10,referenceHeightMm:323,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65});
+ const corner=jumpProfile(samples,[],323,[{...base,flightTimeScale:.8,minimumClearanceMetres:.1}],{routeLengthMetres:10,referenceHeightMm:323,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65});
+ let mainPeak=0,cornerPeak=0;for(let fraction=.26;fraction<=.59;fraction+=.001){mainPeak=Math.max(mainPeak,main(fraction,8));cornerPeak=Math.max(cornerPeak,corner(fraction,8));}
+ assert(cornerPeak>=560&&cornerPeak<580);assert(mainPeak>1000);assert(cornerPeak<mainPeak*.6);assert.equal(corner(.61,8),0);
+});
+
 test('clearer height views progressively raise airborne arcs without moving their endpoints',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'tabletop',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:323,gravity:9.81};
  const trueScale=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,flightTimeScale:1});
@@ -101,9 +109,11 @@ test('event design automatically supplies its measured ramp profiles',async()=>{
 test('SWORD Round 1 design supplies measured 3D ramps to every race',async()=>{
  const design=JSON.parse(await readFile(new URL('../public/virtual-race-replay/designs/518554.json',import.meta.url),'utf8'));
  const plan=trackPlanFromDesign(design,{date:'2026-10-04'});
- assert.equal(plan.name,'SWORD R1 04/10/26');assert.equal(plan.jumpFeatures.length,2);assert(hasMeasuredJumpMotion(plan));
- assert.deepEqual(plan.jumpFeatures.map(feature=>feature.name),['jump_trestle_24','cnc_k_wedge']);
- const trestle=plan.jumpFeatures[0];assert.equal(trestle.landingProfile,'up');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);
+ assert.equal(plan.name,'SWORD R1 04/10/26');assert.equal(plan.jumpFeatures.length,3);assert(hasMeasuredJumpMotion(plan));
+ assert.deepEqual(plan.jumpFeatures.map(feature=>feature.name),['jump_trestle_24','cnc_k_wedge','corner_tt_right']);
+ const corner=plan.jumpFeatures.find(feature=>feature.name==='corner_tt_right');assert.equal(corner.takeoffProfile,'tabletop-up');assert.equal(corner.landingProfile,'tabletop-down');assert.equal(corner.flightTimeScale,.8);assert.equal(corner.minimumClearanceMetres,.1);
+ assert(Math.abs(corner.takeoff[0][0]-82.583)<.01);assert(Math.abs(corner.landing[0][0]-82.544)<.01);assert(corner.landing[1][0]-corner.landing[0][0]>79.9);
+ const trestle=plan.jumpFeatures.find(feature=>feature.name==='jump_trestle_24');assert.equal(trestle.landingProfile,'up');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);
  assert(plan.jumpSurfaces.some(surface=>surface.name==='trestle_12'&&surface.profile==='up'));
 });
 
