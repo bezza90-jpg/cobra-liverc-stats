@@ -3,7 +3,7 @@ import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-trestle-air';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
 import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-trestle-slope';
-import {avatarThumbnailPath,loadAvatarColours} from './avatar-colours.js?v=20261017-1';
+import {avatarThumbnailPath,loadAvatarColours} from './avatar-colours.js?v=20261017-2';
 
 const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
@@ -56,7 +56,7 @@ function carState(driver,index){
     const slot=retiredSlots.get(driver.id),loop=design.loop||viewer.scene.route[0],parkingFraction=routeFractionNear(loop),anchor=viewer.routeAt(parkingFraction),next=viewer.routeAt(parkingFraction+.002),heading=Math.atan2(next.y-anchor.y,next.x-anchor.x),forward={x:Math.cos(heading),y:Math.sin(heading)},side={x:-forward.y,y:forward.x},edgeDistance=candidate=>Math.min(candidate.x,candidate.y,design.carpet.width-candidate.x,design.carpet.height-candidate.y),plus={x:anchor.x+side.x*1.8,y:anchor.y+side.y*1.8},minus={x:anchor.x-side.x*1.8,y:anchor.y-side.y*1.8},parkingSide=edgeDistance(plus)<edgeDistance(minus)?side:{x:-side.x,y:-side.y};
     fraction=parkingFraction;point={x:Math.max(.65,Math.min(design.carpet.width-.65,anchor.x+parkingSide.x*1.75-forward.x*slot*1.25)),y:Math.max(.65,Math.min(design.carpet.height-.65,anchor.y+parkingSide.y*1.75-forward.y*slot*1.25))};yaw=heading;lane=0;z=.38;pitch=0;roll=Math.PI;normal={x:0,y:0};
   }else if(time>=duration){fraction=finishFraction(driver,drivers);point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
-  return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,roll,onFire:retired,firePhase:time*7,length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,wheelColor:driver.wheelColor,label:surname(driver.name),number:driver.number};
+  return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,roll,onFire:retired,firePhase:time*7,length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,secondaryColor:driver.secondaryColor,tertiaryColor:driver.tertiaryColor,wheelColor:driver.wheelColor,colorLayout:driver.colorLayout,label:surname(driver.name),number:driver.number};
 }
 function render(force=false){
   let cars=drivers.map(carState),focus=$('focus').value,follow=cars.find(car=>String(car.id)===focus);viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':playing?'Playing':'Paused';

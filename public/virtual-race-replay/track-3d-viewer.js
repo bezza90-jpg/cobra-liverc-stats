@@ -239,7 +239,7 @@ class Viewer{
     let routePoint=Number.isFinite(car.fraction)?this.routeAt(car.fraction):null,centre=vec(Number(car.x??routePoint?.x)||0,Number(car.y??routePoint?.y)||0,Number(car.z)||0),yaw=Number.isFinite(car.yaw)?car.yaw:Math.atan2(routePoint?.ty||0,routePoint?.tx||1),pitch=Number(car.pitch)||0,roll=Number(car.roll)||0;
     let forward=vec(Math.cos(yaw)*Math.cos(pitch),Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch)),baseRight=vec(-Math.sin(yaw),Math.cos(yaw),0),baseUp=norm(cross(forward,baseRight)),right=add(mul(baseRight,Math.cos(roll)),mul(baseUp,Math.sin(roll))),up=norm(cross(forward,right)),length=Number(car.length)||.46,width=Number(car.width)||.30,height=Number(car.height)||.15;
     centre=add(centre,mul(up,.02+height/2));const corner=(f,r,u)=>add(centre,add(mul(forward,f*length/2),add(mul(right,r*width/2),mul(up,u*height/2))));
-    let body=car.color||'#85ed40',accent=car.accentColor||colour(body,1.12),wheel=car.wheelColor||'#929b95',dark=colour(body,.52),light=colour(body,1.12),glass='#172c39',edge='#030806',faces=[];
+    let body=car.color||'#85ed40',accent=car.secondaryColor||car.accentColor||colour(body,1.12),third=car.tertiaryColor||car.accentColor||colour(body,.82),layout=car.colorLayout||'mixed',wheel=car.wheelColor||'#929b95',dark=colour(body,.52),light=colour(body,1.12),glass='#172c39',edge='#030806',faces=[];
     const quad=(points,fill,kind='car')=>faces.push(polygon(points.map(point=>corner(...point)),fill,edge,kind));
     const box=(f0,f1,r0,r1,u0,u1,fill,kind='car')=>{
       quad([[f0,r0,u0],[f1,r0,u0],[f1,r0,u1],[f0,r0,u1]],colour(fill,.66),kind);
@@ -261,18 +261,26 @@ class Viewer{
     // The chassis and shell stay narrow between the wheels, with a pointed
     // nose and a raised central cockpit rather than a full-width sedan body.
     box(-.78,.68,-.46,.46,-.78,-.31,dark,'car-chassis');
-    box(.36,.94,-.34,.34,-.69,-.18,accent,'car-nose');
-    box(-.48,.12,-.64,-.38,-.60,-.12,body,'car-sidepod');
-    box(-.48,.12,.38,.64,-.60,-.12,body,'car-sidepod');
+    const noseColor=layout==='rear-accent'?body:accent,wingColor=layout==='front-accent'?third:accent;
+    box(.36,.94,-.34,.34,-.69,-.18,noseColor,'car-nose');
+    box(-.48,.12,-.64,-.38,-.60,-.12,accent,'car-sidepod');
+    box(-.48,.12,.38,.64,-.60,-.12,third,'car-sidepod');
     let sections=[[-.60,.38,-.18],[-.34,.45,.48],[-.04,.40,.92],[.25,.35,.62],[.48,.31,.10],[.66,.26,-.16]];
+    const shellColours={
+      'front-accent':[body,body,third,accent,accent],
+      'rear-accent':[accent,accent,third,body,body],
+      'top-accent':[body,third,accent,third,body],
+      'lower-accent':[third,body,body,accent,accent],
+      mixed:[body,accent,third,accent,body]
+    }[layout]||[body,accent,third,accent,body];
     for(let i=0;i<sections.length-1;i++){
       let [fa,wa,ua]=sections[i],[fb,wb,ub]=sections[i+1];
-      quad([[fa,-wa,ua],[fb,-wb,ub],[fb,wb,ub],[fa,wa,ua]],i===1?glass:body,'car-shell');
-      quad([[fa,-wa,-.25],[fb,-wb,-.25],[fb,-wb,ub],[fa,-wa,ua]],dark,'car-shell');
-      quad([[fa,wa,-.25],[fa,wa,ua],[fb,wb,ub],[fb,wb,-.25]],colour(body,.74),'car-shell');
+      const shellColour=i===1?glass:shellColours[i];quad([[fa,-wa,ua],[fb,-wb,ub],[fb,wb,ub],[fa,wa,ua]],shellColour,'car-shell');
+      quad([[fa,-wa,-.25],[fb,-wb,-.25],[fb,-wb,ub],[fa,-wa,ua]],i%2?colour(third,.62):dark,'car-shell');
+      quad([[fa,wa,-.25],[fa,wa,ua],[fb,wb,ub],[fb,wb,-.25]],i%2?colour(accent,.72):colour(body,.74),'car-shell');
     }
     // Rear wing and mounts, proportioned like a 1/10 off-road buggy.
-    box(-1.02,-.84,-1.18,1.18,.58,.80,accent,'car-wing');
+    box(-1.02,-.84,-1.18,1.18,.58,.80,wingColor,'car-wing');
     box(-.89,-.82,-.48,-.36,-.24,.62,dark,'car-wing-mount');
     box(-.89,-.82,.36,.48,-.24,.62,dark,'car-wing-mount');
     quad([[-.25,-.37,.69],[.20,-.32,.57],[.20,.32,.57],[-.25,.37,.69]],glass,'car-window');
