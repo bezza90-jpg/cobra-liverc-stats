@@ -49,11 +49,11 @@ test('3D kicker boost raises the middle of the flight without moving either land
  assert.equal(higher(.25,8),normal(.25,8));assert(Math.abs(higher(.50,8)-normal(.50,8))<1e-9);
 });
 
-test('SWORD trestle launch keeps fast cars clearly airborne and lands near the far end',()=>{
- const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'jump_trestle_24',takeoffProfile:'kicker',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:396,gravity:9.81,minimumClearanceMetres:.95,landingAtEnd:true,landingInsetMetres:.2};
+test('trestle kicker rule keeps cars clearly airborne and lands near the far end',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'jump_trestle_24',takeoffProfile:'kicker',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:396,gravity:9.81,flightTimeScale:1.8,minimumClearanceMetres:1.25,landingAtEnd:true,landingInsetMetres:.2};
  const lift=jumpProfile(samples,[],396,[feature],{routeLengthMetres:10,referenceHeightMm:396,kickerFlightTimeScale:1.55});
  let peak=0;for(let fraction=.26;fraction<=.5;fraction+=.001)peak=Math.max(peak,lift(fraction,16));
- assert(peak>=1.34,'fast cars should clear the trestle by about 95 cm');assert.equal(lift(.2,16),0);assert(lift(.58,16)>0);assert.equal(lift(.61,16),0);
+ assert(peak>=1.64,'cars should visibly clear the trestle throughout the long flight');assert.equal(lift(.2,16),0);assert(lift(.58,16)>0);assert.equal(lift(.61,16),0);
 });
 
 test('3D tabletop flight clears the down ramp and touches down 20 cm before its end',()=>{
@@ -89,13 +89,14 @@ test('measured ramp surfaces use their own heights and direction',()=>{
 });
 
 test('roller airtime grows with run-up speed and remains capped before the corner',()=>{
- const fineSamples=Array.from({length:1001},(_,i)=>({x:i/10,y:0})),box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],lift=jumpProfile(fineSamples,[],171,[],{routeLengthMetres:100,referenceHeightMm:171,gravity:9.81,surfaces:[{name:'clubday roller',polygon:box(20,30),direction:[[20,0],[30,0]],profile:'roller',heightMm:171,launchCars:true,speedFlightRatio:.08,minimumFlightDistanceMetres:.72,maximumFlightDistanceMetres:2.4}]});
- const lastAirborne=speed=>{let last=.25;for(let f=.25;f<=.28;f+=.00005)if(lift(f,speed)>0)last=f;return last;};
+ const fineSamples=Array.from({length:1001},(_,i)=>({x:i/10,y:0})),box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],lift=jumpProfile(fineSamples,[],171,[],{routeLengthMetres:100,referenceHeightMm:171,gravity:9.81,surfaces:[{name:'measured roller',polygon:box(20,30),direction:[[20,0],[30,0]],profile:'roller',heightMm:171,launchCars:true,speedFlightRatio:.06,minimumFlightDistanceMetres:.7,maximumFlightDistanceMetres:4.8}]});
+ const lastAirborne=speed=>{let last=.25;for(let f=.25;f<=.31;f+=.00005)if(lift(f,speed)>0)last=f;return last;};
  const slow=lastAirborne(4),fast=lastAirborne(8),veryFast=lastAirborne(16);
- assert(slow>.257&&slow<.261,'a slow car should plop down shortly after the roller');
+ assert(slow>.255&&slow<.26,'a slow car should plop down shortly after the roller');
  assert(fast>slow+.01,'a faster run-up should carry the car materially farther');
- assert(veryFast<=.27405,'the landing must stay before the corner apex cap');
- assert.equal(lift(.275,16),0);
+ assert(veryFast>=.295&&veryFast<=.299,'a fast car should be able to clear a close roller pair');
+ assert.equal(lift(.28,4),0);assert(lift(.28,16)>0,'only the fast approach should still be airborne over the second roller');
+ assert.equal(lift(.30,16),0);
 });
 
 test('trestle boards use straight planar slopes',()=>{
@@ -119,7 +120,7 @@ test('event design automatically supplies its measured ramp profiles',async()=>{
  assert.deepEqual(plan.jumpFeatures.map(feature=>[feature.takeoffHeightMm,feature.landingHeightMm]),[[217,276],[463,446],[217,323]]);
  assert.equal(plan.jumpSurfaces.filter(surface=>surface.profile==='roller').length,2);
  assert.equal(plan.jumpSurfaces.filter(surface=>surface.launchCars).length,2);
- assert(plan.jumpSurfaces.filter(surface=>surface.launchCars).every(surface=>surface.maximumFlightDistanceMetres===2.4));
+ assert(plan.jumpSurfaces.filter(surface=>surface.launchCars).every(surface=>surface.maximumFlightDistanceMetres===4.8));
  assert(plan.jumpSurfaces.some(surface=>surface.profile==='tabletop-up'&&surface.heightMm===463));
  assert(plan.jumpFeatures.some(feature=>feature.name==='cnc_tt'&&feature.landingProfile==='tabletop-down'));
 });
@@ -131,7 +132,8 @@ test('SWORD Round 1 design supplies measured 3D ramps to every race',async()=>{
  assert.deepEqual(plan.jumpFeatures.map(feature=>feature.name),['jump_trestle_24','cnc_k_wedge','corner_tt_right']);
  const corner=plan.jumpFeatures.find(feature=>feature.name==='corner_tt_right');assert.equal(corner.takeoffProfile,'tabletop-up');assert.equal(corner.landingProfile,'tabletop-down');assert.equal(corner.flightTimeScale,.8);assert.equal(corner.minimumClearanceMetres,.1);
  assert(Math.abs(corner.takeoff[0][0]-82.583)<.01);assert(Math.abs(corner.landing[0][0]-82.544)<.01);assert(corner.landing[1][0]-corner.landing[0][0]>79.9);
- const trestle=plan.jumpFeatures.find(feature=>feature.name==='jump_trestle_24');assert.equal(trestle.landingProfile,'flat');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);assert.equal(trestle.minimumClearanceMetres,.95);
+ const trestle=plan.jumpFeatures.find(feature=>feature.name==='jump_trestle_24');assert.equal(trestle.landingProfile,'flat');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);assert.equal(trestle.flightTimeScale,1.8);assert.equal(trestle.minimumClearanceMetres,1.25);
+ assert.equal(plan.jumpSurfaces.filter(surface=>surface.launchCars).length,2);assert(plan.jumpSurfaces.filter(surface=>surface.launchCars).every(surface=>surface.maximumFlightDistanceMetres===4.8));
  assert(plan.jumpSurfaces.some(surface=>surface.name==='trestle_12'&&surface.profile==='linear-up'));
  assert(plan.jumpSurfaces.some(surface=>surface.name==='jump_trestle_24'&&surface.profile==='linear-down'));
 });

@@ -45,9 +45,10 @@ const CATALOG={
   kick:{name:'Legacy kicker',length:.667,width:2.4,parts:[[0,.667,'K']],height:.217}
 };
 
-function colour(hex,factor=1){
-  let raw=(hex||'#888888').replace('#','');if(raw.length===3)raw=raw.split('').map(c=>c+c).join('');
-  let n=parseInt(raw,16),r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+function colour(value,factor=1){
+  let css=String(value||'#888888'),match=css.match(/^rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i),r,g,b;
+  if(match){r=Number(match[1]);g=Number(match[2]);b=Number(match[3]);}
+  else{let raw=css.replace('#','');if(raw.length===3)raw=raw.split('').map(c=>c+c).join('');let n=parseInt(raw,16);if(!Number.isFinite(n))n=0x888888;r=(n>>16)&255;g=(n>>8)&255;b=n&255;}
   r=clamp(Math.round(r*factor),0,255);g=clamp(Math.round(g*factor),0,255);b=clamp(Math.round(b*factor),0,255);
   return `rgb(${r},${g},${b})`;
 }
@@ -275,21 +276,32 @@ class Viewer{
       quad([[f1,r0,u0],[f1,r1,u0],[f1,r1,u1],[f1,r0,u1]],colour(fill,1.04),kind);
       quad([[f0,r0,u1],[f1,r0,u1],[f1,r1,u1],[f0,r1,u1]],fill,kind);
     };
-    // Large exposed tyres, suspension arms and coloured rims give the model
-    // the open-wheel silhouette of a 1/10 off-road buggy.
+    // Large faceted tyres, suspension arms and inset coloured rims give the
+    // model an open-wheel 1/10 buggy silhouette without expensive 3D meshes.
     for(let f of [-.57,.60]){
       box(f-.07,f+.07,-.96,.96,-.73,-.56,dark,'car-suspension');
       for(let r of [-1.10,1.10]){
-      box(f-.25,f+.25,r-.24,r+.24,-1.12,.16,'#111614','car-wheel');
-      let side=r<0?r-.255:r+.255,ring=[];for(let i=0;i<12;i++){let angle=i*Math.PI*2/12;ring.push(corner(f+Math.cos(angle)*.17,side,-.47+Math.sin(angle)*.43));}
-      faces.push(polygon(ring,wheel,'#090d0b','car-hub'));
+        let inner=r<0?r+.24:r-.24,outer=r<0?r-.24:r+.24,tyreOuter=r<0?outer-.01:outer+.01,hubOuter=r<0?outer-.03:outer+.03,tyre=[];
+        for(let i=0;i<12;i++){
+          let a=i*Math.PI*2/12,b=(i+1)*Math.PI*2/12,p0=[f+Math.cos(a)*.25,inner,-.48+Math.sin(a)*.64],p1=[f+Math.cos(b)*.25,inner,-.48+Math.sin(b)*.64],p2=[f+Math.cos(b)*.25,outer,-.48+Math.sin(b)*.64],p3=[f+Math.cos(a)*.25,outer,-.48+Math.sin(a)*.64];
+          quad([p0,p1,p2,p3],i%3===0?'#1b211e':'#101512','car-wheel');tyre.push(corner(f+Math.cos(a)*.25,tyreOuter,-.48+Math.sin(a)*.64));
+        }
+        faces.push(polygon(tyre,'#111614','#060907','car-wheel'));
+        let rim=[];for(let i=0;i<12;i++){let angle=i*Math.PI*2/12;rim.push(corner(f+Math.cos(angle)*.145,hubOuter,-.48+Math.sin(angle)*.37));}
+        faces.push(polygon(rim,wheel,'#090d0b','car-hub'));
       }
     }
     // The chassis and shell stay narrow between the wheels, with a pointed
     // nose and a raised central cockpit rather than a full-width sedan body.
-    box(-.78,.68,-.46,.46,-.78,-.31,dark,'car-chassis');
+    box(-.78,.68,-.46,.46,-.78,-.56,dark,'car-chassis');
+    box(-.72,.64,-.44,.44,-.62,-.20,body,'car-shell-base');
     const noseColor=layout==='rear-accent'?body:accent,wingColor=layout==='front-accent'?third:accent;
-    box(.36,.94,-.34,.34,-.69,-.18,noseColor,'car-nose');
+    // The nose narrows and slopes towards the front instead of reading as a
+    // rectangular block when the car is viewed from track level.
+    quad([[.28,-.37,-.64],[.98,-.20,-.64],[.98,-.20,-.30],[.28,-.37,.02]],colour(noseColor,.82),'car-nose');
+    quad([[.28,.37,-.64],[.28,.37,.02],[.98,.20,-.30],[.98,.20,-.64]],colour(noseColor,.9),'car-nose');
+    quad([[.28,-.37,.02],[.98,-.20,-.30],[.98,.20,-.30],[.28,.37,.02]],noseColor,'car-nose');
+    quad([[.98,-.20,-.64],[.98,.20,-.64],[.98,.20,-.30],[.98,-.20,-.30]],colour(noseColor,1.03),'car-nose');
     box(-.48,.12,-.64,-.38,-.60,-.12,accent,'car-sidepod');
     box(-.48,.12,.38,.64,-.60,-.12,third,'car-sidepod');
     let sections=[[-.60,.38,-.18],[-.34,.45,.48],[-.04,.40,.92],[.25,.35,.62],[.48,.31,.10],[.66,.26,-.16]];
@@ -302,10 +314,15 @@ class Viewer{
     }[layout]||[body,accent,third,accent,body];
     for(let i=0;i<sections.length-1;i++){
       let [fa,wa,ua]=sections[i],[fb,wb,ub]=sections[i+1];
-      const shellColour=i===1?glass:shellColours[i];quad([[fa,-wa,ua],[fb,-wb,ub],[fb,wb,ub],[fa,wa,ua]],shellColour,'car-shell');
-      quad([[fa,-wa,-.25],[fb,-wb,-.25],[fb,-wb,ub],[fa,-wa,ua]],i%2?colour(third,.62):dark,'car-shell');
-      quad([[fa,wa,-.25],[fa,wa,ua],[fb,wb,ub],[fb,wb,-.25]],i%2?colour(accent,.72):colour(body,.74),'car-shell');
+      const shellColour=shellColours[i];quad([[fa,-wa,ua],[fb,-wb,ub],[fb,wb,ub],[fa,wa,ua]],shellColour,'car-shell');
+      let leftPanel=i%2?third:shellColours[i],rightPanel=i%2?accent:shellColours[i];
+      quad([[fa,-wa,-.58],[fb,-wb,-.58],[fb,-wb,ub],[fa,-wa,ua]],colour(leftPanel,.82),'car-shell');
+      quad([[fa,wa,-.58],[fa,wa,ua],[fb,wb,ub],[fb,wb,-.58]],colour(rightPanel,.9),'car-shell');
     }
+    // Deep coloured skirts keep the avatar scheme visible from track-level
+    // cameras; only the exposed chassis beneath them remains dark.
+    quad([[-.52,-.54,-.62],[.60,-.35,-.62],[.60,-.35,-.16],[-.52,-.54,.02]],colour(body,.86),'car-shell');
+    quad([[-.52,.54,-.62],[-.52,.54,.02],[.60,.35,-.16],[.60,.35,-.62]],colour(accent,.9),'car-shell');
     // A buggy wing is carried behind the rear shock tower by two swept
     // braces, rather than sitting on upright single-seater style posts.
     box(-.70,-.57,-.76,.76,-.48,.44,dark,'car-shock-tower');
@@ -314,10 +331,11 @@ class Viewer{
       quad([[-.48,r-.055,-.42],[-.40,r+.055,-.42],[-.59,r+.055,.30],[-.67,r-.055,.30]],third,'car-shock');
     }
     box(-1.04,-.84,-1.14,1.14,.58,.80,wingColor,'car-wing');
-    quad([[-.25,-.37,.69],[.20,-.32,.57],[.20,.32,.57],[-.25,.37,.69]],glass,'car-window');
+    quad([[-.16,-.25,.70],[.09,-.22,.63],[.09,.22,.63],[-.16,.25,.70]],glass,'car-window');
     if(car.onFire){
-      const cx=Number(car.x??routePoint?.x)||0,cy=Number(car.y??routePoint?.y)||0,flicker=.08*Math.sin((Number(car.firePhase)||0)+cx*7+cy*5),flameTop=.95+flicker,flame=(axis,fill,height,span)=>{let a=axis==='x'?vec(cx-span,cy,.28):vec(cx,cy-span,.28),b=axis==='x'?vec(cx+span,cy,.28):vec(cx,cy+span,.28);faces.push(polygon([a,b,vec(cx,cy,height)],fill,'#8d1800','car-fire',.92));};
-      flame('x','#ff5a16',flameTop,.21);flame('y','#ff8422',flameTop-.04,.21);flame('x','#ffd64a',flameTop-.25,.11);flame('y','#fff08a',flameTop-.32,.09);
+      const cx=Number(car.x??routePoint?.x)||0,cy=Number(car.y??routePoint?.y)||0,phase=Number(car.firePhase)||0,base=Math.max(.52,(Number(car.z)||0)+.28),flicker=.1*Math.sin(phase+cx*7+cy*5),swayX=.07*Math.sin(phase*.73),swayY=.06*Math.cos(phase*.91),flameTop=base+.86+flicker;
+      const flame=(axis,fill,height,span,opacity=.96)=>{let a=axis==='x'?vec(cx-span,cy,base):vec(cx,cy-span,base),b=axis==='x'?vec(cx+span,cy,base):vec(cx,cy+span,base);faces.push(polygon([a,b,vec(cx+swayX,cy+swayY,height)],fill,'#8d1800','car-fire',opacity));};
+      flame('x','#e82b0d',flameTop,.29);flame('y','#ff5516',flameTop-.03,.28);flame('x','#ff941f',flameTop-.21,.19);flame('y','#ffd84a',flameTop-.29,.15);flame('x','#fff5a0',flameTop-.41,.08,1);
     }
     return faces;
   }
