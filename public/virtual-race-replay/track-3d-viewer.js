@@ -267,7 +267,7 @@ class Viewer{
     let routePoint=Number.isFinite(car.fraction)?this.routeAt(car.fraction):null,centre=vec(Number(car.x??routePoint?.x)||0,Number(car.y??routePoint?.y)||0,Number(car.z)||0),yaw=Number.isFinite(car.yaw)?car.yaw:Math.atan2(routePoint?.ty||0,routePoint?.tx||1),pitch=Number(car.pitch)||0,roll=Number(car.roll)||0;
     let forward=vec(Math.cos(yaw)*Math.cos(pitch),Math.sin(yaw)*Math.cos(pitch),Math.sin(pitch)),baseRight=vec(-Math.sin(yaw),Math.cos(yaw),0),baseUp=norm(cross(forward,baseRight)),right=add(mul(baseRight,Math.cos(roll)),mul(baseUp,Math.sin(roll))),up=norm(cross(forward,right)),length=Number(car.length)||.46,width=Number(car.width)||.30,height=Number(car.height)||.15;
     centre=add(centre,mul(up,.02+height/2));const corner=(f,r,u)=>add(centre,add(mul(forward,f*length/2),add(mul(right,r*width/2),mul(up,u*height/2))));
-    let body=car.color||'#85ed40',accent=car.secondaryColor||car.accentColor||colour(body,1.12),third=car.tertiaryColor||car.accentColor||colour(body,.82),layout=car.colorLayout||'mixed',wheel=car.wheelColor||'#929b95',dark=colour(body,.52),light=colour(body,1.12),glass='#172c39',edge='#030806',faces=[];
+    let body=car.color||'#85ed40',accent=car.accentColor||car.secondaryColor||colour(body,1.12),secondary=car.secondaryColor||accent,third=car.tertiaryColor||accent||colour(body,.82),layout=car.colorLayout||'mixed',wheel=car.wheelColor||'#929b95',dark=colour(body,.52),light=colour(body,1.12),glass='#172c39',edge='#030806',faces=[];
     const quad=(points,fill,kind='car')=>faces.push(polygon(points.map(point=>corner(...point)),fill,edge,kind));
     const box=(f0,f1,r0,r1,u0,u1,fill,kind='car')=>{
       quad([[f0,r0,u0],[f1,r0,u0],[f1,r0,u1],[f0,r0,u1]],colour(fill,.66),kind);
@@ -295,22 +295,22 @@ class Viewer{
     // nose and a raised central cockpit rather than a full-width sedan body.
     box(-.78,.68,-.46,.46,-.78,-.56,dark,'car-chassis');
     box(-.72,.64,-.44,.44,-.62,-.20,body,'car-shell-base');
-    const noseColor=layout==='rear-accent'?body:accent,wingColor=layout==='front-accent'?third:accent;
+    const noseColor=layout==='rear-accent'?body:secondary,wingColor=layout==='front-accent'?third:accent;
     // The nose narrows and slopes towards the front instead of reading as a
     // rectangular block when the car is viewed from track level.
     quad([[.28,-.37,-.64],[.98,-.20,-.64],[.98,-.20,-.30],[.28,-.37,.02]],colour(noseColor,.82),'car-nose');
     quad([[.28,.37,-.64],[.28,.37,.02],[.98,.20,-.30],[.98,.20,-.64]],colour(noseColor,.9),'car-nose');
     quad([[.28,-.37,.02],[.98,-.20,-.30],[.98,.20,-.30],[.28,.37,.02]],noseColor,'car-nose');
     quad([[.98,-.20,-.64],[.98,.20,-.64],[.98,.20,-.30],[.98,-.20,-.30]],colour(noseColor,1.03),'car-nose');
-    box(-.48,.12,-.64,-.38,-.60,-.12,accent,'car-sidepod');
+    box(-.48,.12,-.64,-.38,-.60,-.12,secondary,'car-sidepod');
     box(-.48,.12,.38,.64,-.60,-.12,third,'car-sidepod');
     let sections=[[-.60,.38,-.18],[-.34,.45,.48],[-.04,.40,.92],[.25,.35,.62],[.48,.31,.10],[.66,.26,-.16]];
     const shellColours={
-      'front-accent':[body,body,third,accent,accent],
-      'rear-accent':[accent,accent,third,body,body],
-      'top-accent':[body,third,accent,third,body],
-      'lower-accent':[third,body,body,accent,accent],
-      mixed:[body,accent,third,accent,body]
+      'front-accent':[body,body,third,secondary,accent],
+      'rear-accent':[accent,secondary,third,body,body],
+      'top-accent':[body,third,accent,secondary,body],
+      'lower-accent':[third,body,body,secondary,accent],
+      mixed:[body,accent,secondary,third,body]
     }[layout]||[body,accent,third,accent,body];
     for(let i=0;i<sections.length-1;i++){
       let [fa,wa,ua]=sections[i],[fb,wb,ub]=sections[i+1];
@@ -322,7 +322,7 @@ class Viewer{
     // Deep coloured skirts keep the avatar scheme visible from track-level
     // cameras; only the exposed chassis beneath them remains dark.
     quad([[-.52,-.54,-.62],[.60,-.35,-.62],[.60,-.35,-.16],[-.52,-.54,.02]],colour(body,.86),'car-shell');
-    quad([[-.52,.54,-.62],[-.52,.54,.02],[.60,.35,-.16],[.60,.35,-.62]],colour(accent,.9),'car-shell');
+    quad([[-.52,.54,-.62],[-.52,.54,.02],[.60,.35,-.16],[.60,.35,-.62]],colour(secondary,.9),'car-shell');
     // A buggy wing is carried behind the rear shock tower by two swept
     // braces, rather than sitting on upright single-seater style posts.
     box(-.70,-.57,-.76,.76,-.48,.44,dark,'car-shock-tower');
