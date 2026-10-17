@@ -1,6 +1,14 @@
 {
   "posts": [
     {
+      "id": "e212c2c7-4e82-43a7-95e9-314131e18474",
+      "title": "New 3D Virtual Replay feature added to the site",
+      "date": "2026-10-17",
+      "body": "The COBRA Virtual Race Replay is now available in 3D. Watch recorded races on measured track layouts, follow a selected driver's car in the flyover view, and see live race timings while the replay runs.\n\nWhere matching race videos are available, you can also open the original footage on YouTube.\n\n[View the new 3D Virtual Replay](https://racehub.cobracardiff.co.uk/virtual-race-replay/3d.html).",
+      "html": "<p>The COBRA Virtual Race Replay is now available in 3D. Watch recorded races on measured track layouts, follow a selected driver's car in the flyover view, and see live race timings while the replay runs.</p><p>Where matching race videos are available, you can also open the original footage on YouTube.</p><p><a href=\"https://racehub.cobracardiff.co.uk/virtual-race-replay/3d.html\" target=\"_blank\" rel=\"noopener noreferrer\">View the new 3D Virtual Replay</a>.</p>",
+      "publishedAt": "2026-10-17T17:30:00+01:00"
+    },
+    {
       "id": "8c55374a-9e03-4fd5-b873-34d7084825d7",
       "title": "New website and features",
       "date": "2026-09-30",

@@ -58,8 +58,12 @@
         "url": "https://www.cobracardiff.co.uk/race-stats"
       },
       {
-        "label": "Virtual Race Replay",
+        "label": "2D Virtual Replay",
         "url": "https://www.cobracardiff.co.uk/virtual-race-replay"
+      },
+      {
+        "label": "3D Virtual Replay",
+        "url": "https://www.cobracardiff.co.uk/virtual-race-replay/3d.html"
       }
     ]
   },
@@ -83,8 +87,12 @@
         "url": "https://www.cobracardiff.co.uk/upload-car-avatar"
       },
       {
-        "label": "Virtual Race Replay",
+        "label": "2D Virtual Replay",
         "url": "https://www.cobracardiff.co.uk/virtual-race-replay"
+      },
+      {
+        "label": "3D Virtual Replay",
+        "url": "https://www.cobracardiff.co.uk/virtual-race-replay/3d.html"
       }
     ]
   },

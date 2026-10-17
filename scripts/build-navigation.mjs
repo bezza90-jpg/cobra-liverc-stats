@@ -29,4 +29,12 @@ for (const page of pages) {
   if (check) throw new Error('Navigation is out of date in ' + page + 'index.html; run npm run build:navigation.');
   await writeFile(file, updated);
 }
+for (const relative of ['virtual-race-replay/3d.html']) {
+  const file = fileURLToPath(new URL('../public/' + relative, import.meta.url));
+  const html = await readFile(file, 'utf8');
+  const updated = addSiteShell(html, '../');
+  if (updated === html) continue;
+  if (check) throw new Error('Navigation is out of date in ' + relative + '; run npm run build:navigation.');
+  await writeFile(file, updated);
+}
 console.log('Navigation ' + (check ? 'checked.' : 'built.'));
