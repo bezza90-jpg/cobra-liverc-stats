@@ -1,16 +1,16 @@
 import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress} from './engine.js?v=20261017-finish';
 import {paceMap} from './pace.js?v=20261017-race';
-import {jumpProfile} from './jumps.js?v=20261017-corner-tabletop';
+import {jumpProfile} from './jumps.js?v=20261017-corner-tabletop-2';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
-import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-corner-tabletop';
-import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-5';
+import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-corner-tabletop-2';
+import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-6';
 
 const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padStart(4,'0')}`;
 const seconds=number=>Number(number||0).toFixed(2);
 const params=new URLSearchParams(location.search),eventId=params.get('event')||'518555';
-let eventData,design,avatarManifest={},viewer,race,drivers=[],pace,lift,lifts={},retiredSlots=new Map(),time=0,duration=0,playing=false,last=0,frame=0;
+let eventData,design,avatarManifest={},viewer,race,drivers=[],pace,lift,lifts={},surfaceLifts={},retiredSlots=new Map(),time=0,duration=0,playing=false,last=0,frame=0;
 const avatarColourCache=new Map();
 
 async function json(url){const response=await fetch(url);if(!response.ok)throw Error(`Could not load ${url}`);return response.json();}
@@ -37,6 +37,11 @@ function configurePhysics(){
     2:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1.08}),
     3:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1.15})
   };
+  surfaceLifts={
+    1:jumpProfile(samples,[],.323,[],{...liftOptions,flightTimeScale:1}),
+    2:jumpProfile(samples,[],.323,[],{...liftOptions,flightTimeScale:1.08}),
+    3:jumpProfile(samples,[],.323,[],{...liftOptions,flightTimeScale:1.15})
+  };
   lift=lifts[1];
   pace=paceMap(rawRoute(),{profile:'race',minimumSpeed:.56,maximumSpeed:1.75});
 }
@@ -45,19 +50,27 @@ function configureGrid(){
   const route=viewer.scene.route,candidates=route.map((point,index)=>({point,index})).filter(({point})=>point.y>15&&point.tx>0);
   const right=candidates.sort((a,b)=>b.point.x-a.point.x)[Math.min(12,candidates.length-1)]||{index:Math.floor(route.length*.25),point:route[Math.floor(route.length*.25)]};
   const heading=Math.atan2(right.point.ty,right.point.tx),forward={x:Math.cos(heading),y:Math.sin(heading)},ahead=route[(right.index+Math.max(8,Math.round(route.length*.012)))%route.length],turnCross=forward.x*(ahead.y-right.point.y)-forward.y*(ahead.x-right.point.x),insideSign=Math.sign(turnCross)||-1;
-  drivers.forEach(driver=>{let slot=Math.max(0,Number(driver.startPosition||driver.number||1)-1),target={x:right.point.x-forward.x*slot*2,y:right.point.y-forward.y*slot*2};driver.startFraction=routeFractionNear(target);driver.gridLane=(slot%2?-insideSign:insideSign)*.42;});
+  drivers.forEach(driver=>{let slot=Math.max(0,Number(driver.startPosition||driver.number||1)-1),target={x:right.point.x-forward.x*slot*2,y:right.point.y-forward.y*slot*2};driver.startFraction=routeFractionNear(target);driver.gridLane=(slot%2?-insideSign:insideSign)*.42;driver.openingSurfaceOnly=Math.abs(lifts[1](driver.startFraction,8)-surfaceLifts[1](driver.startFraction,8))>.035;});
 }
 function carState(driver,index){
-  const activeLift=lifts[viewer?.heightScale]||lift;
-  let routeLength=Number(design.routeLengthMetres)||153.9,fraction=visualFraction(driver,time,pace),point=viewer.routeAt(fraction),ahead=viewer.routeAt(fraction+.001),position=positionAt(driver,time),speed=Math.max(2,Math.min(25,routeLength/Math.max(1,position.lapTime||driver.typical)*(pace.speedAtDistance?.(fraction)||1))),z=Math.max(0,activeLift(fraction,speed));
+  const scale=viewer?.heightScale||1,airborneLift=lifts[scale]||lift,surfaceLift=surfaceLifts[scale]||airborneLift,activeLift=driver.openingSurfaceOnly&&time<driver.laps[0].seconds?surfaceLift:airborneLift;
+  const trackSurface=.035;
+  let routeLength=Number(design.routeLengthMetres)||153.9,fraction=visualFraction(driver,time,pace),point=viewer.routeAt(fraction),ahead=viewer.routeAt(fraction+.001),position=positionAt(driver,time),speed=Math.max(2,Math.min(25,routeLength/Math.max(1,position.lapTime||driver.typical)*(pace.speedAtDistance?.(fraction)||1))),z=Math.max(0,activeLift(fraction,speed))+trackSurface;
   // Read the ramp over roughly a buggy wheelbase rather than at a single
   // sample boundary.  The body follows real ramp angles but cannot flip
   // vertically when entering/leaving a surface or during a gravity arc.
-  let pitchSample=.0015,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),gridBlend=Number.isFinite(driver.startFraction)?Math.max(0,1-time/Math.min(2,driver.laps[0].seconds)):0,lane=(driver.gridLane||0)*gridBlend+(index%3-1)*.11*(1-gridBlend),normal={x:-Math.sin(yaw),y:Math.cos(yaw)},retired=position.finished&&retiredSlots.has(driver.id),roll=0;
+  // The physical COBRA takeoff boards rise about 217-396 mm over
+  // 0.667-1.2 m (roughly 18 degrees).  Keep the visible buggy attitude on
+  // that real ramp angle while the gravity arc controls its height.  While
+  // airborne the car stays nearly level, then blends onto the actual landing
+  // slope during its final 100 mm instead of diving over the tabletop early.
+  let pitchSample=.0025,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),surfaceBefore=Math.max(0,surfaceLift(fraction-pitchSample,speed)),surfaceAfter=Math.max(0,surfaceLift(fraction+pitchSample,speed)),surfacePitch=Math.max(-.165,Math.min(.32,Math.atan2(surfaceAfter-surfaceBefore,routeLength*pitchSample*2))),clearance=Math.max(0,activeLift(fraction,speed)-surfaceLift(fraction,speed)),pitch=Math.max(-.165,Math.min(.32,rawPitch));
+  if(clearance>.008){let flightPitch=Math.max(-.02,Math.min(.32,rawPitch)),landingBlend=rawPitch<0?Math.max(0,Math.min(1,(.10-clearance)/.092)):0;pitch=flightPitch*(1-landingBlend)+surfacePitch*landingBlend;}
+  let yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),gridBlend=Number.isFinite(driver.startFraction)?Math.max(0,1-time/Math.min(2,driver.laps[0].seconds)):0,lane=(driver.gridLane||0)*gridBlend+(index%3-1)*.11*(1-gridBlend),normal={x:-Math.sin(yaw),y:Math.cos(yaw)},retired=position.finished&&retiredSlots.has(driver.id),roll=0;
   if(retired){
     const slot=retiredSlots.get(driver.id),carpet=carpetSize(),loop=design.loop||viewer.scene.route[0],parkingFraction=routeFractionNear(loop),anchor=viewer.routeAt(parkingFraction),next=viewer.routeAt(parkingFraction+.002),heading=Math.atan2(next.y-anchor.y,next.x-anchor.x),forward={x:Math.cos(heading),y:Math.sin(heading)},side={x:-forward.y,y:forward.x},edgeDistance=candidate=>Math.min(candidate.x,candidate.y,carpet.width-candidate.x,carpet.height-candidate.y),plus={x:anchor.x+side.x*2.25,y:anchor.y+side.y*2.25},minus={x:anchor.x-side.x*2.25,y:anchor.y-side.y*2.25},parkingSide=edgeDistance(plus)>edgeDistance(minus)?side:{x:-side.x,y:-side.y};
     fraction=parkingFraction;point={x:Math.max(.65,Math.min(carpet.width-.65,anchor.x+parkingSide.x*2.25-forward.x*slot*1.25)),y:Math.max(.65,Math.min(carpet.height-.65,anchor.y+parkingSide.y*2.25-forward.y*slot*1.25))};yaw=heading;lane=0;z=.38;pitch=0;roll=Math.PI;normal={x:0,y:0};
-  }else if(time>=duration){fraction=finishFraction(driver,drivers);point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
+  }else if(time>=duration){fraction=finishFraction(driver,drivers);point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed)+trackSurface;pitch=0;}
   return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,roll,onFire:retired,firePhase:time*7,length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,secondaryColor:driver.secondaryColor,tertiaryColor:driver.tertiaryColor,wheelColor:driver.wheelColor,colorLayout:driver.colorLayout,label:surname(driver.name),number:driver.number};
 }
 function advanceFollowDriver(){

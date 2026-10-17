@@ -75,6 +75,13 @@ test('corner tabletop uses a low hop and touches down near the top of its down r
  assert(corner(.50,8)>440,'car should remain above the tabletop until the corner');assert(corner(.52,8)>350&&corner(.52,8)<440,'car should be riding down the ramp after its early touchdown');assert.equal(corner(.61,8),0);
 });
 
+test('corner tabletop wheel path follows the rendered up and down ramp profiles',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],upSurface={polygon:box(20,40),direction:[[20,0],[40,0]],profile:'tabletop-up',heightMm:463},downSurface={polygon:box(50,70),direction:[[50,0],[70,0]],profile:'tabletop-down',heightMm:446};
+ const ride=jumpProfile(samples,[],323,[],{routeLengthMetres:10,referenceHeightMm:323,surfaces:[upSurface,downSurface]});
+ assert(Math.abs(ride(.295)-463*(1-Math.cos(Math.PI/4)))<1,'up-ramp height must match the curved 3D ramp');
+ assert(Math.abs(ride(.595)-446*Math.cos(Math.PI/4))<1,'down-ramp height must match the curved 3D ramp');
+});
+
 test('clearer height views progressively raise airborne arcs without moving their endpoints',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'tabletop',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:323,gravity:9.81};
  const trueScale=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323,flightTimeScale:1});
@@ -166,4 +173,15 @@ test('3D avatar colours retain shell, accent and wheel cues',()=>{
 
 test('Russ Williams retains the reviewed fuchsia, white and grey 3D scheme',()=>{
  assert.deepEqual(avatarColourOverride('RUSS-WILLIAMS'),{color:'#e31886',accentColor:'#f4f5f2',secondaryColor:'#f4f5f2',tertiaryColor:'#969b9d',wheelColor:'#f1f2ed',colorLayout:'front-accent'});
+});
+
+test('Lewis Hopkins retains the reviewed green, purple, white and blue 3D scheme',()=>{
+ assert.deepEqual(avatarColourOverride('LEWIS-HOPKINS'),{color:'#20ef4f',accentColor:'#5b1298',secondaryColor:'#f3f1e8',tertiaryColor:'#174cb7',wheelColor:'#eeeae0',colorLayout:'mixed'});
+});
+
+test('reviewed avatar outliers have complete four-colour buggy schemes',()=>{
+ for(const key of ['JON-TUCKER','HARRY-DAVIS','MARK-GIAQUINTO','MATT-WOODIWISS','MIKE-DRISCOLL','RICHARD-HARRISON','SEB-FISHER','STEVE-CURTIS-RICH','STUART-IRONS']){
+  const colours=avatarColourOverride(key);assert(colours,`${key} needs a reviewed colour mapping`);
+  for(const field of ['color','accentColor','secondaryColor','tertiaryColor','wheelColor'])assert.match(colours[field],/^#[0-9a-f]{6}$/i,`${key} ${field}`);
+ }
 });
