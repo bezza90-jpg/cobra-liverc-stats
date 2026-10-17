@@ -45,7 +45,8 @@ export function trackPlanFromDesign(input,base={}){
   const built=spec.parts.map(([offset,length,profile,heightMm,lateral=0,angleOffset=0])=>{
    const origin=transform(item,offset,lateral),piece={...item,x:origin.x,y:origin.y,angle:Number(item.angle||0)+angleOffset};
    const start=transform(piece,0,0),end=transform(piece,length,0);
-   const surface={name:item.key,profile,heightMm,polygon:box(piece,0,length,spec.width),direction:[toPlan(start),toPlan(end)]};
+   const rollerFlight=String(input.eventId||base.eventId||'')==='518555'&&item.key==='cnc_small';
+   const surface={name:item.key,profile,heightMm,polygon:box(piece,0,length,spec.width),direction:[toPlan(start),toPlan(end)],launchCars:rollerFlight,speedFlightRatio:rollerFlight?.08:0,minimumFlightDistanceMetres:rollerFlight?.72:0,maximumFlightDistanceMetres:rollerFlight?2.4:0};
    jumpSurfaces.push(surface);return surface;
   });
   if(spec.flight){
@@ -56,6 +57,7 @@ export function trackPlanFromDesign(input,base={}){
  const points=input.points.map(point=>toPlan({x:Number(point.x),y:Number(point.y)}));
  const loop=input.loop?toPlan({x:Number(input.loop.x),y:Number(input.loop.y)}):points[0];
  return {...base,
+  eventId:String(input.eventId||base.eventId||''),
   date:String(input.eventDate||base.date||''),name:String(input.eventName||input.name||base.name||'COBRA track'),
   routeStatus:'confirmed',points,loopRoute:loop,jumpSurfaces,jumpFeatures,
   routeLengthMetres:Number(input.routeLengthMetres||base.routeLengthMetres)||routeLength(input.points),

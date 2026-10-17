@@ -2,9 +2,9 @@ import {canonicalDriverKey} from '../assets/driver-identity.js';
 import {renderLapCharts} from '../assets/lap-charts.js?v=20260928-same-tab';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
-import {jumpProfile} from './jumps.js?v=20261017-linear-trestle';
+import {jumpProfile} from './jumps.js?v=20261017-speed-rollers';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261017-finals-grid';
-import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-linear-trestle';
+import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-speed-rollers';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
 import {prepare,ordered,timeAtProgress,visualFraction} from './engine.js';
 const $=id=>document.getElementById(id),svgNS='http://www.w3.org/2000/svg';
@@ -121,7 +121,7 @@ async function loadRace(autoplay=false){
  if(endedEarly){const base=Number(label.getAttribute('y'))+40;const spacing=Math.min(105,(base-100)/Math.max(1,retiredSlots.size-1));parkedX=Math.max(52,(planned?planForRace(race)?.border?.x||87:87)-40);parkedY=base-retiredSlots.get(d.id)*spacing;}
  group.setAttribute('transform',s.finished?`translate(${parkedX},${parkedY}) scale(1.44)`:`translate(${x},${y}) rotate(${angle}) scale(1.44)`);
  // Translate inside the rotated car group: upside-down headings lift downward.
- const visualSpeed=(jumpPlan?.routeLengthMetres||151.5)/Math.max(1,d.typical||s.lapTime||15);
+ const visualSpeed=(jumpPlan?.routeLengthMetres||151.5)/Math.max(1,d.typical||s.lapTime||15)*(pace.speedAtDistance?.(dist/length)||1);
  group.querySelector('.car-artwork').setAttribute('transform',`translate(0,${s.finished?0:-jumpLift(dist/length,visualSpeed)})`);
  group.querySelector('.car-nameplate').setAttribute('transform',s.finished?'translate(0,-37)':`rotate(${-angle}) translate(0,-42)`);
  group.querySelector('image').setAttribute('transform',s.finished&&endedEarly?'scale(1,-1)':'scale(1,1)');
