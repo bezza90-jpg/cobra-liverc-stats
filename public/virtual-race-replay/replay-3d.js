@@ -25,6 +25,7 @@ function surname(name){let clean=String(name||'').replace(/["“”]/g,'').trim(
 function rawRoute(){let route=viewer.scene.route.map(({x,y})=>({x,y}));return [...route,route[0]];}
 function planSamples(plan){let path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',routePath(plan.points));let length=path.getTotalLength();return Array.from({length:901},(_,i)=>path.getPointAtLength(length*i/900));}
 function routeFractionNear(target){let route=viewer.scene.route,best=0,score=Infinity;for(let i=0;i<route.length;i++){let value=(route[i].x-target.x)**2+(route[i].y-target.y)**2;if(value<score){score=value;best=i;}}return best/route.length;}
+function carpetSize(){return viewer?.design?.carpet||viewer?.scene?.design?.carpet||design?.carpet||{width:30,height:18};}
 function configurePhysics(){
   const plan=trackPlanFromDesign(design),samples=planSamples(plan);
   const features=plan.jumpFeatures.map(feature=>({...feature,minimumClearanceMetres:Number(feature.minimumClearanceMetres)||(String(feature.name).startsWith('jump_trestle_')?.7:0),takeoff:feature.takeoff.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),landing:feature.landing.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
@@ -53,8 +54,8 @@ function carState(driver,index){
   // vertically when entering/leaving a surface or during a gravity arc.
   let pitchSample=.0015,beforeLift=Math.max(0,activeLift(fraction-pitchSample,speed)),afterLift=Math.max(0,activeLift(fraction+pitchSample,speed)),rawPitch=Math.atan2(afterLift-beforeLift,routeLength*pitchSample*2),pitch=Math.max(-.42,Math.min(.42,rawPitch)),yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x),gridBlend=Number.isFinite(driver.startFraction)?Math.max(0,1-time/Math.min(2,driver.laps[0].seconds)):0,lane=(driver.gridLane||0)*gridBlend+(index%3-1)*.11*(1-gridBlend),normal={x:-Math.sin(yaw),y:Math.cos(yaw)},retired=position.finished&&retiredSlots.has(driver.id),roll=0;
   if(retired){
-    const slot=retiredSlots.get(driver.id),loop=design.loop||viewer.scene.route[0],parkingFraction=routeFractionNear(loop),anchor=viewer.routeAt(parkingFraction),next=viewer.routeAt(parkingFraction+.002),heading=Math.atan2(next.y-anchor.y,next.x-anchor.x),forward={x:Math.cos(heading),y:Math.sin(heading)},side={x:-forward.y,y:forward.x},edgeDistance=candidate=>Math.min(candidate.x,candidate.y,design.carpet.width-candidate.x,design.carpet.height-candidate.y),plus={x:anchor.x+side.x*1.8,y:anchor.y+side.y*1.8},minus={x:anchor.x-side.x*1.8,y:anchor.y-side.y*1.8},parkingSide=edgeDistance(plus)<edgeDistance(minus)?side:{x:-side.x,y:-side.y};
-    fraction=parkingFraction;point={x:Math.max(.65,Math.min(design.carpet.width-.65,anchor.x+parkingSide.x*1.75-forward.x*slot*1.25)),y:Math.max(.65,Math.min(design.carpet.height-.65,anchor.y+parkingSide.y*1.75-forward.y*slot*1.25))};yaw=heading;lane=0;z=.38;pitch=0;roll=Math.PI;normal={x:0,y:0};
+    const slot=retiredSlots.get(driver.id),carpet=carpetSize(),loop=design.loop||viewer.scene.route[0],parkingFraction=routeFractionNear(loop),anchor=viewer.routeAt(parkingFraction),next=viewer.routeAt(parkingFraction+.002),heading=Math.atan2(next.y-anchor.y,next.x-anchor.x),forward={x:Math.cos(heading),y:Math.sin(heading)},side={x:-forward.y,y:forward.x},edgeDistance=candidate=>Math.min(candidate.x,candidate.y,carpet.width-candidate.x,carpet.height-candidate.y),plus={x:anchor.x+side.x*1.8,y:anchor.y+side.y*1.8},minus={x:anchor.x-side.x*1.8,y:anchor.y-side.y*1.8},parkingSide=edgeDistance(plus)<edgeDistance(minus)?side:{x:-side.x,y:-side.y};
+    fraction=parkingFraction;point={x:Math.max(.65,Math.min(carpet.width-.65,anchor.x+parkingSide.x*1.75-forward.x*slot*1.25)),y:Math.max(.65,Math.min(carpet.height-.65,anchor.y+parkingSide.y*1.75-forward.y*slot*1.25))};yaw=heading;lane=0;z=.38;pitch=0;roll=Math.PI;normal={x:0,y:0};
   }else if(time>=duration){fraction=finishFraction(driver,drivers);point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed);pitch=0;}
   return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,roll,onFire:retired,firePhase:time*7,length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,secondaryColor:driver.secondaryColor,tertiaryColor:driver.tertiaryColor,wheelColor:driver.wheelColor,colorLayout:driver.colorLayout,label:surname(driver.name),number:driver.number};
 }
@@ -97,7 +98,7 @@ async function start(){
 }
 
 $('raceSelect').addEventListener('change',()=>loadRace($('raceSelect').value));
-$('focus').addEventListener('change',()=>{viewer.container.querySelector('[data-replay-focus]').value=$('focus').value;if(!$('focus').value)viewer.target={x:design.carpet.width/2,y:design.carpet.height/2,z:0};render(true);});
+$('focus').addEventListener('change',()=>{viewer.container.querySelector('[data-replay-focus]').value=$('focus').value;if(!$('focus').value){const carpet=carpetSize();viewer.target={x:carpet.width/2,y:carpet.height/2,z:0};}render(true);});
 $('play').addEventListener('click',()=>setPlaying(!playing));
 $('restart').addEventListener('click',()=>setTime(0));$('back').addEventListener('click',()=>setTime(time-10));$('forward').addEventListener('click',()=>setTime(time+10));$('timeline').addEventListener('input',event=>setTime(event.target.value));
 start();
