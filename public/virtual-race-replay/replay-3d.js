@@ -1,4 +1,4 @@
-import {prepare,ordered,positionAt,visualFraction,finishFraction} from './engine.js?v=20261017-finish';
+import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress} from './engine.js?v=20261017-finish';
 import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-speed-rollers';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
@@ -70,35 +70,32 @@ function timingFor(entry){
   const elapsed=finished?(Number.isFinite(Number(driver.officialTime))?Number(driver.officialTime):driver.total):(driver.crossings[completed]||0);
   return`${finished?driver.laps.length:completed} / ${seconds(elapsed)}`;
 }
-function raceDistance(entry){
-  const routeLength=Number(design?.routeLengthMetres)||151.5,completed=Math.min(entry.completed,entry.driver.laps.length),fraction=entry.finished?0:visualFraction(entry.driver,time,pace);
-  return(completed+fraction)*routeLength;
-}
-function distanceToLeader(entry,leaderDistance,index){
+function timeToLeader(entry,leader,index){
   if(index===0)return'LEADER';
-  return`+${Math.max(0,leaderDistance-raceDistance(entry)).toFixed(1)} m`;
+  const leaderAtProgress=timeAtProgress(leader.driver,entry.progress),reference=entry.finished?entry.driver.total:time;
+  return`+${Math.max(0,reference-(leaderAtProgress??reference)).toFixed(2)} s`;
 }
-function timingRow(entry,index,compact=false,leaderDistance=0){
+function timingRow(entry,index,compact=false,leader=null){
   const row=document.createElement(compact?'tr':'li');
   if(index===0)row.className='leader';
   if(compact){
     const position=document.createElement('td'),name=document.createElement('td'),result=document.createElement('td'),gap=document.createElement('td');
-    position.textContent=String(index+1);name.textContent=entry.driver.name;result.textContent=timingFor(entry);gap.textContent=distanceToLeader(entry,leaderDistance,index);row.append(position,name,result,gap);
+    position.textContent=String(index+1);name.textContent=entry.driver.name;result.textContent=timingFor(entry);gap.textContent=timeToLeader(entry,leader,index);row.append(position,name,result,gap);
   }else{
     const name=document.createElement('span'),result=document.createElement('strong');
-    name.textContent=`${entry.driver.name} · car ${entry.driver.number}`;result.textContent=`${timingFor(entry)} · ${distanceToLeader(entry,leaderDistance,index)}`;row.append(name,result);
+    name.textContent=`${entry.driver.name} · car ${entry.driver.number}`;result.textContent=`${timingFor(entry)} · ${timeToLeader(entry,leader,index)}`;row.append(name,result);
   }
   return row;
 }
 function addLiveTiming(){
   const wrap=viewer.container.querySelector('.c3-canvas-wrap'),panel=document.createElement('aside'),toolbar=viewer.container.querySelector('.c3-toolbar'),button=document.createElement('button');
   viewer.container.classList.add('c3-timing-behind');
-  panel.className='c3-timing-overlay';panel.dataset.liveTiming='';panel.tabIndex=0;panel.setAttribute('role','button');panel.setAttribute('aria-pressed','false');panel.setAttribute('aria-label','Live race timing. Activate to bring the timing screen in front of the track.');panel.title='Click or tap to move the timing screen in front of or behind the track';panel.innerHTML='<header><strong data-live-timing-title>Live timing</strong><span>Laps / seconds · gap to leader</span></header><table><thead><tr><th>Pos</th><th>Driver</th><th>Laps / seconds</th><th>To leader</th></tr></thead><tbody data-live-timing-body></tbody></table>';
+  panel.className='c3-timing-overlay';panel.dataset.liveTiming='';panel.tabIndex=0;panel.setAttribute('role','button');panel.setAttribute('aria-pressed','false');panel.setAttribute('aria-label','Live race timing. Activate to bring the timing screen in front of the track.');panel.title='Click or tap to move the timing screen in front of or behind the track';panel.innerHTML='<header><strong data-live-timing-title>Live timing</strong><span>Laps / seconds · gap (s) to leader</span></header><table><thead><tr><th>Pos</th><th>Driver</th><th>Laps / seconds</th><th>To leader</th></tr></thead><tbody data-live-timing-body></tbody></table>';
   const ghost=panel.cloneNode(true);ghost.classList.add('c3-timing-ghost');ghost.removeAttribute('data-live-timing');ghost.dataset.liveTimingGhost='';ghost.tabIndex=-1;ghost.removeAttribute('role');ghost.removeAttribute('aria-pressed');ghost.setAttribute('aria-hidden','true');ghost.removeAttribute('title');
   const setTimingFront=front=>{viewer.container.classList.toggle('c3-timing-front',front);panel.setAttribute('aria-pressed',String(front));panel.setAttribute('aria-label',`Live race timing. Activate to move the timing screen ${front?'behind':'in front of'} the track.`);};
   let timingPress=null;
-  viewer.container.addEventListener('pointerdown',event=>{const rect=panel.getBoundingClientRect();if(panel.hidden||event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)return;timingPress={id:event.pointerId,x:event.clientX,y:event.clientY,wasFront:viewer.container.classList.contains('c3-timing-front')};if(!timingPress.wasFront){event.preventDefault();event.stopPropagation();}},true);
-  viewer.container.addEventListener('pointerup',event=>{if(!timingPress||event.pointerId!==timingPress.id)return;const press=timingPress;timingPress=null;if(Math.hypot(event.clientX-press.x,event.clientY-press.y)>10)return;setTimingFront(!press.wasFront);event.preventDefault();event.stopPropagation();},true);
+  viewer.container.addEventListener('pointerdown',event=>{const rect=panel.getBoundingClientRect();if(panel.hidden||event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)return;timingPress={id:event.pointerId,x:event.clientX,y:event.clientY,wasFront:viewer.container.classList.contains('c3-timing-front')};},true);
+  viewer.container.addEventListener('pointerup',event=>{if(!timingPress||event.pointerId!==timingPress.id)return;const press=timingPress;timingPress=null;if(Math.hypot(event.clientX-press.x,event.clientY-press.y)>10)return;setTimingFront(!press.wasFront);},true);
   panel.addEventListener('keydown',event=>{if(event.key!=='Enter'&&event.key!==' ')return;event.preventDefault();setTimingFront(!viewer.container.classList.contains('c3-timing-front'));});
   button.type='button';button.dataset.timingToggle='';button.className='active';button.textContent='Race timings';button.setAttribute('aria-pressed','true');
   button.addEventListener('click',()=>{const visible=panel.hidden;panel.hidden=!visible;ghost.hidden=!visible;button.classList.toggle('active',visible);button.setAttribute('aria-pressed',String(visible));});
@@ -108,7 +105,7 @@ function render(force=false){
   advanceFollowDriver();
   let cars=drivers.map(carState),focus=$('focus').value,follow=cars.find(car=>String(car.id)===focus),followDriver=drivers.find(driver=>String(driver.id)===focus),followStopped=followDriver&&time>=followDriver.total,followState=followStopped?(retiredSlots.has(followDriver.id)?`${surname(followDriver.name)} has retired`:`${surname(followDriver.name)} has finished`):'';viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':followState?`${followState} · race ${playing?'still playing':'paused'}`:playing?'Playing':'Paused';
   const controls=viewer.container.querySelector('[data-replay-controls]');if(controls){controls.querySelector('[data-replay-time]').value=String(time);controls.querySelector('[data-replay-clock]').textContent=clock(time);controls.querySelector('[data-replay-action="play"]').textContent=playing?'Ⅱ Pause':'▶ Play';}
-  if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);const currentOrder=ordered(drivers,time),leaderDistance=currentOrder.length?raceDistance(currentOrder[0]):0;$('order').replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,false,leaderDistance)));for(const body of viewer.container.querySelectorAll('[data-live-timing-body]'))body.replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,true,leaderDistance)));}
+  if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);const currentOrder=ordered(drivers,time),leader=currentOrder[0];$('order').replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,false,leader)));for(const body of viewer.container.querySelectorAll('[data-live-timing-body]'))body.replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,true,leader)));}
 }
 function tick(timestamp){if(!playing){frame=0;return;}let delta=Math.min(.12,(timestamp-last)/1000||0);last=timestamp;time=Math.min(duration,time+delta*Number($('speed').value));if(time>=duration)playing=false;render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';frame=playing?requestAnimationFrame(tick):0;}
 function setPlaying(next){cancelAnimationFrame(frame);frame=0;playing=Boolean(next);if(playing){if(time>=duration)time=0;last=performance.now();frame=requestAnimationFrame(tick);}render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';}
