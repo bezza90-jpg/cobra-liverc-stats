@@ -25,10 +25,12 @@ async function youtube(endpoint, parameters) {
 }
 
 function titleDate(title) {
-  const match = title.match(/(?:^|\D)(\d{2})(\d{2})(\d{2})(?:\D|$)/);
+  const match = title.match(/(?:^|\D)(\d{1,2})[\s./_-]+(\d{1,2})[\s./_-]+(\d{4})(?:\D|$)/)
+    || title.match(/(?:^|\D)(\d{2})(\d{2})(\d{2})(?:\D|$)/)
+    || title.match(/(?:^|\D)(\d{2})[\s./_-]+(\d{2})[\s./_-]+(\d{2})(?:\D|$)/);
   if (!match) return '';
   const [, day, month, year] = match;
-  return `20${year}-${month}-${day}`;
+  return `${year.length === 4 ? year : `20${year}`}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 
 function titleClass(title) {
@@ -40,7 +42,7 @@ function titleClass(title) {
 }
 
 function titleRound(title) {
-  const qualifier = title.match(/\bqual(?:ifying)?\s*(\d+)\b/i);
+  const qualifier = title.match(/\bqual(?:ifying)?(?:\s+round)?\s*(\d+)\b/i);
   if (qualifier) return { type: 'qualifier', number: Number(qualifier[1]), label: `Qual ${qualifier[1]}` };
   const final = title.match(/\b([A-H])\s*[- ]?final\b/i);
   if (final) return { type: 'final', letter: final[1].toUpperCase(), label: `${final[1].toUpperCase()} Final` };
