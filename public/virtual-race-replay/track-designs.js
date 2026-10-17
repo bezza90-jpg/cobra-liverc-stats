@@ -14,7 +14,7 @@ const RAMP_CATALOG={
  cnc_ttdown:{width:2.44,parts:[[0,2.442,'tabletop-down',446]]},
  cnc_k_egg:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,2.317,'egg-lander',323]],flight:[0,1]},
  cnc_k_wedge:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,2.338,'wedge-lander',276]],flight:[0,1]},
- trestle_12:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,1.2,'flat',396],[2.4,2.4,'linear-down',396]]},
+ trestle_12:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,1.2,'flat',396],[2.4,2.4,'linear-down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,flightTimeScale:1,minimumClearanceMetres:.1},
  trestle_24:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,2.4,'flat',396],[3.6,2.4,'linear-down',396]]},
  trestle_36:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,3.6,'flat',396],[4.8,2.4,'linear-down',396]]},
  trestle_48:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,4.8,'flat',396],[6,2.4,'linear-down',396]]},

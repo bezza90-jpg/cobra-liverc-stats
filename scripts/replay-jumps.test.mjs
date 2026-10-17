@@ -113,6 +113,16 @@ test('trestle boards use straight planar slopes',()=>{
  assert(down(.3)>270&&down(.3)<330);assert(down(.4)>180&&down(.4)<220);assert(down(.5)>80&&down(.5)<130);
 });
 
+test('small trestle launches over its top and lands near the bottom of its down ramp',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'trestle_12',takeoffProfile:'linear-up',landingProfile:'linear-down',takeoff:box(20,32),landing:box(44,68),takeoffHeightMm:396,landingHeightMm:396,gravity:9.81,landingAtEnd:true,landingInsetMetres:.2,flightTimeScale:1,minimumClearanceMetres:.1};
+ const lift=jumpProfile(samples,[],396,[feature],{routeLengthMetres:10,referenceHeightMm:396,surfaces:[{polygon:box(20,32),direction:[[20,0],[32,0]],profile:'linear-up',heightMm:396},{polygon:box(32,44),direction:[[32,0],[44,0]],profile:'flat',heightMm:396},{polygon:box(44,68),direction:[[44,0],[68,0]],profile:'linear-down',heightMm:396}]});
+ assert(lift(.25)>160&&lift(.25)<185,'car follows the straight up board');
+ assert(lift(.38)>396,'car is airborne above the flat top');
+ assert(lift(.60)>80,'car remains airborne over most of the down ramp');
+ assert(lift(.655)>15&&lift(.655)<60,'car touches down near the bottom of the down ramp');
+ assert.equal(lift(.69),0,'car is back on the carpet after the ramp');
+});
+
 test('egg and wedge landers rise from the floor without a square leading wall',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],lift=jumpProfile(samples,[],323,[],{routeLengthMetres:10,referenceHeightMm:323,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'egg-lander',heightMm:323}]});
  const wedge=jumpProfile(samples,[],276,[],{routeLengthMetres:10,referenceHeightMm:276,surfaces:[{polygon:box(20,60),direction:[[20,0],[60,0]],profile:'wedge-lander',heightMm:276}]});
@@ -136,11 +146,12 @@ test('event design automatically supplies its measured ramp profiles',async()=>{
 test('SWORD Round 1 design supplies measured 3D ramps to every race',async()=>{
  const design=JSON.parse(await readFile(new URL('../public/virtual-race-replay/designs/518554.json',import.meta.url),'utf8'));
  const plan=trackPlanFromDesign(design,{date:'2026-10-04'});
- assert.equal(plan.name,'SWORD R1 04/10/26');assert.equal(plan.jumpFeatures.length,3);assert(hasMeasuredJumpMotion(plan));
- assert.deepEqual(plan.jumpFeatures.map(feature=>feature.name),['jump_trestle_24','cnc_k_wedge','corner_tt_right']);
+ assert.equal(plan.name,'SWORD R1 04/10/26');assert.equal(plan.jumpFeatures.length,4);assert(hasMeasuredJumpMotion(plan));
+ assert.deepEqual(plan.jumpFeatures.map(feature=>feature.name),['jump_trestle_24','cnc_k_wedge','corner_tt_right','trestle_12']);
  const corner=plan.jumpFeatures.find(feature=>feature.name==='corner_tt_right');assert.equal(corner.takeoffProfile,'tabletop-up');assert.equal(corner.landingProfile,'tabletop-down');assert.equal(corner.flightTimeScale,.8);assert.equal(corner.minimumClearanceMetres,.1);assert.equal(corner.touchdownProgress,.12);
  assert(Math.abs(corner.takeoff[0][0]-82.583)<.01);assert(Math.abs(corner.landing[0][0]-82.544)<.01);assert(corner.landing[1][0]-corner.landing[0][0]>79.9);
  const trestle=plan.jumpFeatures.find(feature=>feature.name==='jump_trestle_24');assert.equal(trestle.landingProfile,'flat');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);assert.equal(trestle.flightTimeScale,1.8);assert.equal(trestle.minimumClearanceMetres,1.25);
+ const smallTrestle=plan.jumpFeatures.find(feature=>feature.name==='trestle_12');assert.equal(smallTrestle.takeoffProfile,'linear-up');assert.equal(smallTrestle.landingProfile,'linear-down');assert.equal(smallTrestle.landingAtEnd,true);assert.equal(smallTrestle.landingInsetMetres,.2);assert.equal(smallTrestle.flightTimeScale,1);assert.equal(smallTrestle.minimumClearanceMetres,.1);
  assert.equal(plan.jumpSurfaces.filter(surface=>surface.launchCars).length,2);assert(plan.jumpSurfaces.filter(surface=>surface.launchCars).every(surface=>surface.maximumFlightDistanceMetres===4.8));
  assert(plan.jumpSurfaces.some(surface=>surface.name==='trestle_12'&&surface.profile==='linear-up'));
  assert(plan.jumpSurfaces.some(surface=>surface.name==='jump_trestle_24'&&surface.profile==='linear-down'));
