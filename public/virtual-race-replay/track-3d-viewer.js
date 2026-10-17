@@ -11,6 +11,9 @@ const mix=(a,b,t)=>a+(b-a)*t;
 
 const CATALOG={
   bot_dot_18:{name:'Bot dot',length:.4572,width:.4572,height:.10,shape:'botdot'},
+  trunk_4:{name:'White trunking · 4 m',length:4,width:.063,height:.063,shape:'trunking'},
+  trunk_2:{name:'White trunking · 2 m',length:2,width:.063,height:.063,shape:'trunking'},
+  corner_tt_right:{name:'Legacy right-corner route marker',shape:'route-marker'},
   cnc_tt:{name:'CNC tabletop',length:6.207,width:2.44,parts:[[0,1.325,'UP'],[1.325,2.44,'TABLE'],[3.765,2.442,'DOWN']],partHeights:[.463,.446,.446]},
   cnc_tt_long_up:{name:'CNC tabletop · long up',length:7.282,width:2.44,parts:[[0,2.4,'UP'],[2.4,2.44,'TABLE'],[4.84,2.442,'DOWN']],height:.446},
   long_up:{name:'Long up ramp',length:2.4,width:2.4,parts:[[0,2.4,'UP']],height:.446},
@@ -150,6 +153,15 @@ function addBotDot(scene,item,spec){
   }
 }
 
+function addTrunking(scene,item,spec){
+  const length=Number(spec.length),half=Number(spec.width)/2,z0=.032,z1=z0+Number(spec.height),a0=localPoint(item,0,-half,z0),a1=localPoint(item,0,half,z0),b0=localPoint(item,length,-half,z0),b1=localPoint(item,length,half,z0),A0=localPoint(item,0,-half,z1),A1=localPoint(item,0,half,z1),B0=localPoint(item,length,-half,z1),B1=localPoint(item,length,half,z1);
+  scene.polygons.push(polygon([A0,B0,B1,A1],'#f1f3ef','#8c9690','boundary'));
+  scene.polygons.push(polygon([a0,b0,B0,A0],'#c2c8c4','#758079','boundary'));
+  scene.polygons.push(polygon([a1,A1,B1,b1],'#d5dad7','#758079','boundary'));
+  scene.polygons.push(polygon([a0,A0,A1,a1],'#b5bdb8','#758079','boundary'));
+  scene.polygons.push(polygon([b0,b1,B1,B0],'#e1e5e2','#758079','boundary'));
+}
+
 function buildScene(design){
   design=normalizeDesign(design);
   let scene={design,route:[],routeLength:0,polygons:[],lines:[],labels:[],warnings:[],stats:{ramps:0,dots:0}};
@@ -168,7 +180,9 @@ function buildScene(design){
   scene.lines.push({points:route.map(p=>vec(p.x,p.y,.045)),stroke:'#6f8c7a',width:1.15,dash:[7,8],kind:'centre'});
   for(let item of design.items){
     let spec=CATALOG[item.key];if(!spec){if(item.key!=='label'&&item.key!=='car_avatar')scene.warnings.push(`No 3D profile yet: ${item.key}`);continue;}
+    if(spec.shape==='route-marker')continue;
     if(spec.shape==='botdot'){addBotDot(scene,item,spec);scene.stats.dots++;continue;}
+    if(spec.shape==='trunking'){addTrunking(scene,item,spec);continue;}
     if(spec.crossSlope){addFingerRamp(scene,item,spec);scene.stats.ramps++;scene.labels.push({point:localPoint(item,spec.length/2,0,.19),text:spec.name});continue;}
     for(let [index,part] of (spec.parts||[]).entries())addRampPart(scene,item,spec,part,index);
     if(spec.parts?.length){
