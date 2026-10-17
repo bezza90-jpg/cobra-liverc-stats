@@ -279,10 +279,14 @@ class Viewer{
       quad([[fa,-wa,-.25],[fb,-wb,-.25],[fb,-wb,ub],[fa,-wa,ua]],i%2?colour(third,.62):dark,'car-shell');
       quad([[fa,wa,-.25],[fa,wa,ua],[fb,wb,ub],[fb,wb,-.25]],i%2?colour(accent,.72):colour(body,.74),'car-shell');
     }
-    // Rear wing and mounts, proportioned like a 1/10 off-road buggy.
-    box(-1.02,-.84,-1.18,1.18,.58,.80,wingColor,'car-wing');
-    box(-.89,-.82,-.48,-.36,-.24,.62,dark,'car-wing-mount');
-    box(-.89,-.82,.36,.48,-.24,.62,dark,'car-wing-mount');
+    // A buggy wing is carried behind the rear shock tower by two swept
+    // braces, rather than sitting on upright single-seater style posts.
+    box(-.70,-.57,-.76,.76,-.48,.44,dark,'car-shock-tower');
+    for(const r of [-.48,.48]){
+      quad([[-.64,r-.065,.34],[-.64,r+.065,.34],[-.94,r+.065,.66],[-.94,r-.065,.66]],dark,'car-wing-brace');
+      quad([[-.48,r-.055,-.42],[-.40,r+.055,-.42],[-.59,r+.055,.30],[-.67,r-.055,.30]],third,'car-shock');
+    }
+    box(-1.04,-.84,-1.14,1.14,.58,.80,wingColor,'car-wing');
     quad([[-.25,-.37,.69],[.20,-.32,.57],[.20,.32,.57],[-.25,.37,.69]],glass,'car-window');
     if(car.onFire){
       const cx=Number(car.x??routePoint?.x)||0,cy=Number(car.y??routePoint?.y)||0,flicker=.08*Math.sin((Number(car.firePhase)||0)+cx*7+cy*5),flameTop=.95+flicker,flame=(axis,fill,height,span)=>{let a=axis==='x'?vec(cx-span,cy,.28):vec(cx,cy-span,.28),b=axis==='x'?vec(cx+span,cy,.28):vec(cx,cy+span,.28);faces.push(polygon([a,b,vec(cx,cy,height)],fill,'#8d1800','car-fire',.92));};
