@@ -5,7 +5,7 @@ import {prepare,visualFraction} from '../public/virtual-race-replay/engine.js';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
 import {trackPlanFromDesign,designFromTrackPlan,hasMeasuredJumpMotion} from '../public/virtual-race-replay/track-designs.js';
 import {readFile} from 'node:fs/promises';
-import {analyseAvatarPixels,avatarThumbnailPath} from '../public/virtual-race-replay/avatar-colours.js';
+import {analyseAvatarPixels,avatarThumbnailPath,avatarColourOverride} from '../public/virtual-race-replay/avatar-colours.js';
 const samples=Array.from({length:101},(_,i)=>({x:i,y:0}));
 const zones=[[[20,-5],[40,-5],[40,5],[20,5]]];
 test('jump is bounded, smooth at entry/exit and absent on ordinary track',()=>{
@@ -139,4 +139,8 @@ test('3D avatar colours retain shell, accent and wheel cues',()=>{
  paint(0,6,225,35,30);paint(6,10,245,210,25);for(let y=2;y<5;y++)for(let x=0;x<2;x++){let i=(y*width+x)*4;data.set([25,70,220,255],i);}
  const colours=analyseAvatarPixels(data,width,height);assert.match(colours.color,/^#[0-9a-f]{6}$/);assert.notEqual(colours.color,colours.accentColor);assert.notEqual(colours.color,colours.wheelColor);assert.match(colours.secondaryColor,/^#[0-9a-f]{6}$/);assert.match(colours.tertiaryColor,/^#[0-9a-f]{6}$/);assert.match(colours.colorLayout,/^(front-accent|rear-accent|top-accent|lower-accent|mixed)$/);
  assert.equal(avatarThumbnailPath({DRIVER:{'2-Wheel Drive Buggy':'assets/car-avatars/DRIVER-AUTO-2WD.png'}},'DRIVER','2-Wheel Drive Buggy'),'../assets/car-avatar-thumbnails/DRIVER-AUTO-2WD.webp');
+});
+
+test('Russ Williams retains the reviewed fuchsia, white and grey 3D scheme',()=>{
+ assert.deepEqual(avatarColourOverride('RUSS-WILLIAMS'),{color:'#e31886',accentColor:'#f4f5f2',secondaryColor:'#f4f5f2',tertiaryColor:'#969b9d',wheelColor:'#f1f2ed',colorLayout:'front-accent'});
 });
