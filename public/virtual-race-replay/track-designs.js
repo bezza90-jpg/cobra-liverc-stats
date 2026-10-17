@@ -12,12 +12,12 @@ const RAMP_CATALOG={
  cnc_ttdown:{width:2.44,parts:[[0,2.442,'tabletop-down',446]]},
  cnc_k_egg:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,2.317,'egg-lander',323]],flight:[0,1]},
  cnc_k_wedge:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,2.338,'wedge-lander',276]],flight:[0,1]},
- trestle_12:{width:2.4,parts:[[0,1.2,'flat',396],[1.2,1.2,'flat',396],[2.4,2.4,'down',396]]},
- trestle_24:{width:2.4,parts:[[0,1.2,'flat',396],[1.2,2.4,'flat',396],[3.6,2.4,'down',396]]},
- trestle_36:{width:2.4,parts:[[0,1.2,'flat',396],[1.2,3.6,'flat',396],[4.8,2.4,'down',396]]},
- trestle_48:{width:2.4,parts:[[0,1.2,'flat',396],[1.2,4.8,'flat',396],[6,2.4,'down',396]]},
- jump_trestle_12:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'flat',396],[3.367,1.2,'flat',396],[4.567,2.4,'down',396]],flight:[0,1]},
- jump_trestle_24:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'flat',396],[3.367,2.4,'flat',396],[5.767,2.4,'down',396]],flight:[0,1]}
+ trestle_12:{width:2.4,parts:[[0,1.2,'up',396],[1.2,1.2,'flat',396],[2.4,2.4,'down',396]]},
+ trestle_24:{width:2.4,parts:[[0,1.2,'up',396],[1.2,2.4,'flat',396],[3.6,2.4,'down',396]]},
+ trestle_36:{width:2.4,parts:[[0,1.2,'up',396],[1.2,3.6,'flat',396],[4.8,2.4,'down',396]]},
+ trestle_48:{width:2.4,parts:[[0,1.2,'up',396],[1.2,4.8,'flat',396],[6,2.4,'down',396]]},
+ jump_trestle_12:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'up',396],[3.367,1.2,'flat',396],[4.567,2.4,'down',396]],flight:[0,1],landingAtEnd:true,landingInsetMetres:.2},
+ jump_trestle_24:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'up',396],[3.367,2.4,'flat',396],[5.767,2.4,'down',396]],flight:[0,1],landingAtEnd:true,landingInsetMetres:.2}
 };
 
 const routeLength=points=>points.reduce((total,point,index)=>{
@@ -47,7 +47,7 @@ export function trackPlanFromDesign(input,base={}){
   });
   if(spec.flight){
    const takeoff=built[spec.flight[0]],landing=built[spec.flight[1]];
-   jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81});
+   jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81,landingAtEnd:Boolean(spec.landingAtEnd),landingInsetMetres:Number(spec.landingInsetMetres)||0});
   }
  }
  const points=input.points.map(point=>toPlan({x:Number(point.x),y:Number(point.y)}));

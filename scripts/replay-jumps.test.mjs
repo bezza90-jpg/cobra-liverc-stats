@@ -49,6 +49,13 @@ test('3D kicker boost raises the middle of the flight without moving either land
  assert.equal(higher(.25,8),normal(.25,8));assert(Math.abs(higher(.50,8)-normal(.50,8))<1e-9);
 });
 
+test('SWORD trestle launch keeps fast cars clearly airborne and lands near the far end',()=>{
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'jump_trestle_24',takeoffProfile:'kicker',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:396,gravity:9.81,minimumClearanceMetres:.7,landingAtEnd:true,landingInsetMetres:.2};
+ const lift=jumpProfile(samples,[],396,[feature],{routeLengthMetres:10,referenceHeightMm:396,kickerFlightTimeScale:1.55});
+ let peak=0;for(let fraction=.26;fraction<=.5;fraction+=.001)peak=Math.max(peak,lift(fraction,16));
+ assert(peak>=1.09,'fast cars should clear the trestle by about 70 cm');assert.equal(lift(.2,16),0);assert(lift(.58,16)>0);assert.equal(lift(.61,16),0);
+});
+
 test('3D tabletop flight clears the down ramp and touches down 20 cm before its end',()=>{
  const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'cnc_tt',takeoffProfile:'tabletop-up',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:463,landingHeightMm:446,gravity:9.81};
  const normal=jumpProfile(samples,[],323,[feature],{routeLengthMetres:10,referenceHeightMm:323});
@@ -96,6 +103,8 @@ test('SWORD Round 1 design supplies measured 3D ramps to every race',async()=>{
  const plan=trackPlanFromDesign(design,{date:'2026-10-04'});
  assert.equal(plan.name,'SWORD R1 04/10/26');assert.equal(plan.jumpFeatures.length,2);assert(hasMeasuredJumpMotion(plan));
  assert.deepEqual(plan.jumpFeatures.map(feature=>feature.name),['jump_trestle_24','cnc_k_wedge']);
+ const trestle=plan.jumpFeatures[0];assert.equal(trestle.landingProfile,'up');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);
+ assert(plan.jumpSurfaces.some(surface=>surface.name==='trestle_12'&&surface.profile==='up'));
 });
 
 test('confirmed hand-drawn plans become flat 3D designs without inferred ramps',()=>{
