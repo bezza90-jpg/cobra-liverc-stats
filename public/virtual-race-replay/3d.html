@@ -13,7 +13,7 @@
   <header class="cobra-site-header"><div class="cobra-header-inner"><a class="cobra-site-logo" href="https://www.cobracardiff.co.uk/" aria-label="COBRA home"><img src="../assets/cobra-header-logo.png" width="271" height="69" alt="COBRA"></a><a class="cobra-book-in" href="../book-in/">Book In</a></div></header>
   <main>
     <nav class="crumbs" aria-label="Replay views"><a id="back2d" href="./?event=518555&amp;race=7121723">← 2D replay and timings</a><a href="../">Race statistics</a></nav>
-    <header class="intro"><div><p class="eyebrow">COBRA · 3D VIRTUAL RACE REPLAY</p><h1>11 October 2026 in 3D</h1><p id="raceTitle">Loading recorded race…</p></div><span class="physics">Measured ramps · gravity 9.81 m/s²</span></header>
+    <header class="intro"><div><p class="eyebrow">COBRA · 3D VIRTUAL RACE REPLAY</p><h1 id="eventTitle">3D Virtual Race Replay</h1><p id="raceTitle">Loading recorded race…</p></div><span id="physicsStatus" class="physics">Loading track plan…</span></header>
     <section class="selectors" aria-label="Choose race and playback">
       <label>Race <select id="raceSelect"></select></label>
       <label>Follow driver in flyover <select id="focus"><option value="">All drivers</option></select></label>
@@ -27,9 +27,9 @@
       <p id="status" role="status">Ready to replay</p>
     </section>
     <section class="race-order" aria-labelledby="orderHeading"><h2 id="orderHeading">On-track order</h2><ol id="order"></ol></section>
-    <p class="explain">Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times. Their position between timing-loop crossings is estimated along the confirmed Track Designer centre line. Ramp heights are measured; airborne motion uses gravity at 9.81 m/s².</p>
+    <p id="replayMethod" class="explain">Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times.</p>
   </main>
   <script src="track-3d-viewer.js?v=20261017-4"></script>
-<script type="module" src="replay-3d.js?v=20261017-7"></script>
+<script type="module" src="replay-3d.js?v=20261017-8"></script>
 </body>
 </html>
