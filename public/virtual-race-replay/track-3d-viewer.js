@@ -246,7 +246,7 @@ class Viewer{
     this.canvas.addEventListener('pointerdown',event=>{this.stopMotion();this.canvas.setPointerCapture(event.pointerId);this.drag={x:event.clientX,y:event.clientY,button:event.button,target:{...this.target}};});
     this.canvas.addEventListener('pointermove',event=>{if(!this.drag)return;let dx=event.clientX-this.drag.x,dy=event.clientY-this.drag.y;if(this.drag.button===2||event.shiftKey){let scale=Math.max(this.design?.carpet.width||30,this.design?.carpet.height||18)/Math.max(380,this.canvas.clientWidth);this.target.x=this.drag.target.x-dx*scale;this.target.y=this.drag.target.y+dy*scale;}else{this.yaw+=dx*.008;this.elevation=clamp(this.elevation+dy*.006,.12,1.54);}this.drag.x=event.clientX;this.drag.y=event.clientY;this.drag.target={...this.target};this.draw();});
     this.canvas.addEventListener('pointerup',()=>this.drag=null);this.canvas.addEventListener('pointercancel',()=>this.drag=null);
-    this.canvas.addEventListener('wheel',event=>{event.preventDefault();if(this.flyover){this.flyoverZoom=clamp(this.flyoverZoom*Math.exp(-event.deltaY*.001),.6,2.2);this.draw();return;}this.stopMotion();this.zoom=clamp(this.zoom*Math.exp(-event.deltaY*.001),.45,4);this.draw();},{passive:false});
+    this.canvas.addEventListener('wheel',event=>{event.preventDefault();if(this.flyover){this.flyoverZoom=clamp(this.flyoverZoom*Math.exp(-event.deltaY*.001),.6,2.2);this.draw();return;}this.stopMotion();let anchor=this.groundAtPointer(event),nextZoom=clamp(this.zoom*Math.exp(-event.deltaY*.001),.45,4);if(nextZoom===this.zoom)return;this.zoom=nextZoom;if(anchor){let shifted=this.groundAtPointer(event);if(shifted){this.target.x+=anchor.x-shifted.x;this.target.y+=anchor.y-shifted.y;}}this.draw();},{passive:false});
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(this.wrap);this.fullscreenHandler=()=>{this.updateFullscreenButton();requestAnimationFrame(()=>this.resize());};document.addEventListener('fullscreenchange',this.fullscreenHandler);
     this.messageHandler=event=>{if(window.opener&&event.source!==window.opener)return;if(event.data?.type==='cobra-3d-design'&&event.data.design)this.setDesign(event.data.design);};
     window.addEventListener('message',this.messageHandler);if(window.opener)setTimeout(()=>window.opener.postMessage({type:'cobra-3d-ready'},'*'),0);
@@ -337,7 +337,7 @@ class Viewer{
     this.flyoverStart=best/route.length;this.flyoverProgress=this.flyoverStart;
   }
   stopMotion(){
-    this.autoRotate=false;this.flyover=false;this.flyoverPaused=false;cancelAnimationFrame(this.frame);this.frame=0;this.container.querySelector('[data-action="rotate"]')?.classList.remove('active');this.container.querySelector('[data-action="flyover"]')?.classList.remove('active');this.flightControls?.classList.remove('active');if(this.flightPauseButton){this.flightPauseButton.textContent='Ⅱ Pause';this.flightPauseButton.classList.remove('active');}if(this.help)this.help.textContent='Drag to orbit · right-drag to pan · scroll to zoom';
+    this.autoRotate=false;this.flyover=false;this.flyoverPaused=false;cancelAnimationFrame(this.frame);this.frame=0;this.container.querySelector('[data-action="rotate"]')?.classList.remove('active');this.container.querySelector('[data-action="flyover"]')?.classList.remove('active');this.flightControls?.classList.remove('active');if(this.flightPauseButton){this.flightPauseButton.textContent='Ⅱ Pause';this.flightPauseButton.classList.remove('active');}if(this.help)this.help.textContent='Drag to orbit · right-drag to pan · scroll to zoom under pointer';
   }
   startAnimation(){cancelAnimationFrame(this.frame);this.lastTime=performance.now();this.lastPaintTime=this.lastTime;if(this.autoRotate||this.flyover)this.frame=requestAnimationFrame(time=>this.animate(time));}
   toggleAutoRotate(){let enable=!this.autoRotate;this.stopMotion();this.autoRotate=enable;this.container.querySelector('[data-action="rotate"]').classList.toggle('active',enable);if(enable){this.help.textContent='Automatic orbit running · drag the track to stop';this.startAnimation();}this.draw();}
@@ -360,6 +360,10 @@ class Viewer{
   }
   cameraPoint(point,camera){let adjusted=vec(point.x,point.y,point.z*this.heightScale),relative=sub(adjusted,camera.position);return{x:dot(relative,camera.right),y:dot(relative,camera.up),depth:dot(relative,camera.forward)};}
   screenPoint(point,camera){return{x:camera.width/2+point.x*camera.focal/point.depth,y:camera.height/2-point.y*camera.focal/point.depth,depth:point.depth};}
+  groundAtPointer(event,camera=this.camera()){
+    let rect=this.canvas.getBoundingClientRect(),screenX=(event.clientX-rect.left)*camera.width/Math.max(1,rect.width),screenY=(event.clientY-rect.top)*camera.height/Math.max(1,rect.height),ray=norm(add(camera.forward,add(mul(camera.right,(screenX-camera.width/2)/camera.focal),mul(camera.up,(camera.height/2-screenY)/camera.focal))));
+    if(Math.abs(ray.z)<1e-5)return null;let distance=-camera.position.z/ray.z;if(distance<=0)return null;return add(camera.position,mul(ray,distance));
+  }
   nearPlane(){return this.flyover?Math.max(.45,Math.min(2.1,this.flyoverHeight*.45)):.1;}
   project(point,camera){let transformed=this.cameraPoint(point,camera);if(transformed.depth<=this.nearPlane())return null;return this.screenPoint(transformed,camera);}
   clipFaceAtCamera(points,camera){
