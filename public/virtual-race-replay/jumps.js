@@ -11,6 +11,20 @@ export function insidePolygon(point,polygon){
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 const smooth=t=>t*t*(3-2*t);
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+function ballisticPeak(startHeight,endHeight,flightTime,gravity){
+ const verticalSpeed=(endHeight-startHeight+.5*gravity*flightTime*flightTime)/Math.max(.001,flightTime),peakTime=clamp(verticalSpeed/gravity,0,flightTime);
+ return startHeight+verticalSpeed*peakTime-.5*gravity*peakTime*peakTime;
+}
+function flightTimeForClearance(startHeight,endHeight,flightTime,gravity,minimumPeak){
+ if(ballisticPeak(startHeight,endHeight,flightTime,gravity)>=minimumPeak)return flightTime;
+ let low=flightTime,high=Math.max(.1,flightTime);
+ while(high<4&&ballisticPeak(startHeight,endHeight,high,gravity)<minimumPeak)high*=1.25;
+ for(let i=0;i<24;i++){
+  const middle=(low+high)/2;
+  if(ballisticPeak(startHeight,endHeight,middle,gravity)<minimumPeak)low=middle;else high=middle;
+ }
+ return high;
+}
 function surfaceProfile(name,t){
  t=clamp(t,0,1);name=String(name||'').toLowerCase();
  if(name.includes('triple')||name.includes('ripple'))return Math.sin(t*Math.PI*3)**2;
@@ -59,7 +73,7 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
    if(f<takeoff.to){const u=(f-takeoff.from)/(takeoff.to-takeoff.from);return surfaceProfile('kicker',u)*startHeight*pixelsPerMetre;}
    const profileName=String(feature.takeoffProfile||feature.name||'').toLowerCase(),landingName=String(feature.landingProfile||'').toLowerCase(),isKicker=profileName.includes('kicker'),isTabletop=profileName.includes('tabletop'),roundedLander=landingName.includes('egg')||landingName.includes('wedge'),rise=landingName.includes('egg')?.2:.15,flightEnd=isTabletop?Math.max(landing.from,landing.to-.2/routeLengthMetres):roundedLander?landing.from+(landing.to-landing.from)*rise:landing.from;
    if(f<=flightEnd){
-    const landingProgress=(flightEnd-landing.from)/Math.max(.000001,landing.to-landing.from),targetHeight=isTabletop?surfaceProfile(feature.landingProfile||'down',landingProgress)*endHeight:endHeight,gap=(flightEnd-takeoff.to)*routeLengthMetres,x=(f-takeoff.to)*routeLengthMetres,speed=clamp(Number(speedMps)||8,2,25),viewScale=Math.max(1,Number(options.flightTimeScale)||1),featureScale=isKicker?Math.max(1,Number(options.kickerFlightTimeScale)||1):isTabletop?Math.max(1,Number(options.tabletopFlightTimeScale)||1):1,flightTime=gap/speed*viewScale*featureScale,time=x/Math.max(.001,gap)*flightTime,gravity=Number(feature.gravity)||Number(options.gravity)||9.81;
+    const landingProgress=(flightEnd-landing.from)/Math.max(.000001,landing.to-landing.from),targetHeight=isTabletop?surfaceProfile(feature.landingProfile||'down',landingProgress)*endHeight:endHeight,gap=(flightEnd-takeoff.to)*routeLengthMetres,x=(f-takeoff.to)*routeLengthMetres,speed=clamp(Number(speedMps)||8,2,25),viewScale=Math.max(1,Number(options.flightTimeScale)||1),featureScale=isKicker?Math.max(1,Number(options.kickerFlightTimeScale)||1):isTabletop?Math.max(1,Number(options.tabletopFlightTimeScale)||1):1,gravity=Number(feature.gravity)||Number(options.gravity)||9.81,minimumClearance=isTabletop?Math.max(0,Number(options.tabletopMinimumClearanceMetres)||0):0,baseFlightTime=gap/speed*viewScale*featureScale,flightTime=minimumClearance?flightTimeForClearance(startHeight,targetHeight,baseFlightTime,gravity,Math.max(startHeight,endHeight)+minimumClearance):baseFlightTime,time=x/Math.max(.001,gap)*flightTime;
     const verticalSpeed=(targetHeight-startHeight+.5*gravity*flightTime*flightTime)/Math.max(.001,flightTime);
     return Math.max(0,startHeight+verticalSpeed*time-.5*gravity*time*time)*pixelsPerMetre;
    }
