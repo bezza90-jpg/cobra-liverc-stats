@@ -9,23 +9,23 @@ export function avatarColourOverride(key){return DRIVER_OVERRIDES[String(key||''
 
 export function avatarThumbnailPath(manifest,key,className){
  const entry=manifest?.[key];
- const source=typeof entry==='string'?entry:entry?.[className]||entry?.default||'';
+ const source=typeof entry==='string'?entry:entry?.[className]||entry?.default||Object.values(entry||{}).find(Boolean)||'';
  if(!source)return'';
  return`../assets/car-avatar-thumbnails/${source.split('/').pop().replace(/\.png$/i,'.webp')}`;
 }
 
 export function analyseAvatarPixels(data,width,height){
- const histogram=(fromY,toY,colourOnly)=>{
+ const histogram=(fromY,toY,colourOnly,fromX=0,toX=1)=>{
   const bins=new Map();
-  for(let y=Math.floor(height*fromY);y<Math.ceil(height*toY);y++)for(let x=0;x<width;x++){
+  for(let y=Math.floor(height*fromY);y<Math.ceil(height*toY);y++)for(let x=Math.floor(width*fromX);x<Math.ceil(width*toX);x++){
    const i=(y*width+x)*4,r=data[i],g=data[i+1],b=data[i+2],a=data[i+3],high=Math.max(r,g,b),low=Math.min(r,g,b),chroma=high-low;
-   if(a<80||high<58||(colourOnly&&chroma<24)||(!colourOnly&&high>244&&chroma<12))continue;
-   const q=[r,g,b].map(value=>Math.min(7,value>>5)),key=q.join(','),weight=(a/255)*(1+chroma/95);
+   if(a<80||high<58||(colourOnly&&chroma<24))continue;
+   const q=[r,g,b].map(value=>Math.min(7,value>>5)),key=q.join(','),weight=(a/255)*(1+Math.min(chroma,96)/320);
    const bin=bins.get(key)||{score:0,x:0,y:0};bin.score+=weight;bin.x+=x*weight;bin.y+=y*weight;bins.set(key,bin);
   }
-  return[...bins.entries()].map(([key,bin])=>({rgb:key.split(',').map(value=>Number(value)*32+16),score:bin.score,x:bin.x/bin.score/width,y:bin.y/bin.score/height})).sort((a,b)=>b.score-a.score);
+  return[...bins.entries()].map(([key,bin])=>{const rgb=key.split(',').map(value=>Number(value)*32+16);return{rgb,score:bin.score,x:bin.x/bin.score/width,y:bin.y/bin.score/height,chroma:Math.max(...rgb)-Math.min(...rgb),high:Math.max(...rgb)};}).sort((a,b)=>b.score-a.score);
  };
- const shell=histogram(.04,.76,true),lower=histogram(.53,.98,false),primaryBin=shell[0],primary=primaryBin?.rgb,accentBin=shell.find(item=>primary&&distance(item.rgb,primary)>72),accent=accentBin?.rgb,thirdBin=shell.find(item=>primary&&distance(item.rgb,primary)>58&&(!accent||distance(item.rgb,accent)>58)),third=thirdBin?.rgb,wheel=lower[0]?.rgb;
+ const shell=histogram(.04,.76,true,.14,.86),neutralShell=histogram(.04,.7,false,.14,.86).filter(item=>item.chroma<36&&item.high>96),lower=histogram(.48,.98,false),primaryBin=shell[0],primary=primaryBin?.rgb,candidates=[...shell,...neutralShell].sort((a,b)=>b.score-a.score),accentBin=candidates.find(item=>primary&&distance(item.rgb,primary)>72),accent=accentBin?.rgb,thirdBin=candidates.find(item=>primary&&distance(item.rgb,primary)>58&&(!accent||distance(item.rgb,accent)>58)),third=thirdBin?.rgb,wheelBin=lower.find(item=>item.chroma<42&&item.high>112)||lower[0],wheel=wheelBin?.rgb;
  if(!primary)return null;
  const horizontal=accentBin&&primaryBin?accentBin.x-primaryBin.x:0,vertical=accentBin&&primaryBin?accentBin.y-primaryBin.y:0,colorLayout=Math.abs(horizontal)>.16?(horizontal>0?'front-accent':'rear-accent'):Math.abs(vertical)>.12?(vertical<0?'top-accent':'lower-accent'):'mixed';
  return{color:hex(primary),accentColor:hex(accent||primary),secondaryColor:hex(accent||primary),tertiaryColor:hex(third||accent||primary),wheelColor:hex(wheel||accent||[146,155,149]),colorLayout};
