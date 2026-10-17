@@ -3,7 +3,7 @@ import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-corner-tabletop';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
 import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-later-trestle-landing';
-import {avatarThumbnailPath,loadAvatarColours} from './avatar-colours.js?v=20261017-2';
+import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-3';
 
 const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
@@ -79,7 +79,7 @@ function addViewerReplayControls(){
 function syncUrl(){let url=new URL(location.href);url.searchParams.set('event',eventId);url.searchParams.set('race',race.id);history.replaceState({},'',url);$('back2d').href=`./?event=${eventId}&race=${race.id}`;}
 async function loadRace(id){
   cancelAnimationFrame(frame);playing=false;$('play').textContent='▶ Play';race=await json(`races/${id}.json`);drivers=race.drivers.slice().sort((a,b)=>a.number-b.number).map((driver,index)=>({...prepare(driver),color:palette[index%palette.length]}));
-  await Promise.all(drivers.map(async driver=>{let url=avatarThumbnailPath(avatarManifest,driver.key,race.className);if(!url)return;let profile=avatarColourCache.get(url);if(profile===undefined){try{profile=await loadAvatarColours(url);}catch{profile=null;}avatarColourCache.set(url,profile);}if(profile)Object.assign(driver,profile);}));
+  await Promise.all(drivers.map(async driver=>{let url=avatarThumbnailPath(avatarManifest,driver.key,race.className);if(url){let profile=avatarColourCache.get(url);if(profile===undefined){try{profile=await loadAvatarColours(url);}catch{profile=null;}avatarColourCache.set(url,profile);}if(profile)Object.assign(driver,profile);}let override=avatarColourOverride(driver.key);if(override)Object.assign(driver,override);}));
   duration=Math.max(...drivers.map(driver=>driver.total));retiredSlots=new Map(drivers.filter(driver=>driver.total<duration-Math.max(30,driver.typical*2)).sort((a,b)=>a.total-b.total||a.number-b.number).map((driver,index)=>[driver.id,index]));$('timeline').max=String(duration);viewer.container.querySelector('[data-replay-time]').max=String(duration);$('endTime').textContent=clock(duration);$('raceTitle').textContent=`${race.name} · ${race.round}`;$('official').href=race.source;
   const focusOptions=()=>[new Option('All drivers',''),...drivers.map(driver=>new Option(`${driver.number}. ${driver.name}`,driver.id))];$('focus').replaceChildren(...focusOptions());viewer.container.querySelector('[data-replay-focus]').replaceChildren(...focusOptions());configureGrid();time=0;syncUrl();render(true);
 }

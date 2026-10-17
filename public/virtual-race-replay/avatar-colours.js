@@ -1,6 +1,11 @@
 const clamp=value=>Math.max(0,Math.min(255,Math.round(value)));
 const hex=rgb=>`#${rgb.map(value=>clamp(value).toString(16).padStart(2,'0')).join('')}`;
 const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
+const DRIVER_OVERRIDES={
+ 'RUSS-WILLIAMS':{color:'#e31886',accentColor:'#f4f5f2',secondaryColor:'#f4f5f2',tertiaryColor:'#969b9d',wheelColor:'#f1f2ed',colorLayout:'front-accent'}
+};
+
+export function avatarColourOverride(key){return DRIVER_OVERRIDES[String(key||'')]||null;}
 
 export function avatarThumbnailPath(manifest,key,className){
  const entry=manifest?.[key];
