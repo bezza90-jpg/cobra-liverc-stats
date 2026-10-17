@@ -4,7 +4,7 @@ import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
 import {jumpProfile} from './jumps.js?v=20261017-speed-rollers';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261017-finals-grid';
-import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-speed-rollers';
+import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-shared-jumps';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
 import {prepare,ordered,timeAtProgress,visualFraction} from './engine.js';
 const $=id=>document.getElementById(id),svgNS='http://www.w3.org/2000/svg';

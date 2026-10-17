@@ -3,7 +3,7 @@ const RAMP_CATALOG={
  corner_tt_right:{width:2.44,parts:[[0,1.325,'tabletop-up',463,0,0],[1.325,2.44,'flat',446,0,0],[2.545,2.4,'tabletop-down',446,-1.22,-90]],flight:[0,2],flightTimeScale:.8,minimumClearanceMetres:.1},
  cnc_tt:{width:2.44,parts:[[0,1.325,'tabletop-up',463],[1.325,2.44,'flat',446],[3.765,2.442,'tabletop-down',446]],flight:[0,2]},
  cnc_tt_long_up:{width:2.44,parts:[[0,2.4,'tabletop-up',446],[2.4,2.44,'flat',446],[4.84,2.442,'tabletop-down',446]],flight:[0,2]},
- cnc_small:{width:2.44,parts:[[0,1.299,'roller',171]]},
+ cnc_small:{width:2.44,parts:[[0,1.299,'roller',171]],rollerFlight:{speedFlightRatio:.06,minimumFlightDistanceMetres:.7,maximumFlightDistanceMetres:4.8}},
  cnc_big:{width:2.44,parts:[[0,1.584,'roller',276]]},
  cnc_kick:{width:2.44,parts:[[0,.667,'kicker',217]]},
  cnc_egg:{width:2.44,parts:[[0,2.317,'egg-lander',323]]},
@@ -18,8 +18,8 @@ const RAMP_CATALOG={
  trestle_24:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,2.4,'flat',396],[3.6,2.4,'linear-down',396]]},
  trestle_36:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,3.6,'flat',396],[4.8,2.4,'linear-down',396]]},
  trestle_48:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,4.8,'flat',396],[6,2.4,'linear-down',396]]},
- jump_trestle_12:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'linear-up',396],[3.367,1.2,'flat',396],[4.567,2.4,'linear-down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,minimumClearanceMetres:.85},
- jump_trestle_24:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'linear-up',396],[3.367,2.4,'flat',396],[5.767,2.4,'linear-down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,minimumClearanceMetres:.95}
+ jump_trestle_12:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'linear-up',396],[3.367,1.2,'flat',396],[4.567,2.4,'linear-down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,flightTimeScale:1.7,minimumClearanceMetres:1.05},
+ jump_trestle_24:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'linear-up',396],[3.367,2.4,'flat',396],[5.767,2.4,'linear-down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,flightTimeScale:1.8,minimumClearanceMetres:1.25}
 };
 
 const routeLength=points=>points.reduce((total,point,index)=>{
@@ -45,8 +45,8 @@ export function trackPlanFromDesign(input,base={}){
   const built=spec.parts.map(([offset,length,profile,heightMm,lateral=0,angleOffset=0])=>{
    const origin=transform(item,offset,lateral),piece={...item,x:origin.x,y:origin.y,angle:Number(item.angle||0)+angleOffset};
    const start=transform(piece,0,0),end=transform(piece,length,0);
-   const rollerFlight=String(input.eventId||base.eventId||'')==='518555'&&item.key==='cnc_small';
-   const surface={name:item.key,profile,heightMm,polygon:box(piece,0,length,spec.width),direction:[toPlan(start),toPlan(end)],launchCars:rollerFlight,speedFlightRatio:rollerFlight?.08:0,minimumFlightDistanceMetres:rollerFlight?.72:0,maximumFlightDistanceMetres:rollerFlight?2.4:0};
+   const rollerFlight=profile==='roller'&&spec.rollerFlight;
+   const surface={name:item.key,profile,heightMm,polygon:box(piece,0,length,spec.width),direction:[toPlan(start),toPlan(end)],launchCars:Boolean(rollerFlight),speedFlightRatio:Number(rollerFlight?.speedFlightRatio)||0,minimumFlightDistanceMetres:Number(rollerFlight?.minimumFlightDistanceMetres)||0,maximumFlightDistanceMetres:Number(rollerFlight?.maximumFlightDistanceMetres)||0};
    jumpSurfaces.push(surface);return surface;
   });
   if(spec.flight){

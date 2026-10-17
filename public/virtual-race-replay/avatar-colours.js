@@ -2,6 +2,7 @@ const clamp=value=>Math.max(0,Math.min(255,Math.round(value)));
 const hex=rgb=>`#${rgb.map(value=>clamp(value).toString(16).padStart(2,'0')).join('')}`;
 const distance=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
 const DRIVER_OVERRIDES={
+ 'CHRIS-GUNTER':{color:'#e6007e',accentColor:'#f1268f',secondaryColor:'#e6007e',tertiaryColor:'#ff70b7',wheelColor:'#f2f2ef',colorLayout:'mixed'},
  'RUSS-WILLIAMS':{color:'#e31886',accentColor:'#f4f5f2',secondaryColor:'#f4f5f2',tertiaryColor:'#969b9d',wheelColor:'#f1f2ed',colorLayout:'front-accent'}
 };
 
