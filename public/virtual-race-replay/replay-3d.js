@@ -84,6 +84,7 @@ function timingRow(entry,index,compact=false){
 }
 function addLiveTiming(){
   const wrap=viewer.container.querySelector('.c3-canvas-wrap'),panel=document.createElement('aside'),toolbar=viewer.container.querySelector('.c3-toolbar'),button=document.createElement('button');
+  viewer.container.classList.add('c3-timing-behind');
   panel.className='c3-timing-overlay';panel.dataset.liveTiming='';panel.setAttribute('aria-label','Live race timing');panel.innerHTML='<header><strong>Live timing</strong><span>Laps / total seconds</span></header><table><thead><tr><th>Pos</th><th>Driver</th><th>Laps / seconds</th></tr></thead><tbody data-live-timing-body></tbody></table>';
   button.type='button';button.dataset.timingToggle='';button.className='active';button.textContent='Race timings';button.setAttribute('aria-pressed','true');
   button.addEventListener('click',()=>{const visible=panel.hidden;panel.hidden=!visible;button.classList.toggle('active',visible);button.setAttribute('aria-pressed',String(visible));});
