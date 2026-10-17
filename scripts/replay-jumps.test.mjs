@@ -50,10 +50,10 @@ test('3D kicker boost raises the middle of the flight without moving either land
 });
 
 test('SWORD trestle launch keeps fast cars clearly airborne and lands near the far end',()=>{
- const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'jump_trestle_24',takeoffProfile:'kicker',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:396,gravity:9.81,minimumClearanceMetres:.7,landingAtEnd:true,landingInsetMetres:.2};
+ const box=(a,b)=>[[a,-5],[b,-5],[b,5],[a,5]],feature={name:'jump_trestle_24',takeoffProfile:'kicker',takeoff:box(20,26),landing:box(50,61),takeoffHeightMm:217,landingHeightMm:396,gravity:9.81,minimumClearanceMetres:.95,landingAtEnd:true,landingInsetMetres:.2};
  const lift=jumpProfile(samples,[],396,[feature],{routeLengthMetres:10,referenceHeightMm:396,kickerFlightTimeScale:1.55});
  let peak=0;for(let fraction=.26;fraction<=.5;fraction+=.001)peak=Math.max(peak,lift(fraction,16));
- assert(peak>=1.09,'fast cars should clear the trestle by about 70 cm');assert.equal(lift(.2,16),0);assert(lift(.58,16)>0);assert.equal(lift(.61,16),0);
+ assert(peak>=1.34,'fast cars should clear the trestle by about 95 cm');assert.equal(lift(.2,16),0);assert(lift(.58,16)>0);assert.equal(lift(.61,16),0);
 });
 
 test('3D tabletop flight clears the down ramp and touches down 20 cm before its end',()=>{
@@ -113,7 +113,7 @@ test('SWORD Round 1 design supplies measured 3D ramps to every race',async()=>{
  assert.deepEqual(plan.jumpFeatures.map(feature=>feature.name),['jump_trestle_24','cnc_k_wedge','corner_tt_right']);
  const corner=plan.jumpFeatures.find(feature=>feature.name==='corner_tt_right');assert.equal(corner.takeoffProfile,'tabletop-up');assert.equal(corner.landingProfile,'tabletop-down');assert.equal(corner.flightTimeScale,.8);assert.equal(corner.minimumClearanceMetres,.1);
  assert(Math.abs(corner.takeoff[0][0]-82.583)<.01);assert(Math.abs(corner.landing[0][0]-82.544)<.01);assert(corner.landing[1][0]-corner.landing[0][0]>79.9);
- const trestle=plan.jumpFeatures.find(feature=>feature.name==='jump_trestle_24');assert.equal(trestle.landingProfile,'up');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);
+ const trestle=plan.jumpFeatures.find(feature=>feature.name==='jump_trestle_24');assert.equal(trestle.landingProfile,'flat');assert.equal(trestle.landingAtEnd,true);assert.equal(trestle.landingInsetMetres,.2);assert.equal(trestle.minimumClearanceMetres,.95);
  assert(plan.jumpSurfaces.some(surface=>surface.name==='trestle_12'&&surface.profile==='up'));
 });
 
