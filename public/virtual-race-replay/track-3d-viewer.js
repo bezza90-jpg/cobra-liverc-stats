@@ -110,7 +110,7 @@ function heightProfile(label,t,height){
   return height;
 }
 
-function addRampPart(scene,item,spec,part,index){
+function addRampPart(scene,item,spec,part,index,options={}){
   let [offset,length,label]=part,width=Number(spec.width||2.4),height=Number(spec.partHeights?.[index]??spec.height??.04);
   let segments=/EGG|WEDGE/i.test(label)?28:/ROLLER|RIPPLE/i.test(label)?18:8,topRows=[];
   let shadowShift=height*.62,shadowLift=.034;
@@ -127,11 +127,11 @@ function addRampPart(scene,item,spec,part,index){
   for(let i=0;i<segments;i++){
     let a=topRows[i],b=topRows[i+1];
     scene.polygons.push(polygon([a[0],b[0],b[1],a[1]],'#c92731','#4a0b10','ramp'));
-    scene.polygons.push(polygon([localPoint(item,offset+length*i/segments,-width/2,.03),a[0],b[0],localPoint(item,offset+length*(i+1)/segments,-width/2,.03)],'#761019','#3c070b','ramp-side'));
-    scene.polygons.push(polygon([localPoint(item,offset+length*i/segments,width/2,.03),localPoint(item,offset+length*(i+1)/segments,width/2,.03),b[1],a[1]],'#8d121c','#3c070b','ramp-side'));
+    if(!options.omitNegativeSide)scene.polygons.push(polygon([localPoint(item,offset+length*i/segments,-width/2,.03),a[0],b[0],localPoint(item,offset+length*(i+1)/segments,-width/2,.03)],'#761019','#3c070b','ramp-side'));
+    if(!options.omitPositiveSide)scene.polygons.push(polygon([localPoint(item,offset+length*i/segments,width/2,.03),localPoint(item,offset+length*(i+1)/segments,width/2,.03),b[1],a[1]],'#8d121c','#3c070b','ramp-side'));
   }
-  scene.polygons.push(polygon([localPoint(item,offset,-width/2,.03),localPoint(item,offset,width/2,.03),topRows[0][1],topRows[0][0]],'#701019','#3c070b','ramp-side'));
-  scene.polygons.push(polygon([localPoint(item,offset+length,-width/2,.03),topRows.at(-1)[0],topRows.at(-1)[1],localPoint(item,offset+length,width/2,.03)],'#701019','#3c070b','ramp-side'));
+  if(!options.omitStartCap)scene.polygons.push(polygon([localPoint(item,offset,-width/2,.03),localPoint(item,offset,width/2,.03),topRows[0][1],topRows[0][0]],'#701019','#3c070b','ramp-side'));
+  if(!options.omitEndCap)scene.polygons.push(polygon([localPoint(item,offset+length,-width/2,.03),topRows.at(-1)[0],topRows.at(-1)[1],localPoint(item,offset+length,width/2,.03)],'#701019','#3c070b','ramp-side'));
 }
 
 function cornerPart(item,part){
@@ -192,7 +192,8 @@ function buildScene(design){
     if(spec.corner){
       for(let [index,part] of spec.parts.entries()){
         const piece=cornerPart(item,part),pieceSpec={...spec,partHeights:[spec.partHeights[index]]};
-        addRampPart(scene,piece.item,pieceSpec,piece.part,0);
+        const right=item.key==='corner_tt_right',joinOptions=index===1?(right?{omitNegativeSide:true}:{omitPositiveSide:true}):index===2?{omitStartCap:true}:{};
+        addRampPart(scene,piece.item,pieceSpec,piece.part,0,joinOptions);
       }
     }else for(let [index,part] of (spec.parts||[]).entries())addRampPart(scene,item,spec,part,index);
     if(spec.parts?.length){
