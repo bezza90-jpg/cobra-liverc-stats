@@ -16,12 +16,14 @@ export function analyseAvatarPixels(data,width,height){
    const i=(y*width+x)*4,r=data[i],g=data[i+1],b=data[i+2],a=data[i+3],high=Math.max(r,g,b),low=Math.min(r,g,b),chroma=high-low;
    if(a<80||high<58||(colourOnly&&chroma<24)||(!colourOnly&&high>244&&chroma<12))continue;
    const q=[r,g,b].map(value=>Math.min(7,value>>5)),key=q.join(','),weight=(a/255)*(1+chroma/95);
-   bins.set(key,(bins.get(key)||0)+weight);
+   const bin=bins.get(key)||{score:0,x:0,y:0};bin.score+=weight;bin.x+=x*weight;bin.y+=y*weight;bins.set(key,bin);
   }
-  return[...bins.entries()].map(([key,score])=>({rgb:key.split(',').map(value=>Number(value)*32+16),score})).sort((a,b)=>b.score-a.score);
+  return[...bins.entries()].map(([key,bin])=>({rgb:key.split(',').map(value=>Number(value)*32+16),score:bin.score,x:bin.x/bin.score/width,y:bin.y/bin.score/height})).sort((a,b)=>b.score-a.score);
  };
- const shell=histogram(.04,.76,true),lower=histogram(.53,.98,false),primary=shell[0]?.rgb,accent=shell.find(item=>primary&&distance(item.rgb,primary)>72)?.rgb,wheel=lower[0]?.rgb;
- return primary?{color:hex(primary),accentColor:hex(accent||primary),wheelColor:hex(wheel||accent||[146,155,149])}:null;
+ const shell=histogram(.04,.76,true),lower=histogram(.53,.98,false),primaryBin=shell[0],primary=primaryBin?.rgb,accentBin=shell.find(item=>primary&&distance(item.rgb,primary)>72),accent=accentBin?.rgb,thirdBin=shell.find(item=>primary&&distance(item.rgb,primary)>58&&(!accent||distance(item.rgb,accent)>58)),third=thirdBin?.rgb,wheel=lower[0]?.rgb;
+ if(!primary)return null;
+ const horizontal=accentBin&&primaryBin?accentBin.x-primaryBin.x:0,vertical=accentBin&&primaryBin?accentBin.y-primaryBin.y:0,colorLayout=Math.abs(horizontal)>.16?(horizontal>0?'front-accent':'rear-accent'):Math.abs(vertical)>.12?(vertical<0?'top-accent':'lower-accent'):'mixed';
+ return{color:hex(primary),accentColor:hex(accent||primary),secondaryColor:hex(accent||primary),tertiaryColor:hex(third||accent||primary),wheelColor:hex(wheel||accent||[146,155,149]),colorLayout};
 }
 
 export async function loadAvatarColours(url){
