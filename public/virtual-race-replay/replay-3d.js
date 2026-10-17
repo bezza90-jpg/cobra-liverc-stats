@@ -1,6 +1,6 @@
 import {prepare,ordered,positionAt,visualFraction,finishFraction} from './engine.js?v=20261017-finish';
 import {paceMap} from './pace.js?v=20261017-race';
-import {jumpProfile} from './jumps.js?v=20261017-landers';
+import {jumpProfile} from './jumps.js?v=20261017-tabletop-flight';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
 import {trackPlanFromDesign} from './track-designs.js?v=20261016-3d';
 import {avatarThumbnailPath,loadAvatarColours} from './avatar-colours.js?v=20261017-1';
@@ -21,7 +21,7 @@ function configurePhysics(){
   const plan=trackPlanFromDesign(design),samples=planSamples(plan);
   const features=plan.jumpFeatures.map(feature=>({...feature,takeoff:feature.takeoff.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),landing:feature.landing.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
   const surfaces=plan.jumpSurfaces.map(surface=>({...surface,polygon:surface.polygon.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{let p=routePoint(point,plan);return[p.x,p.y]})}));
-  const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55,tabletopFlightTimeScale:1.8};
+  const liftOptions={surfaces,routeLengthMetres:plan.routeLengthMetres,referenceHeightMm:323,gravity:9.81,kickerFlightTimeScale:1.55,tabletopFlightTimeScale:1.8,tabletopMinimumClearanceMetres:.65};
   lifts={
     1:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1}),
     2:jumpProfile(samples,[],.323,features,{...liftOptions,flightTimeScale:1.08}),
