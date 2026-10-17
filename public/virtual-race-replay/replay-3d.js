@@ -1,8 +1,8 @@
 import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress} from './engine.js?v=20261017-finish';
 import {paceMap} from './pace.js?v=20261017-race';
-import {jumpProfile} from './jumps.js?v=20261017-speed-rollers';
+import {jumpProfile} from './jumps.js?v=20261017-corner-tabletop';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
-import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-shared-jumps';
+import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-corner-tabletop';
 import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-5';
 
 const $=id=>document.getElementById(id);
