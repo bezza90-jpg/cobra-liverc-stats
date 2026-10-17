@@ -2,7 +2,7 @@ import {prepare,ordered,positionAt,visualFraction,finishFraction} from './engine
 import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-tabletop-flight';
 import {routePath,routePoint} from './track-layouts.js?v=20261004-presentation';
-import {trackPlanFromDesign} from './track-designs.js?v=20261016-3d';
+import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-season-3d';
 import {avatarThumbnailPath,loadAvatarColours} from './avatar-colours.js?v=20261017-1';
 
 const $=id=>document.getElementById(id);
@@ -13,6 +13,14 @@ let eventData,design,avatarManifest={},viewer,race,drivers=[],pace,lift,lifts={}
 const avatarColourCache=new Map();
 
 async function json(url){const response=await fetch(url);if(!response.ok)throw Error(`Could not load ${url}`);return response.json();}
+async function loadDesign(){
+  const response=await fetch(`designs/${eventId}.json`);
+  if(response.ok)return response.json();
+  if(response.status!==404)throw Error(`Could not load the 3D track design (${response.status})`);
+  const plans=await json('track-plans.json'),plan=plans[eventId]||plans[`date:${eventData.date}`];
+  if(!plan||plan.routeStatus!=='confirmed')throw Error('A confirmed track plan is not available for this event.');
+  return designFromTrackPlan(plan);
+}
 function surname(name){let clean=String(name||'').replace(/["“”]/g,'').trim().split(/\s+/);return clean.at(-1)||name;}
 function rawRoute(){let route=viewer.scene.route.map(({x,y})=>({x,y}));return [...route,route[0]];}
 function planSamples(plan){let path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',routePath(plan.points));let length=path.getTotalLength();return Array.from({length:901},(_,i)=>path.getPointAtLength(length*i/900));}
@@ -62,11 +70,11 @@ async function loadRace(id){
 }
 async function start(){
   try{
-    [eventData,design,avatarManifest]=await Promise.all([json(`events/${eventId}.json`),json(`designs/${eventId}.json`),json('../data/car-avatars.json').catch(()=>({}))]);
+    [eventData,avatarManifest]=await Promise.all([json(`events/${eventId}.json`),json('../data/car-avatars.json').catch(()=>({}))]);design=await loadDesign();
     viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:true});configurePhysics();
     viewer.container.querySelector('[data-height]')?.addEventListener('change',()=>requestAnimationFrame(()=>render(true)));
     for(const item of eventData.races){let option=new Option(`${item.round} · ${item.name}`,item.id);$('raceSelect').append(option);}
-    let requested=params.get('race'),initial=eventData.races.some(item=>item.id===requested)?requested:'7121723';$('raceSelect').value=initial;await loadRace(initial);
+    let requested=params.get('race'),initial=eventData.races.some(item=>item.id===requested)?requested:eventData.races[0]?.id;if(!initial)throw Error('No recorded races are available for this event.');$('raceSelect').value=initial;await loadRace(initial);
   }catch(error){$('status').textContent=error.message;$('status').className='error';console.error(error);}
 }
 
