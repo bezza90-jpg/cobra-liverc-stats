@@ -3,6 +3,8 @@ export function positionAt(driver,time){const c=driver.crossings,t=Math.max(0,ti
 export function ordered(drivers,time){return drivers.map(d=>({driver:d,...positionAt(d,time)})).sort((a,b)=>b.progress-a.progress||a.driver.finalPosition-b.driver.finalPosition);}
 export function finishFraction(driver,drivers,spacing=.006){const order=[...drivers].sort((a,b)=>a.finalPosition-b.finalPosition||a.number-b.number),slot=order.findIndex(item=>item.id===driver.id);return Math.max(1,order.length-slot)*spacing%1;}
 export function timeAtProgress(driver,progress){if(progress>driver.laps.length)return null;const i=Math.floor(progress);return i>=driver.laps.length?driver.total:driver.crossings[i]+(progress-i)*(driver.crossings[i+1]-driver.crossings[i]);}
+export function raceTimeAtPosition(position){const driver=position.driver,completed=Math.min(position.completed,driver.laps.length);return position.finished?(Number.isFinite(Number(driver.officialTime))?Number(driver.officialTime):driver.total):(driver.crossings[completed]||0);}
+export function raceTimingAtPosition(position){const completed=position.finished?position.driver.laps.length:Math.min(position.completed,position.driver.laps.length);return`${completed} / ${raceTimeAtPosition(position).toFixed(2)}`;}
 
 // Finals approach the first crossing from their grid. Heat runs share a
 // simultaneous loop start and use each driver's recorded elapsed lap times.
