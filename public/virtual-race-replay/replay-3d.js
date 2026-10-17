@@ -75,7 +75,7 @@ function timingRow(entry,index,compact=false){
   if(index===0)row.className='leader';
   if(compact){
     const position=document.createElement('td'),name=document.createElement('td'),result=document.createElement('td');
-    position.textContent=String(index+1);name.textContent=surname(entry.driver.name);name.title=entry.driver.name;result.textContent=timingFor(entry);row.append(position,name,result);
+    position.textContent=String(index+1);name.textContent=entry.driver.name;result.textContent=timingFor(entry);row.append(position,name,result);
   }else{
     const name=document.createElement('span'),result=document.createElement('strong');
     name.textContent=`${entry.driver.name} · car ${entry.driver.number}`;result.textContent=timingFor(entry);row.append(name,result);
@@ -85,7 +85,7 @@ function timingRow(entry,index,compact=false){
 function addLiveTiming(){
   const wrap=viewer.container.querySelector('.c3-canvas-wrap'),panel=document.createElement('aside'),toolbar=viewer.container.querySelector('.c3-toolbar'),button=document.createElement('button');
   viewer.container.classList.add('c3-timing-behind');
-  panel.className='c3-timing-overlay';panel.dataset.liveTiming='';panel.setAttribute('aria-label','Live race timing');panel.innerHTML='<header><strong>Live timing</strong><span>Laps / total seconds</span></header><table><thead><tr><th>Pos</th><th>Driver</th><th>Laps / seconds</th></tr></thead><tbody data-live-timing-body></tbody></table>';
+  panel.className='c3-timing-overlay';panel.dataset.liveTiming='';panel.setAttribute('aria-label','Live race timing');panel.innerHTML='<header><strong data-live-timing-title>Live timing</strong><span>Laps / total seconds</span></header><table><thead><tr><th>Pos</th><th>Driver</th><th>Laps / seconds</th></tr></thead><tbody data-live-timing-body></tbody></table>';
   button.type='button';button.dataset.timingToggle='';button.className='active';button.textContent='Race timings';button.setAttribute('aria-pressed','true');
   button.addEventListener('click',()=>{const visible=panel.hidden;panel.hidden=!visible;button.classList.toggle('active',visible);button.setAttribute('aria-pressed',String(visible));});
   toolbar.insertBefore(button,toolbar.querySelector('.c3-grow'));wrap.append(panel);
@@ -107,7 +107,7 @@ function syncUrl(){let url=new URL(location.href);url.searchParams.set('event',e
 async function loadRace(id){
   cancelAnimationFrame(frame);playing=false;$('play').textContent='▶ Play';race=await json(`races/${id}.json`);drivers=race.drivers.slice().sort((a,b)=>a.number-b.number).map((driver,index)=>({...prepare(driver),color:palette[index%palette.length]}));
   await Promise.all(drivers.map(async driver=>{let url=avatarThumbnailPath(avatarManifest,driver.key,race.className);if(url){let profile=avatarColourCache.get(url);if(profile===undefined){try{profile=await loadAvatarColours(url);}catch{profile=null;}avatarColourCache.set(url,profile);}if(profile)Object.assign(driver,profile);}let override=avatarColourOverride(driver.key);if(override)Object.assign(driver,override);}));
-  duration=Math.max(...drivers.map(driver=>driver.total));retiredSlots=new Map(drivers.filter(driver=>driver.total<duration-Math.max(30,driver.typical*2)).sort((a,b)=>a.total-b.total||a.number-b.number).map((driver,index)=>[driver.id,index]));$('timeline').max=String(duration);viewer.container.querySelector('[data-replay-time]').max=String(duration);$('endTime').textContent=clock(duration);$('raceTitle').textContent=`${race.name} · ${race.round}`;$('official').href=race.source;
+  duration=Math.max(...drivers.map(driver=>driver.total));retiredSlots=new Map(drivers.filter(driver=>driver.total<duration-Math.max(30,driver.typical*2)).sort((a,b)=>a.total-b.total||a.number-b.number).map((driver,index)=>[driver.id,index]));$('timeline').max=String(duration);viewer.container.querySelector('[data-replay-time]').max=String(duration);$('endTime').textContent=clock(duration);$('raceTitle').textContent=`${race.name} · ${race.round}`;viewer.container.querySelector('[data-live-timing-title]').textContent=race.name;$('official').href=race.source;
   const focusOptions=()=>[new Option('All drivers',''),...drivers.map(driver=>new Option(`${driver.number}. ${driver.name}`,driver.id))];$('focus').replaceChildren(...focusOptions());viewer.container.querySelector('[data-replay-focus]').replaceChildren(...focusOptions());configureGrid();time=0;syncUrl();render(true);
 }
 async function start(){
