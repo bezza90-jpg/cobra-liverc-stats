@@ -6,7 +6,7 @@ import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261017-finals-grid';
 import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-trestle-hop-1';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
-import {prepare,ordered,timeAtProgress,visualFraction} from './engine.js';
+import {prepare,ordered,timeAtProgress,visualFraction,raceTimingAtPosition} from './engine.js?v=20261018-lap-seconds-1';
 const $=id=>document.getElementById(id),svgNS='http://www.w3.org/2000/svg';
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=s=>`${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`;
@@ -132,7 +132,7 @@ async function loadRace(autoplay=false){
  if(!force&&Math.abs(time-lastTable)<.15)return;lastTable=time;$('rows').replaceChildren();
  standings.forEach((s,i)=>{const d=s.driver;if(comparisonKeys.length&&!comparisonKeys.includes(d.key))return;const tr=document.createElement('tr');if(focus===d.id)tr.className='chosen';let gap='Leader';if(i){if(time>=duration){const lapGap=leader.driver.laps.length-d.laps.length;gap=lapGap?`+${lapGap} lap${lapGap===1?'':'s'}`:`+${(d.officialTime-leader.driver.officialTime).toFixed(2)}s`;}else{const behind=leader.progress-s.progress;if(behind>=1)gap=`+${Math.floor(behind)} lap${Math.floor(behind)===1?'':'s'}`;else{const at=timeAtProgress(d,leader.progress);gap=at===null?'Finished':`~+${Math.max(0,at-time).toFixed(1)}s`;}}}
  const delta=s.lapTime-d.typical,slow=!s.finished&&s.lap>1&&s.lapTime>d.typical*1.1;
- for(const val of [i+1,d.name,s.finished?`Finished · ${s.completed}`:`${s.lap} / ${d.laps.length}`,gap,`${s.lapTime.toFixed(3)}s`,s.lap===1&&!s.finished?'Opening lap':`${delta>=0?'+':''}${delta.toFixed(2)}s${slow?' · slower lap':''}`]){const td=document.createElement('td');td.textContent=val;tr.append(td)}
+ for(const val of [i+1,d.name,raceTimingAtPosition(s),gap,`${s.lapTime.toFixed(3)}s`,s.lap===1&&!s.finished?'Opening lap':`${delta>=0?'+':''}${delta.toFixed(2)}s${slow?' · slower lap':''}`]){const td=document.createElement('td');td.textContent=val;tr.append(td)}
  const chip=document.createElement('span');chip.className='chip';chip.style.background=d.color;chip.textContent=d.number;tr.children[1].prepend(chip);if(slow)tr.children[5].className='slow';if(s.finished)tr.children[2].className='finished';$('rows').append(tr);});}
  function setPlaying(value){playing=value;last=performance.now();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';render(true);}
  function seek(value){time=Math.max(0,Math.min(duration,value));if(time>=duration)setPlaying(false);render(true);}
