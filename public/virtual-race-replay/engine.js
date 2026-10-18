@@ -5,6 +5,7 @@ export function finishFraction(driver,drivers,spacing=.006){const order=[...driv
 export function timeAtProgress(driver,progress){if(progress>driver.laps.length)return null;const i=Math.floor(progress);return i>=driver.laps.length?driver.total:driver.crossings[i]+(progress-i)*(driver.crossings[i+1]-driver.crossings[i]);}
 export function raceTimeAtPosition(position){const driver=position.driver,completed=Math.min(position.completed,driver.laps.length);return position.finished?(Number.isFinite(Number(driver.officialTime))?Number(driver.officialTime):driver.total):(driver.crossings[completed]||0);}
 export function raceTimingAtPosition(position){const completed=position.finished?position.driver.laps.length:Math.min(position.completed,position.driver.laps.length);return`${completed} / ${raceTimeAtPosition(position).toFixed(2)}`;}
+export function lapPerformanceAtPosition(position){const delta=position.lapTime-position.driver.typical,slow=!position.finished&&position.lap>1&&position.lapTime>position.driver.typical*1.1;return{lapTime:`${position.lapTime.toFixed(3)}s`,comparison:position.lap===1&&!position.finished?'Opening lap':`${delta>=0?'+':''}${delta.toFixed(2)}s${slow?' · slower lap':''}`,slow};}
 
 // Finals approach the first crossing from their grid. Heat runs share a
 // simultaneous loop start and use each driver's recorded elapsed lap times.
