@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync,existsSync} from 'node:fs';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
 import {planPoint,routePath,straightFor,routePoint,gridPositions,planBorder} from '../public/virtual-race-replay/track-layouts.js';
-import {prepare,positionAt,visualFraction,finishFraction,raceTimeAtPosition,raceTimingAtPosition} from '../public/virtual-race-replay/engine.js';
+import {prepare,positionAt,visualFraction,finishFraction,raceTimeAtPosition,raceTimingAtPosition,lapPerformanceAtPosition} from '../public/virtual-race-replay/engine.js';
 const base=new URL('../public/virtual-race-replay/',import.meta.url);
 {
  const driver=prepare({officialTime:47.1,laps:[{seconds:14.5},{seconds:16.25},{seconds:16.37}]}),running={driver,...positionAt(driver,20)},finished={driver,...positionAt(driver,driver.total)};
@@ -10,6 +10,8 @@ const base=new URL('../public/virtual-race-replay/',import.meta.url);
  assert.equal(raceTimingAtPosition(running),'1 / 14.50','running timing matches the 3D laps / seconds format');
  assert.equal(raceTimeAtPosition(finished),47.1,'finished timing uses official total race seconds');
  assert.equal(raceTimingAtPosition(finished),'3 / 47.10','finished timing matches the 3D laps / seconds format');
+ assert.deepEqual(lapPerformanceAtPosition(running),{lapTime:'16.250s',comparison:'-0.12s',slow:false},'lap performance matches the 2D timing columns');
+ const slower={driver,lapTime:20,lap:3,finished:false};assert.deepEqual(lapPerformanceAtPosition(slower),{lapTime:'20.000s',comparison:'+3.63s · slower lap',slow:true},'slower-lap comparison is shared by both replays');
 }
 // Sample the actual SVG routes without a browser dependency (quadratic curves
 // are densely flattened before equal-distance resampling).

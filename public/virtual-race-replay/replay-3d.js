@@ -1,4 +1,4 @@
-import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress} from './engine.js?v=20261017-finish';
+import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress,raceTimingAtPosition,lapPerformanceAtPosition} from './engine.js?v=20261018-timing-columns-1';
 import {paceMap} from './pace.js?v=20261017-race';
 import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
 import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-trestle-hop-1';
@@ -8,7 +8,6 @@ import {sharedRaceVideo} from '../assets/shared-race-video.js?v=20260929-shared-
 const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padStart(4,'0')}`;
-const seconds=number=>Number(number||0).toFixed(2);
 const params=new URLSearchParams(location.search);
 let eventId=params.get('event')||'',catalogEvents=[],eventData,design,avatarManifest={},raceVideos=[],viewer,race,drivers=[],pace,lift,lifts={},surfaceLifts={},retiredSlots=new Map(),time=0,duration=0,playing=false,last=0,frame=0;
 const avatarColourCache=new Map();
@@ -80,11 +79,7 @@ function advanceFollowDriver(){
   const order=ordered(drivers,time),index=order.findIndex(entry=>String(entry.driver.id)===focus),below=index>=0?order.slice(index+1):[],above=index>0?order.slice(0,index):[],next=[...below,...above].find(entry=>!entry.finished);if(!next)return;
   const id=String(next.driver.id);$('focus').value=id;viewer.container.querySelector('[data-replay-focus]').value=id;viewer.setFollowCar(id);
 }
-function timingFor(entry){
-  const driver=entry.driver,completed=Math.min(entry.completed,driver.laps.length),finished=entry.finished||time>=driver.total;
-  const elapsed=finished?(Number.isFinite(Number(driver.officialTime))?Number(driver.officialTime):driver.total):(driver.crossings[completed]||0);
-  return`${finished?driver.laps.length:completed} / ${seconds(elapsed)}`;
-}
+function timingFor(entry){return raceTimingAtPosition(entry);}
 function timeToLeader(entry,leader,index){
   if(index===0)return'LEADER';
   const leaderAtProgress=timeAtProgress(leader.driver,entry.progress),reference=entry.finished?entry.driver.total:time;
@@ -94,8 +89,8 @@ function timingRow(entry,index,compact=false,leader=null){
   const row=document.createElement(compact?'tr':'li');
   if(index===0)row.className='leader';
   if(compact){
-    const position=document.createElement('td'),name=document.createElement('td'),result=document.createElement('td'),gap=document.createElement('td');
-    position.textContent=String(index+1);name.textContent=entry.driver.name;result.textContent=timingFor(entry);gap.textContent=timeToLeader(entry,leader,index);row.append(position,name,result,gap);
+    const position=document.createElement('td'),name=document.createElement('td'),result=document.createElement('td'),gap=document.createElement('td'),lapTime=document.createElement('td'),comparison=document.createElement('td'),performance=lapPerformanceAtPosition(entry);
+    position.textContent=String(index+1);name.textContent=entry.driver.name;result.textContent=timingFor(entry);gap.textContent=timeToLeader(entry,leader,index);lapTime.textContent=performance.lapTime;comparison.textContent=performance.comparison;comparison.classList.toggle('slow',performance.slow);row.append(position,name,result,gap,lapTime,comparison);
   }else{
     const name=document.createElement('span'),result=document.createElement('strong');
     name.textContent=`${entry.driver.name} · car ${entry.driver.number}`;result.textContent=`${timingFor(entry)} · ${timeToLeader(entry,leader,index)}`;row.append(name,result);
@@ -105,7 +100,7 @@ function timingRow(entry,index,compact=false,leader=null){
 function addLiveTiming(){
   const wrap=viewer.container.querySelector('.c3-canvas-wrap'),panel=document.createElement('aside'),toolbar=viewer.container.querySelector('.c3-toolbar'),button=document.createElement('button');
   viewer.container.classList.add('c3-timing-behind');
-  panel.className='c3-timing-overlay';panel.dataset.liveTiming='';panel.tabIndex=0;panel.setAttribute('role','button');panel.setAttribute('aria-pressed','false');panel.setAttribute('aria-label','Live race timing. Activate to bring the timing screen in front of the track.');panel.title='Click or tap to move the timing screen in front of or behind the track';panel.innerHTML='<header><strong data-live-timing-title>Live timing</strong><span>Laps / seconds · gap (s) to leader</span></header><table><thead><tr><th>Pos</th><th>Driver</th><th>Laps / seconds</th><th>To leader</th></tr></thead><tbody data-live-timing-body></tbody></table>';
+  panel.className='c3-timing-overlay';panel.dataset.liveTiming='';panel.tabIndex=0;panel.setAttribute('role','button');panel.setAttribute('aria-pressed','false');panel.setAttribute('aria-label','Live race timing. Activate to bring the timing screen in front of the track.');panel.title='Click or tap to move the timing screen in front of or behind the track';panel.innerHTML='<header><strong data-live-timing-title>Live timing</strong><span>Laps / seconds · gap · lap performance</span></header><table><thead><tr><th>Pos</th><th>Driver</th><th>Laps / seconds</th><th>To leader</th><th>Lap time</th><th><span class="c3-full-heading">Compared with typical lap</span><span class="c3-short-heading">Vs typical</span></th></tr></thead><tbody data-live-timing-body></tbody></table>';
   const ghost=panel.cloneNode(true);ghost.classList.add('c3-timing-ghost');ghost.removeAttribute('data-live-timing');ghost.dataset.liveTimingGhost='';ghost.tabIndex=-1;ghost.removeAttribute('role');ghost.removeAttribute('aria-pressed');ghost.setAttribute('aria-hidden','true');ghost.removeAttribute('title');
   const setTimingFront=front=>{viewer.container.classList.toggle('c3-timing-front',front);panel.setAttribute('aria-pressed',String(front));panel.setAttribute('aria-label',`Live race timing. Activate to move the timing screen ${front?'behind':'in front of'} the track.`);};
   setTimingFront(true);
