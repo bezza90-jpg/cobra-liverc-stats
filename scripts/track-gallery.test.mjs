@@ -19,6 +19,10 @@ test('track gallery flyovers follow the measured 3D design files',()=>{
   assert.match(replay,/params\.get\('autoplay'\)===\s*'1'/);
   assert.match(replay,/raceFlyoverMode&&!trackOnlyMode\)viewer\.startFlyover\(true\)/);
   assert.match(replay,/autoPlay&&!trackOnlyMode\)setPlaying\(true\)/);
+  assert.match(replay,/document\.body\.classList\.add\('race-flyover-mode'\)/);
+  const replayCss=readFileSync(new URL('virtual-race-replay/replay-3d.css',publicRoot),'utf8');
+  assert.match(replayCss,/\.race-flyover-mode main\{width:100%;height:100dvh/);
+  assert.match(replayCss,/\.race-flyover-mode #viewer[^}]+height:100dvh!important/);
   assert.match(replay,/params\.get\('explore'\)===\s*'track'/);
   assert.match(replay,/trackOnlyMode\?\[\]:drivers\.map\(carState\)/);
 });
