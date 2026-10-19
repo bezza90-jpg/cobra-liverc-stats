@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-19T11:15:31.949Z",
+  "updatedAt": "2026-10-19T17:30:21.280Z",
   "ticketLimits": {
     "Junior Racers": 10,
     "2-Wheel Drive Buggy": 64,
@@ -14,6 +14,34 @@
       "driverName": "BOB GELSTHARP",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3624077",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "DAN PULLEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5811289",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "DAVID MILFORD",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5097267",
+      "chassis": "R1 Wurks",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "JON PAISLEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2223753",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MARK HICKS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3753291",
       "chassis": "Schumacher",
       "transponderSource": "wix"
     },
@@ -32,6 +60,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "SIMON FISHER",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2189851",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "STEVE CURTIS-RICH",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6196241",
@@ -39,9 +74,44 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "THOMAS SPENCER JENKINS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5749969",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "BOB GELSTHARP",
       "className": "4-Wheel Drive Buggy",
       "transponder": "9135402",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "DAN PULLEY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7832340",
+      "chassis": "PR",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "DAVID MILFORD",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "5097267",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "FRAN BRAVERY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "9746100",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "JON PAISLEY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "2840842",
       "chassis": "Schumacher",
       "transponderSource": "wix"
     },
@@ -72,10 +142,31 @@
       "transponder": "6155425",
       "chassis": "Schumacher",
       "transponderSource": "wix"
+    },
+    {
+      "driverName": "THOMAS SPENCER JENKINS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "5749969",
+      "chassis": "TLR",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "TIM BRAVERY",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7226235",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "SEB FISHER",
+      "className": "Junior Racers",
+      "transponder": "6645548",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
     }
   ],
   "entrySources": {
-    "wix": 0,
+    "wix": 13,
     "admin": 9
   }
 }
