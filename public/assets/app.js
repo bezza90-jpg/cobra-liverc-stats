@@ -1,5 +1,5 @@
 import {canonicalDriverKey} from './driver-identity.js';
-import {buildCRatings,driverRatingClasses} from './c-rating.js?v=20261019-crating2';
+import {buildCRatings,driverRatingClasses} from './c-rating.js?v=20261019-crating3';
 import {buildPaceIndex,paceSummary} from './pace-index.js?v=20261019-pace1';
 import {createAvatarLoader} from './avatar-loader.js';
 import {trackerDrivers} from './tracker-priority.js';
@@ -198,7 +198,7 @@ function ensureEnhancedMarkup() {
           <section class="profile-section consistency-trend-panel crating-panel" id="driverCRatingPanel" hidden>
             <div class="consistency-trend-heading"><div><p class="eyebrow">COBRA driver skill rating</p><h3>cRating</h3></div><div class="consistency-trend-controls"><label>Class<select id="driverCRatingClass"></select></label></div></div>
             <div id="driverCRatingChart" aria-live="polite"></div>
-            <p class="definition">cRating starts at 1500 and changes after every published final. Finishing ahead of highly rated drivers earns more; losing to lower-rated drivers costs more. Ratings are separate for each class and remain provisional until five finals.</p>
+            <p class="definition">cRating starts at 1500 and changes after every published final. Finishing ahead of highly rated drivers earns more; losing to lower-rated drivers costs more. Below 1000, losses taper progressively towards a 500-point soft floor while gains remain fully available. Ratings are separate for each class and remain provisional until five finals.</p>
           </section>
           <section class="profile-section"><h3>Class breakdown</h3><div class="table-wrap compact"><table>
             <thead><tr><th>Class</th><th>Entries</th><th>Runs</th><th>Laps</th><th>Distance</th><th>Track time</th><th>Finals</th><th>Avg overall</th><th>Best</th><th>Top 5</th><th>Podiums</th><th>Overall wins</th><th>Race wins</th><th>TQs</th><th>Performance</th><th>Fastest lap</th><th>Avg consistency</th></tr></thead>
