@@ -5,8 +5,8 @@
   },
   "reservedByType": {
     "sword": {
-      "2-Wheel Drive Buggy":["MATTHEW-HODGES","BOBTECH","STEVE-CURTIS-RICH","MIKE-HYSIAK"],
-      "4-Wheel Drive Buggy":["MATTHEW-HODGES","BOBTECH","STEVE-CURTIS-RICH","MIKE-HYSIAK","BRUCE"]
+      "2-Wheel Drive Buggy":["MATTHEW-HODGES","BOBTECH","STEVE-CURTIS-RICH","MIKE-DRISCOLL"],
+      "4-Wheel Drive Buggy":["MATTHEW-HODGES","BOBTECH","STEVE-CURTIS-RICH","MIKE-DRISCOLL","BRUCE"]
     },
     "club": {}
   },
