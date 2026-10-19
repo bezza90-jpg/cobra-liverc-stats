@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-19T01:16:45.478Z",
+  "updatedAt": "2026-10-19T01:21:02.326Z",
   "entries": [
     {
       "driverKey": "MATTHEW-HODGES",
@@ -57,6 +57,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix",
       "transponder": "6155425"
     },
     {
@@ -86,6 +87,7 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix",
       "transponder": "4950687"
     }
   ]
