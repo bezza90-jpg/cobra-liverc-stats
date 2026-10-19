@@ -24,6 +24,10 @@ test('only an exact seven digit number can update the public entry',()=>{
   assert.equal(entry.chassis,'R1 Wurks');
   guest.guestDetails.formResponse.inputValues[0].value='ABC123';
   assert.equal(publicEntry(guest,order,{'2WD Transponder Number':'field-2wd'}).transponder,'');
+  guest.guestDetails.formResponse.inputValues[0].value='0000000';
+  assert.equal(publicEntry(guest,order,{'2WD Transponder Number':'field-2wd'}).transponder,'');
+  guest.guestDetails.formResponse.inputValues[0].value='9999999';
+  assert.equal(publicEntry(guest,order,{'2WD Transponder Number':'field-2wd'}).transponder,'');
 });
 test('automatic Wix event rolls at UK midnight',()=>{
   assert.equal(londonDate(new Date('2026-10-04T22:59:59Z')),'2026-10-04');
@@ -61,6 +65,12 @@ test('a paid double-class ticket expands both selected classes and their own car
 test('paid admin orders are read from tickets even when missing from the guest query',()=>{
   const orders=[{status:'PAID',tickets:[{...ticket,guestDetails:attendingGuest.guestDetails}]},{status:'PENDING',tickets:[{...ticket,ticketNumber:'T2',guestDetails:{firstName:'Martin',lastName:'Owen'}}]}];
   assert.deepEqual(entriesFromOrders(orders,[],{}).map(row=>row.driverName),['MATTHEW HODGES']);
+});
+test('newer paid orders are processed last so their chassis and car details win',()=>{
+  const older={status:'PAID',createdDate:'2026-10-20T17:00:00Z',tickets:[{...ticket,ticketNumber:'OLD',guestDetails:{...attendingGuest.guestDetails,form:{inputValues:[{inputName:'chassis',value:'Schumacher'}]}}}]};
+  const newer={status:'PAID',createdDate:'2026-10-20T18:00:00Z',tickets:[{...ticket,ticketNumber:'NEW',guestDetails:{...attendingGuest.guestDetails,form:{inputValues:[{inputName:'chassis',value:'Associated'}]}}}]};
+  const rows=entriesFromOrders([newer,older],[],{'2WD Chassis':'chassis'});
+  assert.deepEqual(rows.map(row=>row.chassis),['Schumacher','Associated']);
 });
 test('double-class selections can come from the matching buyer checkout form',()=>{
   const order={status:'PAID',firstName:'Matthew',lastName:'Hodges',checkoutForm:{inputValues:[{inputName:'classes',values:['2WD','Vintage']}]},tickets:[{...ticket,name:'Adult Double Class'}]};

@@ -1,5 +1,6 @@
 import {readFile} from 'node:fs/promises';
 import {mergeCurrentWixEntries,applyConfirmedChassis} from '../public/assets/event-entry-merge.js';
+import {validTransponder} from '../public/assets/transponder-number.js';
 
 const file = async name => JSON.parse(await readFile(new URL(`../public/data/${name}`, import.meta.url), 'utf8'));
 const key = row => `${String(row.driverName || '').trim().toUpperCase()}|${String(row.className || '').trim().toUpperCase()}`;
@@ -26,7 +27,7 @@ if (wix?.entries?.length && (!wix.eventDate || wix.eventDate === published.date)
     if (!shown && row.className === 'Junior Racers' && actualByName.get(nameKey(row))) return false;
     if (!shown) return true;
     return (row.chassis && String(shown.chassis || '').toUpperCase() !== String(row.chassis).toUpperCase()) ||
-      (/^\d{7}$/.test(String(row.transponder || '')) && row.transponder !== '1234567' && row.transponderSource !== 'history' && String(shown.transponder || '') !== String(row.transponder));
+      (validTransponder(row.transponder) && row.transponderSource !== 'history' && String(shown.transponder || '') !== String(row.transponder));
   });
   if (problems.length) throw Error(`Current Wix entries differ from the public list: ${problems.map(row => `${row.driverName} — ${row.className}`).join(', ')}`);
 }
