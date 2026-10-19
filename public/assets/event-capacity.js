@@ -7,7 +7,8 @@ export function eventSpaces(data, meeting, config) {
     const confirmed = override.confirmedMinimum?.[name] || 0;
     const reserved = override.reserved || config.reservedByType?.[meeting.type] || {};
     const missing = (reserved[name] || []).filter(key => !data.entries.some(entry => entry.className === name && entry.driverKey === key)).length;
-    const entered = Math.max(published + missing, confirmed);
-    return {name,limit,entered,reserved:missing,remaining:Math.max(0,limit-entered),confirmed:confirmed > published};
+    const held = Number.isInteger(override.held?.[name]) && override.held[name] > 0 ? override.held[name] : 0;
+    const entered = Math.max(published + missing + held, confirmed);
+    return {name,limit,entered,reserved:missing + held,remaining:Math.max(0,limit-entered),confirmed:confirmed > published};
   });
 }

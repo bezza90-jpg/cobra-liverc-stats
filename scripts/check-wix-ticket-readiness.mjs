@@ -17,7 +17,7 @@ export function expectedTicketLimits(meeting,capacities) {
   const reserved=override.reserved || capacities.reservedByType?.[meeting.type] || {};
   return Object.fromEntries(Object.entries(limits).map(([className,limit])=>[
     className,
-    Number(limit)-(reserved[className] || []).length
+    Number(limit)-(reserved[className] || []).length-(Number(override.held?.[className]) || 0)
   ]));
 }
 

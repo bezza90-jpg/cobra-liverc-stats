@@ -30,3 +30,8 @@ test('an event override can disable the standard reservations',()=>{
   const custom={...capacities,events:{518556:{reserved:{}}}};
   assert.equal(expectedTicketLimits(meeting,custom)['2-Wheel Drive Buggy'],80);
 });
+
+test('temporary event holds reduce public tickets without changing total capacity',()=>{
+  const custom={...capacities,events:{518556:{held:{'2-Wheel Drive Buggy':2}}}};
+  assert.equal(expectedTicketLimits(meeting,custom)['2-Wheel Drive Buggy'],74);
+});
