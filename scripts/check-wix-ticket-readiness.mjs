@@ -22,6 +22,7 @@ export function safeTicketLimits(meeting,capacities) {
 }
 
 export function ticketReadiness(ticketDefinitions,meeting,capacities) {
+  const override=capacities.events?.[String(meeting.eventId)] || {};
   const safe=safeTicketLimits(meeting,capacities);
   const required=Object.entries(TICKET_CLASSES).filter(([,className])=>safe[className] !== undefined);
   const starts=new Set();
@@ -43,6 +44,13 @@ export function ticketReadiness(ticketDefinitions,meeting,capacities) {
     checked.push({name:ticketName,limit,start});
   }
   if (starts.size!==1) problems.push('The SWORD ticket types do not share the same sale opening time.');
+  if (override.salesOpen) {
+    const expected=Date.parse(override.salesOpen);
+    if (Number.isNaN(expected)) problems.push('The configured ticket opening time is invalid.');
+    else if ([...starts].some(start=>Date.parse(start)!==expected)) {
+      problems.push(`The Wix tickets do not open at the configured time ${override.salesOpen}.`);
+    }
+  }
   assert.equal(problems.length,0,problems.join(' '));
   return checked;
 }

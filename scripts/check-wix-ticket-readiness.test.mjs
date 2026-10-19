@@ -36,3 +36,10 @@ test('a lower ticket quantity is safe and can preserve discretionary places',()=
   lower[1].actualLimit=64;
   assert.equal(ticketReadiness(lower,meeting,capacities)[1].limit,64);
 });
+
+test('event opening time must match the configured UK booking launch',()=>{
+  const custom={...capacities,events:{518556:{salesOpen:'2026-10-19T18:00:00+01:00'}}};
+  assert.equal(ticketReadiness(definitions,meeting,custom).length,3);
+  const wrong=definitions.map(row=>({...row,salePeriod:{startDate:'2026-10-19T18:00:00.000Z'}}));
+  assert.throws(()=>ticketReadiness(wrong,meeting,custom),/do not open at the configured time/);
+});
