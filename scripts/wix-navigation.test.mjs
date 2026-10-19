@@ -7,6 +7,7 @@ test('Wix feature links preserve selections while booking, home and unrelated li
   const cases=[
     ['https://www.cobracardiff.co.uk/driver-distance-tracker','https://racehub.cobracardiff.co.uk/?tracker=1'],
     ['https://www.cobracardiff.co.uk/sword-schedule','https://racehub.cobracardiff.co.uk/schedule/?type=sword'],
+    ['https://www.cobracardiff.co.uk/track-gallery','https://racehub.cobracardiff.co.uk/track-gallery/'],
     ['https://www.cobracardiff.co.uk/virtual-race-replay?race=7072625&compare=A&compare=B#track','https://racehub.cobracardiff.co.uk/virtual-race-replay/?race=7072625&compare=A&compare=B#track'],
     ['https://www.cobracardiff.co.uk/event-list',null],
     ['https://www.cobracardiff.co.uk/',null],
