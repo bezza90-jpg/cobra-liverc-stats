@@ -23,6 +23,9 @@ test('track gallery flyovers follow the measured 3D design files',()=>{
   const replayCss=readFileSync(new URL('virtual-race-replay/replay-3d.css',publicRoot),'utf8');
   assert.match(replayCss,/\.race-flyover-mode main\{width:100%;height:100dvh/);
   assert.match(replayCss,/\.race-flyover-mode #viewer[^}]+height:100dvh!important/);
+  assert.match(replayCss,/\.race-flyover-mode \.cobra3d:not\(\.c3-mobile-controls-open\) \.c3-toolbar\{display:none\}/);
+  assert.match(replayCss,/\.race-flyover-mode \.cobra3d\.c3-mobile-controls-open \.c3-toolbar\{display:grid;position:absolute/);
+  assert.match(replay,/☰ Controls/);
   assert.match(replay,/params\.get\('explore'\)===\s*'track'/);
   assert.match(replay,/trackOnlyMode\?\[\]:drivers\.map\(carState\)/);
 });
