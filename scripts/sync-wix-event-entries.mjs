@@ -81,6 +81,17 @@ export function publicEntries(guest,order,mapping) {
 }
 export function publicEntry(guest,order,mapping) { return publicEntries(guest,order,mapping)[0] || null; }
 
+export const SEASON_CLASS_OVERRIDES=[
+  {driverName:'HAIDEN HICKS',from:'2026-09-01',to:'2027-08-31',bookedClass:'Junior Racers',raceClass:'2-Wheel Drive Buggy'}
+];
+export function applySeasonClassOverrides(entries,eventDate) {
+  return entries.map(row=>{
+    const name=String(row.driverName || '').trim().replace(/\\s+/g,' ').toUpperCase();
+    const rule=SEASON_CLASS_OVERRIDES.find(item=>item.driverName===name && item.bookedClass===row.className && eventDate>=item.from && eventDate<=item.to);
+    return rule ? {...row,className:rule.raceClass} : row;
+  });
+}
+
 export function entriesFromOrders(orders,guests,mapping) {
   const guestByTicket=new Map(guests.filter(row=>row.guestType==='TICKET_HOLDER').map(row=>[row.ticketNumber,row]));
   const timestamp=order=>Date.parse(order._createdDate || order.createdDate || order.created || '') || 0;
@@ -202,7 +213,7 @@ export async function sync({site,key}) {
   const counts={}; for (const order of orders) counts[order.status]=(counts[order.status] || 0)+1;
   console.log('Wix order statuses: '+JSON.stringify(counts));
   const history=transponderHistory(JSON.parse(await readFile(new URL('../data/raw/entries.json',import.meta.url),'utf8')),today);
-  const entries=usePreviousTransponders(entriesFromOrders(orders,rows,mapping),history);
+  const entries=usePreviousTransponders(applySeasonClassOverrides(entriesFromOrders(orders,rows,mapping),meeting.date),history);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
   let value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),ticketLimits:ticketLimitsFromDefinitions(definitions),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
   const admin=JSON.parse(await readFile(new URL('../public/data/admin-event-entries.json',import.meta.url),'utf8').catch(error=>{if (error.code==='ENOENT') return 'null';throw error;}));
