@@ -3,8 +3,17 @@
   "liveRcEventId": "518556",
   "eventDate": "2026-11-01",
   "eventTitle": "COBRA SWORD Round 2",
-  "source": "Club-team admin places confirmed for SWORD Round 2 on 19 October 2026",
-  "removeEntries": [],
+  "source": "Club-team admin places and event corrections confirmed for SWORD Round 2 on 19 October 2026",
+  "removeEntries": [
+    {
+      "driverName": "Ian Peakman",
+      "className": "2-Wheel Drive Buggy"
+    },
+    {
+      "driverName": "Ian Peakman",
+      "className": "4-Wheel Drive Buggy"
+    }
+  ],
   "entries": [
     {
       "driverName": "Matthew Hodges",
@@ -59,6 +68,11 @@
       "className": "4-Wheel Drive Buggy",
       "transponder": "4950687",
       "chassis": "Team Associated"
+    },
+    {
+      "driverName": "Haiden Hicks",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3422662"
     }
   ]
 }
