@@ -10,10 +10,15 @@ test('track gallery flyovers follow the measured 3D design files',()=>{
   assert.deepEqual([...gallery.flyoverEvents].sort(),designs);
   const source=readFileSync(new URL('assets/track-gallery.js',publicRoot),'utf8');
   assert.match(source,/const threeDAvailable=event=>designAvailable\(event\)/);
+  assert.match(source,/flyover=race&autoplay=1/);
   assert.match(source,/flyover=track/);
   assert.match(source,/explore=track/);
   const replay=readFileSync(new URL('virtual-race-replay/replay-3d.js',publicRoot),'utf8');
   assert.match(replay,/params\.get\('flyover'\)===\s*'track'/);
+  assert.match(replay,/params\.get\('flyover'\)===\s*'race'/);
+  assert.match(replay,/params\.get\('autoplay'\)===\s*'1'/);
+  assert.match(replay,/raceFlyoverMode&&!trackOnlyMode\)viewer\.startFlyover\(true\)/);
+  assert.match(replay,/autoPlay&&!trackOnlyMode\)setPlaying\(true\)/);
   assert.match(replay,/params\.get\('explore'\)===\s*'track'/);
   assert.match(replay,/trackOnlyMode\?\[\]:drivers\.map\(carState\)/);
 });
