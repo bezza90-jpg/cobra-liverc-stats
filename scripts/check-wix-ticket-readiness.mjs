@@ -11,19 +11,19 @@ const TICKET_CLASSES={
   '4WD SWORD Entry':'4-Wheel Drive Buggy'
 };
 
-export function expectedTicketLimits(meeting,capacities) {
+export function safeTicketLimits(meeting,capacities) {
   const override=capacities.events?.[String(meeting.eventId)] || {};
   const limits=override.limits || capacities.types?.[meeting.type] || {};
   const reserved=override.reserved || capacities.reservedByType?.[meeting.type] || {};
   return Object.fromEntries(Object.entries(limits).map(([className,limit])=>[
     className,
-    Number(limit)-(reserved[className] || []).length-(Number(override.held?.[className]) || 0)
+    Number(limit)-(reserved[className] || []).length
   ]));
 }
 
 export function ticketReadiness(ticketDefinitions,meeting,capacities) {
-  const expected=expectedTicketLimits(meeting,capacities);
-  const required=Object.entries(TICKET_CLASSES).filter(([,className])=>expected[className] !== undefined);
+  const safe=safeTicketLimits(meeting,capacities);
+  const required=Object.entries(TICKET_CLASSES).filter(([,className])=>safe[className] !== undefined);
   const starts=new Set();
   const checked=[];
   const problems=[];
@@ -35,7 +35,7 @@ export function ticketReadiness(ticketDefinitions,meeting,capacities) {
     }
     const limit=Number(ticket.actualLimit ?? ticket.initialLimit);
     if (!Number.isInteger(limit)) problems.push(`${ticketName} has no finite ticket limit.`);
-    else if (limit!==expected[className]) problems.push(`${ticketName} is ${limit}; expected ${expected[className]} public tickets after reserved club places.`);
+    else if (limit<0 || limit>safe[className]) problems.push(`${ticketName} is ${limit}; the safe maximum is ${safe[className]} after protected club places.`);
     const start=ticket.salePeriod?.startDate;
     if (!start) problems.push(`${ticketName} has no sale opening time.`);
     else if (Number.isNaN(Date.parse(start))) problems.push(`${ticketName} has an invalid sale opening time.`);

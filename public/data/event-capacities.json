@@ -19,8 +19,7 @@
     },
     "518556": {
       "limits":{"Junior Racers":10,"4-Wheel Drive Buggy":30,"2-Wheel Drive Buggy":70},
-      "held":{"2-Wheel Drive Buggy":2},
-      "note":"Round 2 public 2WD ticket limit is 64: four named club reservations, one additional admin place and one temporary friend hold. Reduce held to 1 when the friend books and the Wix limit is raised to 65."
+      "note":"Round 2 opened with 64 public 2WD tickets. Wix quantities may be adjusted as protected places book, but named reservations plus public tickets must never exceed the 70-car total."
     }
   }
 }

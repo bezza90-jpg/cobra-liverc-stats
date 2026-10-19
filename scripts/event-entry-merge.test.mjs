@@ -28,6 +28,11 @@ test('a booking feed from another event cannot change the current race classes',
  const data={...meeting,entries:[]};
  assert.equal(mergeCurrentWixEntries(data,{eventDate:meeting.date,liveRcEventId:'other',entries:[{driverName:'NEW JUNIOR',className:'Junior Racers'}]}),data);
 });
+test('current Wix ticket quantities reach the event page before the first booking',()=>{
+ const source={eventId:'1',date:'2026-11-01',entries:[]};
+ const wix={liveRcEventId:'1',eventDate:'2026-11-01',entries:[],ticketLimits:{'2-Wheel Drive Buggy':64}};
+ assert.deepEqual(mergeCurrentWixEntries(source,wix).ticketLimits,{'2-Wheel Drive Buggy':64});
+});
 
 test('confirmed CSV chassis applies to that event and class without changing transponders or new Wix bookings',()=>{
  const data={...meeting,entries:[{driverName:'HARRY DAVIS',className:'2-Wheel Drive Buggy',chassis:'Kyosho',transponder:'5032515'},{driverName:'HARRY DAVIS',className:'4-Wheel Drive Buggy',chassis:'Schumacher'},{driverName:'NEW DRIVER',className:'2-Wheel Drive Buggy',chassis:'TLR'}]};

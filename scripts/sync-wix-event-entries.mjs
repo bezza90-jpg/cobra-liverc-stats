@@ -108,6 +108,21 @@ async function upcomingEvents(site,key) {
   }
   throw Error('Wix returned too many upcoming events.');
 }
+async function ticketDefinitions(eventId,site,key) {
+  const data=await request('/events-ticket-definitions/v3/ticket-definitions/query',site,key,{query:{filter:{eventId:{$eq:eventId}},paging:{limit:100,offset:0}}});
+  if (!Array.isArray(data.ticketDefinitions)) throw Error('Wix ticket definitions were incomplete; retaining the published roster.');
+  return data.ticketDefinitions;
+}
+export function ticketLimitsFromDefinitions(definitions) {
+  const limits={};
+  for (const ticket of definitions) {
+    const definition=TICKETS[String(ticket.name || '').trim()];
+    const limit=Number(ticket.actualLimit ?? ticket.initialLimit);
+    if (!definition || !Number.isInteger(limit) || limit<0) continue;
+    limits[definition[0]]=(limits[definition[0]] || 0)+limit;
+  }
+  return limits;
+}
 async function guests(eventId,site,key) {
   const result=[]; let cursor='';
   for (let page=0;page<1000;page++) {
@@ -182,14 +197,14 @@ export async function sync({site,key}) {
   const slug=bookingSlug(meeting.bookingUrl), events=await upcomingEvents(site,key);
   const event=events.find(row=>row.slug===slug);
   if (!event) throw Error(`No upcoming Wix event matched ${slug}.`);
-  const mapping=formMapping(event), rows=await guests(event.id,site,key);
-  const orders=await listOrders(event.id,site,key);
+  const mapping=formMapping(event);
+  const [rows,orders,definitions]=await Promise.all([guests(event.id,site,key),listOrders(event.id,site,key),ticketDefinitions(event.id,site,key)]);
   const counts={}; for (const order of orders) counts[order.status]=(counts[order.status] || 0)+1;
   console.log('Wix order statuses: '+JSON.stringify(counts));
   const history=transponderHistory(JSON.parse(await readFile(new URL('../data/raw/entries.json',import.meta.url),'utf8')),today);
   const entries=usePreviousTransponders(entriesFromOrders(orders,rows,mapping),history);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
-  let value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
+  let value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),ticketLimits:ticketLimitsFromDefinitions(definitions),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
   const admin=JSON.parse(await readFile(new URL('../public/data/admin-event-entries.json',import.meta.url),'utf8').catch(error=>{if (error.code==='ENOENT') return 'null';throw error;}));
   value=mergeAdminEntries(value,admin);
   value.entries=usePreviousTransponders(value.entries,history).sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName));

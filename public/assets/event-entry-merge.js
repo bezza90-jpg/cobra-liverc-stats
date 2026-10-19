@@ -22,8 +22,10 @@ export function applyConfirmedChassis(data, confirmed = {}) {
 export function mergeCurrentWixEntries(data, wix = {}, previousTransponders = []) {
   const published = Array.isArray(data?.entries) ? data.entries : [];
   const bookings = Array.isArray(wix?.entries) ? wix.entries : [];
-  if (!bookings.length || (wix.eventDate && data.date && wix.eventDate !== data.date) ||
+  if ((wix.eventDate && data.date && wix.eventDate !== data.date) ||
       (wix.liveRcEventId && data.eventId && String(wix.liveRcEventId) !== String(data.eventId))) return data;
+  const ticketLimits=wix.ticketLimits && typeof wix.ticketLimits==='object' ? wix.ticketLimits : data.ticketLimits;
+  if (!bookings.length) return {...data,...(ticketLimits ? {ticketLimits} : {})};
   const seniorNames = new Set([...published, ...bookings].filter(row => row.className && row.className !== 'Junior Racers').map(identity));
   const bookedSeniorNames = new Set(bookings.filter(row => row.className && row.className !== 'Junior Racers').map(identity));
   const history = new Map(previousTransponders.filter(row => validTransponder(row.transponder) &&
@@ -58,7 +60,7 @@ export function mergeCurrentWixEntries(data, wix = {}, previousTransponders = []
   }
   const wixUpdated = Date.parse(wix.updatedAt || '');
   const dataUpdated = Date.parse(data.updatedAt || '');
-  return {...data, entries:merged, updatedAt:wixUpdated > dataUpdated ? wix.updatedAt : data.updatedAt};
+  return {...data, entries:merged, ...(ticketLimits ? {ticketLimits} : {}), updatedAt:wixUpdated > dataUpdated ? wix.updatedAt : data.updatedAt};
 }
 
 export function entriesForMeeting(data, wix, meeting, previousTransponders = []) {

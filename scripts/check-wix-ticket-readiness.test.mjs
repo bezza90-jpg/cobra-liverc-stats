@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {expectedTicketLimits,ticketReadiness} from './check-wix-ticket-readiness.mjs';
+import {safeTicketLimits,ticketReadiness} from './check-wix-ticket-readiness.mjs';
 
 const meeting={title:'SWORD Round 2',type:'sword',eventId:'518556'};
 const capacities={
@@ -13,8 +13,8 @@ const definitions=[
   {name:'4WD SWORD Entry',actualLimit:25,salePeriod:{startDate:'2026-10-19T17:00:00Z'}}
 ];
 
-test('public ticket limits keep configured club reservations available',()=>{
-  assert.deepEqual(expectedTicketLimits(meeting,capacities),{
+test('safe public ticket ceilings keep configured club reservations available',()=>{
+  assert.deepEqual(safeTicketLimits(meeting,capacities),{
     'Junior Racers':12,'4-Wheel Drive Buggy':25,'2-Wheel Drive Buggy':76
   });
   assert.equal(ticketReadiness(definitions,meeting,capacities).length,3);
@@ -22,16 +22,17 @@ test('public ticket limits keep configured club reservations available',()=>{
 
 test('ticket readiness rejects an over-capacity ticket limit',()=>{
   const wrong=structuredClone(definitions);
-  wrong[1].actualLimit=80;
-  assert.throws(()=>ticketReadiness(wrong,meeting,capacities),/is 80; expected 76/);
+  wrong[1].actualLimit=77;
+  assert.throws(()=>ticketReadiness(wrong,meeting,capacities),/is 77; the safe maximum is 76/);
 });
 
 test('an event override can disable the standard reservations',()=>{
   const custom={...capacities,events:{518556:{reserved:{}}}};
-  assert.equal(expectedTicketLimits(meeting,custom)['2-Wheel Drive Buggy'],80);
+  assert.equal(safeTicketLimits(meeting,custom)['2-Wheel Drive Buggy'],80);
 });
 
-test('temporary event holds reduce public tickets without changing total capacity',()=>{
-  const custom={...capacities,events:{518556:{held:{'2-Wheel Drive Buggy':2}}}};
-  assert.equal(expectedTicketLimits(meeting,custom)['2-Wheel Drive Buggy'],74);
+test('a lower ticket quantity is safe and can preserve discretionary places',()=>{
+  const lower=structuredClone(definitions);
+  lower[1].actualLimit=64;
+  assert.equal(ticketReadiness(lower,meeting,capacities)[1].limit,64);
 });
