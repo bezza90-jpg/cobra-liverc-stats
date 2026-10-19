@@ -213,12 +213,6 @@
       "transponderSource": "wix"
     },
     {
-      "driverName": "HAIDEN HICKS",
-      "className": "Junior Racers",
-      "transponder": "3422662",
-      "transponderSource": "wix"
-    },
-    {
       "driverName": "SEB FISHER",
       "className": "Junior Racers",
       "transponder": "6645548",
@@ -227,7 +221,7 @@
     }
   ],
   "entrySources": {
-    "wix": 21,
+    "wix": 20,
     "admin": 10
   }
 }
