@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-19T18:37:47.970Z",
+  "updatedAt": "2026-10-19T19:16:48.219Z",
   "ticketLimits": {
     "Junior Racers": 10,
     "2-Wheel Drive Buggy": 64,
@@ -39,6 +39,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "IAN PEAKMAN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5653564",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "JON PAISLEY",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2223753",
@@ -50,6 +57,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "3753291",
       "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MATT WOODIWISS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3753291",
+      "chassis": "XRAY",
       "transponderSource": "wix"
     },
     {
@@ -130,10 +144,24 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "IAN PEAKMAN",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6091953",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "JON PAISLEY",
       "className": "4-Wheel Drive Buggy",
       "transponder": "2840842",
       "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MATT WOODIWISS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "8008844",
+      "chassis": "XRAY",
       "transponderSource": "wix"
     },
     {
@@ -207,7 +235,7 @@
     }
   ],
   "entrySources": {
-    "wix": 19,
+    "wix": 23,
     "admin": 9
   }
 }
