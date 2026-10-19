@@ -9,7 +9,7 @@ const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padStart(4,'0')}`;
 const params=new URLSearchParams(location.search);
-const trackFlyoverMode=params.get('flyover')==='track',raceFlyoverMode=params.get('flyover')==='race',trackExploreMode=params.get('explore')==='track',trackOnlyMode=trackFlyoverMode||trackExploreMode,autoPlay=params.get('autoplay')==='1';
+const trackFlyoverMode=params.get('flyover')==='track',raceFlyoverMode=params.get('flyover')==='race',trackExploreMode=params.get('explore')==='track',trackOnlyMode=trackFlyoverMode||trackExploreMode,autoPlay=params.get('autoplay')==='1';\nif(raceFlyoverMode)document.body.classList.add('race-flyover-mode');
 let eventId=params.get('event')||'',catalogEvents=[],eventData,design,avatarManifest={},raceVideos=[],viewer,race,drivers=[],pace,lift,lifts={},surfaceLifts={},retiredSlots=new Map(),time=0,duration=0,playing=false,last=0,frame=0;
 const avatarColourCache=new Map();
 
