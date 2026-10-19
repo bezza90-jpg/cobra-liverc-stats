@@ -3,11 +3,77 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-19T00:49:48.817Z",
+  "updatedAt": "2026-10-19T01:12:08.372Z",
   "ticketLimits": {
     "Junior Racers": 10,
     "2-Wheel Drive Buggy": 64,
     "4-Wheel Drive Buggy": 25
   },
-  "entries": []
+  "entries": [
+    {
+      "driverName": "BOB GELSTHARP",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3624077",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MATTHEW HODGES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5504378",
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MIKE DRISCOLL",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2142002",
+      "chassis": "TLR",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "STEVE CURTIS-RICH",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6196241",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "BOB GELSTHARP",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "9135402",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MATTHEW HODGES",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "3647613",
+      "chassis": "Team Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "MIKE DRISCOLL",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "5431388",
+      "chassis": "TLR",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "PAUL CURTIS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4950687",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "STEVE CURTIS-RICH",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6155425",
+      "transponderSource": "wix"
+    }
+  ],
+  "entrySources": {
+    "wix": 0,
+    "admin": 9
+  }
 }
