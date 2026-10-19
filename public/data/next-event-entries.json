@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-19T19:29:59.510Z",
+  "updatedAt": "2026-10-19T20:03:23.211Z",
   "entries": [
     {
       "driverKey": "BOBTECH",
@@ -35,6 +35,15 @@
       "transponder": "5811289"
     },
     {
+      "driverKey": "DANIEL-GRIFFITHS",
+      "driverName": "DANIEL GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "2982143"
+    },
+    {
       "driverKey": "DAVID-MILFORD",
       "driverName": "DAVID MILFORD",
       "className": "2-Wheel Drive Buggy",
@@ -49,7 +58,16 @@
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Kyosho",
-      "transponder": "3422662"
+      "transponder": "3519622"
+    },
+    {
+      "driverKey": "IAN-TOWNSEND",
+      "driverName": "IAN TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "4571829"
     },
     {
       "driverKey": "JON-PAISLEY",
@@ -106,6 +124,24 @@
       "transponder": "4961721"
     },
     {
+      "driverKey": "ROY-DAVIES",
+      "driverName": "ROY DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix",
+      "transponder": "8268154"
+    },
+    {
+      "driverKey": "RUSS-WILLIAMS",
+      "driverName": "RUSS WILLIAMS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "6657438"
+    },
+    {
       "driverKey": "SIMON-FISHER",
       "driverName": "SIMON FISHER",
       "className": "2-Wheel Drive Buggy",
@@ -122,6 +158,15 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "6196241"
+    },
+    {
+      "driverKey": "STEVEN-GRIFFITHS",
+      "driverName": "STEVEN GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "8943115"
     },
     {
       "driverKey": "THOMAS-SPENCER-JENKINS",
@@ -232,6 +277,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "4407442"
+    },
+    {
+      "driverKey": "RUSS-WILLIAMS",
+      "driverName": "RUSS WILLIAMS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "6657438"
     },
     {
       "driverKey": "SPENCER-FARLEY",
