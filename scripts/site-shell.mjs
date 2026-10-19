@@ -7,7 +7,7 @@ const routes = {
   'virtual-race-replay/3d.html':'virtual-race-replay/3d.html',
   'driver-car-avatars':'car-avatars/', 'driver-distance-tracker':'?tracker=1',
   'drivers-setups':'setups/', 'upload-car-avatar':'avatar-upload/', 'about-cobra':'about/',
-  'club-news':'club-news/',
+  'club-news':'club-news/', 'track-gallery':'track-gallery/',
   'website-guides':'website-guides/'
 };
 const escape = value => value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
