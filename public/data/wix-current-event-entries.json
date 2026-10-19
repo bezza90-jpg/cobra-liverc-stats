@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-19T19:19:45.055Z",
+  "updatedAt": "2026-10-19T19:53:40.095Z",
   "ticketLimits": {
     "Junior Racers": 10,
     "2-Wheel Drive Buggy": 64,
@@ -32,6 +32,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "DANIEL GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2982143",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "DAVID MILFORD",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5097267",
@@ -41,8 +48,15 @@
     {
       "driverName": "HAIDEN HICKS",
       "className": "2-Wheel Drive Buggy",
-      "transponder": "3422662",
-      "transponderSource": "admin"
+      "transponder": "3519622",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "IAN TOWNSEND",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4571829",
+      "chassis": "Associated",
+      "transponderSource": "wix"
     },
     {
       "driverName": "JON PAISLEY",
@@ -87,6 +101,20 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "ROY DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8268154",
+      "chassis": "TLR",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "RUSS WILLIAMS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6657438",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "SIMON FISHER",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2189851",
@@ -98,6 +126,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "6196241",
       "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "STEVEN GRIFFITHS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8943115",
+      "chassis": "XRAY",
       "transponderSource": "wix"
     },
     {
@@ -185,6 +220,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "RUSS WILLIAMS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6657438",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "SPENCER FARLEY",
       "className": "4-Wheel Drive Buggy",
       "transponder": "9889135",
@@ -221,7 +263,7 @@
     }
   ],
   "entrySources": {
-    "wix": 20,
-    "admin": 10
+    "wix": 27,
+    "admin": 9
   }
 }
