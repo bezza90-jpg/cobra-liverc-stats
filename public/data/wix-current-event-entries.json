@@ -56,7 +56,7 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "5653564",
       "chassis": "Schumacher",
-      "transponderSource": "admin"
+      "transponderSource": "wix"
     },
     {
       "driverName": "IAN TOWNSEND",
@@ -189,7 +189,7 @@
       "className": "4-Wheel Drive Buggy",
       "transponder": "6091953",
       "chassis": "Schumacher",
-      "transponderSource": "admin"
+      "transponderSource": "wix"
     },
     {
       "driverName": "JON PAISLEY",
@@ -277,7 +277,7 @@
     }
   ],
   "entrySources": {
-    "wix": 20,
-    "admin": 12
+    "wix": 22,
+    "admin": 10
   }
 }
