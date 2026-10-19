@@ -26,9 +26,12 @@ test('track gallery flyovers follow the measured 3D design files',()=>{
   assert.match(replayCss,/\.race-flyover-mode \.cobra3d:not\(\.c3-mobile-controls-open\) \.c3-toolbar\{display:none\}/);
   assert.match(replayCss,/\.race-flyover-mode \.cobra3d\.c3-mobile-controls-open \.c3-toolbar\{display:grid;position:absolute/);
   assert.match(replay,/☰ Controls/);
+  assert.match(replay,/const galleryFlyoverMode=trackFlyoverMode\|\|raceFlyoverMode/);
   assert.match(replay,/history\.scrollRestoration='manual'/);
   assert.match(replay,/document\.documentElement\.scrollTop=0/);
   assert.match(replay,/requestAnimationFrame\(\(\)=>requestAnimationFrame\(resetFlyoverViewport\)\)/);
+  assert.match(replay,/mobileReplayBar\.classList\.add\('c3-flyover-menu-only'\)/);
+  assert.match(replayCss,/\.c3-mobile-replay-bar\.c3-flyover-menu-only\{grid-template-columns:1fr\}/);
   assert.match(replay,/params\.get\('explore'\)===\s*'track'/);
   assert.match(replay,/trackOnlyMode\?\[\]:drivers\.map\(carState\)/);
 });
