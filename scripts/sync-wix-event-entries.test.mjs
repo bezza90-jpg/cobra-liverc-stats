@@ -96,6 +96,9 @@ test('Haiden junior-price bookings map to senior 2WD throughout the 2026/27 seas
     ['HAIDEN HICKS','2-Wheel Drive Buggy','3422662'],
     ['SEB FISHER','Junior Racers','6645548']
   ]);
+  const mapped=applySeasonClassOverrides(rows,'2026-11-01');
+  assert.equal(mapped.filter(row=>row.className==='2-Wheel Drive Buggy').length,1);
+  assert.equal(mapped.filter(row=>row.className==='Junior Racers').length,1);
   assert.equal(applySeasonClassOverrides(rows,'2027-09-01')[0].className,'Junior Racers');
 });
 
