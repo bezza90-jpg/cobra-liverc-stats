@@ -561,3 +561,24 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .crating-button{margin-top:10px}.crating-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:16px 0}.crating-summary>div{display:grid;gap:3px;padding:14px;background:#eff8eb;border:1px solid #b9dba9;border-radius:7px}.crating-summary strong{color:#176726;font-size:1.45rem}.crating-summary span{font-size:.74rem;font-weight:800;text-transform:uppercase}.crating-baseline{stroke:#779184;stroke-width:1.5;stroke-dasharray:5 5}.crating-line{stroke:#a3f329}.crating-history{margin-top:12px}.crating-up{color:#087b25;font-weight:900}.crating-down{color:#a12b28;font-weight:900}@media(max-width:700px){.crating-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 .c-rating-cell{font-weight:800;color:var(--accent,#98ef32);white-space:nowrap}.c-rating-cell small{display:block;font-size:.68rem;font-weight:600;color:var(--muted,#a9b7ad)}
+
+
+/* Keep the driver leaderboard dense and readable on phones without hiding columns. */
+#driverLeaderboard table{font-size:.82rem}
+#driverLeaderboard th,#driverLeaderboard td{padding:10px 9px}
+#driverLeaderboard th{white-space:normal;line-height:1.15}
+#driverLeaderboard th:nth-child(1),#driverLeaderboard td:nth-child(1){width:3.25rem}
+#driverLeaderboard th:nth-child(2),#driverLeaderboard td:nth-child(2){min-width:9.5rem}
+#driverLeaderboard th:nth-child(3),#driverLeaderboard td:nth-child(3){width:5.5rem}
+#driverLeaderboard th:nth-child(4),#driverLeaderboard td:nth-child(4){min-width:8.5rem}
+#driverLeaderboard th:nth-child(5){text-transform:none;letter-spacing:.025em}
+#driverLeaderboard th:nth-child(5),#driverLeaderboard td:nth-child(5){width:5.75rem}
+@media(max-width:700px){
+  #driverLeaderboard table{font-size:.74rem}
+  #driverLeaderboard th,#driverLeaderboard td{padding:8px 6px}
+  #driverLeaderboard th:nth-child(1),#driverLeaderboard td:nth-child(1){width:2.6rem}
+  #driverLeaderboard th:nth-child(2),#driverLeaderboard td:nth-child(2){min-width:8rem}
+  #driverLeaderboard th:nth-child(3),#driverLeaderboard td:nth-child(3){width:4.5rem}
+  #driverLeaderboard th:nth-child(4),#driverLeaderboard td:nth-child(4){min-width:7rem}
+  #driverLeaderboard th:nth-child(5),#driverLeaderboard td:nth-child(5){width:4.8rem}
+}
