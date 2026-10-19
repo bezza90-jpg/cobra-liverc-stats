@@ -1,79 +1,61 @@
 {
-  "liveRcEventId": "518556",
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
-  "eventTitle": "SWORD Round 2 EOS 2026/7",
+  "liveRcEventId": "518556",
+  "eventSlug": "cobra-sword-round-2",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-19T01:12:08.372Z",
-  "ticketLimits": {
-    "Junior Racers": 10,
-    "2-Wheel Drive Buggy": 64,
-    "4-Wheel Drive Buggy": 25
-  },
+  "updatedAt": "2026-10-19T01:15:44.109687Z",
   "entries": [
     {
-      "driverName": "BOB GELSTHARP",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "3624077",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "MATTHEW HODGES",
+      "driverName": "Matthew Hodges",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5504378",
-      "chassis": "Team Associated",
-      "transponderSource": "wix"
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "MIKE DRISCOLL",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "2142002",
-      "chassis": "TLR",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "STEVE CURTIS-RICH",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "6196241",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "BOB GELSTHARP",
-      "className": "4-Wheel Drive Buggy",
-      "transponder": "9135402",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "MATTHEW HODGES",
+      "driverName": "Matthew Hodges",
       "className": "4-Wheel Drive Buggy",
       "transponder": "3647613",
-      "chassis": "Team Associated",
-      "transponderSource": "wix"
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "MIKE DRISCOLL",
+      "driverName": "Mike Driscoll",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2142002",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "Mike Driscoll",
       "className": "4-Wheel Drive Buggy",
       "transponder": "5431388",
-      "chassis": "TLR",
-      "transponderSource": "wix"
+      "chassis": "TLR"
     },
     {
-      "driverName": "PAUL CURTIS",
-      "className": "4-Wheel Drive Buggy",
-      "transponder": "4950687",
-      "transponderSource": "wix"
+      "driverName": "Steve Curtis-Rich",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6196241",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "STEVE CURTIS-RICH",
+      "driverName": "Steve Curtis-Rich",
       "className": "4-Wheel Drive Buggy",
-      "transponder": "6155425",
-      "transponderSource": "wix"
+      "transponder": "6155425"
+    },
+    {
+      "driverName": "Bob Gelstharp",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3624077",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Bob Gelstharp",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "9135402",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Paul Curtis",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4950687"
     }
-  ],
-  "entrySources": {
-    "wix": 0,
-    "admin": 9
-  }
+  ]
 }
