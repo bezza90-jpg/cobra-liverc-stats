@@ -41,6 +41,25 @@ test('track gallery offers results and 2D replay for every event',()=>{
   assert.match(source,/3D track model available/);
 });
 
+test('verified event playlists appear as red YouTube actions',()=>{
+  const gallery=readJson('data/track-gallery.json');
+  const catalog=readJson('virtual-race-replay/catalog.json');
+  const eventIds=new Set(catalog.events.map(event=>String(event.id)));
+  const source=readFileSync(new URL('assets/track-gallery.js',publicRoot),'utf8');
+  const css=readFileSync(new URL('assets/track-gallery.css',publicRoot),'utf8');
+  for(const [eventId,playlists] of Object.entries(gallery.youtubePlaylists||{})){
+    assert.ok(eventIds.has(eventId),eventId);
+    assert.ok(playlists.length,eventId);
+    for(const playlist of playlists){
+      assert.match(playlist.url,/^https:\/\/www\.youtube\.com\/playlist\?list=[\w-]+$/);
+      assert.match(playlist.label,/playlist$/);
+    }
+  }
+  assert.equal(gallery.youtubePlaylists['518555'].length,2);
+  assert.match(source,/YouTube \$\{playlist\.label\}/);
+  assert.match(css,/\.track-actions \.youtube\{/);
+});
+
 test('track gallery uses shared COBRA branding and a viewport-fitted fullscreen viewer',()=>{
   const html=readFileSync(new URL('track-gallery/index.html',publicRoot),'utf8');
   const css=readFileSync(new URL('assets/track-gallery.css',publicRoot),'utf8');
