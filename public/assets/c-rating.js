@@ -1,6 +1,7 @@
-const START_RATING=1500, K_FACTOR=1200, RATING_DIVISOR=3200, PROVISIONAL_FINALS=5, PROVISIONAL_MULTIPLIER=1.5;
+const START_RATING=1500, K_FACTOR=1200, RATING_DIVISOR=3200, PROVISIONAL_FINALS=5, PROVISIONAL_MULTIPLIER=1.5, SOFT_FLOOR=500, LOSS_TAPER_START=1000;
 const key=(driver,className)=>driver+'|'+className;
-const clamp=value=>Math.max(100,Math.min(10000,value));
+const clamp=value=>Math.max(SOFT_FLOOR,Math.min(10000,value));
+const taperedChange=(rating,change)=>{if(change>=0)return change;const scale=Math.max(0,Math.min(1,(rating-SOFT_FLOOR)/(LOSS_TAPER_START-SOFT_FLOOR)));return Math.round(change*scale);};
 export function buildCRatings(eventResults=[]){
  const ratings=new Map(),races=new Map(),history=new Map(),groups=new Map();
  for(const row of eventResults){const position=Number(row[4]),tier=String(row[7]||'');if(!(position>0)||!/(?:main|final)/i.test(tier))continue;const groupKey=row[1]+'|'+row[0]+'|'+row[2];if(!groups.has(groupKey))groups.set(groupKey,[]);groups.get(groupKey).push(row);}
@@ -9,7 +10,7 @@ export function buildCRatings(eventResults=[]){
   const before=new Map(unique.map(row=>[row[3],ratings.get(key(row[3],row[2]))??START_RATING]));
   const changes=new Map();
   for(const row of unique){const driver=row[3],rating=before.get(driver),position=Number(row[4]),actual=(fieldSize-position)/(fieldSize-1);let expected=0;for(const opponent of unique){if(opponent[3]===driver)continue;expected+=1/(1+Math.pow(10,(before.get(opponent[3])-rating)/RATING_DIVISOR));}expected/=(fieldSize-1);const completed=races.get(key(driver,row[2]))||0,k=K_FACTOR*(completed<PROVISIONAL_FINALS?PROVISIONAL_MULTIPLIER:1);changes.set(driver,Math.round(k*(actual-expected)));}
-  for(const row of unique){const driver=row[3],className=row[2],ratingKey=key(driver,className),count=(races.get(ratingKey)||0)+1,next=clamp(before.get(driver)+changes.get(driver));ratings.set(ratingKey,next);races.set(ratingKey,count);if(!history.has(ratingKey))history.set(ratingKey,[]);history.get(ratingKey).push({date:row[1],eventId:row[0],className,position:Number(row[4]),fieldSize,rating:next,change:changes.get(driver),races:count,provisional:count<PROVISIONAL_FINALS});}
+  for(const row of unique){const driver=row[3],className=row[2],ratingKey=key(driver,className),count=(races.get(ratingKey)||0)+1,previous=before.get(driver),applied=taperedChange(previous,changes.get(driver)),next=clamp(previous+applied),change=next-previous;ratings.set(ratingKey,next);races.set(ratingKey,count);if(!history.has(ratingKey))history.set(ratingKey,[]);history.get(ratingKey).push({date:row[1],eventId:row[0],className,position:Number(row[4]),fieldSize,rating:next,change,races:count,provisional:count<PROVISIONAL_FINALS});}
  }
  return{ratings,races,history,startRating:START_RATING};
 }
