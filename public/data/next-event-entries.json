@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-19T20:03:23.211Z",
+  "updatedAt": "2026-10-19T20:06:42.196Z",
   "entries": [
     {
       "driverKey": "BOBTECH",
@@ -59,6 +59,15 @@
       "countryCode": "GB",
       "chassis": "Kyosho",
       "transponder": "3519622"
+    },
+    {
+      "driverKey": "IAN-PEAKMAN",
+      "driverName": "IAN PEAKMAN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "5653564"
     },
     {
       "driverKey": "IAN-TOWNSEND",
@@ -222,6 +231,15 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "9746100"
+    },
+    {
+      "driverKey": "IAN-PEAKMAN",
+      "driverName": "IAN PEAKMAN",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "6091953"
     },
     {
       "driverKey": "JON-PAISLEY",
