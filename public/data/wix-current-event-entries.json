@@ -38,7 +38,8 @@
     {
       "driverName": "Steve Curtis-Rich",
       "className": "4-Wheel Drive Buggy",
-      "transponder": "6155425"
+      "transponder": "6155425",
+      "chassis": "Schumacher"
     },
     {
       "driverName": "Bob Gelstharp",
@@ -55,7 +56,8 @@
     {
       "driverName": "Paul Curtis",
       "className": "4-Wheel Drive Buggy",
-      "transponder": "4950687"
+      "transponder": "4950687",
+      "chassis": "Team Associated"
     }
   ]
 }
