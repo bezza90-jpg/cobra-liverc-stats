@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-19T19:53:40.095Z",
+  "updatedAt": "2026-10-19T20:22:53.093Z",
   "ticketLimits": {
     "Junior Racers": 10,
     "2-Wheel Drive Buggy": 64,
@@ -46,6 +46,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "DEWI JONES",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6263647",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "HAIDEN HICKS",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3519622",
@@ -80,6 +87,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "MARTYN HADLEY",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "9073997",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "MATT WOODIWISS",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3753291",
@@ -111,6 +125,13 @@
       "driverName": "ROY DAVIES",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8268154",
+      "chassis": "TLR",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "ROYSTON STEWART",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2395627",
       "chassis": "TLR",
       "transponderSource": "wix"
     },
@@ -176,6 +197,13 @@
       "transponder": "5097267",
       "chassis": "Schumacher",
       "transponderSource": "wix"
+    },
+    {
+      "driverName": "DEWI JONES",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "",
+      "chassis": "Schumacher",
+      "transponderSource": "none"
     },
     {
       "driverName": "FRAN BRAVERY",
@@ -269,6 +297,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "LEO SMITH",
+      "className": "Junior Racers",
+      "transponder": "6624085",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "SEB FISHER",
       "className": "Junior Racers",
       "transponder": "6645548",
@@ -277,7 +312,7 @@
     }
   ],
   "entrySources": {
-    "wix": 22,
-    "admin": 10
+    "wix": 34,
+    "admin": 9
   }
 }
