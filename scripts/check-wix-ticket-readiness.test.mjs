@@ -23,7 +23,7 @@ test('public ticket limits keep configured club reservations available',()=>{
 test('ticket readiness rejects an over-capacity ticket limit',()=>{
   const wrong=structuredClone(definitions);
   wrong[1].actualLimit=80;
-  assert.throws(()=>ticketReadiness(wrong,meeting,capacities),/should allow 76/);
+  assert.throws(()=>ticketReadiness(wrong,meeting,capacities),/is 80; expected 76/);
 });
 
 test('an event override can disable the standard reservations',()=>{
