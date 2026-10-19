@@ -52,6 +52,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "IAN PEAKMAN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5653564",
+      "chassis": "Schumacher",
+      "transponderSource": "admin"
+    },
+    {
       "driverName": "IAN TOWNSEND",
       "className": "2-Wheel Drive Buggy",
       "transponder": "4571829",
@@ -178,6 +185,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "IAN PEAKMAN",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6091953",
+      "chassis": "Schumacher",
+      "transponderSource": "admin"
+    },
+    {
       "driverName": "JON PAISLEY",
       "className": "4-Wheel Drive Buggy",
       "transponder": "2840842",
@@ -263,7 +277,7 @@
     }
   ],
   "entrySources": {
-    "wix": 27,
-    "admin": 9
+    "wix": 20,
+    "admin": 12
   }
 }
