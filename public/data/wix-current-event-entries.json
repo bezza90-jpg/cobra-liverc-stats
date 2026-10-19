@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-19T11:13:56.101Z",
+  "updatedAt": "2026-10-19T11:15:31.949Z",
   "ticketLimits": {
     "Junior Racers": 10,
     "2-Wheel Drive Buggy": 64,
@@ -28,7 +28,7 @@
       "driverName": "MIKE DRISCOLL",
       "className": "2-Wheel Drive Buggy",
       "transponder": "4003421",
-      "chassis": "Team Associated",
+      "chassis": "TLR",
       "transponderSource": "wix"
     },
     {
