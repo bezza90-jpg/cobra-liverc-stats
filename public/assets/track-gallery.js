@@ -5,7 +5,7 @@ let events=[],plans={},gallery={events:{},flyoverEvents:[]},activeId='',lightbox
 
 const planFor=event=>plans[event.id]||plans[`date:${event.date}`]||null;
 const designAvailable=event=>gallery.flyoverEvents.includes(String(event.id));
-const threeDAvailable=event=>Boolean(planFor(event)||designAvailable(event));
+const threeDAvailable=event=>designAvailable(event);
 
 function actionLink(label,href,className=''){
   return `<a class="${className}" href="${escapeHtml(href)}"${href.startsWith('http')?' target="_blank" rel="noopener"':''}>${escapeHtml(label)}</a>`;
@@ -28,7 +28,10 @@ function renderEvent(id,updateAddress=true){
   const image=plan?.image?`../virtual-race-replay/${plan.image}`:'';
   $('designImageButton').hidden=!image;$('designPlaceholder').hidden=Boolean(image);
   if(image){$('designImage').src=image;$('designImage').alt=`${event.name} track design`;$('designImageButton').dataset.image=image;$('designImageButton').dataset.caption=`${event.name} track design`;}
-  $('photoSource').href=entry.sourcePost||gallery.facebookGroup||'https://www.facebook.com/groups/cobracardiff';
+  if(!image&&designAvailable(event))$('designPlaceholder').innerHTML='<strong>3D track model available</strong><span>Use Track flyover or Explore track in 3D to view this layout.</span>';
+  else if(!image)$('designPlaceholder').innerHTML='<strong>Track design not available</strong><span>The archive keeps this space ready when a plan is added.</span>';
+  $('photoSource').hidden=!photos.length;
+  if(photos.length)$('photoSource').href=entry.sourcePost||gallery.facebookGroup||'https://www.facebook.com/groups/cobracardiff';
   $('photoScroller').innerHTML=photos.length?photos.map((photo,index)=>`<button class="track-photo" type="button" data-image="${escapeHtml(photo.image)}" data-caption="${escapeHtml(photo.caption||`${event.name} track photograph ${index+1}`)}"><img src="${escapeHtml(photo.image)}" alt="${escapeHtml(photo.caption||`${event.name} track photograph ${index+1}`)}" loading="lazy"><span>View fullscreen</span></button>`).join(''):[1,2,3].map(photoPlaceholder).join('');
   lightboxItems=[...(image?[{image,caption:`${event.name} track design`}]:[]),...photos];
   $('eventSelect').value=activeId;document.querySelectorAll('[data-event-id]').forEach(button=>button.setAttribute('aria-current',String(button.dataset.eventId)===activeId?'true':'false'));

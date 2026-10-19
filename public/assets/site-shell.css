@@ -90,3 +90,36 @@ html.cobra-search-open{overflow:hidden}.cobra-search-panel[hidden]{display:none}
 html.cobra-embedded .cobra-back-to-top{display:none}
 @media(max-width:620px){.cobra-back-to-top{right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));min-width:46px;width:46px;height:46px;padding:0;justify-content:center}.cobra-back-to-top b{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}}
 @media(prefers-reduced-motion:reduce){.cobra-back-to-top{transition:none}}
+
+/* Shared COBRA page hero. This matches the Club Series branding on pages whose
+   content uses its own local stylesheet, such as Club News and the replays. */
+.cobra-branded-hero{
+ position:relative;
+ overflow:hidden;
+ color:#fff;
+ background:
+  linear-gradient(115deg,rgba(4,11,7,.98) 0 44%,rgba(4,72,15,.96) 75%,rgba(7,163,26,.92)),
+  repeating-linear-gradient(135deg,transparent 0 24px,rgba(255,255,255,.04) 24px 48px);
+ border-bottom:5px solid #08a31a;
+ isolation:isolate;
+}
+.cobra-branded-hero::after{
+ content:"";
+ position:absolute;
+ z-index:-1;
+ width:420px;
+ height:420px;
+ right:-170px;
+ top:-220px;
+ border:80px solid rgba(255,255,255,.06);
+ border-radius:50%;
+ pointer-events:none;
+}
+.cobra-branded-hero>*,.cobra-branded-hero>div>*{position:relative;z-index:1}
+.news-hero.cobra-branded-hero{padding:36px max(18px,calc((100vw - 960px)/2))}
+main>.cobra-branded-hero{
+ width:100vw;
+ margin:0 0 22px calc(50% - 50vw);
+ padding:20px max(26px,calc((100vw - 1440px)/2 + 26px));
+}
+@media(max-width:650px){main>.cobra-branded-hero{padding:18px 12px}}
