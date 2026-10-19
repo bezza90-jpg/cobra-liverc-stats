@@ -1,6 +1,14 @@
 {
   "posts": [
     {
+      "id": "838ab82e-e682-4dd9-bf88-bf94e4cdacbb",
+      "title": "A bigger rostrum for our next event",
+      "date": "2026-10-19",
+      "body": "We have ordered new stage steps and legs ready for our next event. The new setup will raise the rostrum by 0.5 m, giving drivers a better view of the track, and extend it with an additional 2 m section so there will be plenty of room on the platform.\n\nWe are looking forward to putting the larger, roomier rostrum into use at the next meeting.",
+      "html": "<p>We have ordered new stage steps and legs ready for our next event. The new setup will raise the rostrum by 0.5 m, giving drivers a better view of the track, and extend it with an additional 2 m section so there will be plenty of room on the platform.</p><p>We are looking forward to putting the larger, roomier rostrum into use at the next meeting.</p>",
+      "publishedAt": "2026-10-19T12:00:00+01:00"
+    },
+    {
       "id": "e212c2c7-4e82-43a7-95e9-314131e18474",
       "title": "New 3D Virtual Replay feature added to the site",
       "date": "2026-10-17",
