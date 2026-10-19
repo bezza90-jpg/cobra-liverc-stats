@@ -4,11 +4,21 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-19T01:44:19.440Z",
+  "updatedAt": "2026-10-19T01:50:49.389Z",
   "entries": [
     {
+      "driverKey": "BOBTECH",
+      "driverName": "Bob \"Bobtech\" Gelstharp",
+      "bookingName": "BOB GELSTHARP",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "3624077"
+    },
+    {
       "driverKey": "MATTHEW-HODGES",
-      "driverName": "Matthew Hodges",
+      "driverName": "MATTHEW HODGES",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -16,8 +26,36 @@
       "transponder": "5504378"
     },
     {
+      "driverKey": "MIKE-DRISCOLL",
+      "driverName": "MIKE DRISCOLL",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "2142002"
+    },
+    {
+      "driverKey": "STEVE-CURTIS-RICH",
+      "driverName": "STEVE CURTIS-RICH",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "6196241"
+    },
+    {
+      "driverKey": "BOBTECH",
+      "driverName": "Bob \"Bobtech\" Gelstharp",
+      "bookingName": "BOB GELSTHARP",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "9135402"
+    },
+    {
       "driverKey": "MATTHEW-HODGES",
-      "driverName": "Matthew Hodges",
+      "driverName": "MATTHEW HODGES",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -26,16 +64,7 @@
     },
     {
       "driverKey": "MIKE-DRISCOLL",
-      "driverName": "Mike Driscoll",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "chassisSource": "wix",
-      "transponder": "2142002"
-    },
-    {
-      "driverKey": "MIKE-DRISCOLL",
-      "driverName": "Mike Driscoll",
+      "driverName": "MIKE DRISCOLL",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -43,52 +72,23 @@
       "transponder": "5431388"
     },
     {
-      "driverKey": "STEVE-CURTIS-RICH",
-      "driverName": "Steve Curtis-Rich",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "6196241"
-    },
-    {
-      "driverKey": "STEVE-CURTIS-RICH",
-      "driverName": "Steve Curtis-Rich",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "6155425"
-    },
-    {
-      "driverKey": "BOBTECH",
-      "driverName": "Bob \"Bobtech\" Gelstharp",
-      "bookingName": "Bob Gelstharp",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "3624077"
-    },
-    {
-      "driverKey": "BOBTECH",
-      "driverName": "Bob \"Bobtech\" Gelstharp",
-      "bookingName": "Bob Gelstharp",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "9135402"
-    },
-    {
       "driverKey": "BRUCE",
       "driverName": "Paul \"Bruce\" Curtis",
-      "bookingName": "Paul Curtis",
+      "bookingName": "PAUL CURTIS",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "4950687"
+    },
+    {
+      "driverKey": "STEVE-CURTIS-RICH",
+      "driverName": "STEVE CURTIS-RICH",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "6155425"
     }
   ]
 }
