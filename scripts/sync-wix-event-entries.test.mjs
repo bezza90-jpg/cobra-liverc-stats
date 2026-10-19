@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync,assertRosterContinuity,publicEntries,entriesFromOrders,mergeAdminEntries} from './sync-wix-event-entries.mjs';
+import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync,assertRosterContinuity,publicEntries,entriesFromOrders,mergeAdminEntries,ticketLimitsFromDefinitions} from './sync-wix-event-entries.mjs';
 
 test('unchanged entries do not require publishing just because the check time changed',()=>{
   const data={eventDate:'2026-10-11',entries:[{driverName:'TEST DRIVER',className:'Trucks'}]};
@@ -28,6 +28,14 @@ test('only an exact seven digit number can update the public entry',()=>{
   assert.equal(publicEntry(guest,order,{'2WD Transponder Number':'field-2wd'}).transponder,'');
   guest.guestDetails.formResponse.inputValues[0].value='9999999';
   assert.equal(publicEntry(guest,order,{'2WD Transponder Number':'field-2wd'}).transponder,'');
+});
+test('Wix ticket definitions expose current class quantities to the event page',()=>{
+  assert.deepEqual(ticketLimitsFromDefinitions([
+    {name:'Junior Entry',actualLimit:10},
+    {name:'2WD SWORD Entry',actualLimit:64},
+    {name:'4WD SWORD Entry',initialLimit:25},
+    {name:'Unrelated ticket',actualLimit:999}
+  ]),{'Junior Racers':10,'2-Wheel Drive Buggy':64,'4-Wheel Drive Buggy':25});
 });
 test('automatic Wix event rolls at UK midnight',()=>{
   assert.equal(londonDate(new Date('2026-10-04T22:59:59Z')),'2026-10-04');
