@@ -11,6 +11,7 @@ const $=id=>document.getElementById(id),svgNS='http://www.w3.org/2000/svg';
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=s=>`${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`;
 const params=new URLSearchParams(location.search),originalRoute=$('route').getAttribute('d');
+document.documentElement.classList.toggle('track-design-preview',params.get('design')==='track');
 let catalog,trackPlans={},avatars={},event,selectedDriver=canonicalDriverKey(params.get('driver')||''),dayMode=false,frame=0,loadToken=0,pauseCurrent=()=>{},updateFocus=()=>{};
 let comparisonKeys=params.getAll('compare').map(canonicalDriverKey);
 const key=name=>name.toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');
