@@ -5,6 +5,7 @@ const wixPages = new Map([
   ['sword/', 'sword-tables'],
   ['club/', 'club-series-tables'],
   ['podiums/', 'Podium-Gallery'],
+  ['track-gallery/', 'track-gallery'],
   ['setups/', 'drivers-setups'],
   ['avatar-upload/', 'upload-car-avatar'],
   ['car-avatars/', 'driver-car-avatars'],

@@ -1,0 +1,22 @@
+{
+  "updatedAt": "2026-10-19T02:45:00Z",
+  "facebookGroup": "https://www.facebook.com/groups/cobracardiff",
+  "flyoverEvents": ["518551", "518554", "518555"],
+  "events": {
+    "518554": {
+      "sourcePost": "https://www.facebook.com/groups/cobracardiff/posts/10161439425162465/",
+      "photos": [
+        {"image": "../track-photos/518554/01.jpg", "caption": "SWORD Round 1 track from the rostrum"}
+      ]
+    },
+    "518555": {
+      "sourcePost": "https://www.facebook.com/groups/cobracardiff/posts/10161466583127465/",
+      "photos": [
+        {"image": "../track-photos/518555/01.jpg", "caption": "Club Day track from the rostrum side"},
+        {"image": "../track-photos/518555/02.jpg", "caption": "Club Day track centre section"},
+        {"image": "../track-photos/518555/03.jpg", "caption": "Club Day track and trestle feature"},
+        {"image": "../track-photos/518555/04.jpg", "caption": "Club Day track from the far corner"}
+      ]
+    }
+  }
+}

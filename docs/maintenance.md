@@ -95,6 +95,8 @@ Titles should contain `COBRA`, the event date as `DDMMYY`, and the qualifying ro
 
 Embed the published page URL in a Wix website-embed element. Check desktop and mobile sizing after a site change; start with roughly 1,400 pixels of height and adjust to the page. Wix interface labels may vary.
 
+The Wix Track Gallery page at `/track-gallery` should contain a website-embed element pointing to `https://racehub.cobracardiff.co.uk/track-gallery/`. This replaces the former Wix gallery while retaining the public Wix address. The RaceHub page provides the event archive, track photographs, track plans, results and replay links.
+
 The private site manager is not included in this checkout. Before importing or exporting its files, compare them with this repository so it does not overwrite newer code, upload configuration or generated avatar images. Keep its active website files under the same `public/` layout.
 
 Historical ZIP-specific instructions are preserved in [the archive](archive/README.md). Historical site exports under `outputs/` are not active sources.

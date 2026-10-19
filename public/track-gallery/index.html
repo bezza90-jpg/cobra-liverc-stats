@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="../assets/cobra.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a8f18">
+  <meta name="description" content="Browse COBRA track photographs, track designs, race results and Virtual Race Replays by event.">
+  <title>Track Gallery | COBRA</title>
+  <link rel="stylesheet" href="../assets/styles.css?v=20261001-result-avatars">
+  <link rel="stylesheet" href="../assets/track-gallery.css?v=20261019-archive">
+  <script type="module" src="../assets/site-media.js?v=20260924-site1"></script>
+  <script type="module" src="../assets/external-links.js?v=20261019-track-gallery"></script>
+  <link rel="stylesheet" href="../assets/embedded-layout.css?v=20260926-1">
+  <script>if (window.self !== window.top) document.documentElement.classList.add("cobra-embedded");</script>
+  <link rel="canonical" href="https://racehub.cobracardiff.co.uk/track-gallery/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://racehub.cobracardiff.co.uk/track-gallery/">
+  <meta property="og:site_name" content="COBRA RaceHub">
+  <meta property="og:title" content="Track Gallery | COBRA">
+  <meta property="og:description" content="COBRA event track photographs, designs, results and Virtual Race Replays.">
+  <meta property="og:image" content="https://racehub.cobracardiff.co.uk/track-photos/518555/01.jpg">
+  <meta property="og:image:secure_url" content="https://racehub.cobracardiff.co.uk/track-photos/518555/01.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="2048">
+  <meta property="og:image:height" content="1536">
+  <meta property="og:image:alt" content="COBRA indoor off-road RC track">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Track Gallery | COBRA">
+  <meta name="twitter:description" content="COBRA event track photographs, designs, results and Virtual Race Replays.">
+  <meta name="twitter:image" content="https://racehub.cobracardiff.co.uk/track-photos/518555/01.jpg">
+<link data-cobra-shell rel="stylesheet" href="../assets/site-shell.css?v=4"><script data-cobra-shell type="module" src="../assets/site-shell.js?v=4" defer></script><!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"8bd96a91178344ddb3c5078533d44dde"}'></script><!-- End Cloudflare Web Analytics --></head>
+<body><!-- cobra-shell:start --><header class="cobra-site-header"><div class="cobra-header-inner"><a class="cobra-site-logo" href="https://www.cobracardiff.co.uk/" aria-label="COBRA home"><img src="../assets/cobra-header-logo.png" width="271" height="69" alt="COBRA" fetchpriority="high"></a><a class="cobra-book-in" href="../book-in/">Book In</a><details class="cobra-mobile-menu"><summary aria-label="Open site menu">☰ <span>Menu</span></summary><nav class="cobra-site-menu" aria-label="Site"><a href="https://www.cobracardiff.co.uk/">Home</a><details class="cobra-menu-group"><summary>Events</summary><div><a href="../event/">Current event</a><a href="https://www.cobracardiff.co.uk/event-list">Events &amp; booking</a></div></details><details class="cobra-menu-group"><summary>Race Day</summary><div><a href="../schedule/">Club race schedule</a><a href="../briefing/">Drivers briefing</a><a href="../schedule/?type=sword">SWORD race schedule</a></div></details><details class="cobra-menu-group"><summary>Results</summary><div><a href="../club/">Club Series</a><a href="../sword/">SWORD Championship</a><a href="../podiums/">Podium gallery</a><a href="../">Race statistics</a><a href="../virtual-race-replay/">2D Virtual Replay</a><a href="../virtual-race-replay/3d.html">3D Virtual Replay</a></div></details><details class="cobra-menu-group"><summary>COBRA Data</summary><div><a href="../car-avatars/">Driver car avatars</a><a href="../?tracker=1">Driver distance tracker</a><a href="../setups/">Setups &amp; tips</a><a href="../avatar-upload/">Upload car avatar</a><a href="../virtual-race-replay/">2D Virtual Replay</a><a href="../virtual-race-replay/3d.html">3D Virtual Replay</a></div></details><details class="cobra-menu-group"><summary>About COBRA</summary><div><a href="../about/">About &amp; location</a><a href="../club-news/">Club news</a><a href="https://www.cobracardiff.co.uk/media">Media</a><a href="../track-gallery/">Track gallery</a><a href="../website-guides/">Help &amp; Website Guides</a></div></details></nav></details><a class="cobra-gpw-logo" href="https://www.cobracardiff.co.uk/grand-prix-wales"><img src="../assets/gpw-logo.webp" width="99" height="59" alt="Grand Prix of Wales event logo"></a></div></header><!-- cobra-shell:end -->
+  <header class="track-hero">
+    <p class="eyebrow">COBRA · TRACK ARCHIVE</p>
+    <h1>Track Gallery</h1>
+    <p>Choose an event to see its track photographs and design, then open the results or replay the racing.</p>
+  </header>
+  <main class="track-gallery-main">
+    <div class="track-gallery-layout">
+      <aside class="track-sidebar panel" aria-labelledby="trackArchiveTitle">
+        <p class="eyebrow">Archive from 2022</p>
+        <h2 id="trackArchiveTitle">Event archive</h2>
+        <label class="track-mobile-picker">Choose event<select id="eventSelect"></select></label>
+        <nav id="trackArchive" class="track-archive" aria-label="Track gallery events"></nav>
+      </aside>
+      <section class="track-event" aria-live="polite">
+        <div class="panel track-event-heading">
+          <div><p class="eyebrow">Event track</p><h2 id="eventTitle">Loading event…</h2><p id="eventMeta"></p></div>
+          <div id="eventActions" class="track-actions"></div>
+        </div>
+        <div class="track-media-layout">
+          <article class="panel track-design-card">
+            <header><div><p class="eyebrow">Track design</p><h3>Event layout</h3></div><span id="designStatus" class="availability"></span></header>
+            <button id="designImageButton" class="track-image-button" type="button" hidden><img id="designImage" alt="" loading="eager"></button>
+            <div id="designPlaceholder" class="track-placeholder"><strong>Track design not available</strong><span>The archive keeps this space ready when a plan is added.</span></div>
+          </article>
+          <article class="panel track-photos-card">
+            <header><div><p class="eyebrow">Track photographs</p><h3>Event photos</h3></div><a id="photoSource" href="https://www.facebook.com/groups/cobracardiff" target="_blank" rel="noopener">Facebook source ↗</a></header>
+            <div id="photoScroller" class="track-photo-scroller"></div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+  <div class="track-lightbox" id="trackLightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxCaption" hidden>
+    <button id="lightboxClose" class="track-lightbox-close" type="button" aria-label="Close fullscreen image">×</button>
+    <button id="lightboxPrevious" class="track-lightbox-arrow previous" type="button" aria-label="Previous image">‹</button>
+    <figure><img id="lightboxImage" alt=""><figcaption id="lightboxCaption"></figcaption></figure>
+    <button id="lightboxNext" class="track-lightbox-arrow next" type="button" aria-label="Next image">›</button>
+  </div>
+  <script type="module" src="../assets/track-gallery.js?v=20261019-archive"></script>
+<!-- cobra-footer:start --><footer class="cobra-site-footer"><a href="https://www.cobracardiff.co.uk/"><img src="../assets/cobra-header-logo.png" width="220" height="56" alt="COBRA home"></a><p>South Wales TQ HQ<br>BRCA.org Affiliated Club</p><p>Off Road Buggy Racing Club • South Wales</p><nav aria-label="Footer"><a href="../website-guides/">Help &amp; Website Guides</a><a href="https://www.facebook.com/groups/cobracardiff">Facebook</a><a href="https://www.youtube.com/@Bezza90">YouTube</a></nav><p>© 2026 COBRA. Beryl Media Productions. All rights reserved.</p></footer><!-- cobra-footer:end --></body>
+</html>
