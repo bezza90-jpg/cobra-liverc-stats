@@ -17,6 +17,7 @@ function renderEvent(id,updateAddress=true){
   $('eventTitle').textContent=event.name;$('eventMeta').textContent=dateLabel(event.date);
   const race=encodeURIComponent(event.defaultRace||''),eventId=encodeURIComponent(event.id),links=[];
   links.push(actionLink('Event results ↗',`https://cobracardiff.liverc.com/results/?p=view_event&id=${eventId}`,'results'));
+  for(const playlist of gallery.youtubePlaylists?.[activeId]||[])links.push(actionLink(`▶ YouTube ${playlist.label}`,playlist.url,'youtube'));
   links.push(actionLink('2D replay',`../virtual-race-replay/?event=${eventId}&race=${race}`,'primary'));
   if(threeDAvailable(event))links.push(actionLink('3D replay',`../virtual-race-replay/3d.html?event=${eventId}&race=${race}`));
   if(designAvailable(event)){
