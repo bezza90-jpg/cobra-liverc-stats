@@ -33,3 +33,10 @@ test('standalone pages use the shared Club Series hero branding',()=>{
   assert.match(replay2d,/<header class="cobra-branded-hero">/);
   assert.match(replay3d,/intro cobra-branded-hero/);
 });
+
+test('the Events menu ends with the track gallery',()=>{
+  const html=addSiteShell('<html><head></head><body><main>Race</main></body></html>','./');
+  const events=html.match(/<details class="cobra-menu-group"><summary>Events<\/summary><div>(.*?)<\/div><\/details>/s)?.[1]||'';
+  assert.match(events,/Events &amp; booking/);
+  assert.match(events,/Track gallery<\/a>$/);
+});

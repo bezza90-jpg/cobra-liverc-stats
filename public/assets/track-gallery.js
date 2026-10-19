@@ -24,8 +24,8 @@ function renderEvent(id,updateAddress=true){
     links.push(actionLink('Explore track in 3D',`../virtual-race-replay/3d.html?event=${eventId}&race=${race}&explore=track`,'explore'));
   }
   $('eventActions').innerHTML=links.join('');
-  $('designStatus').textContent=designAvailable(event)?'Measured 3D design':plan?'Track plan available':'Awaiting plan';
-  const image=plan?.image?`../virtual-race-replay/${plan.image}`:'';
+  const image=entry.designImage|| (plan?.image?`../virtual-race-replay/${plan.image}`:'');
+  $('designStatus').textContent=designAvailable(event)?'Measured 3D design':image?'Track plan available':'Awaiting plan';
   $('designImageButton').hidden=!image;$('designPlaceholder').hidden=Boolean(image);
   if(image){$('designImage').src=image;$('designImage').alt=`${event.name} track design`;$('designImageButton').dataset.image=image;$('designImageButton').dataset.caption=`${event.name} track design`;}
   if(!image&&designAvailable(event))$('designPlaceholder').innerHTML='<strong>3D track model available</strong><span>Use Track flyover or Explore track in 3D to view this layout.</span>';

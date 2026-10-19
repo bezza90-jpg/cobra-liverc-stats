@@ -18,6 +18,10 @@
       {
         "label": "Events & booking",
         "url": "https://www.cobracardiff.co.uk/event-list"
+      },
+      {
+        "label": "Track gallery",
+        "url": "https://www.cobracardiff.co.uk/track-gallery"
       }
     ]
   },
