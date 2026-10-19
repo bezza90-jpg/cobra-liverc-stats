@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync,assertRosterContinuity,publicEntries,entriesFromOrders,mergeAdminEntries,ticketLimitsFromDefinitions} from './sync-wix-event-entries.mjs';
+import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync,assertRosterContinuity,publicEntries,entriesFromOrders,mergeAdminEntries,ticketLimitsFromDefinitions,applySeasonClassOverrides} from './sync-wix-event-entries.mjs';
 
 test('unchanged entries do not require publishing just because the check time changed',()=>{
   const data={eventDate:'2026-10-11',entries:[{driverName:'TEST DRIVER',className:'Trucks'}]};
@@ -88,6 +88,15 @@ test('double-class selections can come from the matching buyer checkout form',()
 test('unrecognised paid ticket or missing class selection blocks partial publication',()=>{
   assert.throws(()=>publicEntries(attendingGuest,{status:'PAID',tickets:[{...ticket,name:'New Racing Ticket'}]},{}),/Unrecognised attending paid/);
   assert.throws(()=>publicEntries(attendingGuest,{status:'PAID',tickets:[{...ticket,name:'Adult Double Class'}]},{}),/incomplete or unrecognised/);
+});
+
+test('Haiden junior-price bookings map to senior 2WD throughout the 2026/27 season',()=>{
+  const rows=[{driverName:'HAIDEN HICKS',className:'Junior Racers',transponder:'3422662'},{driverName:'SEB FISHER',className:'Junior Racers',transponder:'6645548'}];
+  assert.deepEqual(applySeasonClassOverrides(rows,'2026-11-01').map(row=>[row.driverName,row.className,row.transponder]),[
+    ['HAIDEN HICKS','2-Wheel Drive Buggy','3422662'],
+    ['SEB FISHER','Junior Racers','6645548']
+  ]);
+  assert.equal(applySeasonClassOverrides(rows,'2027-09-01')[0].className,'Junior Racers');
 });
 
 test('confirmed admin entries survive Wix refresh and keep separate source counts',()=>{
