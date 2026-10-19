@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {chartData,lapChartMarkup,positionChartMarkup,chartUrl,replayComparisonUrl} from '../public/assets/lap-charts.js';
+import {chartData,focusedLapScale,lapChartMarkup,positionChartMarkup,chartUrl,replayComparisonUrl} from '../public/assets/lap-charts.js';
 const race=JSON.parse(readFileSync(new URL('../public/virtual-race-replay/races/7072625.json',import.meta.url)));
 test('recorded laps and common scale preserve real race values',()=>{const d=chartData(race);assert.equal(d.drivers.length,9);assert.equal(d.lastLap,18);assert.ok(d.min<13.495&&d.max>25.604);const html=lapChartMarkup(race);assert.match(html,/13\.967/);assert.match(html,/MARK GIAQUINTO/);assert.equal((html.match(/class="lap-chart-row"/g)||[]).length,9);assert.match(html,/Share to Facebook/);});
 test('missing and invalid laps do not become made-up connecting lines',()=>{const r={id:'1',drivers:[{name:'<unsafe>',laps:[{lap:1,seconds:10},{lap:2,seconds:null},{lap:3,seconds:12}]}]};const html=lapChartMarkup(r);assert.equal((html.match(/class="lap-chart-line"/g)||[]).length,2);assert.match(html,/&lt;unsafe&gt;/);assert.doesNotMatch(html,/NaN/);});
@@ -11,3 +11,6 @@ test('position graph begins at lap zero using the supplied start grid',()=>{cons
 test('share pages have distinct stable race and driver addresses',()=>{assert.ok(chartUrl('7072625').endsWith('/7072625/'));assert.ok(chartUrl('7072625','MARK-GIAQUINTO').endsWith('/7072625/MARK-GIAQUINTO/'));});
 
 test('replay comparison preserves the race and multiple selected drivers',()=>{const u=new URL(replayComparisonUrl('7072625',['MARK-GIAQUINTO','RUSSELL-THOMAS']));assert.ok(u.pathname.endsWith('/virtual-race-replay/'));assert.equal(u.searchParams.get('race'),'7072625');assert.deepEqual(u.searchParams.getAll('compare'),['MARK-GIAQUINTO','RUSSELL-THOMAS']);});
+
+test('focused final-lap scale ignores lap one and trims isolated outliers',()=>{const scale=focusedLapScale({laps:[{lap:1,seconds:7},...Array.from({length:16},(_,i)=>({lap:i+2,seconds:17+(i%4)*.08})),{lap:18,seconds:30}]});assert.ok(scale.min>16);assert.ok(scale.max<20);assert.equal(scale.plottedLaps[0].lap,2);});
+test('driver charts explain tight scaling and retain lap one exactly',()=>{const html=lapChartMarkup({name:'Scale test',drivers:[{name:'Driver',laps:[{lap:1,seconds:7},{lap:2,seconds:17},{lap:3,seconds:17.2}]}]});assert.match(html,/tight scale based on that driver/);assert.match(html,/<th scope="row">1<\/th><td>7\.000<\/td>/);});
