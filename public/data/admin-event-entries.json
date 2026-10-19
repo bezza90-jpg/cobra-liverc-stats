@@ -1,91 +1,62 @@
 {
-  "wixEventId": "c8436b97-a4ad-48f9-addd-38f08648fa78",
-  "liveRcEventId": "518555",
-  "eventDate": "2026-10-11",
-  "eventTitle": "Club Day 11th October 2026",
-  "source": "Admin entries and event-specific booking corrections confirmed by Matt on 7-10 October 2026, including Shaun Ogden Vintage as a reserve request while retaining his paid 2WD entry and the Steve Ashton booking-name correction",
-  "removeEntries": [
-    {
-      "driverName": "Mark Hicks",
-      "className": "Junior Racers",
-      "reason": "Booking was for his son Haiden Hicks in Vintage"
-    },
-    {
-      "driverName": "Lee Marson",
-      "className": "Vintage",
-      "reason": "Lee intended to enter Trucks for this event"
-    },
-    {
-      "driverName": "Haiden Hicks",
-      "className": "Junior Racers",
-      "reason": "Junior ticket was used for payment, but Haiden is racing in Trucks for this event"
-    },
-    {
-      "driverName": "Shaun Ogden",
-      "className": "Vintage",
-      "reason": "Vintage details were supplied for the reserve list; Shaun paid for 2WD only"
-    },
-    {
-      "driverName": "MR SR ASHTON",
-      "className": "2-Wheel Drive Buggy",
-      "reason": "Booking name corrected to Steve Ashton for this event"
-    }
-  ],
+  "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
+  "liveRcEventId": "518556",
+  "eventDate": "2026-11-01",
+  "eventTitle": "COBRA SWORD Round 2",
+  "source": "Club-team admin places confirmed for SWORD Round 2 on 19 October 2026",
+  "removeEntries": [],
   "entries": [
     {
-      "driverName": "Bob Gelstharp",
-      "className": "2-Wheel Drive Buggy"
+      "driverName": "Matthew Hodges",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "5504378",
+      "chassis": "Team Associated"
     },
     {
       "driverName": "Matthew Hodges",
-      "className": "2-Wheel Drive Buggy"
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "3647613",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "Steve Curtis-Rich",
-      "className": "2-Wheel Drive Buggy"
-    },
-    {
-      "driverName": "Jamie Davies",
-      "className": "4-Wheel Drive Buggy"
-    },
-    {
-      "driverName": "Matthew Hodges",
-      "className": "4-Wheel Drive Buggy"
-    },
-    {
-      "driverName": "Paul Curtis",
-      "className": "Trucks"
-    },
-    {
-      "driverName": "Bob Gelstharp",
-      "className": "Vintage"
-    },
-    {
-      "driverName": "Jamie Davies",
-      "className": "Trucks"
-    },
-    {
-      "driverName": "Haiden Hicks",
-      "className": "Vintage",
-      "transponder": "8077301",
-      "chassis": "Kyosho"
-    },
-    {
-      "driverName": "Lee Marson",
-      "className": "Trucks",
-      "transponder": "2879705",
+      "driverName": "Mike Driscoll",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2142002",
       "chassis": "TLR"
     },
     {
-      "driverName": "Haiden Hicks",
-      "className": "Trucks",
-      "transponder": "3422662"
+      "driverName": "Mike Driscoll",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "5431388",
+      "chassis": "TLR"
     },
     {
-      "driverName": "Steve Ashton",
+      "driverName": "Steve Curtis-Rich",
       "className": "2-Wheel Drive Buggy",
-      "transponder": "9569399",
-      "chassis": "Kyosho"
+      "transponder": "6196241",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Steve Curtis-Rich",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "6155425"
+    },
+    {
+      "driverName": "Bob Gelstharp",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3624077",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Bob Gelstharp",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "9135402",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Paul Curtis",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "4950687"
     }
   ]
 }
