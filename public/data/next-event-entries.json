@@ -4,8 +4,17 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-19T20:06:42.196Z",
+  "updatedAt": "2026-10-19T21:05:04.627Z",
   "entries": [
+    {
+      "driverKey": "ADAM-MCBRIDE",
+      "driverName": "ADAM MCBRIDE",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "7241911"
+    },
     {
       "driverKey": "BOBTECH",
       "driverName": "Bob \"Bobtech\" Gelstharp",
@@ -53,6 +62,15 @@
       "transponder": "5097267"
     },
     {
+      "driverKey": "DEWI-JONES",
+      "driverName": "DEWI JONES",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "6263647"
+    },
+    {
       "driverKey": "HAIDEN-HICKS",
       "driverName": "HAIDEN HICKS",
       "className": "2-Wheel Drive Buggy",
@@ -79,6 +97,15 @@
       "transponder": "4571829"
     },
     {
+      "driverKey": "JAMIE-DAVIES",
+      "driverName": "JAMIE DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "9036431"
+    },
+    {
       "driverKey": "JON-PAISLEY",
       "driverName": "JON PAISLEY",
       "className": "2-Wheel Drive Buggy",
@@ -88,6 +115,15 @@
       "transponder": "2223753"
     },
     {
+      "driverKey": "KEVIN-GREENWAY",
+      "driverName": "KEVIN GREENWAY",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "6958172"
+    },
+    {
       "driverKey": "MARK-HICKS",
       "driverName": "MARK HICKS",
       "className": "2-Wheel Drive Buggy",
@@ -95,6 +131,15 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "3753291"
+    },
+    {
+      "driverKey": "MARTYN-HADLEY",
+      "driverName": "MARTYN HADLEY",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "9073997"
     },
     {
       "driverKey": "MATT-WOODIWISS",
@@ -140,6 +185,15 @@
       "chassis": "Tlr",
       "chassisSource": "wix",
       "transponder": "8268154"
+    },
+    {
+      "driverKey": "ROYSTON-STEWART",
+      "driverName": "ROYSTON STEWART",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix",
+      "transponder": "2395627"
     },
     {
       "driverKey": "RUSS-WILLIAMS",
@@ -222,6 +276,15 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "5097267"
+    },
+    {
+      "driverKey": "DEWI-JONES",
+      "driverName": "DEWI JONES",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": ""
     },
     {
       "driverKey": "FRAN-BRAVERY",
@@ -340,6 +403,24 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "7226235"
+    },
+    {
+      "driverKey": "LEO-SMITH",
+      "driverName": "LEO SMITH",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "6624085"
+    },
+    {
+      "driverKey": "NOAH-MCBRIDE",
+      "driverName": "NOAH MCBRIDE",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "8205771"
     },
     {
       "driverKey": "SEB-FISHER",
