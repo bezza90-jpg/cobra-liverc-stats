@@ -6,7 +6,7 @@ import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js?v=20261019-opening-lap';
-import {renderLapCharts} from './lap-charts.js?v=20261019-focused-scale';
+import {renderLapCharts} from './lap-charts.js?v=20261019-heat-scale';
 import { loadMap } from './load-map.js?v=20260928-local';
 import { journeyRoadDistanceKm, journeyRoadRoute, journeyRoadMilestones } from './journey-route.js?v=20261005-roads';
 import {createDistanceRoute} from './journey-route-geometry.js?v=20261005-roads';

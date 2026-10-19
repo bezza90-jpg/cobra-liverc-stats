@@ -1,5 +1,5 @@
 import {canonicalDriverKey} from '../assets/driver-identity.js';
-import {renderLapCharts} from '../assets/lap-charts.js?v=20260928-same-tab';
+import {renderLapCharts} from '../assets/lap-charts.js?v=20261019-heat-scale';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
 import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
