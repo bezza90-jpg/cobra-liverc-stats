@@ -27,10 +27,14 @@ test('flyover camera gives heightless route points a valid ground height',()=>{
 test('every archived track photograph exists locally and keeps its Facebook source',()=>{
   const gallery=readJson('data/track-gallery.json');
   for(const [eventId,event] of Object.entries(gallery.events)){
-    assert.match(event.sourcePost,new RegExp(`facebook\\.com/groups/cobracardiff/posts/`),eventId);
-    assert.ok(event.photos.length||event.designImage,eventId);
+    const photos=event.photos||[];
+    if(event.sourcePost)assert.match(event.sourcePost,new RegExp(`facebook\\.com/groups/cobracardiff/posts/`),eventId);
+    assert.ok(photos.length||event.designImage,eventId);
     if(event.designImage)assert.ok(existsSync(new URL(`track-gallery/${event.designImage}`,publicRoot)),`${eventId}: ${event.designImage}`);
-    for(const photo of event.photos)assert.ok(existsSync(new URL(`track-gallery/${photo.image}`,publicRoot)),`${eventId}: ${photo.image}`);
+    for(const photo of photos){
+      assert.ok(existsSync(new URL(`track-gallery/${photo.image}`,publicRoot)),`${eventId}: ${photo.image}`);
+      if(!event.sourcePost)assert.equal(photo.location,'House of Sport',eventId);
+    }
   }
 });
 
@@ -45,6 +49,17 @@ test('track gallery offers results and 2D replay for every event',()=>{
   assert.match(source,/Explore track in 3D/);
   assert.match(source,/photoSource'\)\.hidden=!photos\.length/);
   assert.match(source,/3D track model available/);
+  assert.match(source,/design=track/);
+  assert.match(source,/cache:'no-store'/);
+});
+
+test('events without a separate plan preview the same track used by the 2D replay',()=>{
+  const html=readFileSync(new URL('track-gallery/index.html',publicRoot),'utf8');
+  const replay=readFileSync(new URL('virtual-race-replay/replay.js',publicRoot),'utf8');
+  const replayCss=readFileSync(new URL('virtual-race-replay/style.css',publicRoot),'utf8');
+  assert.match(html,/id="designReplayFrame"/);
+  assert.match(replay,/track-design-preview/);
+  assert.match(replayCss,/\.track-design-preview #cars\{display:none\}/);
 });
 
 test('verified event playlists appear as red YouTube actions',()=>{

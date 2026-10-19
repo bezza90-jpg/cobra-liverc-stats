@@ -26,8 +26,12 @@ function renderEvent(id,updateAddress=true){
   }
   $('eventActions').innerHTML=links.join('');
   const image=entry.designImage|| (plan?.image?`../virtual-race-replay/${plan.image}`:'');
-  $('designStatus').textContent=designAvailable(event)?'Measured 3D design':image?'Track plan available':'Awaiting plan';
-  $('designImageButton').hidden=!image;$('designPlaceholder').hidden=Boolean(image);
+  const replayDesign=!image&&event.defaultRace?`../virtual-race-replay/?event=${eventId}&race=${race}&design=track`:'';
+  $('designStatus').textContent=designAvailable(event)?'Measured 3D design':image?'Track plan available':replayDesign?'Replay design':'Awaiting plan';
+  $('designImageButton').hidden=!image;
+  $('designReplay').hidden=!replayDesign;
+  if(replayDesign)$('designReplayFrame').src=replayDesign;else $('designReplayFrame').removeAttribute('src');
+  $('designPlaceholder').hidden=Boolean(image||replayDesign);
   if(image){$('designImage').src=image;$('designImage').alt=`${event.name} track design`;$('designImageButton').dataset.image=image;$('designImageButton').dataset.caption=`${event.name} track design`;}
   if(!image&&designAvailable(event))$('designPlaceholder').innerHTML='<strong>3D track model available</strong><span>Use Track flyover or Explore track in 3D to view this layout.</span>';
   else if(!image)$('designPlaceholder').innerHTML='<strong>Track design not available</strong><span>The archive keeps this space ready when a plan is added.</span>';
@@ -59,6 +63,6 @@ $('lightboxClose').addEventListener('click',closeLightbox);$('lightboxPrevious')
 document.addEventListener('keydown',event=>{if($('trackLightbox').hidden)return;if(event.key==='Escape')closeLightbox();if(event.key==='ArrowLeft')showLightbox(-1);if(event.key==='ArrowRight')showLightbox(1);});
 
 async function start(){
-  try{const [catalogResponse,plansResponse,galleryResponse]=await Promise.all([fetch('../virtual-race-replay/catalog.json'),fetch('../virtual-race-replay/track-plans.json'),fetch('../data/track-gallery.json')]);if(!catalogResponse.ok||!plansResponse.ok||!galleryResponse.ok)throw Error('The track archive could not be loaded.');const catalog=await catalogResponse.json();plans=await plansResponse.json();gallery=await galleryResponse.json();events=Array.isArray(catalog.events)?catalog.events:[];renderArchive();const requested=new URLSearchParams(location.search).get('event');renderEvent(requested||events[0]?.id,false);}catch(error){$('eventTitle').textContent='Track gallery unavailable';$('eventMeta').textContent=error.message;}
+  try{const request={cache:'no-store'},[catalogResponse,plansResponse,galleryResponse]=await Promise.all([fetch('../virtual-race-replay/catalog.json',request),fetch('../virtual-race-replay/track-plans.json',request),fetch('../data/track-gallery.json',request)]);if(!catalogResponse.ok||!plansResponse.ok||!galleryResponse.ok)throw Error('The track archive could not be loaded.');const catalog=await catalogResponse.json();plans=await plansResponse.json();gallery=await galleryResponse.json();events=Array.isArray(catalog.events)?catalog.events:[];renderArchive();const requested=new URLSearchParams(location.search).get('event');renderEvent(requested||events[0]?.id,false);}catch(error){$('eventTitle').textContent='Track gallery unavailable';$('eventMeta').textContent=error.message;}
 }
 start();
