@@ -2,6 +2,8 @@ const $=id=>document.getElementById(id);
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'})[char]);
 const dateLabel=value=>new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'long',year:'numeric'}).format(new Date(`${value}T12:00:00Z`));
 let events=[],plans={},gallery={events:{},flyoverEvents:[]},activeId='',lightboxItems=[],lightboxIndex=0;
+let renderSequence=0;
+const orientedPlanImages=new Map();
 
 const planFor=event=>plans[event.id]||plans[`date:${event.date}`]||null;
 const designAvailable=event=>gallery.flyoverEvents.includes(String(event.id));
@@ -11,7 +13,22 @@ function actionLink(label,href,className=''){
   return `<a class="${className}" href="${escapeHtml(href)}"${href.startsWith('http')?' target="_blank" rel="noopener"':''}>${escapeHtml(label)}</a>`;
 }
 function photoPlaceholder(index){return `<div class="track-photo-placeholder"><div><strong>Photo ${index}</strong><span>Ready for this event’s track photograph.</span></div></div>`;}
-function renderEvent(id,updateAddress=true){
+function loadImage(src){
+  return new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=src;});
+}
+async function orientedPlanImage(src,rotation=0){
+  const degrees=((Number(rotation)||0)%360+360)%360;if(!degrees)return src;
+  const key=`${src}|${degrees}`;if(orientedPlanImages.has(key))return orientedPlanImages.get(key);
+  const pending=loadImage(src).then(image=>{
+    const sideways=degrees===90||degrees===270,canvas=document.createElement('canvas');
+    canvas.width=sideways?image.naturalHeight:image.naturalWidth;canvas.height=sideways?image.naturalWidth:image.naturalHeight;
+    const context=canvas.getContext('2d');context.translate(canvas.width/2,canvas.height/2);context.rotate(degrees*Math.PI/180);context.drawImage(image,-image.naturalWidth/2,-image.naturalHeight/2);
+    return new Promise(resolve=>canvas.toBlob(blob=>resolve(blob?URL.createObjectURL(blob):src),'image/jpeg',.92));
+  }).catch(()=>src);
+  orientedPlanImages.set(key,pending);return pending;
+}
+async function renderEvent(id,updateAddress=true){
+  const sequence=++renderSequence;
   const event=events.find(item=>String(item.id)===String(id))||events[0];if(!event)return;
   activeId=String(event.id);const plan=planFor(event),entry=gallery.events?.[activeId]||{},photos=Array.isArray(entry.photos)?entry.photos:[];
   $('eventTitle').textContent=event.name;$('eventMeta').textContent=dateLabel(event.date);
@@ -25,7 +42,9 @@ function renderEvent(id,updateAddress=true){
     links.push(actionLink('Explore track in 3D',`../virtual-race-replay/3d.html?event=${eventId}&race=${race}&explore=track`,'explore'));
   }
   $('eventActions').innerHTML=links.join('');
-  const image=entry.designImage|| (plan?.image?`../virtual-race-replay/${plan.image}`:'');
+  const originalImage=entry.designImage|| (plan?.image?`../virtual-race-replay/${plan.image}`:'');
+  const image=originalImage?await orientedPlanImage(originalImage,entry.designImage?0:plan?.rotation):'';
+  if(sequence!==renderSequence)return;
   const replayDesign=!image&&event.defaultRace?`../virtual-race-replay/?event=${eventId}&race=${race}&design=track`:'';
   $('designStatus').textContent=designAvailable(event)?'Measured 3D design':image?'Track plan available':replayDesign?'Replay design':'Awaiting plan';
   $('designImageButton').hidden=!image;
