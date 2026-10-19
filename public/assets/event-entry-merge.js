@@ -1,15 +1,15 @@
 import {canonicalDriverKey} from './driver-identity.js';
+import {normaliseTransponder,validTransponder} from './transponder-number.js';
 
 const identity = row => canonicalDriverKey(String(row.driverKey || row.driverName || '').trim().toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,''));
 const key = row => `${identity(row)}|${String(row.className || '').trim().toUpperCase()}`;
-const validNumber = value => /^[0-9]{7}$/.test(String(value || '')) && String(value) !== '1234567';
 
 function bookingDetails(row, booking, history) {
   const chassis = String(booking.chassis || '').trim();
-  const wixNumber = validNumber(booking.transponder) && booking.transponderSource !== 'history';
-  const transponder = wixNumber ? String(booking.transponder) :
-    validNumber(row.transponder) ? String(row.transponder) :
-    validNumber(booking.transponder) ? String(booking.transponder) : history.get(key(booking)) || '';
+  const wixNumber = validTransponder(booking.transponder) && booking.transponderSource !== 'history';
+  const transponder = wixNumber ? normaliseTransponder(booking.transponder) :
+    validTransponder(row.transponder) ? normaliseTransponder(row.transponder) :
+    validTransponder(booking.transponder) ? normaliseTransponder(booking.transponder) : history.get(key(booking)) || '';
   return {...row, ...(chassis ? {chassis, chassisSource:'wix'} : {}), transponder};
 }
 
@@ -26,12 +26,12 @@ export function mergeCurrentWixEntries(data, wix = {}, previousTransponders = []
       (wix.liveRcEventId && data.eventId && String(wix.liveRcEventId) !== String(data.eventId))) return data;
   const seniorNames = new Set([...published, ...bookings].filter(row => row.className && row.className !== 'Junior Racers').map(identity));
   const bookedSeniorNames = new Set(bookings.filter(row => row.className && row.className !== 'Junior Racers').map(identity));
-  const history = new Map(previousTransponders.filter(row => validNumber(row.transponder) &&
+  const history = new Map(previousTransponders.filter(row => validTransponder(row.transponder) &&
     (!row.eventDate || !data.date || row.eventDate < data.date)).slice()
     .sort((a,b) => String(a.eventDate || '').localeCompare(String(b.eventDate || '')))
-    .map(row => [key(row), String(row.transponder)]));
+    .map(row => [key(row), normaliseTransponder(row.transponder)]));
   const merged = published.filter(row => row.className !== 'Junior Racers' || !seniorNames.has(identity(row)))
-    .map(row => ({...row, transponder:validNumber(row.transponder) ? String(row.transponder) : history.get(key(row)) || ''}));
+    .map(row => ({...row, transponder:validTransponder(row.transponder) ? normaliseTransponder(row.transponder) : history.get(key(row)) || ''}));
   const keys = new Set(merged.map(key));
   const bookingKeys = new Set(bookings.map(key));
   for (const booking of bookings) {
@@ -43,7 +43,7 @@ export function mergeCurrentWixEntries(data, wix = {}, previousTransponders = []
       continue;
     }
     const transponder = String(booking.transponder || '');
-    if (/^[0-9]{7}$/.test(transponder) && transponder !== '1234567') {
+    if (validTransponder(transponder)) {
       const matches = merged.filter(row => row.className === booking.className &&
         String(row.transponder || '') === transponder && !bookingKeys.has(key(row)));
       if (matches.length === 1) {

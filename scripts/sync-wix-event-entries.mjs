@@ -1,6 +1,6 @@
 import {readFile,writeFile,rename} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
-import {transponderHistory,usePreviousTransponders} from './lib/transponder-history.mjs';
+import {transponderHistory,usePreviousTransponders,validTransponder} from './lib/transponder-history.mjs';
 
 const API='https://www.wixapis.com';
 export const TICKETS={
@@ -76,14 +76,15 @@ export function publicEntries(guest,order,mapping) {
   return definitions.map(([className,label,chassisLabel])=>{
     const number=values[mapping[label] || label] || '';
     const chassis=chassisLabel ? String(values[mapping[chassisLabel] || chassisLabel] || '').trim().slice(0,80) : '';
-    return {driverName,className,transponder:/^[0-9]{7}$/.test(number) && number!=='1234567' ? number : '',...(chassis ? {chassis} : {})};
+    return {driverName,className,transponder:validTransponder(number) ? number : '',...(chassis ? {chassis} : {})};
   });
 }
 export function publicEntry(guest,order,mapping) { return publicEntries(guest,order,mapping)[0] || null; }
 
 export function entriesFromOrders(orders,guests,mapping) {
   const guestByTicket=new Map(guests.filter(row=>row.guestType==='TICKET_HOLDER').map(row=>[row.ticketNumber,row]));
-  return orders.flatMap(order=>{
+  const timestamp=order=>Date.parse(order._createdDate || order.createdDate || order.created || '') || 0;
+  return orders.slice().sort((a,b)=>timestamp(a)-timestamp(b)).flatMap(order=>{
     if (!['PAID','FREE'].includes(order.status) || order.archived) return [];
     if (!Array.isArray(order.tickets)) throw Error('Paid Wix order has no ticket data; retaining the published roster.');
     return order.tickets.flatMap(ticket=>{

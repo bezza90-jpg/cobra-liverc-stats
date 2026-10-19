@@ -1,5 +1,5 @@
 import {addReserveActions} from './event-reserves.js';
-import {entriesForMeeting,applyConfirmedChassis} from './event-entry-merge.js?v=20261006-wix-priority';
+import {entriesForMeeting,applyConfirmedChassis} from './event-entry-merge.js?v=20261019-booking-ready';
 import {eventSpaces} from './event-capacity.js';
 import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
 import {entryIdentity} from './event-entry-identity.js';

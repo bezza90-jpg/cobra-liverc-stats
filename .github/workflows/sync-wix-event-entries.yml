@@ -3,7 +3,9 @@ name: Sync current Wix event entries
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/5 * * * *"
+    # Offset from the busy start of each hour. Booking changes are normally
+    # detected within five minutes, subject to GitHub's scheduler queue.
+    - cron: "2-57/5 * * * *"
 
 permissions:
   contents: write
@@ -32,6 +34,8 @@ jobs:
         env:
           WIX_SITE_ID: ${{ secrets.WIX_SITE_ID }}
           WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+      - name: Confirm upcoming-event, capacity and reserve configuration
+        run: node scripts/check-booking-readiness.mjs
       - name: Save safe public entry data
         run: |
           if [[ -n "$(git status --porcelain public/data/wix-current-event-entries.json)" ]]; then

@@ -1,0 +1,47 @@
+name: Publish current Wix entries
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: cobra-statistics-pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate the booking feed and public entry merge
+        run: |
+          node --test scripts/sync-wix-event-entries.test.mjs scripts/transponder-history.test.mjs scripts/event-entry-merge.test.mjs scripts/event-capacity.test.mjs
+          node scripts/check-booking-readiness.mjs
+          node scripts/check-current-wix-entries.mjs
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Enforce reviewed avatar files before deployment
+        run: python3 scripts/verify-avatar-review.py
+      - name: Upload website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+          name: github-pages-${{ github.run_attempt }}
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}

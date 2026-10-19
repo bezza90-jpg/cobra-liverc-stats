@@ -15,7 +15,7 @@ async function matches() {
 if (!await matches()) {
   // An Actions-token push does not trigger the push-based Pages workflow.
   // Explicit dispatch is supported and retries a previously missed publish too.
-  execFileSync('gh',['workflow','run','update-stats.yml','--ref','main'],{stdio:'inherit'});
+  execFileSync('gh',['workflow','run','publish-current-wix-entries.yml','--ref','main'],{stdio:'inherit'});
   const deadline=Date.now()+12*60*1000;
   while (!await matches()) {
     if (Date.now()>=deadline) throw Error('Wix entries were saved but are still missing from the live website after 12 minutes. The next scheduled sync will retry publishing.');

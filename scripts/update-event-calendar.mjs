@@ -1,4 +1,5 @@
 import {canonicalDriverKey,canonicalDriverName} from '../public/assets/driver-identity.js';
+import {normaliseTransponder,validTransponder} from '../public/assets/transponder-number.js';
 import {chassisChoice} from './chassis-choice.mjs';
 import {loadBookings, matchBooking} from './booking-calendar.mjs';
 import { readFile, writeFile, rename } from 'node:fs/promises';
@@ -79,7 +80,7 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
     // is racing in a senior car class. Respect the senior event assignment.
     if (row.className==='Junior Racers' && (liveNames.has(identity(row)) || wixSeniorNames.has(identity(row)))) continue;
     let id=key(row), current=merged.get(id);
-    const transponder=/^[0-9]{7}$/.test(String(row.transponder || '')) && String(row.transponder)!=='1234567' ? String(row.transponder) : '';
+    const transponder=validTransponder(row.transponder) ? normaliseTransponder(row.transponder) : '';
     // A booking name can differ from the established LiveRC name. When one
     // valid transponder uniquely identifies an existing driver in the same
     // class, merge into that row instead of publishing a duplicate entrant.
@@ -90,7 +91,7 @@ export function mergeWixEntries(meeting, liveEntries, wixSnapshot) {
       if (transponderMatches.length===1) [id,current]=transponderMatches[0];
     }
     const currentChassis=String(row.chassis || '').trim();
-    const liveNumber=/^[0-9]{7}$/.test(String(current?.transponder || '')) && String(current.transponder)!=='1234567' ? String(current.transponder) : '';
+    const liveNumber=validTransponder(current?.transponder) ? normaliseTransponder(current.transponder) : '';
     const number=row.transponderSource==='history' ? liveNumber || transponder : transponder || liveNumber;
     if (current) merged.set(id,{...current,transponder:number,...(currentChassis ? {chassis:currentChassis,chassisSource:'wix'} : {})});
     else merged.set(id,{driverName:row.driverName,className:row.className,transponder:number,...(currentChassis ? {chassis:currentChassis,chassisSource:'wix'} : {})});

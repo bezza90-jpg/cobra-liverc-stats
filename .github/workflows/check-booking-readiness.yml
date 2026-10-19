@@ -1,0 +1,28 @@
+name: Check booking readiness
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Check entry, transponder, chassis, capacity and reserve rules
+        run: |
+          node --test scripts/sync-wix-event-entries.test.mjs scripts/transponder-history.test.mjs scripts/event-entry-merge.test.mjs scripts/event-capacity.test.mjs scripts/check-wix-ticket-readiness.test.mjs
+          node scripts/check-booking-readiness.mjs
+      - name: Check live Wix ticket limits and opening time
+        run: node scripts/check-wix-ticket-readiness.mjs
+        env:
+          WIX_SITE_ID: ${{ secrets.WIX_SITE_ID }}
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
