@@ -6,9 +6,10 @@ const readJson=path=>JSON.parse(readFileSync(new URL(path,publicRoot),'utf8'));
 
 test('track gallery flyovers follow the measured 3D design files',()=>{
   const gallery=readJson('data/track-gallery.json');
-  const designs=readdirSync(new URL('virtual-race-replay/designs/',publicRoot)).filter(name=>name.endsWith('.json')).map(name=>name.replace('.json','')).sort();
+  const designs=readdirSync(new URL('virtual-race-replay/designs/',publicRoot)).filter(name=>name.endsWith('.json')).filter(name=>!readJson(`virtual-race-replay/designs/${name}`).flatReplay).map(name=>name.replace('.json','')).sort();
   assert.deepEqual([...gallery.flyoverEvents].sort(),designs);
   const source=readFileSync(new URL('assets/track-gallery.js',publicRoot),'utf8');
+  assert.match(source,/const threeDAvailable=event=>designAvailable\(event\)/);
   assert.match(source,/flyover=track/);
   assert.match(source,/explore=track/);
   const replay=readFileSync(new URL('virtual-race-replay/replay-3d.js',publicRoot),'utf8');
@@ -35,6 +36,8 @@ test('track gallery offers results and 2D replay for every event',()=>{
   assert.match(source,/3D replay/);
   assert.match(source,/Track flyover/);
   assert.match(source,/Explore track in 3D/);
+  assert.match(source,/photoSource'\)\.hidden=!photos\.length/);
+  assert.match(source,/3D track model available/);
 });
 
 test('track gallery uses shared COBRA branding and a viewport-fitted fullscreen viewer',()=>{
