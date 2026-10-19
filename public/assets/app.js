@@ -1,5 +1,5 @@
 import {canonicalDriverKey} from './driver-identity.js';
-import {buildCRatings,driverRatingClasses} from './c-rating.js?v=20261019-crating';
+import {buildCRatings,driverRatingClasses} from './c-rating.js?v=20261019-crating2';
 import {createAvatarLoader} from './avatar-loader.js';
 import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
@@ -339,7 +339,8 @@ function calculateLeaderboard() {
         topFiveRate: row.finals ? 100 * row.topFive / row.finals : 0,
         podiumRate: row.finals ? 100 * row.podiums / row.finals : 0,
         winRate: row.finals ? 100 * row.overallWins / row.finals : 0,
-        tqRate: row.finals ? 100 * row.tqs / row.finals : 0
+        tqRate: row.finals ? 100 * row.tqs / row.finals : 0,
+        ...leaderboardCRating(row.driverKey, className)
       };
     })
     .sort((a, b) => compareLeaderboardRows(a, b, $('leaderboardMetric')?.value || 'average'))
@@ -354,6 +355,7 @@ function countAndRate(count, total) {
 }
 
 const leaderboardMetrics = {
+  cRating: { label: 'cRating', value: row => row.cRating ?? -Infinity, display: row => row.cRating ? fmt.format(row.cRating) : '—' },
   average: { label: 'Average overall finish', lower: true, value: row => row.average, display: row => row.average.toFixed(1) },
   performance: { label: 'Performance score', value: row => row.performance, display: row => row.performance.toFixed(1) },
   finals: { label: 'Finals completed', value: row => row.finals },
@@ -394,16 +396,18 @@ function formatSeconds(seconds) {
 
 function renderLeaderboard() {
   const rows = calculateLeaderboard();
-  const metric = leaderboardMetrics[$('leaderboardMetric')?.value || 'average'] || leaderboardMetrics.average;
-  if ($('leaderboardMetricHeading')) $('leaderboardMetricHeading').textContent = metric.label;
+  const metricKey=$('leaderboardMetric')?.value || 'average';
+  const metric = leaderboardMetrics[metricKey] || leaderboardMetrics.average;
+  const metricHeading=$('leaderboardMetricHeading');
+  if (metricHeading){metricHeading.textContent=metric.label;metricHeading.hidden=metricKey==='cRating';}
   $('leaderboardCount').textContent = `${fmt.format(rows.length)} ranked · ${fmt.format(state.leaderboardEligibleCount)} recorded`;
   $('leaderboardBody').innerHTML = rows.length ? rows.map(row => `
     <tr>
-      <td>${row.rank}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button></td>${resultAvatarCell(row.driverKey, filters().className)}<td class="ranked-metric">${escapeHtml(metric.display ? metric.display(row) : metric.value(row))}</td><td>${row.finals}</td>
+      <td>${row.rank}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button></td>${resultAvatarCell(row.driverKey, filters().className)}${metricKey==='cRating'?'':`<td class="ranked-metric">${escapeHtml(metric.display ? metric.display(row) : metric.value(row))}</td>`}<td class="c-rating-cell">${row.cRating ? `${fmt.format(row.cRating)}${row.cRatingProvisional?' <small>Provisional</small>':''}` : '—'}</td><td>${row.finals}</td>
       <td>${row.average.toFixed(1)}</td><td>${row.best}</td><td>${countAndRate(row.topFive, row.finals)}</td>
       <td>${countAndRate(row.podiums, row.finals)}</td><td>${row.overallWins}</td>
       <td>${row.performance.toFixed(1)}</td><td>${row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`}</td>
-    </tr>`).join('') : '<tr><td colspan="12">No drivers match these filters.</td></tr>';
+    </tr>`).join('') : `<tr><td colspan="${metricKey==='cRating'?12:13}">No drivers match these filters.</td></tr>`;
   hydrateResultAvatars($('leaderboardBody'));
 }
 
@@ -1124,6 +1128,7 @@ function trackTime(runs) {
 
 let cRatingCache=null;
 function cRatingClassesFor(driverKey){if(!cRatingCache)cRatingCache=buildCRatings(state.data.eventResults);return driverRatingClasses(cRatingCache,driverKey);}
+function leaderboardCRating(driverKey,className){const classes=cRatingClassesFor(driverKey),selected=className==='senior'?classes[0]:classes.find(item=>item.className===className);return{cRating:selected?.current??null,cRatingClass:selected?.className??'',cRatingProvisional:Boolean(selected?.provisional)};}
 function renderCRating(){
  const chart=$('driverCRatingChart'),select=$('driverCRatingClass');if(!chart||!select||!state.profileKey)return;
  const classes=cRatingClassesFor(state.profileKey);if(!classes.length){select.innerHTML='';chart.innerHTML='<p class="consistency-trend-empty">No eligible published finals for cRating.</p>';return;}
