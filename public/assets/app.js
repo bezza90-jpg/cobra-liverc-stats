@@ -1309,7 +1309,7 @@ function driverProfile(driverKey) {
   state.profileKey = driverKey;
   const trendPanel=$('driverConsistencyTrend'),trendToggle=$('driverConsistencyTrendToggle');
   if(trendPanel)trendPanel.hidden=true;
-  if(trendToggle){trendToggle.setAttribute('aria-expanded','false');trendToggle.textContent='📈 View consistency trend';}
+  if(trendToggle){trendToggle.setAttribute?.('aria-expanded','false');trendToggle.textContent='📈 View consistency trend';}
   const dialog = $('driverDialog');
   if (!dialog.open) {
     if (new URLSearchParams(location.search).get('tracker') === '1' || (window.self !== window.top && new URLSearchParams(location.search).has('map'))) dialog.show();
