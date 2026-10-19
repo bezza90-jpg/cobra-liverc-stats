@@ -4,7 +4,7 @@ import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
-import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
+import {renderLapCharts} from './lap-charts.js?v=20261019-focused-scale';
 import { loadMap } from './load-map.js?v=20260928-local';
 import { journeyRoadDistanceKm, journeyRoadRoute, journeyRoadMilestones } from './journey-route.js?v=20261005-roads';
 import {createDistanceRoute} from './journey-route-geometry.js?v=20261005-roads';
@@ -186,6 +186,12 @@ function ensureEnhancedMarkup() {
             <div class="driver-profile-avatar" id="driverProfileAvatar" hidden><img alt=""></div>
           </div>
           <div class="profile-stats" id="driverProfileStats"></div>
+          <button type="button" class="consistency-trend-button" id="driverConsistencyTrendToggle" aria-expanded="false">📈 View consistency trend</button>
+          <section class="profile-section consistency-trend-panel" id="driverConsistencyTrend" hidden>
+            <div class="consistency-trend-heading"><div><p class="eyebrow">Consistency over time</p><h3>Consistency trend</h3></div><div class="consistency-trend-controls"><label>Range<select id="driverTrendRange"><option value="6">Last 6 months</option><option value="12" selected>Last 12 months</option><option value="24">Last 24 months</option><option value="all">All history</option><option value="custom">Custom dates</option></select></label><span id="driverTrendCustomDates" hidden><label>From<input type="date" id="driverTrendFrom"></label><label>To<input type="date" id="driverTrendTo"></label></span></div></div>
+            <div id="driverConsistencyTrendChart" aria-live="polite"></div>
+            <p class="definition">Higher percentages mean more consistent lap times. Each point is the driver’s adjusted average for one event; the dashed line is a rolling three-event average. Only complete scheduled runs with at least five laps are included.</p>
+          </section>
           <section class="profile-section"><h3>Class breakdown</h3><div class="table-wrap compact"><table>
             <thead><tr><th>Class</th><th>Entries</th><th>Runs</th><th>Laps</th><th>Distance</th><th>Track time</th><th>Finals</th><th>Avg overall</th><th>Best</th><th>Top 5</th><th>Podiums</th><th>Overall wins</th><th>Race wins</th><th>TQs</th><th>Performance</th><th>Fastest lap</th><th>Avg consistency</th></tr></thead>
             <tbody id="driverClassDetails"></tbody>
@@ -1107,6 +1113,33 @@ function trackTime(runs) {
   return `${hours}h ${minutes % 60}m`;
 }
 
+
+function consistencyTrendSeries(driverKey, options = {}) {
+  const data=state.data;if(!data)return[];
+  const {eventType,className}=filters(),groups=new Map();
+  for(const run of data.raceResults){const race=data.raceById[run[0]];if(run[1]!==driverKey||!race||!isCompleteConsistencyRun(run,data)||!eventMatches(race.e,eventType)||!classMatches(race.c,className))continue;const value=Number.parseFloat(run[7]);if(!Number.isFinite(value))continue;const key=race.e+'|'+race.d;if(!groups.has(key))groups.set(key,{date:race.d,eventId:race.e,values:[]});groups.get(key).values.push(value);}
+  let points=[...groups.values()].map(group=>({date:group.date,eventId:group.eventId,name:data.eventById[group.eventId]?.n||group.eventId,value:average(attendanceAdjustedResults(group.values,true)),runs:group.values.length})).filter(point=>Number.isFinite(point.value)).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!points.length)return points;
+  const range=options.range||'12';
+  if(range==='custom'){if(options.from)points=points.filter(point=>point.date>=options.from);if(options.to)points=points.filter(point=>point.date<=options.to);}
+  else if(range!=='all'){const latest=new Date(points.at(-1).date+'T12:00:00Z');latest.setUTCMonth(latest.getUTCMonth()-Number(range));const cutoff=latest.toISOString().slice(0,10);points=points.filter(point=>point.date>=cutoff);}
+  return points;
+}
+function renderConsistencyTrend(){
+  const chart=$('driverConsistencyTrendChart');if(!chart||!state.profileKey)return;
+  const range=$('driverTrendRange')?.value||'12',custom=range==='custom';if($('driverTrendCustomDates'))$('driverTrendCustomDates').hidden=!custom;
+  const points=consistencyTrendSeries(state.profileKey,{range,from:$('driverTrendFrom')?.value||'',to:$('driverTrendTo')?.value||''});
+  if(!points.length){chart.innerHTML='<p class="consistency-trend-empty">No eligible consistency results in this date range.</p>';return;}
+  const values=points.map(point=>point.value);let min=Math.max(0,Math.floor(Math.min(...values)-2)),max=Math.min(100,Math.ceil(Math.max(...values)+2));if(max-min<6){const centre=(min+max)/2;min=Math.max(0,Math.floor(centre-3));max=Math.min(100,Math.ceil(centre+3));}
+  const width=760,height=300,left=58,right=24,top=24,bottom=56,x=index=>points.length===1?(left+width-right)/2:left+index/(points.length-1)*(width-left-right),y=value=>top+(max-value)/Math.max(1,max-min)*(height-top-bottom);
+  const rolling=points.map((point,index)=>({...point,value:average(points.slice(Math.max(0,index-2),index+1).map(item=>item.value))}));
+  const ticks=Array.from({length:5},(_,index)=>min+(max-min)*index/4),grid=ticks.map(value=>'<line x1="'+left+'" x2="'+(width-right)+'" y1="'+y(value)+'" y2="'+y(value)+'"/><text x="'+(left-9)+'" y="'+(y(value)+4)+'" text-anchor="end">'+value.toFixed(1)+'%</text>').join('');
+  const every=Math.max(1,Math.ceil(points.length/5)),labels=points.map((point,index)=>(index===0||index===points.length-1||index%every===0)?'<text x="'+x(index)+'" y="'+(height-21)+'" text-anchor="middle">'+escapeHtml(point.date.slice(0,7))+'</text>':'').join('');
+  const line=points.map((point,index)=>x(index)+','+y(point.value)).join(' '),trend=rolling.map((point,index)=>x(index)+','+y(point.value)).join(' '),circles=points.map((point,index)=>'<circle tabindex="0" role="img" aria-label="'+escapeHtml(point.name)+', '+point.value.toFixed(1)+' percent" cx="'+x(index)+'" cy="'+y(point.value)+'" r="5"><title>'+escapeHtml(point.name)+' · '+dateFmt.format(new Date(point.date+'T12:00:00Z'))+' · '+point.value.toFixed(1)+'% · '+point.runs+' run'+(point.runs===1?'':'s')+'</title></circle>').join('');
+  const sample=Math.min(3,values.length),delta=average(values.slice(-sample))-average(values.slice(0,sample)),direction=Math.abs(delta)<.1?'Broadly level':delta>0?'Improving':'Less consistent';
+  chart.innerHTML='<div class="consistency-trend-summary"><strong>'+direction+'</strong><span>'+(delta>=0?'+':'')+delta.toFixed(1)+' percentage points from the opening to latest three-event average</span><span>'+points.length+' event'+(points.length===1?'':'s')+' shown</span></div><div class="consistency-trend-scroll" tabindex="0" role="region" aria-label="Consistency trend chart"><svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Consistency percentages over time"><g class="consistency-trend-grid">'+grid+labels+'</g><polyline class="consistency-trend-line" points="'+line+'"/><polyline class="consistency-trend-average" points="'+trend+'"/><g class="consistency-trend-points">'+circles+'</g></svg></div><div class="consistency-trend-legend"><span><i></i>Event adjusted average</span><span><i></i>Rolling three-event average</span></div>';
+}
+
 function driverProfile(driverKey) {
   const data = state.data;
   const driver = data.drivers.find(row => row.k === driverKey);
@@ -1274,6 +1307,9 @@ function driverProfile(driverKey) {
   }).join('') || '<tr><td colspan="10">No completed finals within these filters.</td></tr>';
 
   state.profileKey = driverKey;
+  const trendPanel=$('driverConsistencyTrend'),trendToggle=$('driverConsistencyTrendToggle');
+  if(trendPanel)trendPanel.hidden=true;
+  if(trendToggle){trendToggle.setAttribute('aria-expanded','false');trendToggle.textContent='📈 View consistency trend';}
   const dialog = $('driverDialog');
   if (!dialog.open) {
     if (new URLSearchParams(location.search).get('tracker') === '1' || (window.self !== window.top && new URLSearchParams(location.search).has('map'))) dialog.show();
@@ -1480,6 +1516,10 @@ async function init() {
       const button = event.target.closest('[data-journey-driver]');
       if (button) openJourneyMap(button.dataset.journeyDriver);
     });
+    $('driverConsistencyTrendToggle')?.addEventListener('click',()=>{const panel=$('driverConsistencyTrend'),button=$('driverConsistencyTrendToggle');panel.hidden=!panel.hidden;button.setAttribute('aria-expanded',String(!panel.hidden));button.textContent=panel.hidden?'📈 View consistency trend':'Hide consistency trend';if(!panel.hidden){renderConsistencyTrend();panel.scrollIntoView({block:'nearest',behavior:'smooth'});}});
+    $('driverTrendRange')?.addEventListener('change',renderConsistencyTrend);
+    $('driverTrendFrom')?.addEventListener('change',renderConsistencyTrend);
+    $('driverTrendTo')?.addEventListener('change',renderConsistencyTrend);
     $('closeJourneyMap').addEventListener('click', () => {
       stopJourneyPlayback();
       leaveJourneyFullscreen();

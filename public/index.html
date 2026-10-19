@@ -211,6 +211,12 @@
       <p class="profile-context" id="driverProfileContext"></p></div>
       <div class="driver-profile-avatar" id="driverProfileAvatar" hidden><img alt="" decoding="async"></div></div>
       <div class="profile-stats" id="driverProfileStats"></div>
+      <button type="button" class="consistency-trend-button" id="driverConsistencyTrendToggle" aria-expanded="false">📈 View consistency trend</button>
+      <section class="profile-section consistency-trend-panel" id="driverConsistencyTrend" hidden>
+        <div class="consistency-trend-heading"><div><p class="eyebrow">Consistency over time</p><h3>Consistency trend</h3></div><div class="consistency-trend-controls"><label>Range<select id="driverTrendRange"><option value="6">Last 6 months</option><option value="12" selected>Last 12 months</option><option value="24">Last 24 months</option><option value="all">All history</option><option value="custom">Custom dates</option></select></label><span id="driverTrendCustomDates" hidden><label>From<input type="date" id="driverTrendFrom"></label><label>To<input type="date" id="driverTrendTo"></label></span></div></div>
+        <div id="driverConsistencyTrendChart" aria-live="polite"></div>
+        <p class="definition">Higher percentages mean more consistent lap times. Each point is the driver’s adjusted average for one event; the dashed line is a rolling three-event average. Only complete scheduled runs with at least five laps are included.</p>
+      </section>
       <section class="profile-section">
         <h3>Class breakdown</h3>
         <div class="table-wrap compact"><table>
@@ -242,6 +248,6 @@
     <a href="about/">About COBRA</a><a href="briefing/">Drivers Briefing</a>
     <a href="https://cobracardiff.liverc.com/events/" rel="noopener" target="_top">View source results on LiveRC</a>
   <a class="website-guides-link" href="./website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>
-  <script type="module" src="assets/app.js?v=20261005-tracker-roads"></script>
+  <script type="module" src="assets/app.js?v=20261019-consistency-trend"></script>
 <!-- cobra-footer:start --><footer class="cobra-site-footer"><a href="https://www.cobracardiff.co.uk/"><img src="./assets/cobra-header-logo.png" width="220" height="56" alt="COBRA home"></a><p>South Wales TQ HQ<br>BRCA.org Affiliated Club</p><p>Off Road Buggy Racing Club • South Wales</p><nav aria-label="Footer"><a href="./website-guides/">Help &amp; Website Guides</a><a href="https://www.facebook.com/groups/cobracardiff">Facebook</a><a href="https://www.youtube.com/@Bezza90">YouTube</a></nav><p>© 2026 COBRA. Beryl Media Productions. All rights reserved.</p></footer><!-- cobra-footer:end --></body>
 </html>
