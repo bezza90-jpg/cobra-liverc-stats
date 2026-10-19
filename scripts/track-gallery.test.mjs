@@ -18,6 +18,12 @@ test('track gallery flyovers follow the measured 3D design files',()=>{
   assert.match(replay,/trackOnlyMode\?\[\]:drivers\.map\(carState\)/);
 });
 
+test('flyover camera gives heightless route points a valid ground height',()=>{
+  const source=readFileSync(new URL('virtual-race-replay/track-3d-viewer.js',publicRoot),'utf8');
+  assert.match(source,/target=vec\(point\.x,point\.y,Number\(point\.z\)\|\|0\)/);
+  assert.doesNotMatch(source,/forward=norm\(sub\(point,position\)\)/);
+});
+
 test('every archived track photograph exists locally and keeps its Facebook source',()=>{
   const gallery=readJson('data/track-gallery.json');
   for(const [eventId,event] of Object.entries(gallery.events)){
