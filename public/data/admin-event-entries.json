@@ -69,18 +69,6 @@
       "driverName": "Haiden Hicks",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3422662"
-    },
-    {
-      "driverName": "Ian Peakman",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "5653564",
-      "chassis": "Schumacher"
-    },
-    {
-      "driverName": "Ian Peakman",
-      "className": "4-Wheel Drive Buggy",
-      "transponder": "6091953",
-      "chassis": "Schumacher"
     }
   ]
 }
