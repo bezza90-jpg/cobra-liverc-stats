@@ -1,4 +1,5 @@
 import {canonicalDriverKey} from './driver-identity.js';
+import {buildCRatings,driverRatingClasses} from './c-rating.js?v=20261019-crating';
 import {createAvatarLoader} from './avatar-loader.js';
 import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
@@ -191,6 +192,12 @@ function ensureEnhancedMarkup() {
             <div class="consistency-trend-heading"><div><p class="eyebrow">Consistency over time</p><h3>Consistency trend</h3></div><div class="consistency-trend-controls"><label>Range<select id="driverTrendRange"><option value="6">Last 6 months</option><option value="12" selected>Last 12 months</option><option value="24">Last 24 months</option><option value="all">All history</option><option value="custom">Custom dates</option></select></label><span id="driverTrendCustomDates" hidden><label>From<input type="date" id="driverTrendFrom"></label><label>To<input type="date" id="driverTrendTo"></label></span></div></div>
             <div id="driverConsistencyTrendChart" aria-live="polite"></div>
             <p class="definition">Higher percentages mean more consistent lap times. Each point is the driver’s adjusted average for one event; the dashed line is a rolling three-event average. Only complete scheduled runs with at least five laps are included.</p>
+          </section>
+          <button type="button" class="consistency-trend-button crating-button" id="driverCRatingToggle" aria-expanded="false">🏁 View cRating</button>
+          <section class="profile-section consistency-trend-panel crating-panel" id="driverCRatingPanel" hidden>
+            <div class="consistency-trend-heading"><div><p class="eyebrow">COBRA driver skill rating</p><h3>cRating</h3></div><div class="consistency-trend-controls"><label>Class<select id="driverCRatingClass"></select></label></div></div>
+            <div id="driverCRatingChart" aria-live="polite"></div>
+            <p class="definition">cRating starts at 1500 and changes after every published final. Finishing ahead of highly rated drivers earns more; losing to lower-rated drivers costs more. Ratings are separate for each class and remain provisional until five finals.</p>
           </section>
           <section class="profile-section"><h3>Class breakdown</h3><div class="table-wrap compact"><table>
             <thead><tr><th>Class</th><th>Entries</th><th>Runs</th><th>Laps</th><th>Distance</th><th>Track time</th><th>Finals</th><th>Avg overall</th><th>Best</th><th>Top 5</th><th>Podiums</th><th>Overall wins</th><th>Race wins</th><th>TQs</th><th>Performance</th><th>Fastest lap</th><th>Avg consistency</th></tr></thead>
@@ -1114,6 +1121,20 @@ function trackTime(runs) {
 }
 
 
+
+let cRatingCache=null;
+function cRatingClassesFor(driverKey){if(!cRatingCache)cRatingCache=buildCRatings(state.data.eventResults);return driverRatingClasses(cRatingCache,driverKey);}
+function renderCRating(){
+ const chart=$('driverCRatingChart'),select=$('driverCRatingClass');if(!chart||!select||!state.profileKey)return;
+ const classes=cRatingClassesFor(state.profileKey);if(!classes.length){select.innerHTML='';chart.innerHTML='<p class="consistency-trend-empty">No eligible published finals for cRating.</p>';return;}
+ const previous=select.value;select.innerHTML=classes.map(item=>'<option value="'+escapeHtml(item.className)+'">'+escapeHtml(classLabels[item.className]||item.className)+'</option>').join('');if(classes.some(item=>item.className===previous))select.value=previous;
+ const selected=classes.find(item=>item.className===select.value)||classes[0],points=selected.history,width=760,height=300,left=58,right=24,top=24,bottom=56,values=[1500,...points.map(point=>point.rating)];
+ let min=Math.floor((Math.min(...values)-30)/25)*25,max=Math.ceil((Math.max(...values)+30)/25)*25;if(max-min<100){const centre=(min+max)/2;min=Math.floor((centre-50)/25)*25;max=Math.ceil((centre+50)/25)*25;}
+ const x=index=>points.length===1?(left+width-right)/2:left+index/(points.length-1)*(width-left-right),y=value=>top+(max-value)/(max-min)*(height-top-bottom),ticks=Array.from({length:5},(_,i)=>min+(max-min)*i/4);
+ const grid=ticks.map(value=>'<line x1="'+left+'" x2="'+(width-right)+'" y1="'+y(value)+'" y2="'+y(value)+'"/><text x="'+(left-9)+'" y="'+(y(value)+4)+'" text-anchor="end">'+Math.round(value)+'</text>').join(''),every=Math.max(1,Math.ceil(points.length/5)),labels=points.map((point,index)=>(index===0||index===points.length-1||index%every===0)?'<text x="'+x(index)+'" y="'+(height-21)+'" text-anchor="middle">'+escapeHtml(point.date.slice(0,7))+'</text>':'').join(''),line=points.map((point,index)=>x(index)+','+y(point.rating)).join(' '),circles=points.map((point,index)=>'<circle tabindex="0" role="img" aria-label="'+escapeHtml(point.date)+', cRating '+point.rating+'" cx="'+x(index)+'" cy="'+y(point.rating)+'" r="5"><title>'+escapeHtml(state.data.eventById[point.eventId]?.n||point.eventId)+' · P'+point.position+' of '+point.fieldSize+' · '+(point.change>=0?'+':'')+point.change+' · cRating '+point.rating+'</title></circle>').join('');
+ chart.innerHTML='<div class="crating-summary"><div><strong>'+selected.current+'</strong><span>Current cRating</span></div><div><strong>'+selected.peak+'</strong><span>Peak</span></div><div><strong>'+selected.finals+'</strong><span>Rated finals</span></div><div><strong>'+(selected.provisional?'Provisional':'Established')+'</strong><span>Status</span></div></div><div class="consistency-trend-scroll" tabindex="0" role="region" aria-label="cRating history"><svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="cRating history"><g class="consistency-trend-grid">'+grid+labels+'</g><line class="crating-baseline" x1="'+left+'" x2="'+(width-right)+'" y1="'+y(1500)+'" y2="'+y(1500)+'"/><polyline class="consistency-trend-line crating-line" points="'+line+'"/><g class="consistency-trend-points">'+circles+'</g></svg></div><details class="crating-history"><summary>View rating changes</summary><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Finish</th><th>Change</th><th>cRating</th></tr></thead><tbody>'+points.slice().reverse().map(point=>'<tr><td>'+dateFmt.format(new Date(point.date+'T12:00:00Z'))+'</td><td>'+escapeHtml(state.data.eventById[point.eventId]?.n||point.eventId)+'</td><td>P'+point.position+' / '+point.fieldSize+'</td><td class="'+(point.change>=0?'crating-up':'crating-down')+'">'+(point.change>=0?'+':'')+point.change+'</td><td>'+point.rating+'</td></tr>').join('')+'</tbody></table></div></details>';
+}
+
 function consistencyTrendSeries(driverKey, options = {}) {
   const data=state.data;if(!data)return[];
   const {eventType,className}=filters(),groups=new Map();
@@ -1307,6 +1328,9 @@ function driverProfile(driverKey) {
   }).join('') || '<tr><td colspan="10">No completed finals within these filters.</td></tr>';
 
   state.profileKey = driverKey;
+  const ratingPanel=$('driverCRatingPanel'),ratingToggle=$('driverCRatingToggle');
+  if(ratingPanel)ratingPanel.hidden=true;
+  if(ratingToggle){ratingToggle.setAttribute?.('aria-expanded','false');ratingToggle.textContent='🏁 View cRating';}
   const trendPanel=$('driverConsistencyTrend'),trendToggle=$('driverConsistencyTrendToggle');
   if(trendPanel)trendPanel.hidden=true;
   if(trendToggle){trendToggle.setAttribute?.('aria-expanded','false');trendToggle.textContent='📈 View consistency trend';}
@@ -1516,6 +1540,8 @@ async function init() {
       const button = event.target.closest('[data-journey-driver]');
       if (button) openJourneyMap(button.dataset.journeyDriver);
     });
+    $('driverCRatingToggle')?.addEventListener('click',()=>{const panel=$('driverCRatingPanel'),button=$('driverCRatingToggle');panel.hidden=!panel.hidden;button.setAttribute('aria-expanded',String(!panel.hidden));button.textContent=panel.hidden?'🏁 View cRating':'Hide cRating';if(!panel.hidden){renderCRating();panel.scrollIntoView({block:'nearest',behavior:'smooth'});}});
+    $('driverCRatingClass')?.addEventListener('change',renderCRating);
     $('driverConsistencyTrendToggle')?.addEventListener('click',()=>{const panel=$('driverConsistencyTrend'),button=$('driverConsistencyTrendToggle');panel.hidden=!panel.hidden;button.setAttribute('aria-expanded',String(!panel.hidden));button.textContent=panel.hidden?'📈 View consistency trend':'Hide consistency trend';if(!panel.hidden){renderConsistencyTrend();panel.scrollIntoView({block:'nearest',behavior:'smooth'});}});
     $('driverTrendRange')?.addEventListener('change',renderConsistencyTrend);
     $('driverTrendFrom')?.addEventListener('change',renderConsistencyTrend);
