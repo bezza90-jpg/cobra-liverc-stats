@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-20T07:47:11.650Z",
+  "updatedAt": "2026-10-20T08:18:39.636Z",
   "ticketLimits": {
     "Junior Racers": 11,
     "2-Wheel Drive Buggy": 66,
@@ -181,6 +181,13 @@
       "driverName": "RUSS WILLIAMS",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6657438",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "SHAUN OGDEN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "6923545",
       "chassis": "XRAY",
       "transponderSource": "wix"
     },
@@ -382,7 +389,7 @@
     }
   ],
   "entrySources": {
-    "wix": 44,
+    "wix": 45,
     "admin": 9
   }
 }
