@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-19T22:00:46.675Z",
+  "updatedAt": "2026-10-20T01:20:57.549Z",
   "ticketLimits": {
     "Junior Racers": 11,
     "2-Wheel Drive Buggy": 66,
@@ -14,6 +14,13 @@
       "driverName": "ADAM MCBRIDE",
       "className": "2-Wheel Drive Buggy",
       "transponder": "7241911",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "AINSLEY EVANS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8615491",
       "chassis": "Associated",
       "transponderSource": "wix"
     },
@@ -332,6 +339,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "BEN EVANS",
+      "className": "Junior Racers",
+      "transponder": "3581757",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "LEO SMITH",
       "className": "Junior Racers",
       "transponder": "6624085",
@@ -354,7 +368,7 @@
     }
   ],
   "entrySources": {
-    "wix": 40,
+    "wix": 42,
     "admin": 9
   }
 }
