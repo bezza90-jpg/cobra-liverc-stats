@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-20T13:04:04.152Z",
+  "updatedAt": "2026-10-20T14:19:43.303Z",
   "ticketLimits": {
     "Junior Racers": 11,
     "2-Wheel Drive Buggy": 66,
@@ -36,6 +36,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "6865166",
       "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "DALE PRESTON",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2644565",
+      "chassis": "Associated",
       "transponderSource": "wix"
     },
     {
@@ -410,7 +417,7 @@
     }
   ],
   "entrySources": {
-    "wix": 48,
+    "wix": 49,
     "admin": 9
   }
 }
