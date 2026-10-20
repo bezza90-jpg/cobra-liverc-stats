@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-20T01:39:01.459Z",
+  "updatedAt": "2026-10-20T17:27:44.398Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -44,6 +44,15 @@
       "transponder": "6865166"
     },
     {
+      "driverKey": "DALE-PRESTON",
+      "driverName": "DALE PRESTON",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "2644565"
+    },
+    {
       "driverKey": "DAN-PULLEY",
       "driverName": "DAN PULLEY",
       "className": "2-Wheel Drive Buggy",
@@ -78,6 +87,24 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "6263647"
+    },
+    {
+      "driverKey": "GARETH-MANNING",
+      "driverName": "GARETH MANNING",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "2147522"
+    },
+    {
+      "driverKey": "GREG-PARKER",
+      "driverName": "GREG PARKER",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "7684548"
     },
     {
       "driverKey": "HAIDEN-HICKS",
@@ -196,6 +223,15 @@
       "transponder": "4961721"
     },
     {
+      "driverKey": "ROGER-MILLS",
+      "driverName": "ROGER MILLS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "2981041"
+    },
+    {
       "driverKey": "ROY-DAVIES",
       "driverName": "ROY DAVIES",
       "className": "2-Wheel Drive Buggy",
@@ -223,6 +259,15 @@
       "transponder": "6657438"
     },
     {
+      "driverKey": "SHAUN-OGDEN",
+      "driverName": "SHAUN OGDEN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "6923545"
+    },
+    {
       "driverKey": "SIMON-FISHER",
       "driverName": "SIMON FISHER",
       "className": "2-Wheel Drive Buggy",
@@ -230,6 +275,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "2189851"
+    },
+    {
+      "driverKey": "STEVE-CHAPMAN",
+      "driverName": "STEVE CHAPMAN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "3730989"
     },
     {
       "driverKey": "STEVE-CURTIS-RICH",
@@ -305,6 +359,15 @@
       "transponder": ""
     },
     {
+      "driverKey": "EDWARD-SCOTT",
+      "driverName": "EDWARD SCOTT",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "4648442"
+    },
+    {
       "driverKey": "FRAN-BRAVERY",
       "driverName": "FRAN BRAVERY",
       "className": "4-Wheel Drive Buggy",
@@ -312,6 +375,15 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "9746100"
+    },
+    {
+      "driverKey": "GREG-PARKER",
+      "driverName": "GREG PARKER",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "7322122"
     },
     {
       "driverKey": "IAN-PEAKMAN",
@@ -405,6 +477,15 @@
       "transponder": "9889135"
     },
     {
+      "driverKey": "STEVE-CHAPMAN",
+      "driverName": "STEVE CHAPMAN",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "7169260"
+    },
+    {
       "driverKey": "STEVE-CURTIS-RICH",
       "driverName": "STEVE CURTIS-RICH",
       "className": "4-Wheel Drive Buggy",
@@ -439,6 +520,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "3581757"
+    },
+    {
+      "driverKey": "COHEN-MANNING",
+      "driverName": "COHEN MANNING",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix",
+      "transponder": "8422674"
     },
     {
       "driverKey": "LEO-SMITH",
