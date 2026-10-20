@@ -2,7 +2,7 @@ import {canonicalDriverKey} from '../assets/driver-identity.js';
 import {renderLapCharts} from '../assets/lap-charts.js?v=20261019-heat-scale';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
-import {airborneJumpTransform,jumpProfile} from './jumps.js?v=20261020-anchored-airtime-1';
+import {legacyJumpProfile} from './jumps.js?v=20261020-original-2d-jumps-1';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261017-finals-grid';
 import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-trestle-hop-1';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
@@ -87,9 +87,7 @@ async function loadRace(autoplay=false){
  const availablePlan=planForRace(race),jumpPlan=planned&&availablePlan?.routeStatus==='confirmed'&&hasMeasuredJumpMotion(availablePlan)?availablePlan:null;
  const jumpPolygons=(jumpPlan?.jumpZones||[]).map(polygon=>polygon.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]}));
  const jumpFeatures=(jumpPlan?.jumpFeatures||[]).map(feature=>Object.fromEntries(['takeoff','landing'].map(key=>[key,feature[key].map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})])));
- for(let i=0;i<jumpFeatures.length;i++)Object.assign(jumpFeatures[i],Object.fromEntries(Object.entries(jumpPlan.jumpFeatures[i]).filter(([name])=>!['takeoff','landing'].includes(name))));
- const jumpSurfaces=(jumpPlan?.jumpSurfaces||[]).map(surface=>({...surface,polygon:surface.polygon.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]}),direction:surface.direction?.map(point=>{const p=routePoint(point,jumpPlan);return[p.x,p.y]})}));
- const jumpLift=jumpProfile(samples,jumpPolygons,50,jumpFeatures,{surfaces:jumpSurfaces,routeLengthMetres:jumpPlan?.routeLengthMetres||151.5,referenceHeightMm:323,gravity:9.81,tabletopFlightTimeScale:1,tabletopMinimumClearanceMetres:.08});
+ const jumpLift=legacyJumpProfile(samples,jumpPolygons,50,jumpFeatures);
  const illustrative=fitted?false:!planned||!['518551','499054'].includes(race.eventId);
  const pace=paceMap(samples,{mainStraight,straightSpeed:illustrative?2.5:1.65});
  document.getElementById('grid-reference')?.remove();
@@ -121,11 +119,8 @@ async function loadRace(autoplay=false){
  // First retirement is lowest beside the loop; later retirements stack upward.
  if(endedEarly){const base=Number(label.getAttribute('y'))+40;const spacing=Math.min(105,(base-100)/Math.max(1,retiredSlots.size-1));parkedX=Math.max(52,(planned?planForRace(race)?.border?.x||87:87)-40);parkedY=base-retiredSlots.get(d.id)*spacing;}
  group.setAttribute('transform',s.finished?`translate(${parkedX},${parkedY}) scale(1.44)`:`translate(${x},${y}) rotate(${angle}) scale(1.44)`);
- // The overhead replay keeps cars on the recorded route. Growing the artwork
- // slightly conveys height without pushing it above or below the circuit.
- const visualSpeed=(jumpPlan?.routeLengthMetres||151.5)/Math.max(1,d.typical||s.lapTime||15)*(pace.speedAtDistance?.(dist/length)||1);
- const visualLift=s.finished?0:jumpLift(dist/length,visualSpeed);
- group.querySelector('.car-artwork').setAttribute('transform',airborneJumpTransform(visualLift));
+ // Original 2D hop: lift sideways relative to the car using a fixed 50 px arc.
+ group.querySelector('.car-artwork').setAttribute('transform',`translate(0,${s.finished?0:-jumpLift(dist/length)})`);
  group.querySelector('.car-nameplate').setAttribute('transform',s.finished?'translate(0,-37)':`rotate(${-angle}) translate(0,-42)`);
  group.querySelector('image').setAttribute('transform',s.finished&&endedEarly?'scale(1,-1)':'scale(1,1)');
  group.classList.toggle('retired',s.finished&&endedEarly);
