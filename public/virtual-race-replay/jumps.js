@@ -11,9 +11,13 @@ export function insidePolygon(point,polygon){
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 const smooth=t=>t*t*(3-2*t);
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
-export function screenSpaceJumpTransform(angleDegrees,liftPixels){
- const angle=Number(angleDegrees)||0,lift=Math.max(0,Number(liftPixels)||0);
- return lift?`rotate(${-angle}) translate(0,${-lift}) rotate(${angle})`:'';
+export function boundedJumpLift(liftPixels,maximumPixels=48){
+ const lift=Math.max(0,Number(liftPixels)||0),maximum=Math.max(1,Number(maximumPixels)||48);
+ return maximum*Math.tanh(lift/maximum);
+}
+export function localJumpTransform(liftPixels,maximumPixels=48){
+ const lift=boundedJumpLift(liftPixels,maximumPixels);
+ return lift?`translate(0,${-lift})`:'';
 }
 function ballisticPeak(startHeight,endHeight,flightTime,gravity){
  const verticalSpeed=(endHeight-startHeight+.5*gravity*flightTime*flightTime)/Math.max(.001,flightTime),peakTime=clamp(verticalSpeed/gravity,0,flightTime);
