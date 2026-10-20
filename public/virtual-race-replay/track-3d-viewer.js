@@ -63,7 +63,7 @@ function normalizeDesign(input){
   return {...input,name:String(input.name||'COBRA track'),points,items:Array.isArray(input.items)?input.items:[],carpet};
 }
 
-function sampleRoute(points,step=.19){
+function sampleRoute(points,step=.19,equalDistance=false){
   let output=[],count=points.length;
   const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
   for(let i=0;i<count;i++){
@@ -75,6 +75,19 @@ function sampleRoute(points,step=.19){
       const df=key=>((-3+6*t-3*t2)*a[key]+(-12*t+9*t2)*b[key]+(3+6*t-9*t2)*c[key]+3*t2*d[key])/6;
       output.push({x:f('x'),y:f('y'),w:f('w'),tx:df('x'),ty:df('y')});
     }
+  }
+  if(equalDistance&&output.length>3){
+    const cumulative=[0];
+    for(let i=1;i<=output.length;i++)cumulative.push(cumulative[i-1]+distance(output[i-1],output[i%output.length]));
+    const total=cumulative.at(-1),samples=Math.max(32,Math.ceil(total/step));
+    let segment=1;
+    output=Array.from({length:samples},(_,index)=>{
+      const target=index/samples*total;
+      while(segment<cumulative.length-1&&cumulative[segment]<target)segment++;
+      const before=output[segment-1],after=output[segment%output.length],span=cumulative[segment]-cumulative[segment-1]||1,t=(target-cumulative[segment-1])/span;
+      return{x:mix(before.x,after.x,t),y:mix(before.y,after.y,t),w:mix(before.w,after.w,t)};
+    });
+    output.forEach((point,index)=>{const before=output[(index+output.length-1)%output.length],after=output[(index+1)%output.length];point.tx=after.x-before.x;point.ty=after.y-before.y;});
   }
   return output;
 }
@@ -178,7 +191,7 @@ function buildScene(design){
   scene.polygons.push(polygon([vec(0,0,0),vec(width,0,0),vec(width,height,0),vec(0,height,0)],'#0d1a13','#6e8a76','carpet'));
   for(let x=0;x<=width;x++)scene.lines.push({points:[vec(x,0,.004),vec(x,height,.004)],stroke:x%5===0?'#284033':'#1b2e23',width:x%5===0?1.1:.55,kind:'grid'});
   for(let y=0;y<=height;y++)scene.lines.push({points:[vec(0,y,.004),vec(width,y,.004)],stroke:y%5===0?'#284033':'#1b2e23',width:y%5===0?1.1:.55,kind:'grid'});
-  let route=sampleRoute(design.points),edges=routeEdges(route),n=route.length;
+  let route=sampleRoute(design.points,.19,design.motionProfile==='legacy-smooth'),edges=routeEdges(route),n=route.length;
   scene.route=route;for(let i=0;i<n;i++)scene.routeLength+=Math.hypot(route[i].x-route[(i+1)%n].x,route[i].y-route[(i+1)%n].y);
   for(let i=0;i<n;i++){
     let j=(i+1)%n,l0=edges.left[i],l1=edges.left[j],r0=edges.right[i],r1=edges.right[j];

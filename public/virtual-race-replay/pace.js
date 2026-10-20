@@ -4,6 +4,8 @@ export function paceMap(points, {mainStraight,straightSpeed=1.65,profile='balanc
  const n=points.length-1;
  if(n<8)throw Error('Insufficient route samples');
  const raceProfile=profile==='race';
+ const legacyProfile=profile==='legacy-smooth';
+ const dynamicProfile=raceProfile||legacyProfile;
  const wrap=i=>(i%n+n)%n;
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
  const boost=points.slice(0,n).map(p=>{
@@ -15,25 +17,25 @@ export function paceMap(points, {mainStraight,straightSpeed=1.65,profile='balanc
   // Ease onto the designated straight, then brake before its end.
   return smooth(t/.25)*smooth((1-t)/.2)*(1-smooth(offset/8));
  });
- const reach=Math.max(1,Math.round(n*.005));
+ const reach=Math.max(1,Math.round(n*(legacyProfile?.009:.005)));
  const bend=points.slice(0,n).map((b,i)=>{
   const a=points[wrap(i-reach)],c=points[wrap(i+reach)];
   const u=Math.atan2(b.y-a.y,b.x-a.x),v=Math.atan2(c.y-b.y,c.x-b.x);
   const turn=Math.abs(Math.atan2(Math.sin(v-u),Math.cos(v-u)));
-  return raceProfile?Math.min(1.2,turn*1.6):Math.min(.22,turn*1.2);
+  return dynamicProfile?Math.min(legacyProfile?.95:1.2,turn*(legacyProfile?1.45:1.6)):Math.min(.22,turn*1.2);
  });
- const radius=Math.max(1,Math.round(n*(raceProfile?.018:.025)));
+ const radius=Math.max(1,Math.round(n*(legacyProfile?.034:raceProfile?.018:.025)));
  const cornerLoad=bend.map((_,i)=>{
   let sum=0,total=0;
   for(let j=-radius;j<=radius;j++){const w=radius+1-Math.abs(j);sum+=bend[wrap(i+j)]*w;total+=w;}
   return sum/total;
  });
- const weights=cornerLoad.map((load,i)=>raceProfile?1+load*2.8:(1+load)*(1-(1-.52*1.65/straightSpeed)*boost[i]));
+ const weights=cornerLoad.map((load,i)=>dynamicProfile?1+load*(legacyProfile?2.35:2.8):(1+load)*(1-(1-.52*1.65/straightSpeed)*boost[i]));
  // Technical sections stay near average pace; only the main straight can
  // reach its configured cap. The shorter illustrative oval needs a larger
  // relative boost for a comparable straight transit. Nothing crawls below .75x.
- const minimum=boost.map(b=>raceProfile?1/maximumSpeed:1/(1.1+(straightSpeed-1.1)*b));
- const maximumWeight=raceProfile?1/minimumSpeed:1/.75;
+ const minimum=boost.map(b=>dynamicProfile?1/maximumSpeed:1/(1.1+(straightSpeed-1.1)*b));
+ const maximumWeight=dynamicProfile?1/minimumSpeed:1/.75;
  const bounded=(w,i,scale)=>Math.min(maximumWeight,Math.max(minimum[i],w*scale));
  let low=0,high=2;
  for(let step=0;step<60;step++){

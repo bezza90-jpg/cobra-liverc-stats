@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import {readFileSync,readdirSync,existsSync} from 'node:fs';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
 import {planPoint,routePath,straightFor,routePoint,gridPositions,planBorder} from '../public/virtual-race-replay/track-layouts.js';
+import {designFromTrackPlan} from '../public/virtual-race-replay/track-designs.js';
 import {prepare,positionAt,visualFraction,finishFraction,raceTimeAtPosition,raceTimingAtPosition,lapPerformanceAtPosition} from '../public/virtual-race-replay/engine.js';
+await import('../public/virtual-race-replay/track-3d-viewer.js');
 const base=new URL('../public/virtual-race-replay/',import.meta.url);
 {
  const driver=prepare({officialTime:47.1,laps:[{seconds:14.5},{seconds:16.25},{seconds:16.37}]}),running={driver,...positionAt(driver,20)},finished={driver,...positionAt(driver,driver.total)};
@@ -86,6 +88,20 @@ const maps=routes.map(r=>{
  }
  assert(min<.7&&max>1.5,`race pace should visibly accelerate and brake (${min}-${max})`);
  console.log(`Race-day video pace: speed ${min.toFixed(3)}-${max.toFixed(3)}x lap average`);
+}
+{
+ const legacyDesign=designFromTrackPlan(plans['499054']),route=globalThis.CobraTrack3D.sampleRoute(legacyDesign.points,.19,true),steps=route.map((point,index)=>Math.hypot(point.x-route[(index+1)%route.length].x,point.y-route[(index+1)%route.length].y));
+ assert(Math.max(...steps)/Math.min(...steps)<1.035,'legacy route samples stay at equal real-world distances');
+ const points=[...route.map(({x,y})=>({x,y})),{x:route[0].x,y:route[0].y}],pace=paceMap(points,{profile:'legacy-smooth',minimumSpeed:.62,maximumSpeed:1.7});
+ let previous=0,min=Infinity,max=0,lastSpeed=null;
+ for(let j=1;j<=30000;j++){
+  const distance=pace(j/30000),speed=(distance-previous)*30000;
+  assert(speed>=.62-1e-5&&speed<=1.7+1e-5,`legacy pace speed ${speed}`);
+  if(lastSpeed!==null)assert(Math.abs(speed-lastSpeed)<.01,'legacy pace changes progressively without speed bursts');
+  min=Math.min(min,speed);max=Math.max(max,speed);previous=distance;lastSpeed=speed;
+ }
+ assert(min<.75&&max>1.6,`legacy pace should brake for bends and accelerate on straights (${min}-${max})`);
+ console.log(`Older 3D replay pace: speed ${min.toFixed(3)}-${max.toFixed(3)}x lap average across equal-distance samples`);
 }
 let races=0,drivers=0,crossings=0,shortOpenings=0;
 for(const file of readdirSync(new URL('races/',base))){
