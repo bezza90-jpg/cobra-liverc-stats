@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {boundedJumpLift,jumpProfile,localJumpTransform} from '../public/virtual-race-replay/jumps.js';
+import {airborneJumpScale,airborneJumpTransform,jumpProfile} from '../public/virtual-race-replay/jumps.js';
 import {prepare,visualFraction} from '../public/virtual-race-replay/engine.js';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
 import {trackPlanFromDesign,designFromTrackPlan,hasMeasuredJumpMotion} from '../public/virtual-race-replay/track-designs.js';
@@ -15,14 +15,13 @@ test('jump is bounded, smooth at entry/exit and absent on ordinary track',()=>{
  for(let i=0;i<=1000;i++)assert(lift(i/1000)>=0&&lift(i/1000)<=6);
  assert.equal(lift(.3),lift(1.3));assert.equal(jumpProfile(samples)(.3),0);
 });
-test('2D lift follows the ramp direction but caps extreme measured flights',()=>{
+test('2D airtime stays centred on the route and caps its apparent height',()=>{
  const ordinaryLift=jumpProfile(samples,zones)(.3),extremeLift=228;
- assert(Math.abs(boundedJumpLift(ordinaryLift)-ordinaryLift)<.04);
- assert(boundedJumpLift(extremeLift)>47&&boundedJumpLift(extremeLift)<48);
- assert.equal(localJumpTransform(ordinaryLift),`translate(0,${-boundedJumpLift(ordinaryLift)})`);
- assert.equal(localJumpTransform(0),'');
- const localLift=boundedJumpLift(extremeLift),worldOffset=angle=>({x:localLift*Math.sin(angle),y:-localLift*Math.cos(angle)});
- assert(worldOffset(0).y<0);assert(worldOffset(Math.PI).y>0);
+ assert(airborneJumpScale(ordinaryLift)>1&&airborneJumpScale(ordinaryLift)<1.03);
+ assert(airborneJumpScale(extremeLift)>1.159&&airborneJumpScale(extremeLift)<1.16);
+ assert.equal(airborneJumpTransform(ordinaryLift),`scale(${airborneJumpScale(ordinaryLift)})`);
+ assert.equal(airborneJumpTransform(0),'');
+ assert(!airborneJumpTransform(extremeLift).includes('translate'));
  const driver=prepare({laps:[{seconds:12},{seconds:15},{seconds:16}]});
  const pace=paceMap(samples,{mainStraight:{from:{x:0,y:0},to:{x:100,y:0}},straightSpeed:1.65});
  for(const t of driver.crossings){const distance=visualFraction(driver,t,pace);jumpProfile(samples,zones)(distance);assert.equal(distance,0);}

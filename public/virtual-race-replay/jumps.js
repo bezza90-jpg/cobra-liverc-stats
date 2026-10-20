@@ -11,13 +11,13 @@ export function insidePolygon(point,polygon){
 const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 const smooth=t=>t*t*(3-2*t);
 const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
-export function boundedJumpLift(liftPixels,maximumPixels=48){
- const lift=Math.max(0,Number(liftPixels)||0),maximum=Math.max(1,Number(maximumPixels)||48);
- return maximum*Math.tanh(lift/maximum);
+export function airborneJumpScale(liftPixels,referencePixels=48,maximumScale=1.16){
+ const lift=Math.max(0,Number(liftPixels)||0),reference=Math.max(1,Number(referencePixels)||48),maximum=Math.max(1,Number(maximumScale)||1.16);
+ return 1+(maximum-1)*Math.tanh(lift/reference);
 }
-export function localJumpTransform(liftPixels,maximumPixels=48){
- const lift=boundedJumpLift(liftPixels,maximumPixels);
- return lift?`translate(0,${-lift})`:'';
+export function airborneJumpTransform(liftPixels,referencePixels=48,maximumScale=1.16){
+ const scale=airborneJumpScale(liftPixels,referencePixels,maximumScale);
+ return scale>1?`scale(${scale})`:'';
 }
 function ballisticPeak(startHeight,endHeight,flightTime,gravity){
  const verticalSpeed=(endHeight-startHeight+.5*gravity*flightTime*flightTime)/Math.max(.001,flightTime),peakTime=clamp(verticalSpeed/gravity,0,flightTime);
