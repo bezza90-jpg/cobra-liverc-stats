@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-20T17:27:44.398Z",
+  "updatedAt": "2026-10-20T18:31:33.181Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -89,6 +89,15 @@
       "transponder": "6263647"
     },
     {
+      "driverKey": "FINLEY-OLDFIELD",
+      "driverName": "FINLEY OLDFIELD",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "8874721"
+    },
+    {
       "driverKey": "GARETH-MANNING",
       "driverName": "GARETH MANNING",
       "className": "2-Wheel Drive Buggy",
@@ -140,6 +149,15 @@
       "chassis": "Xray",
       "chassisSource": "wix",
       "transponder": "9036431"
+    },
+    {
+      "driverKey": "JOHN-MORDEN",
+      "driverName": "JOHN MORDEN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "5310037"
     },
     {
       "driverKey": "JON-PAISLEY",
