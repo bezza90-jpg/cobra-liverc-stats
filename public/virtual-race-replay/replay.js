@@ -2,7 +2,7 @@ import {canonicalDriverKey} from '../assets/driver-identity.js';
 import {renderLapCharts} from '../assets/lap-charts.js?v=20261019-heat-scale';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
-import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
+import {jumpProfile,screenSpaceJumpTransform} from './jumps.js?v=20261020-screen-lift-1';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261017-finals-grid';
 import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-trestle-hop-1';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
@@ -121,9 +121,11 @@ async function loadRace(autoplay=false){
  // First retirement is lowest beside the loop; later retirements stack upward.
  if(endedEarly){const base=Number(label.getAttribute('y'))+40;const spacing=Math.min(105,(base-100)/Math.max(1,retiredSlots.size-1));parkedX=Math.max(52,(planned?planForRace(race)?.border?.x||87:87)-40);parkedY=base-retiredSlots.get(d.id)*spacing;}
  group.setAttribute('transform',s.finished?`translate(${parkedX},${parkedY}) scale(1.44)`:`translate(${x},${y}) rotate(${angle}) scale(1.44)`);
- // Translate inside the rotated car group: upside-down headings lift downward.
+ // Keep decorative airtime screen-up. Rotating a local Y offset with the car can
+ // otherwise push cars travelling left below the circuit and over the timeline.
  const visualSpeed=(jumpPlan?.routeLengthMetres||151.5)/Math.max(1,d.typical||s.lapTime||15)*(pace.speedAtDistance?.(dist/length)||1);
- group.querySelector('.car-artwork').setAttribute('transform',`translate(0,${s.finished?0:-jumpLift(dist/length,visualSpeed)})`);
+ const visualLift=s.finished?0:jumpLift(dist/length,visualSpeed);
+ group.querySelector('.car-artwork').setAttribute('transform',screenSpaceJumpTransform(angle,visualLift));
  group.querySelector('.car-nameplate').setAttribute('transform',s.finished?'translate(0,-37)':`rotate(${-angle}) translate(0,-42)`);
  group.querySelector('image').setAttribute('transform',s.finished&&endedEarly?'scale(1,-1)':'scale(1,1)');
  group.classList.toggle('retired',s.finished&&endedEarly);
