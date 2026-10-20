@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-20T01:17:13.469Z",
+  "updatedAt": "2026-10-20T01:26:28.556Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -14,6 +14,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "7241911"
+    },
+    {
+      "driverKey": "AINSLEY-EVANS",
+      "driverName": "AINSLEY EVANS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "8615491"
     },
     {
       "driverKey": "BOBTECH",
@@ -421,6 +430,15 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "7226235"
+    },
+    {
+      "driverKey": "BEN-EVANS",
+      "driverName": "BEN EVANS",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "3581757"
     },
     {
       "driverKey": "LEO-SMITH",
