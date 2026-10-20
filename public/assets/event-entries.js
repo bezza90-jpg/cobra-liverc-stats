@@ -23,7 +23,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=11';
+  link.href = '../assets/event-entries.css?v=12';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -137,16 +137,33 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       card.dataset.className=item.name;
       card.dataset.remaining=String(item.remaining);
       const label = {'Junior Racers':'Junior heat','4-Wheel Drive Buggy':'4WD','2-Wheel Drive Buggy':'2WD'}[item.name] || item.name;
-      const occupiedRatio = item.entered / item.limit;
+      const occupiedRatio = Math.max(0, Math.min(1, item.entered / item.limit));
       const availabilityClass = item.remaining === 0
         ? 'event-space-status event-space-status--full'
-        : occupiedRatio > .75
-          ? 'event-space-status event-space-status--low'
-          : occupiedRatio > .5
-            ? 'event-space-status event-space-status--mid'
-            : 'event-space-status';
+        : 'event-space-status';
       const availability = element('b',availabilityClass,item.remaining ? `${item.remaining} spaces remaining` : 'Class Full');
-      card.append(element('strong','',label),availability,element('span','',`${item.entered} entered or reserved / ${item.limit} spaces`));
+      if (item.remaining > 0) {
+        // Move continuously from green (available), through yellow at 50%,
+        // to an increasingly deep orange as the class approaches capacity.
+        const hue = Math.round(120 * (1 - occupiedRatio));
+        availability.style.setProperty('--capacity-hue',String(hue));
+      }
+      const capacityScale = element('span','event-capacity-scale');
+      const scaleSteps = 15;
+      const filledSteps = Math.round(occupiedRatio * scaleSteps);
+      capacityScale.setAttribute('role','progressbar');
+      capacityScale.setAttribute('aria-label',`${label} ${Math.round(occupiedRatio * 100)}% occupied`);
+      capacityScale.setAttribute('aria-valuemin','0');
+      capacityScale.setAttribute('aria-valuemax','100');
+      capacityScale.setAttribute('aria-valuenow',String(Math.round(occupiedRatio * 100)));
+      for (let step = 1; step <= scaleSteps; step += 1) {
+        const marker = element('i',step <= filledSteps ? 'is-filled' : '');
+        const markerRatio = step / scaleSteps;
+        marker.style.setProperty('--capacity-step',String(step));
+        marker.style.setProperty('--capacity-step-hue',String(Math.round(120 * (1 - markerRatio))));
+        capacityScale.append(marker);
+      }
+      card.append(element('strong','',label),availability,capacityScale,element('span','',`${item.entered} entered or reserved / ${item.limit} spaces`));
       cards.append(card);
     }
     panel.append(cards);
