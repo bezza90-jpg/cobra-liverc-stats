@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {airborneJumpScale,airborneJumpTransform,jumpProfile} from '../public/virtual-race-replay/jumps.js';
+import {jumpProfile,legacyJumpProfile} from '../public/virtual-race-replay/jumps.js';
 import {prepare,visualFraction} from '../public/virtual-race-replay/engine.js';
 import {paceMap} from '../public/virtual-race-replay/pace.js';
 import {trackPlanFromDesign,designFromTrackPlan,hasMeasuredJumpMotion} from '../public/virtual-race-replay/track-designs.js';
@@ -15,16 +15,15 @@ test('jump is bounded, smooth at entry/exit and absent on ordinary track',()=>{
  for(let i=0;i<=1000;i++)assert(lift(i/1000)>=0&&lift(i/1000)<=6);
  assert.equal(lift(.3),lift(1.3));assert.equal(jumpProfile(samples)(.3),0);
 });
-test('2D airtime stays centred on the route and caps its apparent height',()=>{
- const ordinaryLift=jumpProfile(samples,zones)(.3),extremeLift=228;
- assert(airborneJumpScale(ordinaryLift)>1&&airborneJumpScale(ordinaryLift)<1.03);
- assert(airborneJumpScale(extremeLift)>1.159&&airborneJumpScale(extremeLift)<1.16);
- assert.equal(airborneJumpTransform(ordinaryLift),`scale(${airborneJumpScale(ordinaryLift)})`);
- assert.equal(airborneJumpTransform(0),'');
- assert(!airborneJumpTransform(extremeLift).includes('translate'));
+test('2D airtime retains the original fixed-height local hop',()=>{
+ const lift=legacyJumpProfile(samples,zones,50);
+ assert.equal(lift(.2),0);assert(lift(.3)>49.5);assert(Math.abs(lift(.39))<1e-10);
+ for(let i=0;i<=1000;i++)assert(lift(i/1000)>=0&&lift(i/1000)<=50);
+ const worldOffset=angle=>({x:lift(.3)*Math.sin(angle),y:-lift(.3)*Math.cos(angle)});
+ assert(worldOffset(0).y<0);assert(worldOffset(Math.PI).y>0);
  const driver=prepare({laps:[{seconds:12},{seconds:15},{seconds:16}]});
  const pace=paceMap(samples,{mainStraight:{from:{x:0,y:0},to:{x:100,y:0}},straightSpeed:1.65});
- for(const t of driver.crossings){const distance=visualFraction(driver,t,pace);jumpProfile(samples,zones)(distance);assert.equal(distance,0);}
+ for(const t of driver.crossings){const distance=visualFraction(driver,t,pace);lift(distance);assert.equal(distance,0);}
 });
 
 test('kicker stays elevated through the gap and lowers only on the landing ramp',()=>{
