@@ -1,5 +1,5 @@
 import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress,raceTimingAtPosition,lapPerformanceAtPosition} from './engine.js?v=20261018-timing-columns-1';
-import {paceMap} from './pace.js?v=20261017-race';
+import {paceMap} from './pace.js?v=20261020-legacy-motion-1';
 import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
 import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-trestle-hop-1';
 import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-6';
@@ -11,6 +11,7 @@ const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padSta
 const params=new URLSearchParams(location.search);
 const trackFlyoverMode=params.get('flyover')==='track',raceFlyoverMode=params.get('flyover')==='race',trackExploreMode=params.get('explore')==='track',trackOnlyMode=trackFlyoverMode||trackExploreMode,autoPlay=params.get('autoplay')==='1';
 const galleryFlyoverMode=trackFlyoverMode||raceFlyoverMode;
+const currentMotionEvents=new Set(['518554','518555']);
 const resetFlyoverViewport=()=>{if(!galleryFlyoverMode)return;document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0);};
 if(galleryFlyoverMode){
   document.body.classList.add('race-flyover-mode');
@@ -54,7 +55,9 @@ function configurePhysics(){
     3:jumpProfile(samples,[],.323,[],{...liftOptions,flightTimeScale:1.15})
   };
   lift=lifts[1];
-  pace=paceMap(rawRoute(),{profile:'race',minimumSpeed:.56,maximumSpeed:1.75});
+  pace=currentMotionEvents.has(String(eventId))
+    ?paceMap(rawRoute(),{profile:'race',minimumSpeed:.56,maximumSpeed:1.75})
+    :paceMap(rawRoute(),{profile:'legacy-smooth',minimumSpeed:.62,maximumSpeed:1.7});
 }
 function configureGrid(){
   if(!race.isFinal)return;
@@ -160,7 +163,7 @@ async function start(){
     const viewTitle=trackFlyoverMode?`${eventData.name} Track Flyover`:trackExploreMode?`${eventData.name} 3D Track Explorer`:`${eventData.name} in 3D`;$('eventTitle').textContent=viewTitle;document.title=`${viewTitle} | COBRA RC Racing Cardiff`;
     $('raceSelect').replaceChildren(...eventData.races.map(item=>new Option(`${item.round} · ${item.name}`,item.id)));
     const initial=eventData.races.some(item=>String(item.id)===String(requestedRace))?String(requestedRace):eventData.races.some(item=>String(item.id)===String(selectedEvent.defaultRace))?String(selectedEvent.defaultRace):String(eventData.races[0]?.id||'');if(!initial)throw Error('No recorded races are available for this event.');$('raceSelect').value=initial;$('status').textContent='Loading the 3D track…';
-    json('../data/videos.json?v=20261017-current-races').then(data=>{raceVideos=data.videos||[];updateYouTubeLink();}).catch(()=>{});design=await loadDesign();
+    json('../data/videos.json?v=20261017-current-races').then(data=>{raceVideos=data.videos||[];updateYouTubeLink();}).catch(()=>{});design=await loadDesign();design.motionProfile=currentMotionEvents.has(String(eventId))?'current':'legacy-smooth';
     const measured=!design.flatReplay;$('physicsStatus').textContent=measured?'Measured ramps · gravity 9.81 m/s²':'Flat replay · no inferred jumps';
     $('replayMethod').innerHTML=measured?'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times. Their position between timing-loop crossings is estimated along the confirmed Track Designer centre line. Ramp heights are measured; airborne motion uses gravity at 9.81 m/s².':'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times and follow the confirmed event route. This plan does not contain measured ramp positions, so the replay deliberately keeps the cars on the flat circuit.';
     viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:!trackOnlyMode,flyover:trackFlyoverMode,trackOnly:trackOnlyMode});addViewerReplayControls();if(!trackOnlyMode){addLiveTiming();placeYouTubeLink();}configurePhysics();
