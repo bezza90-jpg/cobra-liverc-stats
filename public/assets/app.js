@@ -128,6 +128,13 @@ function metricHelp(value, description, label = '') {
   return `<span class="metric-help" tabindex="0" data-metric-help="${escapeHtml(help)}" aria-label="${escapeHtml(accessible)}">${escapeHtml(text)}</span>`;
 }
 
+function metricHelpHtml(valueHtml, accessibleValue, description, label = '') {
+  const text = String(accessibleValue ?? '—');
+  const help = description || '';
+  const accessible = `${label ? `${label}: ` : ''}${text}. ${help}`.trim();
+  return `<span class="metric-help" tabindex="0" data-metric-help="${escapeHtml(help)}" aria-label="${escapeHtml(accessible)}">${valueHtml}</span>`;
+}
+
 function ensurePaceBenchmarks(data = state.data) {
   if (paceCacheData === data) return fastestLapByRace;
   paceCacheData = data;
@@ -259,6 +266,31 @@ function formatRatingChange(value) {
 function formatRatingWithChange(summary) {
   const total = formatRating(summary?.total);
   return summary?.latest ? `${total} (${formatRatingChange(summary.latest.change)})` : total;
+}
+
+function ratingChangeHtml(value) {
+  const text = formatRatingChange(value);
+  if (!Number.isFinite(value)) return escapeHtml(text);
+  const tone = value < 0 ? 'negative' : value > 0 ? 'positive' : 'neutral';
+  return `<span class="rating-change ${tone}">${escapeHtml(text)}</span>`;
+}
+
+function ratingTextHtml(value) {
+  const text = String(value ?? '—');
+  const match = text.match(/^(.*) \(([+−-][\d,]+)\)$/);
+  if (!match) return escapeHtml(text);
+  const tone = /^[−-]/.test(match[2]) ? 'negative' : /^\+0(?:,0)*$/.test(match[2]) ? 'neutral' : 'positive';
+  return `${escapeHtml(match[1])} (<span class="rating-change ${tone}">${escapeHtml(match[2])}</span>)`;
+}
+
+function ratingMetricHelp(summary, label = 'cRating') {
+  const text = formatRatingWithChange(summary);
+  return metricHelpHtml(ratingTextHtml(text), text, ratingHelp(summary), label);
+}
+
+function ratingChangeMetricHelp(value, label = 'cRating change') {
+  const text = formatRatingChange(value);
+  return metricHelpHtml(ratingChangeHtml(value), text, metricDescriptions.eventRating, label);
 }
 
 function ratingHelp(summary) {
@@ -677,7 +709,7 @@ function leaderboardEvidence(row) {
   }).join('');
   return `<div class="leaderboard-source-panel">
     <div class="leaderboard-source-heading"><div><p class="eyebrow">Result sources</p><h3>${escapeHtml(row.name)}</h3><p>${finals.length} published final${finals.length === 1 ? '' : 's'} · ${runs.length} recorded run${runs.length === 1 ? '' : 's'}</p></div><button type="button" class="profile-open" data-profile-key="${escapeHtml(row.driverKey)}">Open full driver profile</button></div>
-    <div class="source-scorecards"><span>${metricHelp(formatRatingWithChange(row.ratingSummary), ratingHelp(row.ratingSummary), 'cRating')}<small>cRating</small></span><span>${metricValueHelp('pace', row.pace === null ? '—' : `${row.pace.toFixed(1)}%`, 'Pace')}<small>Pace</small></span><span>${metricValueHelp('performance', row.performance.toFixed(1), 'Performance')}<small>Performance</small></span><span>${metricValueHelp('consistency', row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`, 'Consistency')}<small>Consistency</small></span></div>
+    <div class="source-scorecards"><span>${ratingMetricHelp(row.ratingSummary)}<small>cRating</small></span><span>${metricValueHelp('pace', row.pace === null ? '—' : `${row.pace.toFixed(1)}%`, 'Pace')}<small>Pace</small></span><span>${metricValueHelp('performance', row.performance.toFixed(1), 'Performance')}<small>Performance</small></span><span>${metricValueHelp('consistency', row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`, 'Consistency')}<small>Consistency</small></span></div>
     <details open><summary>Published overall results (${finals.length})</summary><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Overall</th><th>Qualifying</th><th>Final</th></tr></thead><tbody>${finalRows || '<tr><td colspan="6">No published finals match these filters.</td></tr>'}</tbody></table></div></details>
     <details><summary>Individual LiveRC runs (${runs.length})</summary><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Behind</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Source</th></tr></thead><tbody>${runRows || '<tr><td colspan="13">No individual runs match these filters.</td></tr>'}</tbody></table></div></details>
   </div>`;
@@ -732,6 +764,8 @@ function renderLeaderboard() {
   state.leaderboardRows = new Map(rows.map(row => [row.driverKey, row]));
   const metricKey = $('leaderboardMetric')?.value || 'average';
   const metric = leaderboardMetrics[metricKey] || leaderboardMetrics.average;
+  const fixedAverageHeading = document.querySelector('#driverLeaderboard [data-leaderboard-sort="average"]');
+  if (fixedAverageHeading) fixedAverageHeading.hidden = metricKey === 'average';
   if ($('leaderboardMetricHeading')) {
     const heading = $('leaderboardMetricHeading');
     const button = heading.querySelector('button');
@@ -743,8 +777,8 @@ function renderLeaderboard() {
   $('leaderboardCount').innerHTML = metricValueHelp('count', `${fmt.format(rows.length)} ranked · ${fmt.format(state.leaderboardEligibleCount)} recorded`, 'Leaderboard coverage');
   $('leaderboardBody').innerHTML = rows.length ? rows.map(row => `
     <tr class="leaderboard-driver-row" data-driver-row="${escapeHtml(row.driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-controls="leaderboard-source-${escapeHtml(row.driverKey)}" aria-label="Show source results for ${escapeHtml(row.name)}">
-      <td>${metricValueHelp('rank', row.rank, 'Rank')}</td><td class="driver-cell"><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button><span class="driver-overall-rating">${metricHelp(formatRatingWithChange(row.ratingSummary), ratingHelp(row.ratingSummary), 'Overall cRating')} cRating</span></td>${resultAvatarCell(row.driverKey, filters().className)}<td class="ranked-metric">${metricHelp(metric.display ? metric.display(row) : metric.value(row), metricKey === 'cRating' ? ratingHelp(row.ratingSummary) : metricDescriptions[metricKey], metric.label)}</td><td>${metricValueHelp('finals', row.finals, 'Finals')}</td>
-      <td>${metricValueHelp('average', row.average.toFixed(1), 'Average overall finish')}</td><td>${metricValueHelp('best', row.best, 'Best overall finish')}</td><td>${metricValueHelp('topFive', countAndRate(row.topFive, row.finals), 'Top-five finishes')}</td>
+      <td>${metricValueHelp('rank', row.rank, 'Rank')}</td><td class="driver-cell"><button type="button" class="driver-name" data-driver-key="${escapeHtml(row.driverKey)}">${escapeHtml(row.name)}</button>${metricKey === 'cRating' ? '' : `<span class="driver-overall-rating">${ratingMetricHelp(row.ratingSummary, 'Overall cRating')} cRating</span>`}</td>${resultAvatarCell(row.driverKey, filters().className)}<td class="ranked-metric">${metricKey === 'cRating' ? ratingMetricHelp(row.ratingSummary) : metricHelp(metric.display ? metric.display(row) : metric.value(row), metricDescriptions[metricKey], metric.label)}</td><td>${metricValueHelp('finals', row.finals, 'Finals')}</td>
+      <td class="leaderboard-fixed-average"${metricKey === 'average' ? ' hidden' : ''}>${metricValueHelp('average', row.average.toFixed(1), 'Average overall finish')}</td><td>${metricValueHelp('best', row.best, 'Best overall finish')}</td><td>${metricValueHelp('topFive', countAndRate(row.topFive, row.finals), 'Top-five finishes')}</td>
       <td>${metricValueHelp('podiums', countAndRate(row.podiums, row.finals), 'Podiums')}</td><td>${metricValueHelp('overallWins', row.overallWins, 'Overall wins')}</td>
       <td>${metricValueHelp('performance', row.performance.toFixed(1), 'Performance')}</td><td>${metricValueHelp('consistency', row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`, 'Consistency')}</td>
     </tr><tr class="leaderboard-source-row" id="leaderboard-source-${escapeHtml(row.driverKey)}" data-source-driver="${escapeHtml(row.driverKey)}" hidden><td colspan="12"></td></tr>`).join('') : '<tr><td colspan="12">No drivers match these filters.</td></tr>';
@@ -865,7 +899,7 @@ function profileStat(value, label, description = '') {
     || (lower.includes('track time') ? metricDescriptions.trackTime : '')
     || 'Calculated from the records that match the current date, event and class filters.';
   const key = evidenceKeys[lower];
-  const body = `<strong>${metricHelp(value, inferred, label)}</strong><span>${escapeHtml(label)}</span>`;
+  const body = `<strong>${key === 'cRating' ? metricHelpHtml(ratingTextHtml(value), value, inferred, label) : metricHelp(value, inferred, label)}</strong><span>${escapeHtml(label)}</span>`;
   return key
     ? `<article class="profile-stat-expandable"><button type="button" class="profile-stat-button" data-profile-evidence="${key}" data-profile-label="${escapeHtml(label)}" aria-expanded="false">${body}</button></article>`
     : `<article>${body}</article>`;
@@ -890,7 +924,7 @@ function renderProfileMetricEvidence(key, label) {
     const rowHtml = rows.map(meeting => {
       const event = data.eventById?.[meeting.eventId];
       const eventName = event?.u ? `<a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">${escapeHtml(meeting.name)}</a>` : escapeHtml(meeting.name);
-      return `<tr><td>${dateFmt.format(new Date(`${meeting.date}T12:00:00Z`))}</td><td>${eventName}</td><td>${meeting.races}</td><td>${formatRating(meeting.before)}</td><td><strong>${formatRatingChange(meeting.change)}</strong></td><td>${formatRating(meeting.after)}</td></tr>`;
+      return `<tr><td>${dateFmt.format(new Date(`${meeting.date}T12:00:00Z`))}</td><td>${eventName}</td><td>${meeting.races}</td><td>${formatRating(meeting.before)}</td><td><strong>${ratingChangeHtml(meeting.change)}</strong></td><td>${formatRating(meeting.after)}</td></tr>`;
     }).join('');
     content = `<p class="metric-evidence-note">Every driver starts at 1,500. Qualifying heats and finals move the rating according to direct opponents, finishing position, lap pace and field strength; practice is excluded and finals carry more weight. The bracketed figure is the latest meeting change.</p><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Start</th><th>Change</th><th>End</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="6">No linked rated races.</td></tr>'}</tbody></table></div>`;
   } else if (eventMetric) {
@@ -921,7 +955,7 @@ function renderProfileMetricEvidence(key, label) {
       const pace = paceForRun(run, data);
       const consistency = Number.parseFloat(run[7]);
       const change = driverRatingSummary(driverKey, data, filters().className).raceChanges.get(run[0])?.change;
-      return `<tr><td>${race ? dateFmt.format(new Date(`${race.d}T12:00:00Z`)) : '—'}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${Number.isFinite(consistency) && consistency >= 0 && consistency <= 100 ? `${consistency.toFixed(2)}%` : '—'}</td><td>${pace === null ? '—' : `${pace.toFixed(1)}%`}</td><td>${formatRatingChange(change)}</td></tr>`;
+      return `<tr><td>${race ? dateFmt.format(new Date(`${race.d}T12:00:00Z`)) : '—'}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${Number.isFinite(consistency) && consistency >= 0 && consistency <= 100 ? `${consistency.toFixed(2)}%` : '—'}</td><td>${pace === null ? '—' : `${pace.toFixed(1)}%`}</td><td>${ratingChangeHtml(change)}</td></tr>`;
     }).join('');
     content = `<div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Best</th><th>Average</th><th>Consistency</th><th>Pace</th><th title="cRating gained from this run">Gain</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="9">No matching race records.</td></tr>'}</tbody></table></div>`;
   }
@@ -1678,7 +1712,7 @@ function driverProfile(driverKey) {
       ['Entries', classEntries], ['Runs', classRuns.length], ['Laps', fmt.format(totalLaps(classRuns))], ['Distance', distanceRaced(classRuns)], ['Track time', trackTime(classRuns)], ['Finals', rows.length],
       ['Av overall', classKeptPositions.length ? average(classKeptPositions).toFixed(1) : '—', 'Average overall finish'], ['Best', classPositions.length ? Math.min(...classPositions) : '—', 'Best overall finish'], ['Top 5', countAndRate(classTopFive, rows.length)], ['Podiums', countAndRate(classPodiums, rows.length)],
       ['Overall wins', classOverallWins], ['Race wins', classRaceWins], ['TQs', classTqs], ['Perf', classPerformance === null ? '—' : classPerformance.toFixed(1), 'Performance'],
-      ['Pace', metricValueHelp('pace', classPace === null ? '—' : `${classPace.toFixed(1)}%`, 'Pace')], ['cRating', metricHelp(formatRatingWithChange(driverRatingSummary(driverKey, data, cls)), ratingHelp(driverRatingSummary(driverKey, data, cls)), 'cRating')],
+      ['Pace', metricValueHelp('pace', classPace === null ? '—' : `${classPace.toFixed(1)}%`, 'Pace')], ['cRating', ratingMetricHelp(driverRatingSummary(driverKey, data, cls))],
       ['Best lap', fastestLaps.length ? `${Math.min(...fastestLaps).toFixed(3)}s` : '—', 'Fastest lap'], ['Av consistency', classConsistency === null ? '—' : `${classConsistency.toFixed(1)}%`, 'Average consistency']
     ];
     return `<article class="profile-metric-card"><h4>${escapeHtml(cls)}</h4><dl>${items.map(([label, value, title]) => `<div${title ? ` title="${escapeHtml(title)}"` : ''}><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl></article>`;
@@ -1745,7 +1779,7 @@ function driverProfile(driverKey) {
       return `<tr class="driver-run-row" data-race-id="${escapeHtml(run[0])}" data-driver-key="${escapeHtml(driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show complete lap result for ${escapeHtml(race.r)} ${escapeHtml(race.n)}"><td>${escapeHtml(race.r)}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td><td>${metricValueHelp('pace', runPace === null ? '—' : `${runPace.toFixed(1)}%`, 'Pace')}</td><td>${videoLink}</td></tr><tr class="driver-run-detail-row" hidden><td colspan="9"></td></tr>`;
     }).join('');
     const raceDrilldown = `<details class="inline-races"><summary>${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}</summary><div class="table-wrap"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${runRows}</tbody></table></div></details>`;
-    return `<tr><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${raceDrilldown}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${metricValueHelp('pace', eventPace === null ? '—' : `${eventPace.toFixed(1)}%`, 'Pace')}</td><td>${metricValueHelp('eventRating', formatRatingChange(eventRating), 'cRating change')}</td></tr>`;
+    return `<tr><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${raceDrilldown}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${metricValueHelp('pace', eventPace === null ? '—' : `${eventPace.toFixed(1)}%`, 'Pace')}</td><td>${ratingChangeMetricHelp(eventRating)}</td></tr>`;
   }).join('') || '<tr><td colspan="12">No completed finals within these filters.</td></tr>';
 
   state.profileKey = driverKey;
