@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-21T20:55:42.368Z",
+  "updatedAt": "2026-10-21T23:36:33.530Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -214,6 +214,15 @@
       "transponder": "3753291"
     },
     {
+      "driverKey": "MARTIN-PITMAN",
+      "driverName": "MARTIN PITMAN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "3499449"
+    },
+    {
       "driverKey": "MARTYN-HADLEY",
       "driverName": "MARTYN HADLEY",
       "className": "2-Wheel Drive Buggy",
@@ -248,6 +257,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "4003421"
+    },
+    {
+      "driverKey": "OLLY-FROST",
+      "driverName": "OLLY FROST",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "7323310"
     },
     {
       "driverKey": "PAUL-TRODDEN",
@@ -510,6 +528,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "5431388"
+    },
+    {
+      "driverKey": "OLLY-FROST",
+      "driverName": "OLLY FROST",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "7323310"
     },
     {
       "driverKey": "BRUCE",
