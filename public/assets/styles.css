@@ -356,9 +356,12 @@ details .table-wrap { margin: 0 14px 14px; }
 .inline-races { position:relative; min-width:58px; }
 .inline-races summary { padding:3px 7px; color:var(--green-dark); background:#f4faf5; border:1px solid #d5e6d8; border-radius:999px; font-size:.68rem; font-weight:850; text-align:center; white-space:nowrap; }
 .inline-races[open] { min-width:58px; }
-.inline-races > .table-wrap { position:absolute; z-index:30; top:calc(100% + 6px); left:0; width:min(760px,calc(100vw - 80px)); max-height:320px; margin:0; background:#fff; border:1px solid #b9c9bd; border-radius:8px; box-shadow:0 16px 38px rgba(0,0,0,.2); }
+.inline-races > .table-wrap { position:fixed; z-index:1005; top:50%; left:50%; width:min(1240px,calc(100vw - 48px)); max-height:min(74vh,760px); margin:0; transform:translate(-50%,-50%); background:#fff; border:1px solid #9fb5a4; border-radius:14px; box-shadow:0 26px 90px rgba(0,0,0,.54); }
+.inline-races > .table-wrap table { min-width:1040px; font-size:.82rem; }
+.inline-races > .table-wrap th,.inline-races > .table-wrap td { padding:10px 9px; }
+.inline-races-close { position:sticky; z-index:3; top:8px; left:calc(100% - 92px); display:block; margin:8px 8px 0 auto; padding:8px 14px; color:#fff; background:var(--green-dark); border:0; border-radius:999px; font-weight:900; }
 
-.driver-dialog { width: min(1120px, calc(100% - 28px)); max-height: 92vh; padding: 0; color: var(--ink); background: var(--surface); border: 0; border-radius: 16px; box-shadow: 0 28px 90px rgba(0,0,0,.35); }
+.driver-dialog { width: min(1500px, calc(100% - 24px)); max-height: 94vh; padding: 0; color: var(--ink); background: var(--surface); border: 0; border-radius: 16px; box-shadow: 0 28px 90px rgba(0,0,0,.35); }
 .driver-dialog::backdrop { background: rgba(3, 10, 6, .72); backdrop-filter: blur(3px); }
 .dialog-shell { position: relative; padding: clamp(22px, 4vw, 38px); }
 .dialog-close { position: absolute; top: 14px; right: 14px; width: 42px; height: 42px; padding: 0; color: #344039; background: #eef3ef; border-radius: 50%; font-size: 1.65rem; line-height: 1; }
@@ -400,7 +403,7 @@ details .table-wrap { margin: 0 14px 14px; }
 .profile-metric-card .metric-help { max-width:100%; }
 .profile-breakdown-section .definition { margin:8px 0 0; font-size:.66rem; line-height:1.35; }
 .profile-breakdown-empty { margin:0; color:var(--muted); font-size:.8rem; }
-.profile-history { max-height: 430px; }
+.profile-history { max-height: 520px; }
 .profile-history table { min-width:0; table-layout:fixed; font-size:.68rem; }
 .profile-history th, .profile-history td { padding:7px 5px; white-space:nowrap; }
 .profile-history th { overflow:hidden; font-size:.58rem; text-overflow:ellipsis; }
@@ -428,7 +431,8 @@ footer a { color: #85e391; }
   .podium-layout { grid-template-columns: 1fr; }
   .profile-breakdown-grid { grid-template-columns:1fr; }
   .class-metric-cards .profile-metric-card dl { grid-template-columns:repeat(3,minmax(0,1fr)); }
-  .inline-races > .table-wrap { position:static; width:720px; max-width:none; margin-top:7px; box-shadow:none; }
+  .inline-races > .table-wrap { width:calc(100vw - 20px); max-height:82vh; }
+  .inline-races > .table-wrap table { min-width:980px; }
   .podium-sidebar { position: static; }
   .podium-mobile-picker { display: grid; }
   .podium-archive { display: none; }
