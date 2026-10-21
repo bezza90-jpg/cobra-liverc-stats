@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-20T18:24:38.787Z",
+  "updatedAt": "2026-10-21T08:12:28.193Z",
   "ticketLimits": {
     "Junior Racers": 11,
     "2-Wheel Drive Buggy": 66,
@@ -332,6 +332,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "LIAM TOOLE",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7180911",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "MARK GIAQUINTO",
       "className": "4-Wheel Drive Buggy",
       "transponder": "4115135",
@@ -452,7 +459,7 @@
     }
   ],
   "entrySources": {
-    "wix": 54,
+    "wix": 55,
     "admin": 9
   }
 }
