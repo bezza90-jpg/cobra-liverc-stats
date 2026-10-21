@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-21T20:11:17.723Z",
+  "updatedAt": "2026-10-21T21:16:01.975Z",
   "ticketLimits": {
     "Junior Racers": 11,
     "2-Wheel Drive Buggy": 66,
@@ -171,6 +171,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "MARTIN PITMAN",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3499449",
+      "chassis": "Schumacher",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "MARTYN HADLEY",
       "className": "2-Wheel Drive Buggy",
       "transponder": "9073997",
@@ -196,6 +203,13 @@
       "className": "2-Wheel Drive Buggy",
       "transponder": "4003421",
       "chassis": "TLR",
+      "transponderSource": "wix"
+    },
+    {
+      "driverName": "OLLY FROST",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "7323310",
+      "chassis": "Associated",
       "transponderSource": "wix"
     },
     {
@@ -402,6 +416,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "OLLY FROST",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "7323310",
+      "chassis": "Associated",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "PAUL CURTIS",
       "className": "4-Wheel Drive Buggy",
       "transponder": "4950687",
@@ -508,7 +529,7 @@
     }
   ],
   "entrySources": {
-    "wix": 62,
+    "wix": 65,
     "admin": 9
   }
 }
