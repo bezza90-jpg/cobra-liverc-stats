@@ -6,6 +6,7 @@ let selectedDriver = null;
 let activeMatch = -1;
 let pendingNonce = '';
 let uploadTimer = 0;
+let awaitingReply = false;
 
 function closeMatches() {
   $('driverMatches').hidden = true;
@@ -114,11 +115,18 @@ $('carPhoto').addEventListener('change', () => {
   if (file) {
     previewUrl = URL.createObjectURL(file);
     $('previewImage').src = previewUrl;
+    status(file.size > 6_000_000
+      ? 'This photo is over 6 MB. Choose a smaller JPG, PNG or WebP photo.'
+      : 'Photo selected. Choose your driver and class, then submit it for approval.');
   }
 });
 $('flipPhoto').addEventListener('change', () => $('previewImage').classList.toggle('flipped', $('flipPhoto').checked));
 $('avatarForm').addEventListener('submit', event => {
   event.preventDefault();
+  if (awaitingReply) {
+    status('This photo was already sent. Please do not submit it again while COBRA checks the upload.');
+    return;
+  }
   if (!$('avatarForm').reportValidity()) return;
   if (!selectedDriver) { $('driverSearch').focus(); status('Choose your name from the matching list.'); return; }
   const photo = $('carPhoto').files[0];
@@ -140,12 +148,11 @@ $('avatarForm').addEventListener('submit', event => {
     $('fileBase64').value = String(reader.result).split(',')[1] || '';
     $('clientNonce').value = pendingNonce;
     status('Sending your photo securely to COBRA…');
+    awaitingReply = true;
     clearTimeout(uploadTimer);
     uploadTimer = setTimeout(() => {
       if (!pendingNonce) return;
-      $('submitAvatar').disabled = false;
-      status('The upload did not return a result. Please check your connection and try again.');
-      pendingNonce = '';
+      status('Your photo may already have reached COBRA, but this page did not receive confirmation. Please do not submit it again; COBRA will check the approval queue.');
     }, 90000);
     $('avatarForm').submit();
   };
@@ -153,11 +160,12 @@ $('avatarForm').addEventListener('submit', event => {
 });
 
 window.addEventListener('message', event => {
-  const trustedGoogle = event.origin === 'https://script.google.com' || /^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/i.test(event.origin);
+  const trustedGoogle = event.origin === 'https://script.google.com' || /^https:\/\/(?:[a-z0-9-]+\.)?googleusercontent\.com$/i.test(event.origin);
   const result = event.data;
   if (!trustedGoogle || !result || result.type !== 'cobra-avatar-upload' || !pendingNonce || result.nonce !== pendingNonce) return;
   clearTimeout(uploadTimer);
   pendingNonce = '';
+  awaitingReply = false;
   $('submitAvatar').disabled = false;
   status(String(result.message || (result.ok ? 'Photo received.' : 'The upload could not be completed.')));
   if (result.ok) {
