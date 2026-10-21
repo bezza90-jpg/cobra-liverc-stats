@@ -52,6 +52,9 @@
         <span class="avatar-upload-hint">Junior drivers: choose the car class you race, such as 2WD or 4WD.</span>
         <label for="carPhoto">Photo of your car</label><input id="carPhoto" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" required>
         <span class="avatar-upload-hint">JPG, PNG or WebP, up to 6 MB. Clear side views work best.</span>
+        <label for="notificationEmail">Email me when it is live <span aria-hidden="true">(optional)</span></label>
+        <input id="notificationEmail" name="notificationEmail" type="email" inputmode="email" autocomplete="email" maxlength="200" placeholder="you@example.com">
+        <span class="avatar-upload-hint">Used only for a one-time confirmation after the approved image has been processed, published and checked live. It is not shown on the website.</span>
         <div class="avatar-upload-preview" id="photoPreview" hidden><img id="previewImage" alt="Preview of the selected car photo"></div>
         <label class="avatar-flip"><input id="flipPhoto" type="checkbox"> Flip horizontally if the car faces left</label>
         <label class="avatar-flip"><input id="consent" type="checkbox" required> I own this photo or have permission to share it with COBRA.</label>
@@ -65,6 +68,6 @@
     </section>
   </main>
   <footer><span>COBRA · Cardiff Off Road Buggy Racing Association</span><a href="../about/">About COBRA</a><a href="../briefing/">Drivers Briefing</a><a href="../">Back to race statistics</a><a class="website-guides-link" href="../website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>
-  <script type="module" src="../assets/avatar-upload.js?v=20260926-compact-drivers"></script>
+  <script type="module" src="../assets/avatar-upload.js?v=20261021-live-email"></script>
 <!-- cobra-footer:start --><footer class="cobra-site-footer"><a href="https://www.cobracardiff.co.uk/"><img src="../assets/cobra-header-logo.png" width="220" height="56" alt="COBRA home"></a><p>South Wales TQ HQ<br>BRCA.org Affiliated Club</p><p>Off Road Buggy Racing Club • South Wales</p><nav aria-label="Footer"><a href="../website-guides/">Help &amp; Website Guides</a><a href="https://www.facebook.com/groups/cobracardiff">Facebook</a><a href="https://www.youtube.com/@Bezza90">YouTube</a></nav><p>© 2026 COBRA. Beryl Media Productions. All rights reserved.</p></footer><!-- cobra-footer:end --></body>
 </html>

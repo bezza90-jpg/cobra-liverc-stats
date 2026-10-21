@@ -260,6 +260,12 @@ h2 { margin: 0; font-size: clamp(1.5rem, 4vw, 2.1rem); letter-spacing: -.035em; 
 .driver-cell { min-width: 150px; }
 .driver-overall-rating { display:block; margin-top:3px; color:#5d6b63; font-size:.62rem; font-weight:750; line-height:1; white-space:nowrap; }
 .driver-overall-rating .metric-help { color:#155b21; font-weight:900; }
+.rating-change.positive { color:#087b18; font-weight:900; }
+.rating-change.negative { color:#c41624; font-weight:900; }
+.rating-change.neutral { color:#59665e; font-weight:800; }
+.source-scorecards .rating-change.positive { color:#9bea19; }
+.source-scorecards .rating-change.negative { color:#ff8790; }
+.source-scorecards .rating-change.neutral { color:#d1d9d3; }
 .leaderboard-driver-row { cursor: pointer; transition: background .16s ease,box-shadow .16s ease; }
 .leaderboard-driver-row:hover, .leaderboard-driver-row:focus-visible { background: #f0f8f1; outline: 0; box-shadow: inset 4px 0 #0a9320; }
 .leaderboard-driver-row[aria-expanded="true"] { background: #e8f5ea; box-shadow: inset 4px 0 #0a9320; }
