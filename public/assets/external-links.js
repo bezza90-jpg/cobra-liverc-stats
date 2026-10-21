@@ -37,7 +37,9 @@ function prepareLink(link) {
     }
   }
   if (/^https?:$/.test(destination.protocol) && (destination.origin !== location.origin || (embedded && siteRoot.hostname === 'racehub.cobracardiff.co.uk'))) {
-    link.target = '_top';
+    const cobraHost = /(^|\.)cobracardiff\.co\.uk$/i.test(destination.hostname);
+    link.target = cobraHost ? '_top' : '_blank';
+    if (!cobraHost) link.rel = 'noopener';
   }
 }
 

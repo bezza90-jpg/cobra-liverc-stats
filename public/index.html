@@ -9,7 +9,7 @@
   <title>COBRA Race Statistics</title>
   <link rel="stylesheet" href="assets/styles.css?v=20261021-crating-colours-v1">
   <script type="module" src="assets/site-media.js?v=20260924-site1"></script>
-<script type="module" src="assets/external-links.js?v=20260926-routes"></script><link rel="stylesheet" href="./assets/embedded-layout.css?v=20260926-1"><script>if (window.self !== window.top) document.documentElement.classList.add("cobra-embedded");</script><link rel="stylesheet" href="assets/lap-charts.css?v=1"><link rel="modulepreload" href="assets/statistics-data.js"><link rel="modulepreload" href="assets/avatar-loader.js"><link rel="modulepreload" href="assets/lap-result-format.js"><link rel="modulepreload" href="assets/lap-charts.js?v=20260928-same-tab"><link rel="modulepreload" href="assets/load-map.js?v=20260928-local"><link rel="modulepreload" href="assets/journey-route.js?v=20260924-mapfix1"><link rel="stylesheet" href="assets/tracker-compact.css?v=3"><link rel="stylesheet" href="assets/statistics-mobile.css?v=1"><link rel="stylesheet" href="assets/avatar-carpet.css?v=3">
+<script type="module" src="assets/external-links.js?v=20261021-external-tabs-v1"></script><link rel="stylesheet" href="./assets/embedded-layout.css?v=20260926-1"><script>if (window.self !== window.top) document.documentElement.classList.add("cobra-embedded");</script><link rel="stylesheet" href="assets/lap-charts.css?v=1"><link rel="modulepreload" href="assets/statistics-data.js"><link rel="modulepreload" href="assets/avatar-loader.js"><link rel="modulepreload" href="assets/lap-result-format.js"><link rel="modulepreload" href="assets/lap-charts.js?v=20260928-same-tab"><link rel="modulepreload" href="assets/load-map.js?v=20260928-local"><link rel="modulepreload" href="assets/journey-route.js?v=20260924-mapfix1"><link rel="stylesheet" href="assets/tracker-compact.css?v=3"><link rel="stylesheet" href="assets/statistics-mobile.css?v=1"><link rel="stylesheet" href="assets/avatar-carpet.css?v=3">
 <!-- page-preview:start -->
 <link rel="canonical" href="https://racehub.cobracardiff.co.uk/">
 <meta property="og:type" content="website">
@@ -131,21 +131,21 @@
               <th scope="col" data-leaderboard-sort="topFive" title="Top-five finishes"><button type="button">Top 5</button></th>
               <th scope="col" data-leaderboard-sort="podiums"><button type="button">Podiums</button></th>
               <th scope="col" data-leaderboard-sort="overallWins" title="Overall wins"><button type="button">Wins</button></th>
-              <th scope="col" data-leaderboard-sort="performance" title="Average field-normalised overall finish"><button type="button">Perf</button></th>
+              <th scope="col" data-leaderboard-sort="performance" title="Peer-relative pace and finishing performance"><button type="button">Perf</button></th>
               <th scope="col" data-leaderboard-sort="consistency" title="Average consistency from every recorded run"><button type="button">Consist</button></th>
             </tr>
           </thead>
           <tbody id="leaderboardBody"></tbody>
         </table>
       </div>
-      <p class="definition">Choose any ranking measure above. Average finish, performance, Pace and consistency use the attendance adjustment: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. Activity totals always use every matching run.</p>
+      <p class="definition">Choose any ranking measure above. Performance uses every valid peer-relative pace and finishing record. Average finish, Pace and consistency use the attendance adjustment: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. Activity totals always use every matching run.</p>
       <details class="metric-guide">
         <summary>How to read these figures</summary>
         <div class="metric-guide-grid">
           <article><h3>Filters first</h3><p>The date, event, class and minimum-finals controls decide which results are included. “Ranked” counts drivers meeting the minimum; “recorded” counts every driver with a published final in those filters.</p></article>
           <article><h3>Pace</h3><p>A driver’s fastest lap is compared with the fastest valid lap in that same race. The benchmark is 100%; a result closer to 100% means the driver was closer to the race’s quickest lap.</p></article>
           <article><h3>cRating</h3><p>A competitive COBRA skill rating built from qualifying heats and finals since January 2022; practice is excluded. Everyone starts at 1,500. Direct opponents, field strength, finishing position and race-relative fastest-lap pace determine gains and losses. Upsets move the score most, and finals carry more weight than qualifying.</p></article>
-          <article><h3>Performance and consistency</h3><p>Performance converts finishing place to a 0–100 score that accounts for field size. Consistency uses complete LiveRC runs with at least five laps.</p></article>
+          <article><h3>Performance and consistency</h3><p>Performance combines every valid race-relative pace reading (70%) with every field-normalised published final result (30%), so it reflects speed and race outcomes against peers. Consistency uses complete LiveRC runs with at least five laps.</p></article>
           <article><h3>Attendance adjustment</h3><p>Below 10 finals every result counts. At 10 finals the lowest result is dropped, then one more is dropped for every additional five finals, rewarding regular attendance without one poor day dominating.</p></article>
           <article><h3>More detail</h3><p>Hover or focus any statistic for its definition. Select a driver’s name to open their profile. In the race history, hover a race to reveal its lap breakdown, click to hold it open, or tap on mobile.</p></article>
         </div>
@@ -223,6 +223,22 @@
       <p class="profile-context" id="driverProfileContext"></p></div>
       <div class="driver-profile-avatar" id="driverProfileAvatar" hidden><img alt="" decoding="async"></div></div>
       <div class="profile-stats" id="driverProfileStats"></div>
+      <div class="profile-trend-actions">
+        <button type="button" class="consistency-trend-button" id="driverTrendToggle" aria-expanded="false">📈 View pace &amp; consistency trends</button>
+        <button type="button" class="consistency-trend-button crating-button" id="driverCRatingToggle" aria-expanded="false">🏁 View cRating history</button>
+      </div>
+      <section class="profile-section consistency-trend-panel" id="driverTrendPanel" hidden>
+        <div class="consistency-trend-heading"><div><p class="eyebrow">Driver development</p><h3>Pace &amp; consistency trends</h3></div><div class="consistency-trend-controls"><label>Range<select id="driverTrendRange"><option value="6">Last 6 months</option><option value="12" selected>Last 12 months</option><option value="24">Last 24 months</option><option value="all">All history</option></select></label></div></div>
+        <h4>Pace</h4><div id="driverPaceTrendChart" aria-live="polite"></div>
+        <p class="definition">Each point compares the driver’s fastest valid laps with peers in the same class and meeting. A rising line means the driver is closing the pace gap.</p>
+        <h4>Consistency</h4><div id="driverConsistencyTrendChart" aria-live="polite"></div>
+        <p class="definition">Higher percentages mean steadier lap times. Each point is the average of complete runs at that meeting.</p>
+      </section>
+      <section class="profile-section consistency-trend-panel crating-panel" id="driverCRatingPanel" hidden>
+        <div class="consistency-trend-heading"><div><p class="eyebrow">COBRA driver skill rating</p><h3>cRating history</h3></div><div class="consistency-trend-controls"><label>Class<select id="driverCRatingClass"></select></label></div></div>
+        <div id="driverCRatingChart" aria-live="polite"></div>
+        <p class="definition">The line shows the rating after each meeting. Results against stronger or similarly rated opponents move the score most; qualifying heats and finals both count.</p>
+      </section>
       <section class="profile-metric-evidence" id="driverMetricEvidence" hidden aria-live="polite"></section>
       <div class="profile-breakdown-grid">
         <section class="profile-section profile-breakdown-section">
@@ -251,6 +267,6 @@
     <a href="about/">About COBRA</a><a href="briefing/">Drivers Briefing</a>
     <a href="https://cobracardiff.liverc.com/events/" rel="noopener" target="_top">View source results on LiveRC</a>
   <a class="website-guides-link" href="./website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>
-  <script type="module" src="assets/app.js?v=20261021-crating-colours-v1"></script>
+  <script type="module" src="assets/app.js?v=20261021-peer-performance-trends-v1"></script>
 <!-- cobra-footer:start --><footer class="cobra-site-footer"><a href="https://www.cobracardiff.co.uk/"><img src="./assets/cobra-header-logo.png" width="220" height="56" alt="COBRA home"></a><p>South Wales TQ HQ<br>BRCA.org Affiliated Club</p><p>Off Road Buggy Racing Club • South Wales</p><nav aria-label="Footer"><a href="./website-guides/">Help &amp; Website Guides</a><a href="https://www.facebook.com/groups/cobracardiff">Facebook</a><a href="https://www.youtube.com/@Bezza90">YouTube</a></nav><p>© 2026 COBRA. Beryl Media Productions. All rights reserved.</p></footer><!-- cobra-footer:end --></body>
 </html>

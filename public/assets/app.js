@@ -97,7 +97,7 @@ const metricDescriptions = {
   topFive: 'Top-five overall finishes, followed by the percentage of completed finals.',
   podiums: 'Top-three overall finishes, followed by the percentage of completed finals.',
   overallWins: 'Published overall event wins within the selected filters.',
-  performance: 'Field-normalised overall finishing score. First place scores 100 and last place scores 0, so different field sizes remain comparable.',
+  performance: 'Peer-relative performance using every valid record in the selected filters. Race-relative pace from usable heats and finals carries 70%; field-normalised published final results carry 30%. When only one type of evidence exists, the available evidence supplies the score.',
   consistency: 'LiveRC run consistency averaged from full-duration runs with at least five laps, after the attendance adjustment.',
   pace: 'Fastest lap as a percentage of the fastest valid lap in the same class at the same meeting, using runs with at least three completed laps. The meeting benchmark is 100%; closer to 100% is faster. This is the main guide for placing drivers into similarly paced heats.',
   cRating: 'Competitive COBRA skill rating from qualifying heats and finals since January 2022; practice is excluded. Juniors have a separate rating pool from senior classes. Every driver starts at 1,500. Changes compare the result with every direct opponent, using 85% finishing position and 15% race-relative fastest-lap pace from runs of at least three laps. Upsets against highly rated drivers move the score most, finals carry more weight than qualifying, and attendance steadily increases confidence in the displayed rating.',
@@ -385,6 +385,14 @@ function attendanceAdjustedResults(values, higherIsBetter = false) {
   return ordered.slice(0, ordered.length - discard);
 }
 
+function combinedPerformanceScore(finishingScores, paceScores) {
+  const finish = average(finishingScores.filter(Number.isFinite));
+  const pace = average(paceScores.filter(Number.isFinite));
+  if (finish === null) return pace;
+  if (pace === null) return finish;
+  return 0.3 * finish + 0.7 * pace;
+}
+
 function filters() {
   return {
     from: $('fromDate').value,
@@ -572,10 +580,9 @@ function calculateLeaderboard() {
     .filter(row => row.finals >= minimumFinals)
     .map(row => {
       const keptPositions = attendanceAdjustedResults(row.positions);
-      const keptPerformances = attendanceAdjustedResults(row.performances, true);
       const keptConsistencies = attendanceAdjustedResults(row.consistencies, true);
       const keptPaces = attendanceAdjustedResults(row.paces, true);
-      const performance = average(keptPerformances);
+      const performance = combinedPerformanceScore(row.performances, row.paces);
       const consistency = average(keptConsistencies);
       const pace = average(keptPaces);
       const ratingSummary = driverRatingSummary(row.driverKey, data, className);
@@ -1584,6 +1591,93 @@ function trackTime(runs) {
   return `${hours}h ${minutes % 60}m`;
 }
 
+function trendRangeCutoff(points, range) {
+  if (range === 'all' || !points.length) return '';
+  const latest = new Date(`${points.at(-1).date}T12:00:00Z`);
+  latest.setUTCMonth(latest.getUTCMonth() - Number(range || 12));
+  return latest.toISOString().slice(0, 10);
+}
+
+function trendChartHtml(points, { ariaLabel, suffix = '', benchmark = null } = {}) {
+  if (!points.length) return '<p class="consistency-trend-empty">No eligible results in this date range.</p>';
+  const values = points.map(point => point.value);
+  const width = 760, height = 300, left = 58, right = 24, top = 24, bottom = 56;
+  let min = Math.floor(Math.min(...values, Number.isFinite(benchmark) ? benchmark : Infinity) - 2);
+  let max = Math.ceil(Math.max(...values, Number.isFinite(benchmark) ? benchmark : -Infinity) + 2);
+  if (max - min < 8) { const centre = (min + max) / 2; min = Math.floor(centre - 4); max = Math.ceil(centre + 4); }
+  const x = index => points.length === 1 ? (left + width - right) / 2 : left + index / (points.length - 1) * (width - left - right);
+  const y = value => top + (max - value) / Math.max(1, max - min) * (height - top - bottom);
+  const rolling = points.map((point, index) => average(points.slice(Math.max(0, index - 2), index + 1).map(item => item.value)));
+  const ticks = Array.from({ length: 5 }, (_, index) => min + (max - min) * index / 4);
+  const grid = ticks.map(value => `<line x1="${left}" x2="${width - right}" y1="${y(value)}" y2="${y(value)}"/><text x="${left - 9}" y="${y(value) + 4}" text-anchor="end">${value.toFixed(suffix ? 1 : 0)}${suffix}</text>`).join('');
+  const every = Math.max(1, Math.ceil(points.length / 5));
+  const labels = points.map((point, index) => (index === 0 || index === points.length - 1 || index % every === 0) ? `<text x="${x(index)}" y="${height - 21}" text-anchor="middle">${escapeHtml(point.date.slice(0, 7))}</text>` : '').join('');
+  const line = points.map((point, index) => `${x(index)},${y(point.value)}`).join(' ');
+  const rollingLine = rolling.map((value, index) => `${x(index)},${y(value)}`).join(' ');
+  const circles = points.map((point, index) => `<circle tabindex="0" role="img" aria-label="${escapeHtml(point.name)}, ${point.value.toFixed(1)}${suffix}" cx="${x(index)}" cy="${y(point.value)}" r="5"><title>${escapeHtml(point.name)} · ${dateFmt.format(new Date(`${point.date}T12:00:00Z`))} · ${point.value.toFixed(1)}${suffix}</title></circle>`).join('');
+  const sample = Math.min(3, values.length);
+  const delta = average(values.slice(-sample)) - average(values.slice(0, sample));
+  const baseline = Number.isFinite(benchmark) ? `<line class="${benchmark === 1500 ? 'crating-baseline' : 'pace-benchmark'}" x1="${left}" x2="${width - right}" y1="${y(benchmark)}" y2="${y(benchmark)}"/>` : '';
+  return `<div class="consistency-trend-summary"><strong>${delta > .1 ? 'Improving' : delta < -.1 ? 'Lower recently' : 'Broadly level'}</strong><span>${delta >= 0 ? '+' : ''}${delta.toFixed(1)}${suffix} from the opening to latest three-event average</span><span>${points.length} meeting${points.length === 1 ? '' : 's'} shown</span></div><div class="consistency-trend-scroll" tabindex="0" role="region" aria-label="${escapeHtml(ariaLabel || 'Driver trend')}"><svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(ariaLabel || 'Driver trend')}"><g class="consistency-trend-grid">${grid}${labels}</g>${baseline}<polyline class="consistency-trend-line" points="${line}"/><polyline class="consistency-trend-average" points="${rollingLine}"/><g class="consistency-trend-points">${circles}</g></svg></div><div class="consistency-trend-legend"><span><i></i>Meeting value</span><span><i></i>Rolling three-meeting average</span></div>`;
+}
+
+function renderDriverTrends() {
+  const profile = state.profileEvidence;
+  if (!profile) return;
+  const range = $('driverTrendRange')?.value || '12';
+  const grouped = new Map();
+  for (const run of profile.runs) {
+    const race = profile.data.raceById[run[0]];
+    if (!race) continue;
+    const key = `${race.d}|${race.e}`;
+    if (!grouped.has(key)) grouped.set(key, { date: race.d, eventId: race.e, paces: [], consistencies: [] });
+    const group = grouped.get(key);
+    const pace = paceForRun(run, profile.data);
+    if (Number.isFinite(pace)) group.paces.push(pace);
+    if (isCompleteConsistencyRun(run, profile.data)) {
+      const consistency = Number.parseFloat(run[7]);
+      if (Number.isFinite(consistency)) group.consistencies.push(consistency);
+    }
+  }
+  const eventName = eventId => profile.data.eventById[eventId]?.n || eventId;
+  const allPace = [...grouped.values()].filter(group => group.paces.length).map(group => ({ date: group.date, name: eventName(group.eventId), value: average(group.paces) })).sort((a, b) => a.date.localeCompare(b.date));
+  const allConsistency = [...grouped.values()].filter(group => group.consistencies.length).map(group => ({ date: group.date, name: eventName(group.eventId), value: average(group.consistencies) })).sort((a, b) => a.date.localeCompare(b.date));
+  const paceCutoff = trendRangeCutoff(allPace, range);
+  const consistencyCutoff = trendRangeCutoff(allConsistency, range);
+  $('driverPaceTrendChart').innerHTML = trendChartHtml(allPace.filter(point => !paceCutoff || point.date >= paceCutoff), { ariaLabel: 'Race-relative pace over time', suffix: '%', benchmark: 100 });
+  $('driverConsistencyTrendChart').innerHTML = trendChartHtml(allConsistency.filter(point => !consistencyCutoff || point.date >= consistencyCutoff), { ariaLabel: 'Consistency over time', suffix: '%' });
+}
+
+function setupCRatingClassOptions() {
+  const profile = state.profileEvidence;
+  const select = $('driverCRatingClass');
+  if (!profile || !select) return;
+  const classes = [...new Set(profile.careerRuns.map(run => profile.data.raceById[run[0]]?.c).filter(Boolean))].sort();
+  const options = [];
+  if (classes.some(cls => cls !== 'Junior Racers')) options.push(['senior', 'All senior classes']);
+  for (const cls of classes) options.push([cls, classLabels[cls] || cls]);
+  const wanted = profile.ratingSummary?.ratingClass || 'senior';
+  select.innerHTML = options.map(([value, label]) => `<option value="${escapeHtml(value)}">${escapeHtml(label)}</option>`).join('');
+  if (options.some(([value]) => value === wanted)) select.value = wanted;
+}
+
+function renderCRatingTrend() {
+  const profile = state.profileEvidence;
+  if (!profile) return;
+  const ratingClass = $('driverCRatingClass')?.value || profile.ratingSummary?.ratingClass || 'senior';
+  const summary = driverRatingSummary(profile.driverKey, profile.data, ratingClass);
+  let starts = 0;
+  const points = summary.meetings.slice().reverse().map(meeting => {
+    starts += meeting.races;
+    return { date: meeting.date, name: meeting.name, value: confirmedRating(meeting.after, starts) };
+  });
+  if (!points.length) {
+    $('driverCRatingChart').innerHTML = '<p class="consistency-trend-empty">No eligible qualifying heats or finals for this class.</p>';
+    return;
+  }
+  $('driverCRatingChart').innerHTML = `<div class="crating-summary"><div><strong>${formatRating(summary.total)}</strong><span>Current</span></div><div><strong>${formatRating(Math.max(1500, ...points.map(point => point.value)))}</strong><span>Peak</span></div><div><strong>${summary.starts}</strong><span>Rated races</span></div><div><strong>${summary.starts < 20 ? 'Provisional' : 'Established'}</strong><span>Status</span></div></div>${trendChartHtml(points, { ariaLabel: 'cRating history', benchmark: 1500 })}`;
+}
+
 function driverProfile(driverKey) {
   const data = state.data;
   const driver = data.drivers.find(row => row.k === driverKey);
@@ -1628,10 +1722,9 @@ function driverProfile(driverKey) {
   const wins = positions.filter(value => value === 1).length;
   const aFinals = results.filter(row => /^A-(?:Main|Final)$/i.test(row[7] || '')).length;
   const keptPositions = attendanceAdjustedResults(positions);
-  const keptPerformances = attendanceAdjustedResults(results.map(performanceFor), true);
   const keptConsistencies = attendanceAdjustedResults(consistencies, true);
   const keptPaces = attendanceAdjustedResults(runs.map(run => paceForRun(run, data)).filter(Number.isFinite), true);
-  const performance = average(keptPerformances);
+  const performance = combinedPerformanceScore(results.map(performanceFor), runs.map(run => paceForRun(run, data)).filter(Number.isFinite));
   const pace = average(keptPaces);
   const consistency = average(keptConsistencies);
   const ratingSummary = driverRatingSummary(driverKey, data, className);
@@ -1699,14 +1792,13 @@ function driverProfile(driverKey) {
     const classOverallWins = classPositions.filter(value => value === 1).length;
     const classTqs = rows.filter(row => Number(row[5]) === 1).length;
     const classKeptPositions = attendanceAdjustedResults(classPositions);
-    const classKeptPerformance = attendanceAdjustedResults(rows.map(performanceFor), true);
     const classRuns = runsByClass.get(cls) || [];
     const classEntries = entries.filter(row => row[2] === cls).length;
     const classRaceWins = classRuns.filter(row => Number(row[2]) === 1).length;
     const fastestLaps = classRuns.map(row => lapTimeSeconds(row[5])).filter(value => Number.isFinite(value) && value > 0);
     const classConsistencies = classRuns.filter(row => isCompleteConsistencyRun(row, data)).map(row => Number.parseFloat(row[7])).filter(Number.isFinite);
     const classPace = average(attendanceAdjustedResults(classRuns.map(run => paceForRun(run, data)).filter(Number.isFinite), true));
-    const classPerformance = average(classKeptPerformance);
+    const classPerformance = combinedPerformanceScore(rows.map(performanceFor), classRuns.map(run => paceForRun(run, data)).filter(Number.isFinite));
     const classConsistency = average(attendanceAdjustedResults(classConsistencies, true));
     const items = [
       ['Entries', classEntries], ['Runs', classRuns.length], ['Laps', fmt.format(totalLaps(classRuns))], ['Distance', distanceRaced(classRuns)], ['Track time', trackTime(classRuns)], ['Finals', rows.length],
@@ -1783,6 +1875,16 @@ function driverProfile(driverKey) {
   }).join('') || '<tr><td colspan="12">No completed finals within these filters.</td></tr>';
 
   state.profileKey = driverKey;
+  setupCRatingClassOptions();
+  for (const [panelId, buttonId, label] of [
+    ['driverTrendPanel', 'driverTrendToggle', '📈 View pace & consistency trends'],
+    ['driverCRatingPanel', 'driverCRatingToggle', '🏁 View cRating history']
+  ]) {
+    const panel = $(panelId);
+    const button = $(buttonId);
+    if (panel) panel.hidden = true;
+    if (button) { button.setAttribute?.('aria-expanded', 'false'); button.textContent = label; }
+  }
   const dialog = $('driverDialog');
   if (!dialog.open) {
     if (new URLSearchParams(location.search).get('tracker') === '1' || (window.self !== window.top && new URLSearchParams(location.search).has('map'))) dialog.show();
@@ -2074,6 +2176,24 @@ async function init() {
       $('driverMetricEvidence').dataset.metric = '';
       $('driverProfileStats').querySelectorAll('[data-profile-evidence]').forEach(button => button.setAttribute('aria-expanded', 'false'));
     });
+    $('driverTrendToggle')?.addEventListener('click', () => {
+      const panel = $('driverTrendPanel');
+      const button = $('driverTrendToggle');
+      panel.hidden = !panel.hidden;
+      button.setAttribute('aria-expanded', String(!panel.hidden));
+      button.textContent = panel.hidden ? '📈 View pace & consistency trends' : 'Hide pace & consistency trends';
+      if (!panel.hidden) renderDriverTrends();
+    });
+    $('driverTrendRange')?.addEventListener('change', renderDriverTrends);
+    $('driverCRatingToggle')?.addEventListener('click', () => {
+      const panel = $('driverCRatingPanel');
+      const button = $('driverCRatingToggle');
+      panel.hidden = !panel.hidden;
+      button.setAttribute('aria-expanded', String(!panel.hidden));
+      button.textContent = panel.hidden ? '🏁 View cRating history' : 'Hide cRating history';
+      if (!panel.hidden) renderCRatingTrend();
+    });
+    $('driverCRatingClass')?.addEventListener('change', renderCRatingTrend);
     $('closeJourneyMap').addEventListener('click', () => {
       stopJourneyPlayback();
       leaveJourneyFullscreen();
