@@ -20,7 +20,8 @@ function positionLaps(driver){
  const start=Number(driver.startPosition);
  return Number.isInteger(start)&&start>0?[{lap:0,position:start,start:true},...recorded]:recorded;
 }
-export function chartUrl(raceId,driver='') {return new URL('../lap-charts/share/'+encodeURIComponent(raceId)+'/'+(driver?encodeURIComponent(driver)+'/':''),import.meta.url).href;}
+export function chartUrl(raceId,driver='') {const url=new URL('../lap-charts/',import.meta.url);url.searchParams.set('race',raceId);if(driver)url.searchParams.set('driver',driver);return url.href;}
+export function chartShareUrl(raceId,driver='') {return chartUrl(raceId,driver);}
 export function replayComparisonUrl(raceId,keys) {const url=new URL('../virtual-race-replay/',import.meta.url);url.searchParams.set('race',raceId);keys.forEach(k=>url.searchParams.append('compare',k));return url.href;}
 export function positionChartMarkup(race,comparison=false){
  const {drivers,lastLap}=chartData(race),positionSeries=drivers.map(positionLaps),count=Math.max(2,drivers.length,...positionSeries.flatMap(laps=>laps.map(l=>l.position)));
