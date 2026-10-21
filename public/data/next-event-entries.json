@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-21T04:57:13.114Z",
+  "updatedAt": "2026-10-21T17:22:06.812Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -105,6 +105,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "2147522"
+    },
+    {
+      "driverKey": "GREG-LANE",
+      "driverName": "GREG LANE",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "3276703"
     },
     {
       "driverKey": "GREG-PARKER",
@@ -232,6 +241,15 @@
       "transponder": "4003421"
     },
     {
+      "driverKey": "PAUL-TRODDEN",
+      "driverName": "PAUL TRODDEN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "XRAY",
+      "chassisSource": "wix",
+      "transponder": "5098199"
+    },
+    {
       "driverKey": "RICHARD-HARRISON",
       "driverName": "RICHARD HARRISON",
       "className": "2-Wheel Drive Buggy",
@@ -331,6 +349,15 @@
       "transponder": "5749969"
     },
     {
+      "driverKey": "ZACK-TRODDEN",
+      "driverName": "ZACK TRODDEN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "XRAY",
+      "chassisSource": "wix",
+      "transponder": "5045462"
+    },
+    {
       "driverKey": "BOBTECH",
       "driverName": "Bob \"Bobtech\" Gelstharp",
       "bookingName": "BOB GELSTHARP",
@@ -422,6 +449,15 @@
       "transponder": "2840842"
     },
     {
+      "driverKey": "LIAM-TOOLE",
+      "driverName": "LIAM TOOLE",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "7180911"
+    },
+    {
       "driverKey": "MARK-GIAQUINTO",
       "driverName": "MARK GIAQUINTO",
       "className": "4-Wheel Drive Buggy",
@@ -475,6 +511,15 @@
       "chassis": "Team Associated",
       "chassisSource": "wix",
       "transponder": "4407442"
+    },
+    {
+      "driverKey": "ROBERT-WEST",
+      "driverName": "ROBERT WEST",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": ""
     },
     {
       "driverKey": "RUSS-WILLIAMS",
