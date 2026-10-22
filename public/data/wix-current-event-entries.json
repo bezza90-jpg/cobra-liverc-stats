@@ -1,549 +1,540 @@
 {
-  "liveRcEventId": "518556",
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
-  "eventTitle": "SWORD Round 2 EOS 2026/7",
+  "liveRcEventId": "518556",
+  "eventSlug": "cobra-sword-round-2",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-22T10:12:36.332Z",
-  "ticketLimits": {
-    "Junior Racers": 11,
-    "2-Wheel Drive Buggy": 66,
-    "4-Wheel Drive Buggy": 25
-  },
+  "updatedAt": "2026-10-22T17:35:57.404054Z",
   "entries": [
     {
-      "driverName": "ADAM MCBRIDE",
+      "driverName": "Adam McBride",
       "className": "2-Wheel Drive Buggy",
       "transponder": "7241911",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "AINSLEY EVANS",
+      "driverName": "Ainsley Evans",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8615491",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "BOB GELSTHARP",
+      "driverName": "Bob Gelstharp",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3624077",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "CHRIS GUNTER",
+      "driverName": "Chris Gunter",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6865166",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "DALE PRESTON",
+      "driverName": "Dale Preston",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2644565",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "DAN PULLEY",
+      "driverName": "Dan Pulley",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5811289",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "DANIEL GRIFFITHS",
+      "driverName": "Daniel Griffiths",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2982143",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "DAVID MILFORD",
+      "driverName": "David Milford",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5097267",
-      "chassis": "R1 Wurks",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "R1 Wurks"
     },
     {
-      "driverName": "DEWI JONES",
+      "driverName": "Dewi Jones",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6263647",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "FINLEY OLDFIELD",
+      "driverName": "Finley Oldfield",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8874721",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "GARETH MANNING",
+      "driverName": "Gareth Manning",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2147522",
-      "chassis": "TLR",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "TLR"
     },
     {
-      "driverName": "GRAHAM KEEP",
+      "driverName": "Graham Keep",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2839009",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "GREG LANE",
+      "driverName": "Greg Lane",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3276703",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "GREG PARKER",
+      "driverName": "Greg Parker",
       "className": "2-Wheel Drive Buggy",
       "transponder": "7684548",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "HAIDEN HICKS",
+      "driverName": "Haiden Hicks",
       "className": "2-Wheel Drive Buggy",
-      "transponder": "3519622",
-      "transponderSource": "wix"
+      "transponder": "3422662",
+      "transponderSource": "history"
     },
     {
-      "driverName": "IAN PEAKMAN",
+      "driverName": "Ian Peakman",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5653564",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "IAN TOWNSEND",
+      "driverName": "Ian Townsend",
       "className": "2-Wheel Drive Buggy",
       "transponder": "4571829",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "JAMIE DAVIES",
+      "driverName": "Jamie Davies",
       "className": "2-Wheel Drive Buggy",
       "transponder": "9036431",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "JOHN MORDEN",
+      "driverName": "John Morden",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5310037",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "JON PAISLEY",
+      "driverName": "Jon Paisley",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2223753",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "KEVIN GREENWAY",
+      "driverName": "Kevin Greenway",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6958172",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "MARK GIAQUINTO",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "4115135",
-      "chassis": "Kyosho",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "MARK HICKS",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "3753291",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "MARTIN PITMAN",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "3499449",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
       "driverName": "MARTYN HADLEY",
       "className": "2-Wheel Drive Buggy",
       "transponder": "9073997",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "MATT WOODIWISS",
+      "driverName": "Mark Giaquinto",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4115135",
+      "transponderSource": "history",
+      "chassis": "Kyosho"
+    },
+    {
+      "driverName": "Mark Hicks",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3753291",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "MATTHEW HODGES",
+      "driverName": "Martin Pitman",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3499449",
+      "transponderSource": "history",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Matt Woodiwiss",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "3753291",
+      "transponderSource": "history",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "Matthew Hodges",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5504378",
-      "chassis": "Team Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "MIKE DRISCOLL",
+      "driverName": "Mike Driscoll",
       "className": "2-Wheel Drive Buggy",
       "transponder": "4003421",
-      "chassis": "TLR",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "TLR"
     },
     {
-      "driverName": "OLLY FROST",
+      "driverName": "Olly Frost",
       "className": "2-Wheel Drive Buggy",
       "transponder": "7323310",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "PAUL TRODDEN",
+      "driverName": "Paul Trodden",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5098199",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "RICHARD HARRISON",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "4961721",
-      "chassis": "Associated",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "ROGER MILLS",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "2981041",
-      "chassis": "Associated",
-      "transponderSource": "wix"
-    },
-    {
-      "driverName": "ROY DAVIES",
-      "className": "2-Wheel Drive Buggy",
-      "transponder": "8268154",
-      "chassis": "TLR",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
       "driverName": "ROYSTON STEWART",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2395627",
-      "chassis": "TLR",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "TLR"
     },
     {
-      "driverName": "RUSS WILLIAMS",
+      "driverName": "Richard Harrison",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "4961721",
+      "transponderSource": "history",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "Roger Mills",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "2981041",
+      "transponderSource": "history",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "Roy Davies",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "8268154",
+      "transponderSource": "history",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "Russ Williams",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6657438",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "RUSSELL THOMAS",
+      "driverName": "Russell Thomas",
       "className": "2-Wheel Drive Buggy",
       "transponder": "0777999",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "SCOTT BOWKETT",
+      "driverName": "Scott Bowkett",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8508635",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "SHAUN OGDEN",
+      "driverName": "Shaun Ogden",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6923545",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "SIMON FISHER",
+      "driverName": "Simon Fisher",
       "className": "2-Wheel Drive Buggy",
       "transponder": "2189851",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "STEVE CHAPMAN",
+      "driverName": "Steve Chapman",
       "className": "2-Wheel Drive Buggy",
       "transponder": "3730989",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "STEVE CURTIS-RICH",
+      "driverName": "Steve Curtis-Rich",
       "className": "2-Wheel Drive Buggy",
       "transponder": "6196241",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "STEVEN GRIFFITHS",
+      "driverName": "Steven Griffiths",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8943115",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "THOMAS SPENCER JENKINS",
+      "driverName": "Thomas Spencer Jenkins",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5749969",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "ZACK TRODDEN",
+      "driverName": "Zack Trodden",
       "className": "2-Wheel Drive Buggy",
       "transponder": "5045462",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "BOB GELSTHARP",
+      "driverName": "Bob Gelstharp",
       "className": "4-Wheel Drive Buggy",
       "transponder": "9135402",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "CHRIS GUNTER",
+      "driverName": "Chris Gunter",
       "className": "4-Wheel Drive Buggy",
       "transponder": "6099608",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "DAN PULLEY",
+      "driverName": "Dan Pulley",
       "className": "4-Wheel Drive Buggy",
       "transponder": "7832340",
-      "chassis": "PR",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "PR"
     },
     {
-      "driverName": "DAVID MILFORD",
+      "driverName": "David Milford",
       "className": "4-Wheel Drive Buggy",
       "transponder": "5097267",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "DEWI JONES",
+      "driverName": "Dewi Jones",
       "className": "4-Wheel Drive Buggy",
       "transponder": "",
-      "chassis": "Schumacher",
-      "transponderSource": "none"
+      "transponderSource": "none",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "EDWARD SCOTT",
+      "driverName": "Edward Scott",
       "className": "4-Wheel Drive Buggy",
       "transponder": "4648442",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "FRAN BRAVERY",
+      "driverName": "Fran Bravery",
       "className": "4-Wheel Drive Buggy",
       "transponder": "9746100",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "GREG PARKER",
+      "driverName": "Greg Parker",
       "className": "4-Wheel Drive Buggy",
       "transponder": "7322122",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "IAN PEAKMAN",
+      "driverName": "Ian Peakman",
       "className": "4-Wheel Drive Buggy",
       "transponder": "6091953",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "JON PAISLEY",
+      "driverName": "Jon Paisley",
       "className": "4-Wheel Drive Buggy",
       "transponder": "2840842",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "LIAM TOOLE",
+      "driverName": "Liam Toole",
       "className": "4-Wheel Drive Buggy",
       "transponder": "7180911",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "MARK GIAQUINTO",
+      "driverName": "Mark Giaquinto",
       "className": "4-Wheel Drive Buggy",
       "transponder": "4115135",
-      "chassis": "Kyosho",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Kyosho"
     },
     {
-      "driverName": "MATT WOODIWISS",
+      "driverName": "Matt Woodiwiss",
       "className": "4-Wheel Drive Buggy",
       "transponder": "8008844",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "MATTHEW HODGES",
+      "driverName": "Matthew Hodges",
       "className": "4-Wheel Drive Buggy",
       "transponder": "3647613",
-      "chassis": "Team Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "MIKE DRISCOLL",
+      "driverName": "Mike Driscoll",
       "className": "4-Wheel Drive Buggy",
       "transponder": "5431388",
-      "chassis": "TLR",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "TLR"
     },
     {
-      "driverName": "OLLY FROST",
+      "driverName": "Olly Frost",
       "className": "4-Wheel Drive Buggy",
       "transponder": "7323310",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "PAUL CURTIS",
+      "driverName": "Paul Curtis",
       "className": "4-Wheel Drive Buggy",
       "transponder": "4950687",
-      "chassis": "Team Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "RICHARD HARRISON",
+      "driverName": "Richard Harrison",
       "className": "4-Wheel Drive Buggy",
       "transponder": "4407442",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "ROBERT WEST",
+      "driverName": "Robert West",
       "className": "4-Wheel Drive Buggy",
       "transponder": "",
-      "chassis": "Schumacher",
-      "transponderSource": "none"
+      "transponderSource": "none",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "RUSS WILLIAMS",
+      "driverName": "Russ Williams",
       "className": "4-Wheel Drive Buggy",
       "transponder": "6657438",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "RUSSELL THOMAS",
+      "driverName": "Russell Thomas",
       "className": "4-Wheel Drive Buggy",
       "transponder": "0777999",
-      "chassis": "XRAY",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "XRay"
     },
     {
-      "driverName": "SPENCER FARLEY",
+      "driverName": "Spencer Farley",
       "className": "4-Wheel Drive Buggy",
       "transponder": "9889135",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "STEVE CHAPMAN",
+      "driverName": "Steve Chapman",
       "className": "4-Wheel Drive Buggy",
       "transponder": "7169260",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "STEVE CURTIS-RICH",
+      "driverName": "Steve Curtis-Rich",
       "className": "4-Wheel Drive Buggy",
       "transponder": "6155425",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "THOMAS SPENCER JENKINS",
+      "driverName": "Thomas Spencer Jenkins",
       "className": "4-Wheel Drive Buggy",
       "transponder": "5749969",
-      "chassis": "TLR",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "TLR"
     },
     {
-      "driverName": "TIM BRAVERY",
+      "driverName": "Tim Bravery",
       "className": "4-Wheel Drive Buggy",
       "transponder": "7226235",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "BEN EVANS",
+      "driverName": "Ben Evans",
       "className": "Junior Racers",
       "transponder": "3581757",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "COHEN MANNING",
+      "driverName": "Cohen Manning",
       "className": "Junior Racers",
       "transponder": "8422674",
-      "chassis": "TLR",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "TLR"
     },
     {
-      "driverName": "GEORGE BRAY",
+      "driverName": "George Bray",
       "className": "Junior Racers",
       "transponder": "3193978",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "LEO SMITH",
+      "driverName": "Leo Smith",
       "className": "Junior Racers",
       "transponder": "6624085",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     },
     {
-      "driverName": "NOAH MCBRIDE",
+      "driverName": "Noah MCBRIDE",
       "className": "Junior Racers",
       "transponder": "8205771",
-      "chassis": "Associated",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Team Associated"
     },
     {
-      "driverName": "SEB FISHER",
+      "driverName": "Seb Fisher",
       "className": "Junior Racers",
       "transponder": "6645548",
-      "chassis": "Schumacher",
-      "transponderSource": "wix"
+      "transponderSource": "history",
+      "chassis": "Schumacher"
     }
-  ],
-  "entrySources": {
-    "wix": 67,
-    "admin": 9
-  }
+  ]
 }
