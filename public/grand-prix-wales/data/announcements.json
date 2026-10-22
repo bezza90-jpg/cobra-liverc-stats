@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-22",
+  "facebookPageUrl": "https://www.facebook.com/profile.php?id=61584502714320",
+  "posts": [
+    {
+      "driverName": "Marcus Kaerup",
+      "publishedLabel": "Featured driver · 17 July 2026",
+      "image": "/assets/announcements/marcus-kaerup.webp",
+      "imageAlt": "Grand Prix of Wales announcement for Marcus Kaerup",
+      "classes": [
+        "2WD",
+        "4WD"
+      ],
+      "summary": "The 2WD European Champion and current 4WD and 1/8 eBuggy World Champion will compete in both 2WD and 4WD.",
+      "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid0hPeejVFaJE87t2ZJJbZXNn3KZ5NcgJ7hniodcjCdjSw7Ksj3hLDuvQAM9fqsDaq8l&id=61584502714320"
+    },
+    {
+      "driverName": "Ben Smith",
+      "publishedLabel": "2 September 2026",
+      "image": "/assets/announcements/ben-smith.webp",
+      "imageAlt": "Grand Prix of Wales announcement for Ben Smith",
+      "summary": "The newly crowned double 1/10 National Champion and Schumacher driver will race at the GPW.",
+      "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid02xFCzD7TSmxnBE5kY2whjyAFpqkgCUfQ3gfyFh2nuw2TZWndbEjRpFgmfUGsCKeX7l&id=61584502714320"
+    },
+    {
+      "driverName": "Tommy & Jamie Hall",
+      "publishedLabel": "21 September 2026",
+      "image": "/assets/announcements/hall-brothers.webp",
+      "imageAlt": "Grand Prix of Wales announcement for Jamie and Tommy Hall",
+      "summary": "The multiple National-winning Team Associated Hall brothers will race at the Grand Prix of Wales.",
+      "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid02seY5iPoa6eNhBz8adqRN1MJBeyx5FFUf95WGDHMCaCMFqGUUC8G2A6xh3YEwx9Ql&id=61584502714320"
+    },
+    {
+      "driverName": "Craig Drescher",
+      "publishedLabel": "2 February 2026",
+      "image": "/assets/announcements/craig-drescher.webp",
+      "imageAlt": "Grand Prix of Wales announcement for Craig Drescher",
+      "classes": [
+        "2WD",
+        "4WD"
+      ],
+      "summary": "The 11-time European Champion and multiple Worlds A-finalist will compete in both 2WD and 4WD.",
+      "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid02hsw9Qkq3KKRYrq5Kih3FdPC7MpyQ7QifqZhzZ17q99pTDp2LRgL2DYGk9JR3qjHdl&id=61584502714320"
+    },
+    {
+      "driverName": "Jonny Skidmore",
+      "publishedLabel": "2 September 2026",
+      "image": "/assets/announcements/jonny-skidmore.webp",
+      "imageAlt": "Grand Prix of Wales announcement for Jonny Skidmore",
+      "summary": "The 1/8 eBuggy National Champion, 1/8 Nitro Worlds A-finalist and XRAY driver will race in Wales.",
+      "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid02Bo5rLjRpke6nwDNTcoiqvUgY6yCZ4eyUPfjtx7DQNeRYHLd1BtSJ3CcVrRLW4HmPl&id=61584502714320"
+    },
+    {
+      "driverName": "Craig Harris & Chris Gunter",
+      "publishedLabel": "Joint announcement · 6 April 2026",
+      "image": "/assets/announcements/craig-harris-chris-gunter.jpg",
+      "imageAlt": "Craig Harris and Chris Gunter with their SWORD Winter Series trophies and GPW golden tickets",
+      "classes": [
+        "SWORD winners",
+        "Free GPW entry"
+      ],
+      "summary": "Craig Harris and Chris Gunter won the SWORD Winter Series and each received a free entry to the Grand Prix of Wales.",
+      "postUrl": "https://www.facebook.com/photo/?fbid=25940549948980744"
+    },
+    {
+      "driverName": "Dan Cooper",
+      "publishedLabel": "9 February 2026",
+      "image": "/assets/announcements/dan-cooper.webp",
+      "imageAlt": "Grand Prix of Wales free-entry announcement for Dan Cooper",
+      "summary": "Dan Cooper won a free Grand Prix of Wales entry in the MKGP raffle.",
+      "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid0yTsGMTfnrv7jGLndqKZQoMJHNa7x7dDEzWebjfH4EcF5DKyrZnLfXqDnHHzckoG4l&id=61584502714320"
+    }
+  ]
+}
