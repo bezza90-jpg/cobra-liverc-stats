@@ -20,7 +20,11 @@
       "publishedLabel": "2 September 2026",
       "image": "/assets/announcements/ben-smith.webp",
       "imageAlt": "Grand Prix of Wales announcement for Ben Smith",
-      "summary": "The newly crowned double 1/10 National Champion and Schumacher driver will race at the GPW.",
+      "classes": [
+        "2WD",
+        "4WD"
+      ],
+      "summary": "The newly crowned double 1/10 National Champion and Schumacher driver will compete in both 2WD and 4WD.",
       "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid02xFCzD7TSmxnBE5kY2whjyAFpqkgCUfQ3gfyFh2nuw2TZWndbEjRpFgmfUGsCKeX7l&id=61584502714320"
     },
     {
@@ -28,7 +32,11 @@
       "publishedLabel": "21 September 2026",
       "image": "/assets/announcements/hall-brothers.webp",
       "imageAlt": "Grand Prix of Wales announcement for Jamie and Tommy Hall",
-      "summary": "The multiple National-winning Team Associated Hall brothers will race at the Grand Prix of Wales.",
+      "classes": [
+        "2WD",
+        "4WD"
+      ],
+      "summary": "The multiple National-winning Team Associated Hall brothers will both compete in 2WD and 4WD at the Grand Prix of Wales.",
       "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid02seY5iPoa6eNhBz8adqRN1MJBeyx5FFUf95WGDHMCaCMFqGUUC8G2A6xh3YEwx9Ql&id=61584502714320"
     },
     {
@@ -48,7 +56,11 @@
       "publishedLabel": "2 September 2026",
       "image": "/assets/announcements/jonny-skidmore.webp",
       "imageAlt": "Grand Prix of Wales announcement for Jonny Skidmore",
-      "summary": "The 1/8 eBuggy National Champion, 1/8 Nitro Worlds A-finalist and XRAY driver will race in Wales.",
+      "classes": [
+        "2WD",
+        "4WD"
+      ],
+      "summary": "The 1/8 eBuggy National Champion, 1/8 Nitro Worlds A-finalist and XRAY driver will compete in both 2WD and 4WD.",
       "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid02Bo5rLjRpke6nwDNTcoiqvUgY6yCZ4eyUPfjtx7DQNeRYHLd1BtSJ3CcVrRLW4HmPl&id=61584502714320"
     },
     {
