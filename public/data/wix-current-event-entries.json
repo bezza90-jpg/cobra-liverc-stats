@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-21T21:16:01.975Z",
+  "updatedAt": "2026-10-22T10:12:36.332Z",
   "ticketLimits": {
     "Junior Racers": 11,
     "2-Wheel Drive Buggy": 66,
@@ -255,6 +255,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "RUSSELL THOMAS",
+      "className": "2-Wheel Drive Buggy",
+      "transponder": "0777999",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "SCOTT BOWKETT",
       "className": "2-Wheel Drive Buggy",
       "transponder": "8508635",
@@ -451,6 +458,13 @@
       "transponderSource": "wix"
     },
     {
+      "driverName": "RUSSELL THOMAS",
+      "className": "4-Wheel Drive Buggy",
+      "transponder": "0777999",
+      "chassis": "XRAY",
+      "transponderSource": "wix"
+    },
+    {
       "driverName": "SPENCER FARLEY",
       "className": "4-Wheel Drive Buggy",
       "transponder": "9889135",
@@ -529,7 +543,7 @@
     }
   ],
   "entrySources": {
-    "wix": 65,
+    "wix": 67,
     "admin": 9
   }
 }
