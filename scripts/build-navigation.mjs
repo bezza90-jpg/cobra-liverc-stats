@@ -1,7 +1,8 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { addSiteShell } from './site-shell.mjs';
-const pages = ['', 'sword/', 'club/', 'podiums/', 'track-gallery/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/', 'club-news/', 'virtual-race-replay/', 'website-guides/'];
+const shellOnlyPages = ['grand-prix-wales/', 'grand-prix-wales/event-guide/', 'grand-prix-wales/announcements/', 'grand-prix-wales/venue/', 'grand-prix-wales/race-centre/', 'grand-prix-wales/driver-finder/'];
+const pages = ['', 'sword/', 'club/', 'podiums/', 'track-gallery/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/', 'club-news/', 'virtual-race-replay/', 'website-guides/', ...shellOnlyPages];
 const links = [
   ['', 'Race Stats'], ['sword/', 'SWORD Championship'], ['club/', 'Club Series'],
   ['podiums/', 'Podium Gallery'], ['track-gallery/', 'Track Gallery'], ['setups/', 'Setups & Tips'], ['https://www.cobracardiff.co.uk/event-list', 'Events'], ['event/', 'Current Event'],
@@ -15,11 +16,12 @@ const check = process.argv.includes('--check');
 for (const page of pages) {
   const file = fileURLToPath(new URL('../public/' + page + 'index.html', import.meta.url));
   const html = await readFile(file, 'utf8');
-  const base = page ? '../' : './';
+  const depth = page.split('/').filter(Boolean).length;
+  const base = depth ? '../'.repeat(depth) : './';
   const anchors = links.map(([target, label, cls]) => '<a href="' + (target.startsWith('https://') ? target : base + target) + '"' + (target.startsWith('https://') || target === 'website-guides/' ? ' target="_top"' : '') + (cls ? ' class="' + cls + '"' : '') + (target === page ? ' aria-current="page"' : '') + '>' + label.replace('&', '&amp;') + '</a>').join('');
   const nav = '<nav class="results-nav"' + (page ? '' : ' id="resultsNavigation"') + ' aria-label="COBRA pages">' + anchors + '</nav>';
   const existing = /<nav class="results-nav"[^>]*>[\s\S]*?<\/nav>/;
-  let updated = existing.test(html) ? html.replace(existing, nav) : html.replace('<div class="hero-copy">', nav + '\n    <div class="hero-copy">');
+  let updated = shellOnlyPages.includes(page) ? html : existing.test(html) ? html.replace(existing, nav) : html.replace('<div class="hero-copy">', nav + '\n    <div class="hero-copy">');
   // Wix hides duplicate header navigation. Keep the guide reachable in its visible footer.
   if (page !== 'website-guides/' && updated.includes('</footer>') && !updated.includes('class="website-guides-link"')) {
     updated = updated.replace('</footer>', '<a class="website-guides-link" href="' + base + 'website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>');
