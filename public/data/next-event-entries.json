@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-22T02:38:17.342Z",
+  "updatedAt": "2026-10-22T17:20:13.416Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -322,6 +322,15 @@
       "transponder": "6657438"
     },
     {
+      "driverKey": "RUSSELL-THOMAS",
+      "driverName": "RUSSELL THOMAS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "0777999"
+    },
+    {
       "driverKey": "SCOTT-BOWKETT",
       "driverName": "SCOTT BOWKETT",
       "className": "2-Wheel Drive Buggy",
@@ -574,6 +583,15 @@
       "chassis": "Xray",
       "chassisSource": "wix",
       "transponder": "6657438"
+    },
+    {
+      "driverKey": "RUSSELL-THOMAS",
+      "driverName": "RUSSELL THOMAS",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix",
+      "transponder": "0777999"
     },
     {
       "driverKey": "SPENCER-FARLEY",
