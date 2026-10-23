@@ -508,7 +508,7 @@ function ensureEnhancedMarkup() {
             <section class="profile-section profile-breakdown-section"><h3>Class breakdown</h3><div class="profile-metric-cards class-metric-cards" id="driverClassDetails"></div><p class="definition">Distance is estimated at 150 metres per completed lap. Track time, fastest lap and consistency use every recorded run within the selected filters.</p></section>
             <section class="profile-section profile-breakdown-section"><h3>Consistency breakdown</h3><div class="profile-metric-cards consistency-metric-cards" id="driverConsistencyDetails"></div><p class="definition">Consistency bands use only runs completed for the full scheduled duration with at least five laps. The lap-gap figure compares each qualifying run’s fastest lap with its average lap; a smaller gap generally indicates steadier pace.</p></section>
           </div>
-          <section class="profile-section"><h3>Event and final history</h3><div class="table-wrap profile-history"><table>
+          <section class="profile-section"><h3>Event and final history</h3><div class="table-wrap profile-history"><table class="profile-events-table">
             <thead><tr><th>Date</th><th>Event</th><th title="Individual races">Races</th><th>Class</th><th>Overall</th><th>Final</th><th title="Qualifying">Qual</th><th title="Final result">Result</th><th title="Fastest lap">Best lap</th><th title="Consistency">Consist</th><th title="Race-relative pace">Pace</th><th title="cRating gained from this meeting">Gains</th></tr></thead>
             <tbody id="driverEventDetails"></tbody>
           </table></div></section>
@@ -789,7 +789,7 @@ function profileRunRows(eventRuns, driverKey, data) {
 }
 
 function profileRaceDetail(eventRuns, driverKey, data, colspan) {
-  return `<tr class="driver-races-detail-row" hidden><td colspan="${colspan}"><div class="table-wrap driver-races-table" aria-label="Individual race results"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${profileRunRows(eventRuns, driverKey, data)}</tbody></table></div></td></tr>`;
+  return `<tr class="driver-races-detail-row" hidden><td colspan="${colspan}"><div class="table-wrap driver-races-table" aria-label="Individual race results"><table class="profile-runs-table"><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${profileRunRows(eventRuns, driverKey, data)}</tbody></table></div></td></tr>`;
 }
 
 const driverRaceDetailCache = new Map();
@@ -876,7 +876,7 @@ async function loadDriverRunDetail(row) {
         <span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span>
         <span><strong>${timedLaps.length}</strong><small>Timed laps</small></span>
       </div>
-      <div class="run-detail-columns"><div class="run-lap-list"><div class="table-wrap compact"><table><thead><tr><th>Lap</th><th>Race position</th><th>Time</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
+      <div class="run-detail-columns"><div class="run-lap-list"><div class="table-wrap compact"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Race position</th><th>Time</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
       <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to jump to that lap.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">Open full COBRA lap chart</a>${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
     </div>`;
   } catch (error) {
@@ -1055,7 +1055,7 @@ function renderProfileMetricEvidence(key, label) {
       const eventName = event?.u ? `<a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">${escapeHtml(meeting.name)}</a>` : escapeHtml(meeting.name);
       return `<tr><td>${dateFmt.format(new Date(`${meeting.date}T12:00:00Z`))}</td><td>${eventName}</td><td>${meeting.races}</td><td>${formatRating(meeting.before)}</td><td><strong>${ratingChangeHtml(meeting.change)}</strong></td><td>${formatRating(meeting.after)}</td></tr>`;
     }).join('');
-    content = `<p class="metric-evidence-note">Every driver starts at 1,500. Each qualifying round compares the overall class order across all heats; finals use the published finishing order. Result position, lap pace and field strength move the rating, practice is excluded, and finals carry more weight. The bracketed figure is the latest meeting change.</p><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Rated sessions</th><th>Start</th><th>Change</th><th>End</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="6">No linked rated races.</td></tr>'}</tbody></table></div>`;
+    content = `<p class="metric-evidence-note">Every driver starts at 1,500. Each qualifying round compares the overall class order across all heats; finals use the published finishing order. Result position, lap pace and field strength move the rating, practice is excluded, and finals carry more weight. The bracketed figure is the latest meeting change.</p><div class="table-wrap compact"><table class="metric-rating-table"><thead><tr><th>Date</th><th>Event</th><th>Rated sessions</th><th>Start</th><th>Change</th><th>End</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="6">No linked rated races.</td></tr>'}</tbody></table></div>`;
   } else if (eventMetric) {
     const useEntries = ['events','attendance','entries','eventTypes'].includes(key);
     let rows = useEntries ? entries.map(entry => {
@@ -1078,7 +1078,7 @@ function renderProfileMetricEvidence(key, label) {
       const eventRow = `<tr class="profile-evidence-event-row" tabindex="0" role="button" aria-expanded="false" aria-label="Show ${escapeHtml(raceLabel)} for ${escapeHtml(event?.n || row.eventId)}"><td>${dateFmt.format(new Date(`${row.date}T12:00:00Z`))}</td><td>${eventName}</td><td><button type="button" class="driver-races-toggle" aria-expanded="false">${raceLabel}</button></td><td>${escapeHtml(row.cls)}</td><td>${row.position ? `P${row.position}` : '—'}</td><td>${row.qualifying ? `P${row.qualifying}` : '—'}</td><td>${escapeHtml(row.final || '—')}</td></tr>`;
       return `${eventRow}${profileRaceDetail(eventRuns, driverKey, data, 7)}`;
     }).join('');
-    content = `<div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Class</th><th>Overall</th><th>Qual</th><th>Final</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="7">No matching event records.</td></tr>'}</tbody></table></div>`;
+    content = `<div class="table-wrap compact"><table class="metric-events-table"><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Class</th><th>Overall</th><th>Qual</th><th>Final</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="7">No matching event records.</td></tr>'}</tbody></table></div>`;
   } else {
     let rows = runs.slice();
     if (key === 'consistency' || key === 'lapGap') rows = rows.filter(run => isCompleteConsistencyRun(run, data));
@@ -1097,7 +1097,7 @@ function renderProfileMetricEvidence(key, label) {
       const rowLabel = race ? `${race.r} ${race.n}` : run[0];
       return `<tr class="driver-run-row" data-race-id="${escapeHtml(run[0])}" data-driver-key="${escapeHtml(driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show complete lap result for ${escapeHtml(rowLabel)}"><td>${race ? dateFmt.format(new Date(`${race.d}T12:00:00Z`)) : '—'}</td><td><strong>${raceName}</strong></td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${Number.isFinite(consistency) && consistency >= 0 && consistency <= 100 ? `${consistency.toFixed(2)}%` : '—'}</td><td>${pace === null ? '—' : `${pace.toFixed(1)}%`}</td><td>${ratingChangeHtml(change)}</td></tr><tr class="driver-run-detail-row" hidden><td colspan="9"></td></tr>`;
     }).join('');
-    content = `<div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Best</th><th>Average</th><th>Consistency</th><th>Pace</th><th title="cRating gained from this run">Gain</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="9">No matching race records.</td></tr>'}</tbody></table></div>`;
+    content = `<div class="table-wrap compact"><table class="metric-runs-table"><thead><tr><th>Date</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Best</th><th>Average</th><th>Consistency</th><th>Pace</th><th title="cRating gained from this run">Gain</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="9">No matching race records.</td></tr>'}</tbody></table></div>`;
   }
   panel.dataset.metric = key;
   panel.classList.remove('fullscreen');
