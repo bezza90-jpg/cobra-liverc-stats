@@ -2,13 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {runInNewContext} from 'node:vm';
-const code=readFileSync(new URL('../docs/wix-racehub-navigation.html',import.meta.url),'utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
+const snippet=readFileSync(new URL('../docs/wix-racehub-navigation.html',import.meta.url),'utf8');
+const code=snippet.match(/<script>([\s\S]*?)<\/script>/)[1];
 test('Wix feature links preserve selections while booking, home and unrelated links remain intact',()=>{
   const cases=[
     ['https://www.cobracardiff.co.uk/driver-distance-tracker','https://racehub.cobracardiff.co.uk/?tracker=1'],
     ['https://www.cobracardiff.co.uk/sword-schedule','https://racehub.cobracardiff.co.uk/schedule/?type=sword'],
     ['https://www.cobracardiff.co.uk/track-gallery','https://racehub.cobracardiff.co.uk/track-gallery/'],
     ['https://www.cobracardiff.co.uk/virtual-race-replay?race=7072625&compare=A&compare=B#track','https://racehub.cobracardiff.co.uk/virtual-race-replay/?race=7072625&compare=A&compare=B#track'],
+    ['https://www.cobracardiff.co.uk/virtual-race-replay/3d.html?race=7072625','https://racehub.cobracardiff.co.uk/virtual-race-replay/3d.html?race=7072625'],
     ['https://www.cobracardiff.co.uk/event-list',null],
     ['https://www.cobracardiff.co.uk/',null],
     ['https://www.cobracardiff.co.uk/grand-prix-wales',null],
@@ -25,4 +27,13 @@ test('Wix feature links preserve selections while booking, home and unrelated li
   assigned=null;prevented=false;
   handler({target:{closest:()=>links[0]},button:0,ctrlKey:true,preventDefault:()=>prevented=true,stopImmediatePropagation(){}});
   assert.equal(assigned,null);assert.equal(prevented,false);
+});
+
+test('Wix loads the hosted shared header and its two replay destinations',()=>{
+  assert.match(snippet,/assets\/wix-site-shell\.js/);
+  const loader=readFileSync(new URL('../public/assets/wix-site-shell.js',import.meta.url),'utf8');
+  assert.match(loader,/>2D Virtual Replay</);
+  assert.match(loader,/>3D Virtual Replay</);
+  assert.match(loader,/virtual-race-replay\/3d\.html/);
+  assert.doesNotMatch(snippet,/class="cobra-site-header"/);
 });
