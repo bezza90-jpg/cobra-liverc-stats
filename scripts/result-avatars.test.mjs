@@ -1,6 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {resultAvatarClass, resultAvatarPath} from '../public/assets/result-avatars.js';
+
+test('result avatars provide click and keyboard enlargement without opening the result row', async () => {
+  const source = await readFile(new URL('../public/assets/result-avatars.js', import.meta.url), 'utf8');
+  assert.match(source, /image\.addEventListener\('click', event => \{ event\.stopPropagation\(\); showPreview\(image\); \}\)/);
+  assert.match(source, /image\.addEventListener\('keydown'/);
+  assert.match(source, /aria-label', 'Enlarge car avatar'/);
+});
 
 test('class-specific avatars never appear in another class', () => {
   const mark = {'4-Wheel Drive Buggy':'assets/car-avatars/MARK-GIAQUINTO-AUTO-4WD.png'};

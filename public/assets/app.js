@@ -6,7 +6,7 @@ import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
 import {lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261023-lap-colours';
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
-import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261004-display';
+import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261023-click-preview';
 
 const state = { data: null, profileKey: '', leaderboardSort: { key: 'rank', direction: 'asc' } };
 let journeyMap = null;

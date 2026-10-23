@@ -358,6 +358,11 @@ details .table-wrap { margin: 0 14px 14px; }
 .race-results-table th,.race-results-table td{padding:9px 7px}
 .race-results-table th{font-size:.62rem;letter-spacing:.025em}
 .race-results-table .driver-name{font-size:.72rem}
+.result-avatar-cell{width:64px;text-align:center!important}
+.result-avatar{display:block;width:52px;height:32px;margin:auto;object-fit:contain;cursor:zoom-in}
+.result-avatar:focus-visible{outline:2px solid #087b19;outline-offset:3px}
+.result-avatar-preview{position:fixed;z-index:10000;padding:10px;border:1px solid #8bae94;border-radius:12px;background:#f8fbf8;box-shadow:0 10px 30px #082c3c55;object-fit:contain;pointer-events:none}
+.result-avatar-preview[hidden]{display:none}
 .driver-races-toggle { min-width:58px; padding:3px 7px; color:var(--green-dark); background:#f4faf5; border:1px solid #d5e6d8; border-radius:999px; font-size:.68rem; font-weight:850; text-align:center; white-space:nowrap; }
 .driver-races-toggle:hover,.driver-races-toggle[aria-expanded="true"] { color:#fff; background:var(--green-dark); border-color:var(--green-dark); }
 .profile-event-row,.profile-evidence-event-row { cursor:pointer; }
