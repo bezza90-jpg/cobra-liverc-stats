@@ -669,13 +669,17 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 #driverLeaderboard{scroll-margin-top:20px}
 
 /* Fastest lap timing uses the familiar racing purple/pink. */
-.fastest-lap{color:#a500a5;font-weight:800}
+.fastest-lap,.driver-run-detail tr.lap-fastest>*{background:#7b2fa3!important;color:#fff!important;font-weight:850}
+.driver-run-detail tr.lap-near-fastest>*{background:#167a35!important;color:#fff!important;font-weight:800}
+.driver-run-detail tr.lap-slow>*{background:#a71931!important;color:#fff!important;font-weight:800}
 
 /* Driver result drill-down: hover previews on desktop, tap/click pins on touch. */
 .driver-run-row{cursor:pointer;transition:background-color .16s ease,box-shadow .16s ease}
 .driver-run-row:hover,.driver-run-row:focus-visible,.driver-run-row[aria-expanded="true"]{background:#eef8f0;box-shadow:inset 4px 0 #08a31a}
 .driver-run-detail-row>td{padding:0!important;background:#f7faf8}
 .driver-run-detail{padding:16px 18px 20px;border-left:4px solid #08a31a}
+.driver-run-retry{margin-top:8px;padding:9px 15px;border:0;border-radius:999px;background:#087f18;color:#fff;font:inherit;font-weight:850;cursor:pointer}
+.driver-run-retry:hover,.driver-run-retry:focus-visible{background:#056811;outline:3px solid #9fe429;outline-offset:2px}
 .run-detail-summary{display:grid;grid-template-columns:repeat(5,minmax(110px,1fr));gap:8px;margin-bottom:16px}
 .run-detail-summary span{padding:12px;background:#082f13;color:#fff;border-top:3px solid #9ceb43;border-radius:7px}
 .run-detail-summary strong,.run-detail-summary small{display:block}
