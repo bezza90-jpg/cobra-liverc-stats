@@ -84,18 +84,25 @@
   .statistics-page :is(.driver-races-detail-row,.driver-run-detail-row)[hidden]{display:none!important}
   .statistics-page :is(.driver-races-detail-row,.driver-run-detail-row)>td{display:block!important;width:100%;padding:0!important;border:0!important;background:transparent!important}
   .statistics-page :is(.driver-races-detail-row,.driver-run-detail-row)>td::before{content:none!important}
-  .statistics-page .driver-run-detail{margin:0;padding:10px 0 4px}
-  .statistics-page .driver-run-detail .run-detail-summary{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-bottom:10px}
-  .statistics-page .driver-run-detail .run-detail-summary>span{grid-column:span 2;min-width:0;min-height:42px;padding:5px 4px;border-top-width:2px}
-  .statistics-page .driver-run-detail .run-detail-summary>span:nth-last-child(-n+2){grid-column:span 3}
-  .statistics-page .driver-run-detail .run-detail-summary strong{font-size:.84rem;line-height:1.05;white-space:nowrap}
-  .statistics-page .driver-run-detail .run-detail-summary small{margin-top:2px;font-size:.48rem;line-height:1.12;overflow-wrap:anywhere}
-  .statistics-page .run-detail-columns{grid-template-columns:1fr}
+  .statistics-page .driver-run-detail{position:sticky;left:0;box-sizing:border-box;width:calc(100vw - 40px);max-width:calc(100vw - 40px);margin:0;padding:10px 0 4px;overflow:hidden}
+  .statistics-page .driver-run-detail .run-detail-summary{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;margin-bottom:8px}
+  .statistics-page .driver-run-detail .run-detail-summary>span{grid-column:auto;min-width:0;min-height:38px;padding:4px 2px;border-top-width:2px}
+  .statistics-page .driver-run-detail .run-detail-summary strong{font-size:.76rem;line-height:1;white-space:nowrap}
+  .statistics-page .driver-run-detail .run-detail-summary small{margin-top:2px;font-size:0;line-height:1;white-space:nowrap}
+  .statistics-page .driver-run-detail .run-detail-summary small[data-mobile-label]::after{content:attr(data-mobile-label);font-size:.43rem}
+  .statistics-page .driver-run-detail .run-summary-fastest{order:-1}
+  .statistics-page .run-detail-columns{grid-template-columns:minmax(0,1fr);width:100%;min-width:0;max-width:100%}
   .statistics-page .run-lap-list .table-wrap{max-height:none;overflow-x:hidden;overflow-y:visible}
   .statistics-page .run-laps-table{width:100%;min-width:0;table-layout:fixed}
-  .statistics-page .run-laps-table{font-size:.74rem}
-  .statistics-page .run-laps-table th,.statistics-page .run-laps-table td{padding:6px 4px;white-space:normal}
-  .statistics-page .run-detail-chart{position:relative;top:auto;min-width:0}
+  .statistics-page .run-laps-table{font-size:.72rem}
+  .statistics-page .run-laps-table th,.statistics-page .run-laps-table td{padding:6px 3px;white-space:nowrap}
+  .statistics-page .run-laps-table th:nth-child(1),.statistics-page .run-laps-table td:nth-child(1){width:18%;text-align:right}
+  .statistics-page .run-laps-table th:nth-child(2),.statistics-page .run-laps-table td:nth-child(2){width:22%;text-align:left}
+  .statistics-page .run-laps-table th:nth-child(3),.statistics-page .run-laps-table td:nth-child(3){width:60%;text-align:right}
+  .statistics-page .run-detail-chart{position:relative;top:auto;box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:10px;overflow:hidden}
+  .statistics-page .run-detail-chart h4,.statistics-page .run-lap-chart-help,.statistics-page .run-detail-links,.statistics-page .run-detail-links a,.statistics-page .run-detail-links p{max-width:100%;overflow-wrap:anywhere}
+  .statistics-page .run-lap-chart-legend{gap:6px 10px;font-size:.66rem}
+  .statistics-page .run-detail-links{box-sizing:border-box;width:100%;padding:10px}
   .statistics-page .run-lap-chart-scroll{overflow:hidden}
   .statistics-page .run-lap-chart-scroll svg{width:100%;min-width:0;height:auto}
   .statistics-page .race-results-wrap{max-height:none;overflow-x:auto;overflow-y:visible}
@@ -104,10 +111,10 @@
   .statistics-page .race-result-driver-detail:not([hidden]){display:table-row!important}
   .statistics-page .race-result-driver-detail>td{display:table-cell!important;width:auto;padding:0!important}
   .statistics-page .race-result-driver-detail .driver-run-detail{position:sticky;left:0;width:calc(100vw - 40px);min-width:0;padding:10px 0 14px}
-  .statistics-page .race-result-driver-detail .run-detail-summary{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px;margin-bottom:10px}
-  .statistics-page .race-result-driver-detail .run-detail-summary>span{min-height:44px;padding:5px 6px;border-top-width:2px}
-  .statistics-page .race-result-driver-detail .run-detail-summary strong{font-size:.9rem;line-height:1.05}
-  .statistics-page .race-result-driver-detail .run-detail-summary small{margin-top:2px;font-size:.52rem;line-height:1.15}
+  .statistics-page .race-result-driver-detail .run-detail-summary{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;margin-bottom:8px}
+  .statistics-page .race-result-driver-detail .run-detail-summary>span{min-height:38px;padding:4px 2px;border-top-width:2px}
+  .statistics-page .race-result-driver-detail .run-detail-summary strong{font-size:.76rem;line-height:1}
+  .statistics-page .race-result-driver-detail .run-detail-summary small{margin-top:2px;font-size:0;line-height:1}
   .statistics-page .race-result-driver-detail .run-summary-fastest{order:-1}
   .statistics-page :is(.run-summary-average-10,.run-summary-average-15){display:none}
   .statistics-page #raceLapCharts{padding:12px;overflow:hidden}
