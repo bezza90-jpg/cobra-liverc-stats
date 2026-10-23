@@ -4,11 +4,11 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-23T00:18:54.118Z",
+  "updatedAt": "2026-10-23T02:01:12.866Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
-      "driverName": "Adam McBride",
+      "driverName": "ADAM MCBRIDE",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -17,7 +17,7 @@
     },
     {
       "driverKey": "AINSLEY-EVANS",
-      "driverName": "Ainsley Evans",
+      "driverName": "AINSLEY EVANS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -27,7 +27,7 @@
     {
       "driverKey": "BOBTECH",
       "driverName": "Bob \"Bobtech\" Gelstharp",
-      "bookingName": "Bob Gelstharp",
+      "bookingName": "BOB GELSTHARP",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -36,7 +36,7 @@
     },
     {
       "driverKey": "CHRIS-GUNTER",
-      "driverName": "Chris Gunter",
+      "driverName": "CHRIS GUNTER",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
@@ -45,7 +45,7 @@
     },
     {
       "driverKey": "DALE-PRESTON",
-      "driverName": "Dale Preston",
+      "driverName": "DALE PRESTON",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -54,7 +54,7 @@
     },
     {
       "driverKey": "DAN-PULLEY",
-      "driverName": "Dan Pulley",
+      "driverName": "DAN PULLEY",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Pr",
@@ -63,7 +63,7 @@
     },
     {
       "driverKey": "DANIEL-GRIFFITHS",
-      "driverName": "Daniel Griffiths",
+      "driverName": "DANIEL GRIFFITHS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -72,7 +72,7 @@
     },
     {
       "driverKey": "DAVID-MILFORD",
-      "driverName": "David Milford",
+      "driverName": "DAVID MILFORD",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -81,7 +81,7 @@
     },
     {
       "driverKey": "DEWI-JONES",
-      "driverName": "Dewi Jones",
+      "driverName": "DEWI JONES",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -90,7 +90,7 @@
     },
     {
       "driverKey": "FINLEY-OLDFIELD",
-      "driverName": "Finley Oldfield",
+      "driverName": "FINLEY OLDFIELD",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -99,7 +99,7 @@
     },
     {
       "driverKey": "GARETH-MANNING",
-      "driverName": "Gareth Manning",
+      "driverName": "GARETH MANNING",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -108,16 +108,16 @@
     },
     {
       "driverKey": "GRAHAM-KEEP",
-      "driverName": "Graham Keep",
+      "driverName": "GRAHAM KEEP",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Associated",
       "chassisSource": "wix",
       "transponder": "2839009"
     },
     {
       "driverKey": "GREG-LANE",
-      "driverName": "Greg Lane",
+      "driverName": "GREG LANE",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -126,7 +126,7 @@
     },
     {
       "driverKey": "GREG-PARKER",
-      "driverName": "Greg Parker",
+      "driverName": "GREG PARKER",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -135,15 +135,15 @@
     },
     {
       "driverKey": "HAIDEN-HICKS",
-      "driverName": "Haiden Hicks",
+      "driverName": "HAIDEN HICKS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Kyosho",
-      "transponder": "3422662"
+      "transponder": "3519622"
     },
     {
       "driverKey": "IAN-PEAKMAN",
-      "driverName": "Ian Peakman",
+      "driverName": "IAN PEAKMAN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -152,7 +152,7 @@
     },
     {
       "driverKey": "IAN-TOWNSEND",
-      "driverName": "Ian Townsend",
+      "driverName": "IAN TOWNSEND",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -161,7 +161,7 @@
     },
     {
       "driverKey": "JAMIE-DAVIES",
-      "driverName": "Jamie Davies",
+      "driverName": "JAMIE DAVIES",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
@@ -170,7 +170,7 @@
     },
     {
       "driverKey": "JOHN-MORDEN",
-      "driverName": "John Morden",
+      "driverName": "JOHN MORDEN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -179,7 +179,7 @@
     },
     {
       "driverKey": "JON-PAISLEY",
-      "driverName": "Jon Paisley",
+      "driverName": "JON PAISLEY",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -188,12 +188,39 @@
     },
     {
       "driverKey": "KEVIN-GREENWAY",
-      "driverName": "Kevin Greenway",
+      "driverName": "KEVIN GREENWAY",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "6958172"
+    },
+    {
+      "driverKey": "MARK-GIAQUINTO",
+      "driverName": "MARK GIAQUINTO",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho",
+      "chassisSource": "wix",
+      "transponder": "4115135"
+    },
+    {
+      "driverKey": "MARK-HICKS",
+      "driverName": "MARK HICKS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "3753291"
+    },
+    {
+      "driverKey": "MARTIN-PITMAN",
+      "driverName": "MARTIN PITMAN",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "transponder": "3499449"
     },
     {
       "driverKey": "MARTYN-HADLEY",
@@ -205,35 +232,8 @@
       "transponder": "9073997"
     },
     {
-      "driverKey": "MARK-GIAQUINTO",
-      "driverName": "Mark Giaquinto",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Kyosho",
-      "chassisSource": "wix",
-      "transponder": "4115135"
-    },
-    {
-      "driverKey": "MARK-HICKS",
-      "driverName": "Mark Hicks",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "3753291"
-    },
-    {
-      "driverKey": "MARTIN-PITMAN",
-      "driverName": "Martin Pitman",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "transponder": "3499449"
-    },
-    {
       "driverKey": "MATT-WOODIWISS",
-      "driverName": "Matt Woodiwiss",
+      "driverName": "MATT WOODIWISS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -242,7 +242,7 @@
     },
     {
       "driverKey": "MATTHEW-HODGES",
-      "driverName": "Matthew Hodges",
+      "driverName": "MATTHEW HODGES",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -251,7 +251,7 @@
     },
     {
       "driverKey": "MIKE-DRISCOLL",
-      "driverName": "Mike Driscoll",
+      "driverName": "MIKE DRISCOLL",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -260,7 +260,7 @@
     },
     {
       "driverKey": "OLLY-FROST",
-      "driverName": "Olly Frost",
+      "driverName": "OLLY FROST",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -269,12 +269,39 @@
     },
     {
       "driverKey": "PAUL-TRODDEN",
-      "driverName": "Paul Trodden",
+      "driverName": "PAUL TRODDEN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "XRay",
+      "chassis": "XRAY",
       "chassisSource": "wix",
       "transponder": "5098199"
+    },
+    {
+      "driverKey": "RICHARD-HARRISON",
+      "driverName": "RICHARD HARRISON",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "4961721"
+    },
+    {
+      "driverKey": "ROGER-MILLS",
+      "driverName": "ROGER MILLS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix",
+      "transponder": "2981041"
+    },
+    {
+      "driverKey": "ROY-DAVIES",
+      "driverName": "ROY DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix",
+      "transponder": "8268154"
     },
     {
       "driverKey": "ROYSTON-STEWART",
@@ -286,35 +313,8 @@
       "transponder": "2395627"
     },
     {
-      "driverKey": "RICHARD-HARRISON",
-      "driverName": "Richard Harrison",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "chassisSource": "wix",
-      "transponder": "4961721"
-    },
-    {
-      "driverKey": "ROGER-MILLS",
-      "driverName": "Roger Mills",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "chassisSource": "wix",
-      "transponder": "2981041"
-    },
-    {
-      "driverKey": "ROY-DAVIES",
-      "driverName": "Roy Davies",
-      "className": "2-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Tlr",
-      "chassisSource": "wix",
-      "transponder": "8268154"
-    },
-    {
       "driverKey": "RUSS-WILLIAMS",
-      "driverName": "Russ Williams",
+      "driverName": "RUSS WILLIAMS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
@@ -323,7 +323,7 @@
     },
     {
       "driverKey": "RUSSELL-THOMAS",
-      "driverName": "Russell Thomas",
+      "driverName": "RUSSELL THOMAS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
@@ -332,7 +332,7 @@
     },
     {
       "driverKey": "SCOTT-BOWKETT",
-      "driverName": "Scott Bowkett",
+      "driverName": "SCOTT BOWKETT",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -341,7 +341,7 @@
     },
     {
       "driverKey": "SHAUN-OGDEN",
-      "driverName": "Shaun Ogden",
+      "driverName": "SHAUN OGDEN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -350,7 +350,7 @@
     },
     {
       "driverKey": "SIMON-FISHER",
-      "driverName": "Simon Fisher",
+      "driverName": "SIMON FISHER",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -359,7 +359,7 @@
     },
     {
       "driverKey": "STEVE-CHAPMAN",
-      "driverName": "Steve Chapman",
+      "driverName": "STEVE CHAPMAN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -368,7 +368,7 @@
     },
     {
       "driverKey": "STEVE-CURTIS-RICH",
-      "driverName": "Steve Curtis-Rich",
+      "driverName": "STEVE CURTIS-RICH",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -377,7 +377,7 @@
     },
     {
       "driverKey": "STEVEN-GRIFFITHS",
-      "driverName": "Steven Griffiths",
+      "driverName": "STEVEN GRIFFITHS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -386,26 +386,26 @@
     },
     {
       "driverKey": "THOMAS-SPENCER-JENKINS",
-      "driverName": "Thomas Spencer Jenkins",
+      "driverName": "THOMAS SPENCER JENKINS",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "XRay",
+      "chassis": "XRAY",
       "chassisSource": "wix",
       "transponder": "5749969"
     },
     {
       "driverKey": "ZACK-TRODDEN",
-      "driverName": "Zack Trodden",
+      "driverName": "ZACK TRODDEN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "XRay",
+      "chassis": "XRAY",
       "chassisSource": "wix",
       "transponder": "5045462"
     },
     {
       "driverKey": "BOBTECH",
       "driverName": "Bob \"Bobtech\" Gelstharp",
-      "bookingName": "Bob Gelstharp",
+      "bookingName": "BOB GELSTHARP",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -414,7 +414,7 @@
     },
     {
       "driverKey": "CHRIS-GUNTER",
-      "driverName": "Chris Gunter",
+      "driverName": "CHRIS GUNTER",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
@@ -423,7 +423,7 @@
     },
     {
       "driverKey": "DAN-PULLEY",
-      "driverName": "Dan Pulley",
+      "driverName": "DAN PULLEY",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Pr",
@@ -432,7 +432,7 @@
     },
     {
       "driverKey": "DAVID-MILFORD",
-      "driverName": "David Milford",
+      "driverName": "DAVID MILFORD",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -441,7 +441,7 @@
     },
     {
       "driverKey": "DEWI-JONES",
-      "driverName": "Dewi Jones",
+      "driverName": "DEWI JONES",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -450,7 +450,7 @@
     },
     {
       "driverKey": "EDWARD-SCOTT",
-      "driverName": "Edward Scott",
+      "driverName": "EDWARD SCOTT",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -459,7 +459,7 @@
     },
     {
       "driverKey": "FRAN-BRAVERY",
-      "driverName": "Fran Bravery",
+      "driverName": "FRAN BRAVERY",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -468,7 +468,7 @@
     },
     {
       "driverKey": "GREG-PARKER",
-      "driverName": "Greg Parker",
+      "driverName": "GREG PARKER",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -477,7 +477,7 @@
     },
     {
       "driverKey": "IAN-PEAKMAN",
-      "driverName": "Ian Peakman",
+      "driverName": "IAN PEAKMAN",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -486,7 +486,7 @@
     },
     {
       "driverKey": "JON-PAISLEY",
-      "driverName": "Jon Paisley",
+      "driverName": "JON PAISLEY",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -495,7 +495,7 @@
     },
     {
       "driverKey": "LIAM-TOOLE",
-      "driverName": "Liam Toole",
+      "driverName": "LIAM TOOLE",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -504,7 +504,7 @@
     },
     {
       "driverKey": "MARK-GIAQUINTO",
-      "driverName": "Mark Giaquinto",
+      "driverName": "MARK GIAQUINTO",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Kyosho",
@@ -513,7 +513,7 @@
     },
     {
       "driverKey": "MATT-WOODIWISS",
-      "driverName": "Matt Woodiwiss",
+      "driverName": "MATT WOODIWISS",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -522,7 +522,7 @@
     },
     {
       "driverKey": "MATTHEW-HODGES",
-      "driverName": "Matthew Hodges",
+      "driverName": "MATTHEW HODGES",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -531,7 +531,7 @@
     },
     {
       "driverKey": "MIKE-DRISCOLL",
-      "driverName": "Mike Driscoll",
+      "driverName": "MIKE DRISCOLL",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -540,7 +540,7 @@
     },
     {
       "driverKey": "OLLY-FROST",
-      "driverName": "Olly Frost",
+      "driverName": "OLLY FROST",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -550,7 +550,7 @@
     {
       "driverKey": "BRUCE",
       "driverName": "Paul \"Bruce\" Curtis",
-      "bookingName": "Paul Curtis",
+      "bookingName": "PAUL CURTIS",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -559,7 +559,7 @@
     },
     {
       "driverKey": "RICHARD-HARRISON",
-      "driverName": "Richard Harrison",
+      "driverName": "RICHARD HARRISON",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -568,7 +568,7 @@
     },
     {
       "driverKey": "ROBERT-WEST",
-      "driverName": "Robert West",
+      "driverName": "ROBERT WEST",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -577,7 +577,7 @@
     },
     {
       "driverKey": "RUSS-WILLIAMS",
-      "driverName": "Russ Williams",
+      "driverName": "RUSS WILLIAMS",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
@@ -586,7 +586,7 @@
     },
     {
       "driverKey": "RUSSELL-THOMAS",
-      "driverName": "Russell Thomas",
+      "driverName": "RUSSELL THOMAS",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Xray",
@@ -595,7 +595,7 @@
     },
     {
       "driverKey": "SPENCER-FARLEY",
-      "driverName": "Spencer Farley",
+      "driverName": "SPENCER FARLEY",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -604,7 +604,7 @@
     },
     {
       "driverKey": "STEVE-CHAPMAN",
-      "driverName": "Steve Chapman",
+      "driverName": "STEVE CHAPMAN",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -613,7 +613,7 @@
     },
     {
       "driverKey": "STEVE-CURTIS-RICH",
-      "driverName": "Steve Curtis-Rich",
+      "driverName": "STEVE CURTIS-RICH",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -622,7 +622,7 @@
     },
     {
       "driverKey": "THOMAS-SPENCER-JENKINS",
-      "driverName": "Thomas Spencer Jenkins",
+      "driverName": "THOMAS SPENCER JENKINS",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "TLR",
@@ -631,7 +631,7 @@
     },
     {
       "driverKey": "TIM-BRAVERY",
-      "driverName": "Tim Bravery",
+      "driverName": "TIM BRAVERY",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -640,7 +640,7 @@
     },
     {
       "driverKey": "BEN-EVANS",
-      "driverName": "Ben Evans",
+      "driverName": "BEN EVANS",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -649,7 +649,7 @@
     },
     {
       "driverKey": "COHEN-MANNING",
-      "driverName": "Cohen Manning",
+      "driverName": "COHEN MANNING",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Tlr",
@@ -658,7 +658,7 @@
     },
     {
       "driverKey": "GEORGE-BRAY",
-      "driverName": "George Bray",
+      "driverName": "GEORGE BRAY",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -667,7 +667,7 @@
     },
     {
       "driverKey": "LEO-SMITH",
-      "driverName": "Leo Smith",
+      "driverName": "LEO SMITH",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -676,7 +676,7 @@
     },
     {
       "driverKey": "NOAH-MCBRIDE",
-      "driverName": "Noah MCBRIDE",
+      "driverName": "NOAH MCBRIDE",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Team Associated",
@@ -685,7 +685,7 @@
     },
     {
       "driverKey": "SEB-FISHER",
-      "driverName": "Seb Fisher",
+      "driverName": "SEB FISHER",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Schumacher",
