@@ -5,7 +5,8 @@ import vm from 'node:vm';
 const app = readFileSync(new URL('../public/assets/app.js', import.meta.url), 'utf8');
 function functionSource(name) {
   const start = app.indexOf(`function ${name}(`);
-  const next = app.indexOf('\nfunction ', start + 1);
+  const candidates = [app.indexOf('\nfunction ', start + 1), app.indexOf('\nasync function ', start + 1)].filter(index => index >= 0);
+  const next = candidates.length ? Math.min(...candidates) : app.length;
   return app.slice(start, next);
 }
 const durationFunctions = ['completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun'].map(functionSource).join('\n');
@@ -47,7 +48,7 @@ test('driver class and consistency breakdowns include qualifying-only activity',
   const nodes = {};
   const data = {drivers:[{k:'TEST',n:'Test Racer'}],events:[{i:'e',d:'2026-09-20',t:'club'}],eventById:{e:{t:'club'}},entries:[['e','2026-09-20','Trucks','TEST']],eventResults:[],raceById:{r:{e:'e',d:'2026-09-20',c:'Trucks',l:300}},raceResults:[['r','TEST',1,'18/5:04.090','','16.000','16.894','96.2%']],videos:[]};
   const context = vm.createContext({...profileHelpers,state:{data},$:id=>nodes[id] ||= {open:true},filters:()=>({from:'',to:'',eventType:'',className:''}),renderProfileAvatar(){},sharedRaceVideo:()=>null,profileStat:()=>'',distanceJourneyStat:()=>'',classLabels:{},dateFmt:new Intl.DateTimeFormat('en-GB'),fmt:new Intl.NumberFormat('en-GB'),kmToMiles:n=>n,escapeHtml:String});
-  vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','combinedPerformanceScore','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','setupCRatingClassOptions','driverProfile'].map(functionSource).join('\n'),context);
+  vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','combinedPerformanceScore','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','profileRunRows','profileRaceDetail','setupCRatingClassOptions','driverProfile'].map(functionSource).join('\n'),context);
   context.driverProfile('TEST');
   assert.match(nodes.driverClassDetails.innerHTML, /Trucks/);
   assert.doesNotMatch(nodes.driverClassDetails.innerHTML, /Infinity|NaN/);
@@ -60,7 +61,7 @@ test('every archived driver profile renders without broken numbers or missing co
   data.videos = [];
   const nodes = {};
   const context = vm.createContext({...profileHelpers,state:{data},$:id=>nodes[id] ||= {open:true},filters:()=>({from:'',to:'',eventType:'',className:''}),renderProfileAvatar(){},sharedRaceVideo:()=>null,profileStat:(value)=>String(value),distanceJourneyStat:()=>'',classLabels:{},dateFmt:new Intl.DateTimeFormat('en-GB'),fmt:new Intl.NumberFormat('en-GB'),kmToMiles:n=>n,escapeHtml:String});
-  vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','combinedPerformanceScore','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','setupCRatingClassOptions','driverProfile'].map(functionSource).join('\n'),context);
+  vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','combinedPerformanceScore','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','profileRunRows','profileRaceDetail','setupCRatingClassOptions','driverProfile'].map(functionSource).join('\n'),context);
   for (const driver of data.drivers) {
     context.driverProfile(driver.k);
     for (const id of ['driverProfileStats','driverClassDetails','driverConsistencyDetails','driverEventDetails']) {

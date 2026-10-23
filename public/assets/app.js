@@ -727,6 +727,21 @@ function lapAverage(laps, count) {
   return values.length === count ? `${average(values).toFixed(3)}s` : '—';
 }
 
+function profileRunRows(eventRuns, driverKey, data) {
+  return eventRuns.map(run => {
+    const race = data.raceById[run[0]];
+    const raceName = race.u ? `<a href="${escapeHtml(race.u)}" target="_blank" rel="noopener">${escapeHtml(race.n)}</a>` : escapeHtml(race.n);
+    const video = sharedRaceVideo(data.raceResults, data.videos, run[0], driverKey);
+    const videoLink = video ? `<a class="race-video-inline" href="${escapeHtml(video.url)}" target="_blank" rel="noopener" title="You are in this race">Watch this race ▶</a>` : '—';
+    const runPace = paceForRun(run, data);
+    return `<tr class="driver-run-row" data-race-id="${escapeHtml(run[0])}" data-driver-key="${escapeHtml(driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show complete lap result for ${escapeHtml(race.r)} ${escapeHtml(race.n)}"><td>${escapeHtml(race.r)}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td><td>${metricValueHelp('pace', runPace === null ? '—' : `${runPace.toFixed(1)}%`, 'Pace')}</td><td>${videoLink}</td></tr><tr class="driver-run-detail-row" hidden><td colspan="9"></td></tr>`;
+  }).join('');
+}
+
+function profileRaceDetail(eventRuns, driverKey, data, colspan) {
+  return `<tr class="driver-races-detail-row" hidden><td colspan="${colspan}"><div class="table-wrap driver-races-table" aria-label="Individual race results"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${profileRunRows(eventRuns, driverKey, data)}</tbody></table></div></td></tr>`;
+}
+
 async function loadDriverRunDetail(row) {
   const detail = row?.nextElementSibling;
   if (!detail?.classList.contains('driver-run-detail-row')) return;
@@ -918,7 +933,7 @@ function renderProfileMetricEvidence(key, label) {
   if (!panel || !evidence) return;
   const active = panel.dataset.metric === key && !panel.hidden;
   $('driverProfileStats').querySelectorAll('[data-profile-evidence]').forEach(button => button.setAttribute('aria-expanded', String(!active && button.dataset.profileEvidence === key)));
-  if (active) { panel.hidden = true; panel.dataset.metric = ''; return; }
+  if (active) { panel.hidden = true; panel.classList.remove('fullscreen'); panel.dataset.metric = ''; return; }
   const { data, driverKey, entries, results, runs, ratingSummary } = evidence;
   const eventFilters = {
     finals: () => true, topFive: row => row[4] <= 5, podiums: row => row[4] <= 3, wins: row => row[4] === 1,
@@ -944,9 +959,19 @@ function renderProfileMetricEvidence(key, label) {
     const rowHtml = rows.map(row => {
       const event = data.eventById[row.eventId];
       const eventName = event?.u ? `<a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">${escapeHtml(event.n)}</a>` : escapeHtml(event?.n || row.eventId);
-      return `<tr><td>${dateFmt.format(new Date(`${row.date}T12:00:00Z`))}</td><td>${eventName}</td><td>${escapeHtml(row.cls)}</td><td>${row.position ? `P${row.position}` : '—'}</td><td>${row.qualifying ? `P${row.qualifying}` : '—'}</td><td>${escapeHtml(row.final || '—')}</td></tr>`;
+      const eventRuns = runs.filter(run => {
+        const race = data.raceById[run[0]];
+        return race?.e === row.eventId && race.c === row.cls;
+      }).sort((a, b) => {
+        const raceA = data.raceById[a[0]];
+        const raceB = data.raceById[b[0]];
+        return Number(raceB.f) - Number(raceA.f) || raceA.r.localeCompare(raceB.r) || raceA.n.localeCompare(raceB.n);
+      });
+      const raceLabel = `${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}`;
+      const eventRow = `<tr class="profile-evidence-event-row" tabindex="0" role="button" aria-expanded="false" aria-label="Show ${escapeHtml(raceLabel)} for ${escapeHtml(event?.n || row.eventId)}"><td>${dateFmt.format(new Date(`${row.date}T12:00:00Z`))}</td><td>${eventName}</td><td><button type="button" class="driver-races-toggle" aria-expanded="false">${raceLabel}</button></td><td>${escapeHtml(row.cls)}</td><td>${row.position ? `P${row.position}` : '—'}</td><td>${row.qualifying ? `P${row.qualifying}` : '—'}</td><td>${escapeHtml(row.final || '—')}</td></tr>`;
+      return `${eventRow}${profileRaceDetail(eventRuns, driverKey, data, 7)}`;
     }).join('');
-    content = `<div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Overall</th><th>Qual</th><th>Final</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="6">No matching event records.</td></tr>'}</tbody></table></div>`;
+    content = `<div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Class</th><th>Overall</th><th>Qual</th><th>Final</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="7">No matching event records.</td></tr>'}</tbody></table></div>`;
   } else {
     let rows = runs.slice();
     if (key === 'consistency' || key === 'lapGap') rows = rows.filter(run => isCompleteConsistencyRun(run, data));
@@ -967,7 +992,8 @@ function renderProfileMetricEvidence(key, label) {
     content = `<div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Best</th><th>Average</th><th>Consistency</th><th>Pace</th><th title="cRating gained from this run">Gain</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="9">No matching race records.</td></tr>'}</tbody></table></div>`;
   }
   panel.dataset.metric = key;
-  panel.innerHTML = `<div class="profile-metric-evidence-heading"><div><p class="eyebrow">Metric evidence</p><h3>Where ${escapeHtml(label)} comes from</h3></div><button type="button" class="profile-metric-evidence-close" aria-label="Close metric evidence">×</button></div>${content}`;
+  panel.classList.remove('fullscreen');
+  panel.innerHTML = `<div class="profile-metric-evidence-heading"><div><p class="eyebrow">Metric evidence</p><h3>Where ${escapeHtml(label)} comes from</h3></div><div class="profile-metric-evidence-actions"><button type="button" class="profile-metric-evidence-fullscreen" aria-pressed="false">Full screen</button><button type="button" class="profile-metric-evidence-close" aria-label="Close metric evidence">×</button></div></div>${content}`;
   panel.hidden = false;
   panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 }
@@ -1862,18 +1888,10 @@ function driverProfile(driverKey) {
     });
     const eventPace = average(attendanceAdjustedResults(eventRuns.map(run => paceForRun(run, data)).filter(Number.isFinite), true));
     const eventRating = ratingSummary.meetings.find(meeting => meeting.eventId === eventId && meeting.date === date)?.change;
-    const runRows = eventRuns.map(run => {
-      const race = data.raceById[run[0]];
-      const raceName = race.u ? `<a href="${escapeHtml(race.u)}" target="_blank" rel="noopener">${escapeHtml(race.n)}</a>` : escapeHtml(race.n);
-      const video = sharedRaceVideo(data.raceResults, data.videos, run[0], driverKey);
-      const videoLink = video ? `<a class="race-video-inline" href="${escapeHtml(video.url)}" target="_blank" rel="noopener" title="You are in this race">Watch this race ▶</a>` : '—';
-      const runPace = paceForRun(run, data);
-      return `<tr class="driver-run-row" data-race-id="${escapeHtml(run[0])}" data-driver-key="${escapeHtml(driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show complete lap result for ${escapeHtml(race.r)} ${escapeHtml(race.n)}"><td>${escapeHtml(race.r)}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td><td>${metricValueHelp('pace', runPace === null ? '—' : `${runPace.toFixed(1)}%`, 'Pace')}</td><td>${videoLink}</td></tr><tr class="driver-run-detail-row" hidden><td colspan="9"></td></tr>`;
-    }).join('');
     const raceLabel = `${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}`;
     const raceDrilldown = `<button type="button" class="driver-races-toggle" aria-expanded="false">${raceLabel}</button>`;
-    const eventRow = `<tr><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${raceDrilldown}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${metricValueHelp('pace', eventPace === null ? '—' : `${eventPace.toFixed(1)}%`, 'Pace')}</td><td>${ratingChangeMetricHelp(eventRating)}</td></tr>`;
-    const detailRow = `<tr class="driver-races-detail-row" hidden><td colspan="12"><div class="table-wrap driver-races-table" aria-label="Individual race results"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${runRows}</tbody></table></div></td></tr>`;
+    const eventRow = `<tr class="profile-event-row" tabindex="0" role="button" aria-expanded="false"><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${raceDrilldown}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${metricValueHelp('pace', eventPace === null ? '—' : `${eventPace.toFixed(1)}%`, 'Pace')}</td><td>${ratingChangeMetricHelp(eventRating)}</td></tr>`;
+    const detailRow = profileRaceDetail(eventRuns, driverKey, data, 12);
     return `${eventRow}${detailRow}`;
   }).join('') || '<tr><td colspan="12">No completed finals within these filters.</td></tr>';
 
@@ -2126,19 +2144,23 @@ async function init() {
       event.preventDefault();
       row.click();
     });
-    $('driverEventDetails').addEventListener('click', event => {
-      const groupButton = event.target.closest('.driver-races-toggle');
+    const handleProfileDrilldownClick = (container, event) => {
+      const eventRow = event.target.closest('.profile-event-row,.profile-evidence-event-row');
+      const groupButton = event.target.closest('.driver-races-toggle') || (eventRow && !event.target.closest('a,button,.metric-help') ? eventRow.querySelector('.driver-races-toggle') : null);
       if (groupButton) {
         const detailRow = groupButton.closest('tr')?.nextElementSibling;
         if (!detailRow?.classList.contains('driver-races-detail-row')) return;
         const opening = detailRow.hidden;
-        $('driverEventDetails').querySelectorAll('.driver-races-detail-row').forEach(other => {
+        container.querySelectorAll('.driver-races-detail-row').forEach(other => {
           if (other === detailRow) return;
           other.hidden = true;
-          other.previousElementSibling?.querySelector('.driver-races-toggle')?.setAttribute('aria-expanded', 'false');
+          const otherRow = other.previousElementSibling;
+          otherRow?.querySelector('.driver-races-toggle')?.setAttribute('aria-expanded', 'false');
+          otherRow?.setAttribute('aria-expanded', 'false');
         });
         detailRow.hidden = !opening;
         groupButton.setAttribute('aria-expanded', String(opening));
+        groupButton.closest('tr')?.setAttribute('aria-expanded', String(opening));
         return;
       }
       if (event.target.closest('a,button,.metric-help')) return;
@@ -2147,7 +2169,7 @@ async function init() {
       const detail = row.nextElementSibling;
       const wasPinned = row.dataset.pinned === 'true';
       if (!wasPinned) {
-        $('driverEventDetails').querySelectorAll('.driver-run-row').forEach(other => {
+        container.querySelectorAll('.driver-run-row').forEach(other => {
           if (other === row) return;
           other.dataset.pinned = 'false';
           other.setAttribute('aria-expanded', 'false');
@@ -2160,9 +2182,10 @@ async function init() {
         row.setAttribute('aria-expanded', 'false');
         row.dataset.pinned = 'false';
       }
-    });
+    };
+    $('driverEventDetails').addEventListener('click', event => handleProfileDrilldownClick($('driverEventDetails'), event));
     $('driverEventDetails').addEventListener('keydown', event => {
-      const row = event.target.closest('.driver-run-row');
+      const row = event.target.closest('.driver-run-row,.profile-event-row');
       if (!row || event.target !== row || !['Enter', ' '].includes(event.key)) return;
       event.preventDefault();
       row.click();
@@ -2177,10 +2200,28 @@ async function init() {
       if (button) openJourneyMap(button.dataset.journeyDriver);
     });
     $('driverMetricEvidence').addEventListener('click', event => {
-      if (!event.target.closest('.profile-metric-evidence-close')) return;
-      $('driverMetricEvidence').hidden = true;
-      $('driverMetricEvidence').dataset.metric = '';
-      $('driverProfileStats').querySelectorAll('[data-profile-evidence]').forEach(button => button.setAttribute('aria-expanded', 'false'));
+      const panel = $('driverMetricEvidence');
+      if (event.target.closest('.profile-metric-evidence-close')) {
+        panel.hidden = true;
+        panel.classList.remove('fullscreen');
+        panel.dataset.metric = '';
+        $('driverProfileStats').querySelectorAll('[data-profile-evidence]').forEach(button => button.setAttribute('aria-expanded', 'false'));
+        return;
+      }
+      const fullscreen = event.target.closest('.profile-metric-evidence-fullscreen');
+      if (fullscreen) {
+        const enabled = panel.classList.toggle('fullscreen');
+        fullscreen.setAttribute('aria-pressed', String(enabled));
+        fullscreen.textContent = enabled ? 'Exit full screen' : 'Full screen';
+        return;
+      }
+      handleProfileDrilldownClick(panel, event);
+    });
+    $('driverMetricEvidence').addEventListener('keydown', event => {
+      const row = event.target.closest('.driver-run-row,.profile-evidence-event-row');
+      if (!row || event.target !== row || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      row.click();
     });
     $('driverTrendToggle')?.addEventListener('click', () => {
       const panel = $('driverTrendPanel');
