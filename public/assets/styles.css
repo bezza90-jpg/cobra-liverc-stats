@@ -681,7 +681,7 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .driver-run-detail{padding:16px 18px 20px;border-left:4px solid #08a31a}
 .driver-run-retry{margin-top:8px;padding:9px 15px;border:0;border-radius:999px;background:#087f18;color:#fff;font:inherit;font-weight:850;cursor:pointer}
 .driver-run-retry:hover,.driver-run-retry:focus-visible{background:#056811;outline:3px solid #9fe429;outline-offset:2px}
-.run-detail-summary{display:grid;grid-template-columns:repeat(5,minmax(110px,1fr));gap:8px;margin-bottom:16px}
+.run-detail-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-bottom:16px}
 .run-detail-summary span{padding:12px;background:#082f13;color:#fff;border-top:3px solid #9ceb43;border-radius:7px}
 .run-detail-summary strong,.run-detail-summary small{display:block}
 .run-detail-summary strong{font-size:1.15rem}
@@ -690,6 +690,7 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .run-detail-columns h4{margin:0 0 8px}
 .run-lap-list .table-wrap{max-height:360px;scroll-behavior:smooth}
 .run-lap-list tr{scroll-margin-top:36px}
+.run-lap-list tr.run-lap-selected{outline:3px solid #0a8f21;outline-offset:-3px}
 .run-detail-chart{position:sticky;top:12px;align-self:start;min-width:0;padding:14px;background:#07170d;color:#fff;border:1px solid #315340;border-radius:9px}
 .run-detail-chart h4{font-size:1.05rem}
 .run-lap-chart-help{margin:0 0 8px;color:#c8dbcdd9;font-size:.78rem}
@@ -699,7 +700,7 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .run-lap-chart-line{fill:none;stroke:#d8ebdf;stroke-width:2.5;stroke-linejoin:round}
 .run-lap-chart-points circle{fill:#fff;stroke:#a3f329;stroke-width:2;cursor:pointer;transition:r .15s ease,stroke-width .15s ease}
 .run-lap-chart-points circle.lap-fastest{fill:#b25ce0;stroke:#f1ceff}.run-lap-chart-points circle.lap-near-fastest{fill:#16a34a;stroke:#b7f7ca}.run-lap-chart-points circle.lap-slow{fill:#d52b45;stroke:#ffc2cb}
-.run-lap-chart-points a:hover circle,.run-lap-chart-points a:focus circle{r:9px;stroke:#fff;stroke-width:4;outline:none}
+.run-lap-chart-points [role="button"]:hover circle,.run-lap-chart-points [role="button"]:focus circle{r:9px;stroke:#fff;stroke-width:4;outline:none}
 .run-lap-chart-legend{display:flex;gap:8px 14px;flex-wrap:wrap;margin:9px 0 12px;color:#d5e4d9;font-size:.72rem;font-weight:800}.run-lap-chart-legend span{display:flex;align-items:center;gap:5px}.run-lap-chart-legend i{width:12px;height:12px;border-radius:50%}.run-lap-chart-legend .lap-fastest{background:#b25ce0}.run-lap-chart-legend .lap-near-fastest{background:#16a34a}.run-lap-chart-legend .lap-slow{background:#d52b45}
 .run-detail-links{display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:14px;background:#fff;border:1px solid #d6e2d9;border-radius:8px}
 .run-detail-links a{color:#067b14;font-weight:850}
