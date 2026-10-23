@@ -713,7 +713,12 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .run-detail-summary small{margin-top:5px;color:#c8dbcdd9;font-size:.68rem;font-weight:800;text-transform:uppercase}
 .run-detail-columns{display:grid;grid-template-columns:minmax(280px,1.5fr) minmax(190px,.7fr);gap:16px}
 .run-detail-columns h4{margin:0 0 8px}
-.run-lap-list .table-wrap{max-height:none;overflow-y:visible;scroll-behavior:smooth}
+.run-lap-list{min-width:0}
+.run-lap-list .table-wrap{max-height:none;overflow-x:hidden;overflow-y:visible;scroll-behavior:smooth}
+.run-laps-table{width:100%;min-width:0!important;table-layout:fixed}
+.run-laps-table th:nth-child(1),.run-laps-table td:nth-child(1){width:18%;text-align:right}
+.run-laps-table th:nth-child(2),.run-laps-table td:nth-child(2){width:22%;text-align:left}
+.run-laps-table th:nth-child(3),.run-laps-table td:nth-child(3){width:60%;text-align:right}
 .run-lap-list tr{scroll-margin-top:36px}
 .run-lap-list tr.run-lap-selected{outline:3px solid #0a8f21;outline-offset:-3px}
 .run-detail-chart{position:sticky;top:12px;align-self:start;min-width:0;padding:14px;background:#07170d;color:#fff;border:1px solid #315340;border-radius:9px}
