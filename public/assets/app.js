@@ -884,7 +884,11 @@ async function loadDriverRunDetail(row) {
   const cell = detail.querySelector('td');
   cell.innerHTML = '<div class="driver-run-detail" role="status">Loading lap-by-lap result…</div>';
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const slowNotice = setTimeout(() => {
+    const status = cell.querySelector('[role="status"]');
+    if (status) status.textContent = 'Still loading lap-by-lap result…';
+  }, 8000);
+  const timeout = setTimeout(() => controller.abort(), 25000);
   try {
     const raceId = row.dataset.raceId;
     const driverKey = row.dataset.driverKey;
@@ -922,6 +926,7 @@ async function loadDriverRunDetail(row) {
     const message = error?.name === 'AbortError' ? 'Lap details are taking longer than expected' : error.message;
     cell.innerHTML = `<div class="driver-run-detail"><p>${escapeHtml(message)}. The official summary above remains available.</p><button type="button" class="driver-run-retry">Try again</button></div>`;
   } finally {
+    clearTimeout(slowNotice);
     clearTimeout(timeout);
   }
 }
