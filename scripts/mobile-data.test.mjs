@@ -20,10 +20,11 @@ test('Wix routing updates plain links while preserving event and driver filters'
  const share={href:'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fexample.com',target:'_blank',hasAttribute:()=>false,classList:{contains:c=>c==='lap-chart-open'}};route(share);assert.equal(share.target,'_blank');
 });
 test('statistics drill-down tables use the phone card layout',async()=>{
- const [html,app,css]=await Promise.all([
+ const [html,app,css,styles]=await Promise.all([
   readFile(new URL('../public/index.html',import.meta.url),'utf8'),
   readFile(new URL('../public/assets/app.js',import.meta.url),'utf8'),
-  readFile(new URL('../public/assets/statistics-mobile.css',import.meta.url),'utf8')
+  readFile(new URL('../public/assets/statistics-mobile.css',import.meta.url),'utf8'),
+  readFile(new URL('../public/assets/styles.css',import.meta.url),'utf8')
  ]);
  assert.match(html,/class="[^"]*profile-events-table/);
  for(const className of ['profile-runs-table','run-laps-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.match(app,new RegExp(`class="${className}"`));
@@ -37,6 +38,9 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(css,/:is\(\.run-summary-average-10,\.run-summary-average-15\)\{display:none\}/);
   assert.match(app,/race-result-driver-row/);
   assert.match(app,/race-result-driver-detail/);
+  assert.match(styles,/\.race-results-wrap\{max-height:500px\}/);
+  assert.match(styles,/\.race-results-table\{min-width:0;table-layout:auto;font-size:\.72rem\}/);
+  assert.match(styles,/\.fastest-lap\{background:transparent!important;color:#7b2fa3!important;font-weight:900\}/);
  assert.match(css,/driver-races-detail-row[^}]*\[hidden\][^{]*\{display:none!important\}/);
  assert.match(css,/run-lap-list \.table-wrap\{max-height:360px;overflow-x:hidden/);
 });
