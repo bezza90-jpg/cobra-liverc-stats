@@ -1,4 +1,5 @@
 import { nextMeeting } from './event-calendar.js?v=20260926-midnight';
+import { facebookShareLink, lapLineColour } from './lap-charts.js?v=20261023-line-gradient';
 
 const REFRESH_MS = 60_000;
 const raceCache = new Map();
@@ -76,8 +77,9 @@ function lapChart(laps, best, targetPrefix) {
     const target = `${targetPrefix}-${lap.lap}`;
     return `<g role="button" tabindex="0" data-event-lap-target="${escapeHtml(target)}" aria-label="Outline lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></g>`;
   }).join('');
-  const line = laps.map(lap => `${x(lap.lap)},${y(lap.seconds)}`).join(' ');
-  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Selectable lap-time chart"><g class="run-lap-chart-grid">${grid}${ticks}<text x="${left}" y="14">Seconds</text><text x="324" y="208" text-anchor="middle">Lap number</text></g><polyline class="run-lap-chart-line" points="${line}"/><g class="run-lap-chart-points">${points}</g></svg>`;
+  const gradientPrefix=('event-'+targetPrefix).replace(/[^a-z0-9_-]/gi,'-'),gradientParts=[],lineParts=[];
+  laps.slice(1).forEach((lap,index)=>{const previous=laps[index],id=gradientPrefix+'-'+index;gradientParts.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}"><stop offset="0" stop-color="${lapLineColour(previous.seconds,best)}"/><stop offset="1" stop-color="${lapLineColour(lap.seconds,best)}"/></linearGradient>`);lineParts.push(`<line class="run-lap-chart-line" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}" style="stroke:url(#${id})"/>`);});
+  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Selectable lap-time chart"><defs>${gradientParts.join('')}</defs><g class="run-lap-chart-grid">${grid}${ticks}<text x="${left}" y="14">Seconds</text><text x="324" y="208" text-anchor="middle">Lap number</text></g>${lineParts.join('')}<g class="run-lap-chart-points">${points}</g></svg>`;
 }
 
 function average(values) {
@@ -100,13 +102,13 @@ function driverDetail(race, driver) {
     const timingClass = Number(lap.lap) === 1 || best === null ? '' : lapPerformanceClass(lap.seconds, best);
     return `<tr id="${prefix}-${lap.lap}" class="${timingClass}"><td>${lap.position ? `P${lap.position}` : '—'}</td><td>${lap.lap}</td><td>${Number(lap.seconds).toFixed(3)}s</td></tr>`;
   }).join('');
-  return `<div class="driver-run-detail current-event-driver-detail"><div class="run-detail-summary">${averages}<span><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small>Fastest lap</small></span><span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span><span><strong>${timedLaps.length}</strong><small>Timed laps</small></span></div><div class="run-detail-columns"><div class="run-lap-list"><h4>${escapeHtml(driver.name)} lap times</h4><div class="table-wrap"><table><thead><tr><th>Position</th><th>Lap</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div></div><aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p>${lapChart(timedLaps, best, prefix)}<div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="../lap-charts/?race=${encodeURIComponent(race.id)}&driver=${encodeURIComponent(driver.key || driver.name)}">Open full COBRA lap chart</a><a href="../virtual-race-replay/?race=${encodeURIComponent(race.id)}">Watch 2D replay</a></div></aside></div></div>`;
+  return `<div class="driver-run-detail current-event-driver-detail"><div class="run-detail-summary">${averages}<span><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small>Fastest lap</small></span><span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span><span><strong>${timedLaps.length}</strong><small>Timed laps</small></span></div><div class="run-detail-columns"><div class="run-lap-list"><h4>${escapeHtml(driver.name)} lap times</h4><div class="table-wrap"><table><thead><tr><th>Position</th><th>Lap</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div></div><aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p>${lapChart(timedLaps, best, prefix)}<div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="../lap-charts/?race=${encodeURIComponent(race.id)}&driver=${encodeURIComponent(driver.key || driver.name)}">Open full COBRA lap chart</a>${facebookShareLink(race.id,driver.key||driver.id||driver.name)}<a href="../virtual-race-replay/?race=${encodeURIComponent(race.id)}">Watch 2D replay</a></div></aside></div></div>`;
 }
 
 function standingsMarkup(race) {
   const drivers = [...(race.drivers || [])].sort((a, b) => Number(a.finalPosition || 999) - Number(b.finalPosition || 999));
   const rows = drivers.map(driver => `<tr><td>P${driver.finalPosition || '—'}</td><td><button type="button" class="current-event-driver" data-driver-key="${escapeHtml(driver.key || driver.id || driver.name)}">${escapeHtml(driver.name)}</button></td><td>${(driver.laps || []).length}</td><td>${formatTime(driver.officialTime)}</td></tr>`).join('');
-  return `<div class="current-event-race-result"><div class="table-wrap"><table class="current-event-standings"><thead><tr><th>Pos</th><th>Driver</th><th>Laps</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div><div class="current-event-driver-slot" aria-live="polite"></div></div>`;
+  return `<div class="current-event-race-result"><div class="current-event-result-actions">${facebookShareLink(race.id)}</div><div class="table-wrap"><table class="current-event-standings"><thead><tr><th>Pos</th><th>Driver</th><th>Laps</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div><div class="current-event-driver-slot" aria-live="polite"></div></div>`;
 }
 
 async function raceDetail(raceId) {

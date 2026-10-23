@@ -4,7 +4,7 @@ import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
-import {lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261023-lap-colours';
+import {chartShareUrl, facebookShareLink, lapLineColour, lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261023-line-gradient';
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
 import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261023-click-preview';
 
@@ -484,13 +484,20 @@ function ensureEnhancedMarkup() {
           <a class="event-link" id="raceEventLink" href="#" target="_blank" rel="noopener">Open event results ↗</a>
           <a class="event-link" id="raceResultLink" href="#" target="_blank" rel="noopener">Open this race ↗</a><a class="event-link" id="raceReplayLink" href="#" target="_blank" rel="noopener">Virtual race replay ▶</a><a class="event-link video-link" id="raceVideoLink" href="#" target="_blank" rel="noopener" hidden>Watch race video ▶</a>
         </div>
-        <h3 class="race-result-title" id="raceResultTitle">Select a race</h3>
+        <div class="race-result-heading"><h3 class="race-result-title" id="raceResultTitle">Select a race</h3><a class="facebook-share" id="raceFacebookShare" href="#" target="_blank" rel="noopener" aria-label="Share to Facebook" title="Share to Facebook" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.7 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5H17V3.6c-.7-.1-1.5-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4v2.3H8.2V13h2.6v8h2.9Z"/></svg></a></div>
         <div class="table-wrap compact"><table><thead><tr><th>Pos</th><th>Driver</th><th class="result-avatar-heading">Avatar</th><th>Qualifying</th><th>Laps / time</th><th>Behind</th><th>Fastest lap</th><th>Average lap</th><th>Consistency</th><th title="Fastest lap compared with the fastest valid lap in this race">Pace</th></tr></thead><tbody id="raceExplorerResults"></tbody></table></div>
       </section>`);
   }
 
   // Older generated pages already contain the explorer but predate its replay link.
   if (!$('raceReplayLink')) $('raceResultLink')?.insertAdjacentHTML('afterend', '<a class="event-link" id="raceReplayLink" href="#" target="_blank" rel="noopener">Virtual race replay ▶</a>');
+  if (!$('raceFacebookShare')) $('raceResultTitle')?.insertAdjacentHTML('afterend', '<a class="facebook-share" id="raceFacebookShare" href="#" target="_blank" rel="noopener" aria-label="Share to Facebook" title="Share to Facebook" hidden><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.7 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5H17V3.6c-.7-.1-1.5-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4v2.3H8.2V13h2.6v8h2.9Z"/></svg></a>');
+  if ($('raceResultTitle')?.parentElement && !$('raceResultTitle').parentElement.classList.contains('race-result-heading')) {
+    const heading = document.createElement('div');
+    heading.className = 'race-result-heading';
+    $('raceResultTitle').before(heading);
+    heading.append($('raceResultTitle'), $('raceFacebookShare'));
+  }
 
   if (!$('driverDialog')) {
     document.querySelector('footer')?.insertAdjacentHTML('beforebegin', `
@@ -821,7 +828,7 @@ function prefetchDriverRunDetails(container) {
   });
 }
 
-function driverRunLapChart(laps, best, raceId) {
+function driverRunLapChart(laps, best, raceId, driverKey = '') {
   if (!laps.length || best === null) return '<p>No lap chart is available for this race.</p>';
   const timed = laps.length > 1 ? laps.slice(1) : laps;
   const values = timed.map(lap => Number(lap.seconds));
@@ -837,13 +844,14 @@ function driverRunLapChart(laps, best, raceId) {
   const ticks = Array.from({ length: 5 }, (_, index) => min + ((max - min) * index) / 4);
   const grid = ticks.map(value => `<line x1="48" x2="600" y1="${y(value)}" y2="${y(value)}"/><text x="40" y="${y(value) + 4}" text-anchor="end">${value.toFixed(1)}</text>`).join('');
   const lapTicks = laps.filter((lap, index) => index === 0 || index === laps.length - 1 || Number(lap.lap) % Math.max(1, Math.ceil(lastLap / 9)) === 0).map(lap => `<text x="${x(lap.lap)}" y="194" text-anchor="middle">${lap.lap}</text>`).join('');
-  const line = laps.map(lap => `${x(lap.lap)},${y(lap.seconds)}`).join(' ');
+  const gradientPrefix=('run-'+raceId+'-'+driverKey).replace(/[^a-z0-9_-]/gi,'-'),gradientParts=[],lineParts=[];
+  laps.slice(1).forEach((lap,index)=>{const previous=laps[index],id=gradientPrefix+'-'+index;gradientParts.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}"><stop offset="0" stop-color="${lapLineColour(previous.seconds,best)}"/><stop offset="1" stop-color="${lapLineColour(lap.seconds,best)}"/></linearGradient>`);lineParts.push(`<line class="run-lap-chart-line" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}" style="stroke:url(#${id})"/>`);});
   const points = laps.map(lap => {
     const timingClass = Number(lap.lap) === 1 ? '' : lapPerformanceClass(lap.seconds, best);
     const target = `driver-lap-${raceId}-${lap.lap}`;
     return `<g role="button" tabindex="0" data-lap-target="${target}" aria-label="Outline lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></g>`;
   }).join('');
-  return `<svg viewBox="0 0 630 210" role="img" aria-label="Selectable lap-time chart"><g class="run-lap-chart-grid">${grid}${lapTicks}<text x="48" y="14">Seconds</text><text x="324" y="208" text-anchor="middle">Lap number</text></g><polyline class="run-lap-chart-line" points="${line}"/><g class="run-lap-chart-points">${points}</g></svg>`;
+  return `<svg viewBox="0 0 630 210" role="img" aria-label="Selectable lap-time chart"><defs>${gradientParts.join('')}</defs><g class="run-lap-chart-grid">${grid}${lapTicks}<text x="48" y="14">Seconds</text><text x="324" y="208" text-anchor="middle">Lap number</text></g>${lineParts.join('')}<g class="run-lap-chart-points">${points}</g></svg>`;
 }
 
 async function loadDriverRunDetail(row) {
@@ -887,7 +895,7 @@ async function loadDriverRunDetail(row) {
         <span><strong>${timedLaps.length}</strong><small>Timed laps</small></span>
       </div>
       <div class="run-detail-columns"><div class="run-lap-list"><div class="table-wrap compact"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Race position</th><th>Time</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
-      <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to jump to that lap.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">Open full COBRA lap chart</a>${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
+      <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to jump to that lap.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId, driverKey)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">Open full COBRA lap chart</a>${facebookShareLink(raceId, driverKey)}${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
     </div>`;
   } catch (error) {
     delete detail.dataset.loaded;
@@ -960,10 +968,13 @@ function renderRaceExplorer(raceId) {
     $('raceResultLink').hidden = true;
     $('raceReplayLink').hidden = true;
     $('raceVideoLink').hidden = true;
+    $('raceFacebookShare').hidden = true;
     return;
   }
   const event = data.eventById[race.e];
   $('raceResultTitle').textContent = `${event?.n || ''} — ${race.n}`;
+  $('raceFacebookShare').href = 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(chartShareUrl(raceId));
+  $('raceFacebookShare').hidden = false;
   $('raceEventLink').href = event?.u || '#';
   $('raceEventLink').hidden = !event?.u;
   $('raceReplayLink').href = './virtual-race-replay/?race='+encodeURIComponent(raceId)+'&event='+encodeURIComponent(race.e);
