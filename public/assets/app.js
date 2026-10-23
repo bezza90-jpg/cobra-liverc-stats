@@ -865,7 +865,10 @@ function selectRunLapPoint(lapPoint) {
 }
 
 function syncDrilldownHeight(container) {
-  container.querySelectorAll('.compact,.driver-races-table,.race-results-wrap,.profile-metric-evidence > .table-wrap').forEach(wrap => {
+  const wraps = new Set(container.querySelectorAll('.compact,.driver-races-table,.race-results-wrap,.profile-metric-evidence > .table-wrap'));
+  const surroundingWrap = container.closest('.table-wrap');
+  if (surroundingWrap) wraps.add(surroundingWrap);
+  wraps.forEach(wrap => {
     wrap.classList.toggle('drilldown-expanded', Boolean(wrap.querySelector('[aria-expanded="true"]')));
   });
 }

@@ -344,6 +344,7 @@ summary { padding: 15px 17px; font-weight: 800; cursor: pointer; }
 details .table-wrap { margin: 0 14px 14px; }
 .compact { max-height: 430px; }
 .table-wrap.drilldown-expanded { max-height:none !important; overflow-y:visible; }
+.statistics-page .table-wrap:has([aria-expanded="true"]) { max-height:none !important; overflow-y:visible; }
 .compact table { font-size: .78rem; }
 .winner { color: var(--green-dark); font-weight: 900; }
 .result-cell { min-width: 165px; line-height: 1.45; }
@@ -708,7 +709,7 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .run-detail-summary small{margin-top:5px;color:#c8dbcdd9;font-size:.68rem;font-weight:800;text-transform:uppercase}
 .run-detail-columns{display:grid;grid-template-columns:minmax(280px,1.5fr) minmax(190px,.7fr);gap:16px}
 .run-detail-columns h4{margin:0 0 8px}
-.run-lap-list .table-wrap{max-height:360px;scroll-behavior:smooth}
+.run-lap-list .table-wrap{max-height:none;overflow-y:visible;scroll-behavior:smooth}
 .run-lap-list tr{scroll-margin-top:36px}
 .run-lap-list tr.run-lap-selected{outline:3px solid #0a8f21;outline-offset:-3px}
 .run-detail-chart{position:sticky;top:12px;align-self:start;min-width:0;padding:14px;background:#07170d;color:#fff;border:1px solid #315340;border-radius:9px}
