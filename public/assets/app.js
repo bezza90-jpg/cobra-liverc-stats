@@ -761,6 +761,31 @@ function prefetchDriverRunDetails(container) {
   });
 }
 
+function driverRunLapChart(laps, best, raceId) {
+  if (!laps.length || best === null) return '<p>No lap chart is available for this race.</p>';
+  const timed = laps.length > 1 ? laps.slice(1) : laps;
+  const values = timed.map(lap => Number(lap.seconds));
+  const low = Math.min(...values);
+  const high = Math.max(...values);
+  const padding = Math.max(0.25, (high - low) * 0.12);
+  const min = Math.max(0, low - padding);
+  const max = Math.max(min + 0.8, high + padding);
+  const lastLap = Math.max(2, ...laps.map(lap => Number(lap.lap)));
+  const x = lap => 48 + ((Number(lap) - 1) / (lastLap - 1)) * 552;
+  const rawY = seconds => 170 - ((Number(seconds) - min) / (max - min)) * 132;
+  const y = seconds => Math.max(24, Math.min(170, rawY(seconds)));
+  const ticks = Array.from({ length: 5 }, (_, index) => min + ((max - min) * index) / 4);
+  const grid = ticks.map(value => `<line x1="48" x2="600" y1="${y(value)}" y2="${y(value)}"/><text x="40" y="${y(value) + 4}" text-anchor="end">${value.toFixed(1)}</text>`).join('');
+  const lapTicks = laps.filter((lap, index) => index === 0 || index === laps.length - 1 || Number(lap.lap) % Math.max(1, Math.ceil(lastLap / 9)) === 0).map(lap => `<text x="${x(lap.lap)}" y="194" text-anchor="middle">${lap.lap}</text>`).join('');
+  const line = laps.map(lap => `${x(lap.lap)},${y(lap.seconds)}`).join(' ');
+  const points = laps.map(lap => {
+    const timingClass = Number(lap.lap) === 1 ? '' : lapPerformanceClass(lap.seconds, best);
+    const target = `driver-lap-${raceId}-${lap.lap}`;
+    return `<a href="#${target}" aria-label="Show lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></a>`;
+  }).join('');
+  return `<svg viewBox="0 0 630 210" role="img" aria-label="Selectable lap-time chart"><g class="run-lap-chart-grid">${grid}${lapTicks}<text x="48" y="14">Seconds</text><text x="324" y="208" text-anchor="middle">Lap number</text></g><polyline class="run-lap-chart-line" points="${line}"/><g class="run-lap-chart-points">${points}</g></svg>`;
+}
+
 async function loadDriverRunDetail(row) {
   const detail = row?.nextElementSibling;
   if (!detail?.classList.contains('driver-run-detail-row')) return;
@@ -789,7 +814,7 @@ async function loadDriverRunDetail(row) {
     const best = timedLaps.length ? Math.min(...timedLaps.map(lap => Number(lap.seconds))) : null;
     const averageTimed = timedLaps.length ? average(timedLaps.map(lap => Number(lap.seconds))) : null;
     const source = race.source || state.data.raceById[raceId]?.u;
-    const lapRows = allLaps.map(lap => `<tr class="${lap.lap === 1 ? '' : lapPerformanceClass(lap.seconds, best)}"><td>${lap.lap}</td><td>${Number(lap.seconds).toFixed(3)}s</td><td>${lap.position ? `P${lap.position}` : '—'}</td></tr>`).join('');
+    const lapRows = allLaps.map(lap => `<tr id="driver-lap-${escapeHtml(raceId)}-${lap.lap}" class="${lap.lap === 1 ? '' : lapPerformanceClass(lap.seconds, best)}"><td>${lap.lap}</td><td>${lap.position ? `P${lap.position}` : '—'}</td><td>${Number(lap.seconds).toFixed(3)}s</td></tr>`).join('');
     cell.innerHTML = `<div class="driver-run-detail">
       <div class="run-detail-summary">
         <span><strong>${lapAverage(timedLaps, 3)}</strong><small>Top 3 lap average</small></span>
@@ -798,8 +823,8 @@ async function loadDriverRunDetail(row) {
         <span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span>
         <span><strong>${timedLaps.length}</strong><small>Timed laps</small></span>
       </div>
-      <div class="run-detail-columns"><div><h4>Lap-by-lap result</h4><div class="table-wrap compact"><table><thead><tr><th>Lap</th><th>Time</th><th>Race position</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
-      <div class="run-detail-links"><h4>Open result</h4><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">COBRA lap charts</a>${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is listed but excluded from the Top 3 and Top 5 averages.</p></div></div>
+      <div class="run-detail-columns"><div class="run-lap-list"><div class="table-wrap compact"><table><thead><tr><th>Lap</th><th>Race position</th><th>Time</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
+      <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to jump to that lap.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">Open full COBRA lap chart</a>${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
     </div>`;
   } catch (error) {
     delete detail.dataset.loaded;
