@@ -281,7 +281,8 @@ h2 { margin: 0; font-size: clamp(1.5rem, 4vw, 2.1rem); letter-spacing: -.035em; 
 .source-scorecards small { display: block; margin-top: 5px; color: #bcd3c1; font-size: .66rem; letter-spacing: .06em; text-transform: uppercase; }
 .leaderboard-source-panel details { margin-top: 9px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
 .leaderboard-source-panel details > summary { padding: 11px 13px; color: var(--green-dark); font-size: .78rem; font-weight: 900; cursor: pointer; }
-.leaderboard-source-panel details .table-wrap { margin: 0 10px 10px; }
+.leaderboard-source-panel details .table-wrap { max-height:none; margin:0 10px 10px; overflow-y:visible; }
+.leaderboard-source-collapse { position:sticky; z-index:30; top:12px; display:block; width:max-content; margin:-4px 0 10px auto; padding:9px 13px; box-shadow:0 8px 24px rgba(0,45,12,.24); }
 .metric-help { display: inline-block; color: inherit; border-bottom: 1px dotted rgba(6,123,20,.65); cursor: help; outline: 0; }
 .metric-help:hover, .metric-help:focus-visible { color: var(--green-dark); border-bottom-style: solid; background: rgba(117,239,59,.12); border-radius: 3px; }
 .metric-help-popover { position: fixed; z-index: 10000; box-sizing: border-box; padding: 12px 14px; color: #f7fff8; background: linear-gradient(135deg,#07130c,#0b3517); border: 1px solid rgba(119,236,88,.55); border-radius: 10px; box-shadow: 0 16px 42px rgba(0,0,0,.34); font-size: .8rem; font-weight: 650; line-height: 1.45; pointer-events: none; animation: metric-help-in .16s ease-out both; }

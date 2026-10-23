@@ -783,6 +783,7 @@ function leaderboardEvidence(row) {
   }).join('');
   return `<div class="leaderboard-source-panel">
     <div class="leaderboard-source-heading"><div><p class="eyebrow">Result sources</p><h3>${escapeHtml(row.name)}</h3><p>${finals.length} published final${finals.length === 1 ? '' : 's'} · ${runs.length} recorded run${runs.length === 1 ? '' : 's'}</p></div><button type="button" class="profile-open" data-profile-key="${escapeHtml(row.driverKey)}">Open full driver profile</button></div>
+    <button type="button" class="leaderboard-source-collapse" data-collapse-leaderboard aria-label="Collapse results for ${escapeHtml(row.name)}">↑ Collapse</button>
     <div class="source-scorecards"><span>${ratingMetricHelp(row.ratingSummary)}<small>cRating</small></span><span>${metricValueHelp('pace', row.pace === null ? '—' : `${row.pace.toFixed(1)}%`, 'Pace')}<small>Pace</small></span><span>${metricValueHelp('performance', row.performance.toFixed(1), 'Performance')}<small>Performance</small></span><span>${metricValueHelp('consistency', row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`, 'Consistency')}<small>Consistency</small></span></div>
     <details open><summary>Published overall results (${finals.length})</summary><div class="table-wrap compact"><table class="leaderboard-event-results"><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Class</th><th>Overall</th><th>Qualifying</th><th>Final</th></tr></thead><tbody>${finalRows || '<tr><td colspan="7">No published finals match these filters.</td></tr>'}</tbody></table></div></details>
     <details><summary>Individual LiveRC runs (${runs.length})</summary><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Behind</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Source</th></tr></thead><tbody>${runRows || '<tr><td colspan="13">No individual runs match these filters.</td></tr>'}</tbody></table></div></details>
@@ -2297,6 +2298,19 @@ async function init() {
       row.click();
     });
     $('leaderboardBody').addEventListener('click', event => {
+      const collapseButton = event.target.closest('[data-collapse-leaderboard]');
+      if (collapseButton) {
+        const sourceRow = collapseButton.closest('.leaderboard-source-row');
+        const driverRow = sourceRow?.previousElementSibling;
+        if (sourceRow && driverRow?.classList.contains('leaderboard-driver-row')) {
+          sourceRow.hidden = true;
+          driverRow.setAttribute('aria-expanded', 'false');
+          driverRow.setAttribute('aria-label', `Show source results for ${driverRow.querySelector('.driver-name')?.textContent || 'driver'}`);
+          driverRow.focus({ preventScroll: true });
+          driverRow.scrollIntoView({ block: 'center' });
+        }
+        return;
+      }
       const profileButton = event.target.closest('[data-profile-key]');
       if (profileButton) { driverProfile(profileButton.dataset.profileKey); return; }
       const nameButton = event.target.closest('.driver-name[data-driver-key]');
