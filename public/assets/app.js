@@ -755,7 +755,17 @@ function leaderboardEvidence(row) {
   const finalRows = finals.map(result => {
     const event = data.eventById[result[0]];
     const eventName = event?.u ? `<a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">${escapeHtml(event.n)}</a>` : escapeHtml(event?.n || result[0]);
-    return `<tr><td>${dateFmt.format(new Date(`${result[1]}T12:00:00Z`))}</td><td>${eventName}</td><td>${escapeHtml(result[2])}</td><td>P${result[4]}</td><td>${result[5] ? `P${result[5]}` : '—'}</td><td>${escapeHtml(result[7] || result[6] || '—')}</td></tr>`;
+    const eventRuns = runs.filter(run => {
+      const race = data.raceById[run[0]];
+      return race?.e === result[0] && race.c === result[2];
+    }).sort((a, b) => {
+      const raceA = data.raceById[a[0]];
+      const raceB = data.raceById[b[0]];
+      return Number(raceB.f) - Number(raceA.f) || raceA.r.localeCompare(raceB.r) || raceA.n.localeCompare(raceB.n);
+    });
+    const raceLabel = `${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}`;
+    const eventRow = `<tr class="profile-evidence-event-row" tabindex="0" role="button" aria-expanded="false" aria-label="Show ${escapeHtml(raceLabel)} for ${escapeHtml(event?.n || result[0])}"><td>${dateFmt.format(new Date(`${result[1]}T12:00:00Z`))}</td><td>${eventName}</td><td><button type="button" class="driver-races-toggle" aria-expanded="false">${raceLabel}</button></td><td>${escapeHtml(result[2])}</td><td>P${result[4]}</td><td>${result[5] ? `P${result[5]}` : '—'}</td><td>${escapeHtml(result[7] || result[6] || '—')}</td></tr>`;
+    return `${eventRow}${profileRaceDetail(eventRuns, row.driverKey, data, 7)}`;
   }).join('');
   const runRows = runs.map(run => {
     const race = data.raceById[run[0]];
@@ -767,7 +777,7 @@ function leaderboardEvidence(row) {
   return `<div class="leaderboard-source-panel">
     <div class="leaderboard-source-heading"><div><p class="eyebrow">Result sources</p><h3>${escapeHtml(row.name)}</h3><p>${finals.length} published final${finals.length === 1 ? '' : 's'} · ${runs.length} recorded run${runs.length === 1 ? '' : 's'}</p></div><button type="button" class="profile-open" data-profile-key="${escapeHtml(row.driverKey)}">Open full driver profile</button></div>
     <div class="source-scorecards"><span>${ratingMetricHelp(row.ratingSummary)}<small>cRating</small></span><span>${metricValueHelp('pace', row.pace === null ? '—' : `${row.pace.toFixed(1)}%`, 'Pace')}<small>Pace</small></span><span>${metricValueHelp('performance', row.performance.toFixed(1), 'Performance')}<small>Performance</small></span><span>${metricValueHelp('consistency', row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`, 'Consistency')}<small>Consistency</small></span></div>
-    <details open><summary>Published overall results (${finals.length})</summary><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Overall</th><th>Qualifying</th><th>Final</th></tr></thead><tbody>${finalRows || '<tr><td colspan="6">No published finals match these filters.</td></tr>'}</tbody></table></div></details>
+    <details open><summary>Published overall results (${finals.length})</summary><div class="table-wrap compact"><table class="leaderboard-event-results"><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Class</th><th>Overall</th><th>Qualifying</th><th>Final</th></tr></thead><tbody>${finalRows || '<tr><td colspan="7">No published finals match these filters.</td></tr>'}</tbody></table></div></details>
     <details><summary>Individual LiveRC runs (${runs.length})</summary><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Behind</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Source</th></tr></thead><tbody>${runRows || '<tr><td colspan="13">No individual runs match these filters.</td></tr>'}</tbody></table></div></details>
   </div>`;
 }
@@ -2262,6 +2272,8 @@ async function init() {
       if (profileButton) { driverProfile(profileButton.dataset.profileKey); return; }
       const nameButton = event.target.closest('.driver-name[data-driver-key]');
       if (nameButton) { driverProfile(nameButton.dataset.driverKey); return; }
+      const sourcePanel = event.target.closest('.leaderboard-source-panel');
+      if (sourcePanel) { handleProfileDrilldownClick(sourcePanel, event); return; }
       if (event.target.closest('a,button,.metric-help,details,summary')) return;
       const driverRow = event.target.closest('[data-driver-row]');
       if (!driverRow) return;
@@ -2278,6 +2290,13 @@ async function init() {
       driverRow.setAttribute('aria-label', `${row.hidden ? 'Show' : 'Hide'} source results for ${driverRow.querySelector('.driver-name')?.textContent || 'driver'}`);
     });
     $('leaderboardBody').addEventListener('keydown', event => {
+      const sourcePanel = event.target.closest('.leaderboard-source-panel');
+      const sourceRow = event.target.closest('.driver-run-row,.profile-evidence-event-row');
+      if (sourcePanel && sourceRow && event.target === sourceRow && ['Enter', ' '].includes(event.key)) {
+        event.preventDefault();
+        sourceRow.click();
+        return;
+      }
       const row = event.target.closest('[data-driver-row]');
       if (!row || event.target !== row || !['Enter', ' '].includes(event.key)) return;
       event.preventDefault();

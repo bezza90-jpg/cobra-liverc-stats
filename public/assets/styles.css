@@ -687,6 +687,9 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 /* Driver result drill-down: hover previews on desktop, tap/click pins on touch. */
 .driver-run-row{cursor:pointer;transition:background-color .16s ease,box-shadow .16s ease}
 .driver-run-row:hover,.driver-run-row:focus-visible,.driver-run-row[aria-expanded="true"]{background:#eef8f0;box-shadow:inset 4px 0 #08a31a}
+.profile-event-row[aria-expanded="true"]>td,.profile-evidence-event-row[aria-expanded="true"]>td,.driver-run-row[aria-expanded="true"]>td{background:#dff3e3!important;border-bottom-color:#84c58f;font-weight:750}
+.profile-event-row[aria-expanded="true"]>td:first-child,.profile-evidence-event-row[aria-expanded="true"]>td:first-child,.driver-run-row[aria-expanded="true"]>td:first-child{box-shadow:inset 5px 0 #078719}
+.driver-races-toggle[aria-expanded="true"]::after{content:' ↓ shown below';font-size:.58rem;white-space:nowrap}
 .driver-run-detail-row>td{padding:0!important;background:#f7faf8}
 .driver-run-detail{padding:16px 18px 20px;border-left:4px solid #08a31a}
 .driver-run-retry{margin-top:8px;padding:9px 15px;border:0;border-radius:999px;background:#087f18;color:#fff;font:inherit;font-weight:850;cursor:pointer}
