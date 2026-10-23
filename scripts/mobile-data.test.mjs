@@ -19,3 +19,15 @@ test('Wix routing updates plain links while preserving event and driver filters'
  const eventLink={href:'https://cobracardiff.liverc.com/results/?p=view_event&id=518554',target:'_top',hasAttribute:name=>name==='data-open-new-tab'};route(eventLink);assert.equal(eventLink.target,'_blank');assert.equal(eventLink.rel,'noopener');
  const share={href:'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fexample.com',target:'_blank',hasAttribute:()=>false,classList:{contains:c=>c==='lap-chart-open'}};route(share);assert.equal(share.target,'_blank');
 });
+test('statistics drill-down tables use the phone card layout',async()=>{
+ const [html,app,css]=await Promise.all([
+  readFile(new URL('../public/index.html',import.meta.url),'utf8'),
+  readFile(new URL('../public/assets/app.js',import.meta.url),'utf8'),
+  readFile(new URL('../public/assets/statistics-mobile.css',import.meta.url),'utf8')
+ ]);
+ for(const className of ['profile-events-table','race-results-table']) assert.match(html,new RegExp(`class="[^"]*${className}`));
+ for(const className of ['profile-runs-table','run-laps-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.match(app,new RegExp(`class="${className}"`));
+ for(const className of ['profile-events-table','profile-runs-table','metric-rating-table','metric-events-table','metric-runs-table','race-results-table']) assert.ok(css.includes(`.${className}`),`${className} has a mobile layout`);
+ assert.match(css,/driver-races-detail-row[^}]*\[hidden\][^{]*\{display:none!important\}/);
+ assert.match(css,/run-lap-list \.table-wrap\{max-height:360px;overflow-x:hidden/);
+});

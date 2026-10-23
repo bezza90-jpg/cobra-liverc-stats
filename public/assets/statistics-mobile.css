@@ -22,4 +22,82 @@
   .statistics-page .filter-grid>.statistics-driver-search{order:0;grid-column:1/-1}
   .statistics-page #driverSearch{scroll-margin-top:20px;min-height:48px;font-size:16px}
   .statistics-page #driverSearch:target{outline:3px solid #08a31a;outline-offset:3px}
+
+  /* Race results and profile drill-downs become readable cards on phones. */
+  .statistics-page .driver-dialog,
+  .statistics-page .dialog-shell,
+  .statistics-page .profile-metric-evidence{max-width:100%;overflow-x:hidden}
+  .statistics-page .profile-history,
+  .statistics-page .driver-races-table,
+  .statistics-page .profile-metric-evidence>.table-wrap,
+  .statistics-page .race-results-wrap{max-height:none;overflow:visible;border:0;background:transparent}
+  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table,.race-results-table){display:block;width:100%;min-width:0!important;table-layout:auto}
+  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table,.race-results-table)>thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table,.race-results-table)>tbody{display:grid;gap:10px;width:100%}
+  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table,.race-results-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;width:100%;padding:12px;border:1px solid #c9d8cd;border-top:3px solid #08a31a;border-radius:10px;background:#fff;box-shadow:0 5px 15px rgba(2,40,11,.07)}
+  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table,.race-results-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row)>td{display:flex;min-width:0;min-height:34px;padding:0;border:0;align-items:flex-start;justify-content:space-between;gap:8px;text-align:right;white-space:normal;overflow-wrap:anywhere}
+  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table,.race-results-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row)>td::before{content:var(--cell-label);flex:0 0 auto;color:#66736b;font-size:.62rem;font-weight:900;letter-spacing:.04em;text-align:left;text-transform:uppercase}
+  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table,.race-results-table)>tbody>tr>td:nth-child(1){--cell-label:'Date'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(2),
+  .statistics-page .metric-rating-table>tbody>tr>td:nth-child(2),
+  .statistics-page .metric-events-table>tbody>tr>td:nth-child(2){--cell-label:'Event'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(3),
+  .statistics-page .metric-events-table>tbody>tr>td:nth-child(3){--cell-label:'Races'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(4),
+  .statistics-page .metric-events-table>tbody>tr>td:nth-child(4){--cell-label:'Class'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(5),
+  .statistics-page .metric-events-table>tbody>tr>td:nth-child(5){--cell-label:'Overall'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(6){--cell-label:'Final'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(7),
+  .statistics-page .metric-events-table>tbody>tr>td:nth-child(6){--cell-label:'Qual'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(8){--cell-label:'Result'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(9){--cell-label:'Best lap'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(10){--cell-label:'Consistency'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(11){--cell-label:'Pace'}
+  .statistics-page .profile-events-table>tbody>tr>td:nth-child(12){--cell-label:'cRating'}
+  .statistics-page .metric-events-table>tbody>tr>td:nth-child(7){--cell-label:'Final'}
+  .statistics-page .metric-rating-table>tbody>tr>td:nth-child(3){--cell-label:'Rated sessions'}
+  .statistics-page .metric-rating-table>tbody>tr>td:nth-child(4){--cell-label:'Start'}
+  .statistics-page .metric-rating-table>tbody>tr>td:nth-child(5){--cell-label:'Change'}
+  .statistics-page .metric-rating-table>tbody>tr>td:nth-child(6){--cell-label:'End'}
+  .statistics-page .profile-runs-table>tbody>tr>td:nth-child(1){--cell-label:'Round'}
+  .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr>td:nth-child(2){--cell-label:'Race'}
+  .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr>td:nth-child(3){--cell-label:'Position'}
+  .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr>td:nth-child(4){--cell-label:'Laps / time'}
+  .statistics-page .profile-runs-table>tbody>tr>td:nth-child(5){--cell-label:'Fastest'}
+  .statistics-page .metric-runs-table>tbody>tr>td:nth-child(5){--cell-label:'Best'}
+  .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr>td:nth-child(6){--cell-label:'Average'}
+  .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr>td:nth-child(7){--cell-label:'Consistency'}
+  .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr>td:nth-child(8){--cell-label:'Pace'}
+  .statistics-page .profile-runs-table>tbody>tr>td:nth-child(9){--cell-label:'Video'}
+  .statistics-page .metric-runs-table>tbody>tr>td:nth-child(9){--cell-label:'Gain'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(1){--cell-label:'Position'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(2){--cell-label:'Driver'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(3){--cell-label:'Avatar'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(4){--cell-label:'Qualifying'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(5){--cell-label:'Laps / time'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(6){--cell-label:'Behind'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(7){--cell-label:'Fastest lap'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(8){--cell-label:'Average lap'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(9){--cell-label:'Consistency'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(10){--cell-label:'Pace'}
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(11){--cell-label:'Potential run'}
+  .statistics-page :is(.profile-events-table,.metric-events-table)>tbody>tr:not(.driver-races-detail-row)>td:nth-child(2),
+  .statistics-page :is(.profile-events-table,.metric-events-table)>tbody>tr:not(.driver-races-detail-row)>td:nth-child(3),
+  .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr:not(.driver-run-detail-row)>td:nth-child(2),
+  .statistics-page .race-results-table>tbody>tr>td:nth-child(2){grid-column:1/-1}
+  .statistics-page .driver-races-toggle{min-width:96px;min-height:44px}
+  .statistics-page :is(.driver-races-detail-row,.driver-run-detail-row){display:block;width:100%;padding:0;background:transparent}
+  .statistics-page :is(.driver-races-detail-row,.driver-run-detail-row)[hidden]{display:none!important}
+  .statistics-page :is(.driver-races-detail-row,.driver-run-detail-row)>td{display:block!important;width:100%;padding:0!important;border:0!important;background:transparent!important}
+  .statistics-page :is(.driver-races-detail-row,.driver-run-detail-row)>td::before{content:none!important}
+  .statistics-page .driver-run-detail{margin:0;padding:10px 0 4px}
+  .statistics-page .run-detail-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .statistics-page .run-detail-columns{grid-template-columns:1fr}
+  .statistics-page .run-lap-list .table-wrap{max-height:360px;overflow-x:hidden;overflow-y:auto}
+  .statistics-page .run-laps-table{width:100%;min-width:0;table-layout:fixed}
+  .statistics-page .run-laps-table th,.statistics-page .run-laps-table td{padding:9px 5px;white-space:normal}
+  .statistics-page .run-detail-chart{position:relative;top:auto;min-width:0}
+  .statistics-page .run-lap-chart-scroll{overflow:hidden}
+  .statistics-page .run-lap-chart-scroll svg{width:100%;min-width:0;height:auto}
 }
