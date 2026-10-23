@@ -26,10 +26,13 @@ const preview = element('div', 'car-avatar-preview');
 preview.hidden = true;
 preview.setAttribute('role', 'tooltip');
 preview.id = 'carAvatarPreview';
+const previewClose = element('button', 'car-avatar-preview-close', 'Close');
+previewClose.type = 'button';
+previewClose.setAttribute('aria-label', 'Close enlarged car image');
 const previewImage = element('img');
 previewImage.addEventListener('load', () => fitDisplayedCar(previewImage));
 const previewCaption = element('p');
-preview.append(previewImage, previewCaption);
+preview.append(previewClose, previewImage, previewCaption);
 document.body.append(preview);
 let previewOwner = null;
 function hidePreview() {
@@ -56,8 +59,14 @@ function showPreview(button, image) {
 }
 document.addEventListener('keydown', event => { if (event.key === 'Escape') hidePreview(); });
 document.addEventListener('pointerdown', event => { if (previewOwner && !previewOwner.contains(event.target)) hidePreview(); });
-window.addEventListener('scroll', hidePreview, true);
+previewClose.addEventListener('click', hidePreview);
+// Embedded mobile pages can scroll an ancestor rather than the window itself.
+// Capture every scroll/touch gesture so an old preview cannot remain over later rows.
+document.addEventListener('scroll', hidePreview, {capture:true, passive:true});
+document.addEventListener('touchmove', hidePreview, {passive:true});
+window.addEventListener('scroll', hidePreview, {capture:true, passive:true});
 window.addEventListener('resize', hidePreview);
+window.addEventListener('pagehide', hidePreview);
 async function initialise() {
   const status = document.getElementById('galleryStatus');
   try {
