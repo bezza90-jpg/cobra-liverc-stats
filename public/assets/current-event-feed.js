@@ -1,5 +1,5 @@
 import { nextMeeting } from './event-calendar.js?v=20260926-midnight';
-import { facebookShareLink, lapLineColour } from './lap-charts.js?v=20261023-line-gradient';
+import { facebookShareLink, lapLineColour } from './lap-charts.js?v=20261023-lap-readout';
 
 const REFRESH_MS = 60_000;
 const raceCache = new Map();
@@ -75,7 +75,7 @@ function lapChart(laps, best, targetPrefix) {
   const points = laps.map(lap => {
     const timingClass = lapPerformanceClass(lap.seconds, best);
     const target = `${targetPrefix}-${lap.lap}`;
-    return `<g role="button" tabindex="0" data-event-lap-target="${escapeHtml(target)}" aria-label="Outline lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></g>`;
+    return `<g role="button" tabindex="0" data-event-lap-target="${escapeHtml(target)}" data-lap-number="${lap.lap}" data-lap-time="${Number(lap.seconds).toFixed(3)}" aria-label="Outline lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></g>`;
   }).join('');
   const gradientPrefix=('event-'+targetPrefix).replace(/[^a-z0-9_-]/gi,'-'),gradientParts=[],lineParts=[];
   laps.slice(1).forEach((lap,index)=>{const previous=laps[index],id=gradientPrefix+'-'+index;gradientParts.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}"><stop offset="0" stop-color="${lapLineColour(previous.seconds,best)}"/><stop offset="1" stop-color="${lapLineColour(lap.seconds,best)}"/></linearGradient>`);lineParts.push(`<line class="run-lap-chart-line" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}" style="stroke:url(#${id})"/>`);});
@@ -102,7 +102,7 @@ function driverDetail(race, driver) {
     const timingClass = Number(lap.lap) === 1 || best === null ? '' : lapPerformanceClass(lap.seconds, best);
     return `<tr id="${prefix}-${lap.lap}" class="${timingClass}"><td>${lap.position ? `P${lap.position}` : '—'}</td><td>${lap.lap}</td><td>${Number(lap.seconds).toFixed(3)}s</td></tr>`;
   }).join('');
-  return `<div class="driver-run-detail current-event-driver-detail"><div class="run-detail-summary">${averages}<span><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small>Fastest lap</small></span><span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span><span><strong>${timedLaps.length}</strong><small>Timed laps</small></span></div><div class="run-detail-columns"><div class="run-lap-list"><h4>${escapeHtml(driver.name)} lap times</h4><div class="table-wrap"><table><thead><tr><th>Position</th><th>Lap</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div></div><aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p>${lapChart(timedLaps, best, prefix)}<div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="../lap-charts/?race=${encodeURIComponent(race.id)}&driver=${encodeURIComponent(driver.key || driver.name)}">Open full COBRA lap chart</a>${facebookShareLink(race.id,driver.key||driver.id||driver.name)}<a href="../virtual-race-replay/?race=${encodeURIComponent(race.id)}">Watch 2D replay</a></div></aside></div></div>`;
+  return `<div class="driver-run-detail current-event-driver-detail"><div class="run-detail-summary">${averages}<span><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small>Fastest lap</small></span><span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span><span><strong>${timedLaps.length}</strong><small>Timed laps</small></span></div><div class="run-detail-columns"><div class="run-lap-list"><h4>${escapeHtml(driver.name)} lap times</h4><div class="table-wrap"><table><thead><tr><th>Position</th><th>Lap</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div></div><aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p><p class="lap-point-readout" aria-live="polite">Select a point to see its lap time.</p>${lapChart(timedLaps, best, prefix)}<div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="../lap-charts/?race=${encodeURIComponent(race.id)}&driver=${encodeURIComponent(driver.key || driver.name)}">Open full COBRA lap chart</a>${facebookShareLink(race.id,driver.key||driver.id||driver.name)}<a href="../virtual-race-replay/?race=${encodeURIComponent(race.id)}">Watch 2D replay</a></div></aside></div></div>`;
 }
 
 function standingsMarkup(race) {
@@ -178,6 +178,10 @@ function handleFeedInteraction(event) {
     const detail = lapPoint.closest('.current-event-driver-detail');
     detail?.querySelectorAll('.run-lap-selected').forEach(row => row.classList.remove('run-lap-selected'));
     document.getElementById(lapPoint.dataset.eventLapTarget)?.classList.add('run-lap-selected');
+    detail?.querySelectorAll('[data-event-lap-target].lap-chart-selected').forEach(point => point.classList.remove('lap-chart-selected'));
+    lapPoint.classList.add('lap-chart-selected');
+    const readout = detail?.querySelector('.lap-point-readout');
+    if (readout) readout.textContent = `Lap ${lapPoint.dataset.lapNumber} · ${lapPoint.dataset.lapTime}s`;
     return;
   }
   const button = event.target.closest('.current-event-driver');

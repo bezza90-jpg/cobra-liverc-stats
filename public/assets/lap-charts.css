@@ -4,3 +4,7 @@
 .lap-chart-choices{border:1px solid #304638;padding:18px;margin-bottom:24px}.lap-chart-choices legend{font-weight:bold;color:#a3f329}.lap-chart-choices label{display:inline-flex;align-items:center;gap:6px;margin:5px 20px 5px 0;min-height:32px;font-size:13px}.lap-chart-choices input{accent-color:#08a31a;width:18px;height:18px}.lap-chart-choices p{color:#bdcec2;font-size:14px}
 
 .facebook-share{display:inline-grid;place-items:center;width:32px;height:32px;padding:0;border:1px solid #0866ff;border-radius:50%;background:#0866ff;color:#fff;text-decoration:none;vertical-align:middle}.facebook-share svg{width:24px;height:24px;fill:currentColor}.facebook-share:hover,.facebook-share:focus-visible{outline:3px solid #9bc2ff;outline-offset:2px}.current-event-result-actions{display:flex;justify-content:flex-end;margin:0 0 10px}
+
+.lap-chart-points circle.lap-chart-selected{stroke:#fff;stroke-width:4;outline:none}
+.lap-point-readout{display:inline-block;min-width:190px;margin:0 0 8px;padding:6px 10px;border:1px solid #4d735b;border-radius:999px;background:#102319;color:#fff;font-size:13px;font-weight:800}
+@media(max-width:640px){.lap-chart-row,.single-driver .lap-chart-row{grid-template-columns:1fr;gap:8px}.lap-chart-driver{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}.lap-chart-driver h3,.lap-chart-driver p{margin:0}.lap-chart-content{width:100%}.lap-point-readout{display:block;box-sizing:border-box;width:100%;min-width:0;text-align:center}}

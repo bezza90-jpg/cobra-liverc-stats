@@ -30,12 +30,12 @@
   .statistics-page .profile-history,
   .statistics-page .driver-races-table,
   .statistics-page .profile-metric-evidence>.table-wrap{max-height:none;overflow:visible;border:0;background:transparent}
-  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table){display:block;width:100%;min-width:0!important;table-layout:auto}
-  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
-  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody{display:grid;gap:10px;width:100%}
-  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;width:100%;padding:12px;border:1px solid #c9d8cd;border-top:3px solid #08a31a;border-radius:10px;background:#fff;box-shadow:0 5px 15px rgba(2,40,11,.07)}
-  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row)>td{display:flex;min-width:0;min-height:34px;padding:0;border:0;align-items:flex-start;justify-content:space-between;gap:8px;text-align:right;white-space:normal;overflow-wrap:anywhere}
-  .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row)>td::before{content:var(--cell-label);flex:0 0 auto;color:#66736b;font-size:.62rem;font-weight:900;letter-spacing:.04em;text-align:left;text-transform:uppercase}
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table){display:block;width:100%;min-width:0!important;table-layout:auto}
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody{display:grid;gap:10px;width:100%}
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px;width:100%;padding:12px;border:1px solid #c9d8cd;border-top:3px solid #08a31a;border-radius:10px;background:#fff;box-shadow:0 5px 15px rgba(2,40,11,.07)}
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row)>td{display:flex;min-width:0;min-height:34px;padding:0;border:0;align-items:flex-start;justify-content:space-between;gap:8px;text-align:right;white-space:normal;overflow-wrap:anywhere}
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row)>td::before{content:var(--cell-label);flex:0 0 auto;color:#66736b;font-size:.62rem;font-weight:900;letter-spacing:.04em;text-align:left;text-transform:uppercase}
   .statistics-page :is(.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr>td:nth-child(1){--cell-label:'Date'}
   .statistics-page .profile-events-table>tbody>tr>td:nth-child(2),
   .statistics-page .metric-rating-table>tbody>tr>td:nth-child(2),
@@ -70,7 +70,13 @@
   .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr>td:nth-child(8){--cell-label:'Pace'}
   .statistics-page .profile-runs-table>tbody>tr>td:nth-child(9){--cell-label:'Video'}
   .statistics-page .metric-runs-table>tbody>tr>td:nth-child(9){--cell-label:'Gain'}
-  .statistics-page :is(.profile-events-table,.metric-events-table)>tbody>tr:not(.driver-races-detail-row)>td:nth-child(2),
+  .statistics-page .leaderboard-event-results>tbody>tr>td:nth-child(2){--cell-label:'Event'}
+  .statistics-page .leaderboard-event-results>tbody>tr>td:nth-child(3){--cell-label:'Races'}
+  .statistics-page .leaderboard-event-results>tbody>tr>td:nth-child(4){--cell-label:'Class'}
+  .statistics-page .leaderboard-event-results>tbody>tr>td:nth-child(5){--cell-label:'Overall'}
+  .statistics-page .leaderboard-event-results>tbody>tr>td:nth-child(6){--cell-label:'Qualifying'}
+  .statistics-page .leaderboard-event-results>tbody>tr>td:nth-child(7){--cell-label:'Final'}
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.metric-events-table)>tbody>tr:not(.driver-races-detail-row)>td:nth-child(2),
   .statistics-page :is(.profile-events-table,.metric-events-table)>tbody>tr:not(.driver-races-detail-row)>td:nth-child(3),
   .statistics-page :is(.profile-runs-table,.metric-runs-table)>tbody>tr:not(.driver-run-detail-row)>td:nth-child(2){grid-column:1/-1}
   .statistics-page .driver-races-toggle{min-width:96px;min-height:44px}

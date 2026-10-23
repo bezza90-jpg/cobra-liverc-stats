@@ -28,7 +28,7 @@ test('statistics drill-down tables use the phone card layout',async()=>{
  ]);
  assert.match(html,/class="[^"]*profile-events-table/);
  for(const className of ['profile-runs-table','run-laps-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.match(app,new RegExp(`class="${className}"`));
- for(const className of ['profile-events-table','profile-runs-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.ok(css.includes(`.${className}`),`${className} has a mobile layout`);
+ for(const className of ['leaderboard-event-results','profile-events-table','profile-runs-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.ok(css.includes(`.${className}`),`${className} has a mobile layout`);
  assert.ok(!css.includes('.race-results-table'),'the main race results keep their compact table layout');
   assert.match(css,/#raceLapCharts \.lap-chart-scroll svg\{width:100%;min-width:0;height:auto\}/);
   assert.match(css,/#raceLapCharts \.lap-chart-row\{grid-template-columns:1fr/);
@@ -44,6 +44,9 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(styles,/\.race-results-table\{min-width:0;table-layout:auto;font-size:\.72rem\}/);
   assert.match(styles,/\.fastest-lap\{background:transparent!important;color:#7b2fa3!important;font-weight:900\}/);
   assert.match(styles,/\.driver-races-toggle\[aria-expanded="true"\]::after\{content:' ↓ shown below'/);
+  assert.match(styles,/\.table-wrap\.drilldown-expanded \{ max-height:none !important; overflow-y:visible; \}/);
+  assert.match(app,/syncDrilldownHeight\(container\)/);
+  assert.match(app,/lapPoint\.dataset\.lapTime/);
   assert.match(html,/id="raceFacebookShare"/);
   assert.match(app,/facebookShareLink\(raceId, driverKey\)/);
   assert.match(styles,/\.facebook-share\{/);

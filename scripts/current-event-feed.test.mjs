@@ -6,6 +6,7 @@ import {
   orderedPublishedRaces,
   timedLapsFor
 } from '../public/assets/current-event-feed.js';
+import { readFile } from 'node:fs/promises';
 
 test('current event races are shown newest first', () => {
   const races = orderedPublishedRaces({ races: [{ id: '1' }, { id: '2' }, { id: '3' }] });
@@ -32,4 +33,12 @@ test('lap thresholds match the published legend', () => {
   assert.equal(lapPerformanceClass(16.99, 16.7), 'lap-near-fastest');
   assert.equal(lapPerformanceClass(18.2, 16.7), 'lap-slow');
   assert.equal(lapPerformanceClass(17.4, 16.7), '');
+});
+
+test('current event lap points publish an exact selected-lap readout', async () => {
+  const source = await readFile(new URL('../public/assets/current-event-feed.js', import.meta.url), 'utf8');
+  assert.match(source, /data-lap-number=/);
+  assert.match(source, /data-lap-time=/);
+  assert.match(source, /lap-point-readout/);
+  assert.match(source, /lapPoint\.dataset\.lapTime/);
 });
