@@ -50,6 +50,9 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(styles,/\.driver-races-toggle\[aria-expanded="true"\]::after\{content:' ↓ shown below'/);
   assert.match(styles,/\.table-wrap\.drilldown-expanded \{ max-height:none !important; overflow-y:visible; \}/);
   assert.match(styles,/\.run-lap-chart-scroll svg\{display:block;width:100%;min-width:0;max-width:100%/);
+  assert.match(styles,/\.run-lap-list\{min-width:0\}/);
+  assert.match(styles,/\.run-laps-table\{width:100%;min-width:0!important;table-layout:fixed\}/);
+  assert.match(styles,/\.run-laps-table th:nth-child\(3\).*\{width:60%;text-align:right\}/);
   assert.match(styles,/\.statistics-page \.table-wrap:has\(\[aria-expanded="true"\]\) \{ max-height:none !important; overflow-y:visible; \}/);
   assert.match(app,/syncDrilldownHeight\(container\)/);
   assert.match(app,/container\.closest\('\.table-wrap'\)/);
