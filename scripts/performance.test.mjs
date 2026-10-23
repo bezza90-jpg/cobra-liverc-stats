@@ -77,6 +77,17 @@ test('failed map request can be retried', async () => {
   await retry;
 });
 
+test('ordinary statistics visits leave journey and map code on demand', async () => {
+  const app = await read('public/assets/app.js');
+  const html = await read('public/index.html');
+  assert.doesNotMatch(app, /^import .*journey-route/m);
+  assert.doesNotMatch(app, /^import .*load-map/m);
+  assert.match(app, /import\('\.\/journey-route\.js/);
+  assert.match(app, /import\('\.\/load-map\.js/);
+  assert.doesNotMatch(html, /rel="modulepreload" href="assets\/journey-route\.js/);
+  assert.doesNotMatch(html, /rel="modulepreload" href="assets\/load-map\.js/);
+});
+
 
 test('setup context preserves final podium links for every event and driver', async () => {
   const fullText = await read('public/data/dashboard.json');

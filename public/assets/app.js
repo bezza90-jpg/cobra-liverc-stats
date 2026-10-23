@@ -5,9 +5,6 @@ import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
 import {lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261023-lap-colours';
-import { loadMap } from './load-map.js?v=20260928-local';
-import { journeyRoadDistanceKm, journeyRoadRoute, journeyRoadMilestones } from './journey-route.js?v=20261005-roads';
-import {createDistanceRoute} from './journey-route-geometry.js?v=20261005-roads';
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
 import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261004-display';
 
@@ -26,6 +23,32 @@ let journeyMotionCache = null;
 let journeyTravelledLine = null;
 let journeyLastMotionKm = new Map();
 let journeyPlaybackHasStarted = false;
+let loadMap = null;
+let journeyRoadDistanceKm = 0;
+let journeyRoadRoute = [];
+let journeyRouteAt = null;
+let journeyMilestoneData = [];
+let journeyToolsPromise = null;
+
+function loadJourneyTools() {
+  if (!journeyToolsPromise) {
+    journeyToolsPromise = Promise.all([
+      import('./load-map.js?v=20260928-local'),
+      import('./journey-route.js?v=20261005-roads'),
+      import('./journey-route-geometry.js?v=20261005-roads')
+    ]).then(([mapModule, routeModule, geometryModule]) => {
+      loadMap = mapModule.loadMap;
+      journeyRoadDistanceKm = routeModule.journeyRoadDistanceKm;
+      journeyRoadRoute = routeModule.journeyRoadRoute;
+      journeyRouteAt = geometryModule.createDistanceRoute(journeyRoadRoute, journeyRoadDistanceKm);
+      journeyMilestoneData = routeModule.journeyRoadMilestones;
+    }).catch(error => {
+      journeyToolsPromise = null;
+      throw error;
+    });
+  }
+  return journeyToolsPromise;
+}
 let journeyFollowSelected = true;
 let journeySelectedKeys = new Set();
 let journeyRecentKeys = null;
@@ -1101,8 +1124,6 @@ function geoKm(a, b) {
   return 6371 * 2 * Math.atan2(Math.sqrt(value), Math.sqrt(1 - value));
 }
 
-const journeyRouteAt=createDistanceRoute(journeyRoadRoute,journeyRoadDistanceKm);
-
 function journeyRoundOrder(round) {
   const text = String(round || '');
   const number = Number(text.match(/\d+/)?.[0]) || 0;
@@ -1139,8 +1160,6 @@ function buildJourneyRoundSlots() {
   }
   return slots;
 }
-
-const journeyMilestoneData = journeyRoadMilestones;
 
 function journeyDriverDistances(cutoffTime = Infinity, raceStarts = null, elapsedDays = 0) {
   const stats = new Map();
@@ -1621,6 +1640,7 @@ async function openJourneyMap(driverKey) {
   stopJourneyPlayback();
   try {
     if (!journeyMap) $('journeyMap').textContent = 'Loading road map…';
+    await loadJourneyTools();
     await loadMap();
   } catch (error) {
     $('journeyMap').textContent = error.message;
@@ -2130,7 +2150,7 @@ async function init() {
   // On the dedicated tracker, start the map library alongside the race data.
   // Ordinary statistics visits keep the map download on demand.
   const startupParams = new URLSearchParams(window.location.search);
-  if (startupParams.get('tracker') === '1' || startupParams.has('map')) loadMap().catch(() => {});
+  if (startupParams.get('tracker') === '1' || startupParams.has('map')) loadJourneyTools().catch(() => {});
   try {
     const { data, videosReady } = await loadStatisticsData();
     loadingControls.forEach((control,index)=>control.disabled=priorDisabled[index]);

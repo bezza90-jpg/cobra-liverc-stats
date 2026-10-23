@@ -42,6 +42,43 @@ export function initBackToTop() {
   update();
 }
 
+export function initNavigationPrefetch(root = document) {
+  if (root.documentElement?.dataset.cobraPrefetchReady) return;
+  if (root.documentElement) root.documentElement.dataset.cobraPrefetchReady = 'true';
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return;
+  const queued = new Set();
+  let hoverTimer = 0;
+  const candidate = target => {
+    const anchor = target?.closest?.('a[href]');
+    if (!anchor || anchor.hasAttribute('download') || anchor.target === '_blank') return null;
+    const url = new URL(anchor.href, location.href);
+    if (url.origin !== location.origin || !/^https?:$/.test(url.protocol)) return null;
+    url.hash = '';
+    const current = new URL(location.href); current.hash = '';
+    if (url.href === current.href || queued.has(url.href) || queued.size >= 6) return null;
+    return url;
+  };
+  const prefetch = target => {
+    const url = candidate(target);
+    if (!url) return;
+    queued.add(url.href);
+    const hint = root.createElement('link');
+    hint.rel = 'prefetch';
+    hint.as = 'document';
+    hint.href = url.href;
+    root.head.append(hint);
+  };
+  root.addEventListener('pointerover', event => {
+    if (event.pointerType && event.pointerType !== 'mouse') return;
+    clearTimeout(hoverTimer);
+    hoverTimer = setTimeout(() => prefetch(event.target), 80);
+  }, {passive: true});
+  root.addEventListener('pointerout', () => clearTimeout(hoverTimer), {passive: true});
+  root.addEventListener('focusin', event => prefetch(event.target), {passive: true});
+  root.addEventListener('pointerdown', event => prefetch(event.target), {passive: true});
+}
+
 const SEARCH_PAGES = [
   ['Home','COBRA indoor RC racing in Cardiff, club information and the latest highlights.','', 'club racing cardiff home'],
   ['Events and booking','See future COBRA meetings and book your place.','https://www.cobracardiff.co.uk/event-list','events entries guests booking book in'],
@@ -104,3 +141,4 @@ function initSiteSearch(shell) {
 
 initSiteHeader();
 initBackToTop();
+initNavigationPrefetch();
