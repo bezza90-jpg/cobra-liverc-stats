@@ -37,7 +37,7 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(css,/\.driver-run-detail \.run-detail-summary\{grid-template-columns:repeat\(5,minmax\(0,1fr\)\)/);
   assert.match(css,/small\[data-mobile-label\]::after\{content:attr\(data-mobile-label\)/);
   assert.match(css,/\.run-laps-table\{font-size:\.72rem\}/);
-  assert.match(css,/\.run-laps-table th:nth-child\(3\).*\{width:60%;text-align:right\}/);
+  assert.match(css,/\.run-laps-table th:nth-child\(2\).*\{width:46%;text-align:center\}/);
   assert.match(css,/\.race-result-driver-detail \.run-detail-summary>span\{min-height:38px;padding:4px 2px/);
   assert.match(css,/:is\(\.run-summary-average-10,\.run-summary-average-15\)\{display:none\}/);
   assert.match(app,/race-result-driver-row/);
@@ -52,7 +52,9 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(styles,/\.run-lap-chart-scroll svg\{display:block;width:100%;min-width:0;max-width:100%/);
   assert.match(styles,/\.run-lap-list\{min-width:0\}/);
   assert.match(styles,/\.run-laps-table\{width:100%;min-width:0!important;table-layout:fixed\}/);
-  assert.match(styles,/\.run-laps-table th:nth-child\(3\).*\{width:60%;text-align:right\}/);
+  assert.match(styles,/\.run-laps-table th:nth-child\(2\).*\{width:46%;text-align:center\}/);
+  assert.match(styles,/tr\.lap-fastest>td:nth-child\(2\)/);
+  assert.match(app,/<th>Lap<\/th><th>Lap time<\/th><th>Pos<\/th>/);
   assert.match(styles,/\.statistics-page \.table-wrap:has\(\[aria-expanded="true"\]\) \{ max-height:none !important; overflow-y:visible; \}/);
   assert.match(app,/syncDrilldownHeight\(container\)/);
   assert.match(app,/container\.closest\('\.table-wrap'\)/);

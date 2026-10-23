@@ -692,9 +692,9 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 
 /* Fastest lap timing uses the familiar racing purple/pink. */
 .fastest-lap{background:transparent!important;color:#7b2fa3!important;font-weight:900}
-.driver-run-detail tr.lap-fastest>td:last-child{color:#7b2fa3!important;font-weight:900}
-.driver-run-detail tr.lap-near-fastest>td:last-child{color:#167a35!important;font-weight:850}
-.driver-run-detail tr.lap-slow>td:last-child{color:#c51632!important;font-weight:850}
+.driver-run-detail tr.lap-fastest>td:nth-child(2){color:#7b2fa3!important;font-weight:900}
+.driver-run-detail tr.lap-near-fastest>td:nth-child(2){color:#167a35!important;font-weight:850}
+.driver-run-detail tr.lap-slow>td:nth-child(2){color:#c51632!important;font-weight:850}
 
 /* Driver result drill-down: hover previews on desktop, tap/click pins on touch. */
 .driver-run-row{cursor:pointer;transition:background-color .16s ease,box-shadow .16s ease}
@@ -716,9 +716,9 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .run-lap-list{min-width:0}
 .run-lap-list .table-wrap{max-height:none;overflow-x:hidden;overflow-y:visible;scroll-behavior:smooth}
 .run-laps-table{width:100%;min-width:0!important;table-layout:fixed}
-.run-laps-table th:nth-child(1),.run-laps-table td:nth-child(1){width:18%;text-align:right}
-.run-laps-table th:nth-child(2),.run-laps-table td:nth-child(2){width:22%;text-align:left}
-.run-laps-table th:nth-child(3),.run-laps-table td:nth-child(3){width:60%;text-align:right}
+.run-laps-table th:nth-child(1),.run-laps-table td:nth-child(1){width:24%;text-align:center}
+.run-laps-table th:nth-child(2),.run-laps-table td:nth-child(2){width:46%;text-align:center}
+.run-laps-table th:nth-child(3),.run-laps-table td:nth-child(3){width:30%;text-align:center}
 .run-lap-list tr{scroll-margin-top:36px}
 .run-lap-list tr.run-lap-selected{outline:3px solid #0a8f21;outline-offset:-3px}
 .run-detail-chart{position:sticky;top:12px;align-self:start;min-width:0;padding:14px;background:#07170d;color:#fff;border:1px solid #315340;border-radius:9px}

@@ -96,9 +96,9 @@
   .statistics-page .run-laps-table{width:100%;min-width:0;table-layout:fixed}
   .statistics-page .run-laps-table{font-size:.72rem}
   .statistics-page .run-laps-table th,.statistics-page .run-laps-table td{padding:6px 3px;white-space:nowrap}
-  .statistics-page .run-laps-table th:nth-child(1),.statistics-page .run-laps-table td:nth-child(1){width:18%;text-align:right}
-  .statistics-page .run-laps-table th:nth-child(2),.statistics-page .run-laps-table td:nth-child(2){width:22%;text-align:left}
-  .statistics-page .run-laps-table th:nth-child(3),.statistics-page .run-laps-table td:nth-child(3){width:60%;text-align:right}
+  .statistics-page .run-laps-table th:nth-child(1),.statistics-page .run-laps-table td:nth-child(1){width:24%;text-align:center}
+  .statistics-page .run-laps-table th:nth-child(2),.statistics-page .run-laps-table td:nth-child(2){width:46%;text-align:center}
+  .statistics-page .run-laps-table th:nth-child(3),.statistics-page .run-laps-table td:nth-child(3){width:30%;text-align:center}
   .statistics-page .run-detail-chart{position:relative;top:auto;box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:10px;overflow:hidden}
   .statistics-page .run-detail-chart h4,.statistics-page .run-lap-chart-help,.statistics-page .run-detail-links,.statistics-page .run-detail-links a,.statistics-page .run-detail-links p{max-width:100%;white-space:normal;overflow-wrap:anywhere}
   .statistics-page .run-lap-chart-legend{gap:6px 10px;font-size:.66rem}
