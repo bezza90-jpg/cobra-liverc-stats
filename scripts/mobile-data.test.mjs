@@ -49,6 +49,7 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(styles,/\.fastest-lap\{background:transparent!important;color:#7b2fa3!important;font-weight:900\}/);
   assert.match(styles,/\.driver-races-toggle\[aria-expanded="true"\]::after\{content:' ↓ shown below'/);
   assert.match(styles,/\.table-wrap\.drilldown-expanded \{ max-height:none !important; overflow-y:visible; \}/);
+  assert.match(styles,/\.run-lap-chart-scroll svg\{display:block;width:100%;min-width:0;max-width:100%/);
   assert.match(styles,/\.statistics-page \.table-wrap:has\(\[aria-expanded="true"\]\) \{ max-height:none !important; overflow-y:visible; \}/);
   assert.match(app,/syncDrilldownHeight\(container\)/);
   assert.match(app,/container\.closest\('\.table-wrap'\)/);

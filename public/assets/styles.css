@@ -720,8 +720,8 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .run-detail-chart h4{font-size:1.05rem}
 .run-lap-chart-help{margin:0 0 8px;color:#c8dbcdd9;font-size:.78rem}
 .lap-point-readout{display:inline-block;min-width:190px;margin:0 0 8px;padding:6px 10px;color:#fff;background:#102319;border:1px solid #4d735b;border-radius:999px;font-size:.78rem;font-weight:850}
-.run-lap-chart-scroll{overflow-x:auto}
-.run-lap-chart-scroll svg{display:block;width:100%;min-width:420px;height:auto;background:#0c2113;border-radius:6px}
+.run-lap-chart-scroll{width:100%;min-width:0;overflow:hidden}
+.run-lap-chart-scroll svg{display:block;width:100%;min-width:0;max-width:100%;height:auto;background:#0c2113;border-radius:6px}
 .run-lap-chart-grid line{stroke:#315340;stroke-width:1}.run-lap-chart-grid text{fill:#c8dbcdd9;font-size:11px}
 .run-lap-chart-line{fill:none;stroke:#d8ebdf;stroke-width:2.5;stroke-linejoin:round}
 .run-lap-chart-points circle{fill:#fff;stroke:#a3f329;stroke-width:2;cursor:pointer;transition:r .15s ease,stroke-width .15s ease}
