@@ -808,7 +808,7 @@ function driverRunLapChart(laps, best, raceId) {
   const points = laps.map(lap => {
     const timingClass = Number(lap.lap) === 1 ? '' : lapPerformanceClass(lap.seconds, best);
     const target = `driver-lap-${raceId}-${lap.lap}`;
-    return `<a href="#${target}" aria-label="Show lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></a>`;
+    return `<g role="button" tabindex="0" data-lap-target="${target}" aria-label="Outline lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></g>`;
   }).join('');
   return `<svg viewBox="0 0 630 210" role="img" aria-label="Selectable lap-time chart"><g class="run-lap-chart-grid">${grid}${lapTicks}<text x="48" y="14">Seconds</text><text x="324" y="208" text-anchor="middle">Lap number</text></g><polyline class="run-lap-chart-line" points="${line}"/><g class="run-lap-chart-points">${points}</g></svg>`;
 }
@@ -842,10 +842,13 @@ async function loadDriverRunDetail(row) {
     const averageTimed = timedLaps.length ? average(timedLaps.map(lap => Number(lap.seconds))) : null;
     const source = race.source || state.data.raceById[raceId]?.u;
     const lapRows = allLaps.map(lap => `<tr id="driver-lap-${escapeHtml(raceId)}-${lap.lap}" class="${lap.lap === 1 ? '' : lapPerformanceClass(lap.seconds, best)}"><td>${lap.lap}</td><td>${lap.position ? `P${lap.position}` : '—'}</td><td>${Number(lap.seconds).toFixed(3)}s</td></tr>`).join('');
+    const bestAverageCards = [3, 5, 10, 15].map(count => {
+      const value = lapAverage(timedLaps, count);
+      return value === '—' ? '' : `<span><strong>${value}</strong><small>Top ${count} lap average</small></span>`;
+    }).join('');
     cell.innerHTML = `<div class="driver-run-detail">
       <div class="run-detail-summary">
-        <span><strong>${lapAverage(timedLaps, 3)}</strong><small>Top 3 lap average</small></span>
-        <span><strong>${lapAverage(timedLaps, 5)}</strong><small>Top 5 lap average</small></span>
+        ${bestAverageCards}
         <span><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small>Best timed lap</small></span>
         <span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span>
         <span><strong>${timedLaps.length}</strong><small>Timed laps</small></span>
@@ -2228,6 +2231,13 @@ async function init() {
       row.click();
     });
     const handleProfileDrilldownClick = (container, event) => {
+      const lapPoint = event.target.closest('[data-lap-target]');
+      if (lapPoint) {
+        const detail = lapPoint.closest('.driver-run-detail');
+        detail?.querySelectorAll('.run-lap-selected').forEach(row => row.classList.remove('run-lap-selected'));
+        document.getElementById(lapPoint.dataset.lapTarget)?.classList.add('run-lap-selected');
+        return;
+      }
       const retry = event.target.closest('.driver-run-retry');
       if (retry) {
         const detail = retry.closest('.driver-run-detail-row');
@@ -2275,6 +2285,12 @@ async function init() {
     };
     $('driverEventDetails').addEventListener('click', event => handleProfileDrilldownClick($('driverEventDetails'), event));
     $('driverEventDetails').addEventListener('keydown', event => {
+      const lapPoint = event.target.closest('[data-lap-target]');
+      if (lapPoint && ['Enter', ' '].includes(event.key)) {
+        event.preventDefault();
+        lapPoint.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        return;
+      }
       const row = event.target.closest('.driver-run-row,.profile-event-row');
       if (!row || event.target !== row || !['Enter', ' '].includes(event.key)) return;
       event.preventDefault();
@@ -2308,6 +2324,12 @@ async function init() {
       handleProfileDrilldownClick(panel, event);
     });
     $('driverMetricEvidence').addEventListener('keydown', event => {
+      const lapPoint = event.target.closest('[data-lap-target]');
+      if (lapPoint && ['Enter', ' '].includes(event.key)) {
+        event.preventDefault();
+        lapPoint.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        return;
+      }
       const row = event.target.closest('.driver-run-row,.profile-evidence-event-row');
       if (!row || event.target !== row || !['Enter', ' '].includes(event.key)) return;
       event.preventDefault();
