@@ -983,11 +983,12 @@ function renderProfileMetricEvidence(key, label) {
     rows.sort((a, b) => (data.raceById[b[0]]?.d || '').localeCompare(data.raceById[a[0]]?.d || ''));
     const rowHtml = rows.map(run => {
       const race = data.raceById[run[0]];
-      const raceName = race?.u ? `<a href="${escapeHtml(race.u)}" target="_blank" rel="noopener">${escapeHtml(race.r)} · ${escapeHtml(race.n)}</a>` : escapeHtml(race?.n || run[0]);
+      const raceName = race ? `${escapeHtml(race.r)} · ${escapeHtml(race.n)}` : escapeHtml(run[0]);
       const pace = paceForRun(run, data);
       const consistency = Number.parseFloat(run[7]);
       const change = driverRatingSummary(driverKey, data, filters().className).raceChanges.get(run[0])?.change;
-      return `<tr><td>${race ? dateFmt.format(new Date(`${race.d}T12:00:00Z`)) : '—'}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${Number.isFinite(consistency) && consistency >= 0 && consistency <= 100 ? `${consistency.toFixed(2)}%` : '—'}</td><td>${pace === null ? '—' : `${pace.toFixed(1)}%`}</td><td>${ratingChangeHtml(change)}</td></tr>`;
+      const rowLabel = race ? `${race.r} ${race.n}` : run[0];
+      return `<tr class="driver-run-row" data-race-id="${escapeHtml(run[0])}" data-driver-key="${escapeHtml(driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show complete lap result for ${escapeHtml(rowLabel)}"><td>${race ? dateFmt.format(new Date(`${race.d}T12:00:00Z`)) : '—'}</td><td><strong>${raceName}</strong></td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${Number.isFinite(consistency) && consistency >= 0 && consistency <= 100 ? `${consistency.toFixed(2)}%` : '—'}</td><td>${pace === null ? '—' : `${pace.toFixed(1)}%`}</td><td>${ratingChangeHtml(change)}</td></tr><tr class="driver-run-detail-row" hidden><td colspan="9"></td></tr>`;
     }).join('');
     content = `<div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Best</th><th>Average</th><th>Consistency</th><th>Pace</th><th title="cRating gained from this run">Gain</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="9">No matching race records.</td></tr>'}</tbody></table></div>`;
   }
