@@ -103,6 +103,15 @@ test('lap detail requests survive the occasional ten-second browser stall', asyn
   assert.match(app, /requestDriverRaceDetail\(raceId\)\.catch/);
 });
 
+test('expanded lap details prefetch their exact full chart page', async () => {
+  const app = await read('public/assets/app.js');
+  const html = await read('public/index.html');
+  assert.match(app, /link\.rel = 'prefetch'/);
+  assert.match(app, /link\.as = 'document'/);
+  assert.match(app, /prefetchFullLapChart\(raceId, driverKey\)/);
+  assert.match(html, /lap-charts\.js\?v=20261024-linked-laps/);
+});
+
 
 test('setup context preserves final podium links for every event and driver', async () => {
   const fullText = await read('public/data/dashboard.json');
