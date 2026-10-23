@@ -1,10 +1,24 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
 import {nextMeeting, londonDate} from '../public/assets/event-calendar.js';
 import {calendarMeetings, allFinalsComplete, enrichNextEventEntries, finalLineupUrls, mergeWixEntries} from './update-event-calendar.mjs';
 const now = new Date('2026-10-04T17:00:00Z');
 const current = {date:'2026-10-04', title:'SWORD Round 1', type:'sword'};
 const future = {date:'2026-10-11', title:'Club Day', type:'club'};
+test('current event exposes booking capacity immediately and loads it directly', async () => {
+ const page = await readFile(new URL('../public/event/index.html', import.meta.url), 'utf8');
+ const eventInfo = await readFile(new URL('../public/assets/event-info.js', import.meta.url), 'utf8');
+ const entriesScript = await readFile(new URL('../public/assets/event-entries.js', import.meta.url), 'utf8');
+ const mobileCss = await readFile(new URL('../public/assets/event-entries.css', import.meta.url), 'utf8');
+ assert.match(page, /data-event-entries[^>]*id="eventEntries"/);
+ assert.match(page, /event-entries\.js\?v=20261024-mobile-bookings/);
+ assert.doesNotMatch(eventInfo, /createElement\(['"]script['"]\)|entriesScript/);
+ assert.match(entriesScript, /getElementById\('eventTitle'\)\?\.closest\('\.panel'\)/);
+ assert.doesNotMatch(entriesScript, /querySelector\('main\.info-main > \.panel'\)/);
+ assert.match(mobileCss, /@media\(max-width:620px\)/);
+ assert.match(mobileCss, /\.event-space-cards\{grid-template-columns:minmax\(0,1fr\)\}/);
+});
 test('keep today even when complete and roll over at UK midnight', () => {
  assert.equal(nextMeeting([current,future],'',now),current);
  const complete = {...current,completed:true};
