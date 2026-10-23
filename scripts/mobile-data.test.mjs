@@ -25,9 +25,10 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   readFile(new URL('../public/assets/app.js',import.meta.url),'utf8'),
   readFile(new URL('../public/assets/statistics-mobile.css',import.meta.url),'utf8')
  ]);
- for(const className of ['profile-events-table','race-results-table']) assert.match(html,new RegExp(`class="[^"]*${className}`));
+ assert.match(html,/class="[^"]*profile-events-table/);
  for(const className of ['profile-runs-table','run-laps-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.match(app,new RegExp(`class="${className}"`));
- for(const className of ['profile-events-table','profile-runs-table','metric-rating-table','metric-events-table','metric-runs-table','race-results-table']) assert.ok(css.includes(`.${className}`),`${className} has a mobile layout`);
+ for(const className of ['profile-events-table','profile-runs-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.ok(css.includes(`.${className}`),`${className} has a mobile layout`);
+ assert.ok(!css.includes('.race-results-table'),'the main race results keep their compact table layout');
  assert.match(css,/driver-races-detail-row[^}]*\[hidden\][^{]*\{display:none!important\}/);
  assert.match(css,/run-lap-list \.table-wrap\{max-height:360px;overflow-x:hidden/);
 });
