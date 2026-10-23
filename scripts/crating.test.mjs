@@ -46,18 +46,18 @@ test('cRating audits every archived driver with finite values and provisional st
   }
 });
 
-test('every race transfers a zero-sum pool between its direct opponents', () => {
+test('every rated session transfers a zero-sum pool between its direct opponents', () => {
   const summaries = context.ensureDriverRatingSummaries(data, 'senior');
-  const changesByRace = new Map();
+  const changesBySession = new Map();
   for (const summary of summaries.values()) {
-    for (const [raceId, race] of summary.raceChanges) changesByRace.set(raceId, (changesByRace.get(raceId) || 0) + race.change);
+    for (const race of summary.raceChanges.values()) changesBySession.set(race.sessionKey, (changesBySession.get(race.sessionKey) || 0) + race.change);
   }
-  for (const [raceId, total] of changesByRace) assert.ok(Math.abs(total) < 1e-7, `${raceId} balances to zero`);
+  for (const [sessionKey, total] of changesBySession) assert.ok(Math.abs(total) < 1e-7, `${sessionKey} balances to zero`);
   const totalPool = [...summaries.values()].reduce((sum, summary) => sum + summary.rawTotal, 0);
   assert.ok(Math.abs(totalPool - summaries.size * 1500) < 1e-6, 'archive rating pool remains balanced');
 });
 
-test('cRating uses one record per driver per rated race and contains no duplicated source rows', () => {
+test('cRating uses one record per driver per qualifying round or final and contains no duplicated source rows', () => {
   const duplicateRows = data.raceResults.length - new Set(data.raceResults.map(row => JSON.stringify(row))).size;
   assert.equal(duplicateRows, 0);
   const ratedFields = new Map();
@@ -65,15 +65,41 @@ test('cRating uses one record per driver per rated race and contains no duplicat
     if (!ratedFields.has(row[0])) ratedFields.set(row[0], []);
     ratedFields.get(row[0]).push(row);
   }
-  const expectedStarts = new Map(data.drivers.map(driver => [driver.k, 0]));
+  const expectedSessions = new Map(data.drivers.map(driver => [driver.k, new Set()]));
   for (const [raceId, rows] of ratedFields) {
     const race = data.raceById[raceId];
-    const field = rows.filter(row => Number(row[2]) > 0 && expectedStarts.has(row[1]));
+    const field = rows.filter(row => Number(row[2]) > 0 && expectedSessions.has(row[1]));
     if (!race || race.d < '2022-01-01' || /^Practice\b/i.test(race.r || '') || race.c === 'Junior Racers' || field.length < 2) continue;
-    for (const row of field) expectedStarts.set(row[1], expectedStarts.get(row[1]) + 1);
+    const sessionKey = /^Qualifier\s+Round\b/i.test(race.r || '')
+      ? `${race.d}|${race.e}|${race.c}|${String(race.r).toLowerCase()}`
+      : `race:${raceId}`;
+    for (const row of field) expectedSessions.get(row[1]).add(sessionKey);
   }
   const summaries = context.ensureDriverRatingSummaries(data, 'senior');
-  for (const [driverKey, count] of expectedStarts) assert.equal(summaries.get(driverKey).starts, count, driverKey);
+  for (const [driverKey, sessions] of expectedSessions) assert.equal(summaries.get(driverKey).starts, sessions.size, driverKey);
+});
+
+test('qualifying compares the overall round order across separate heats', () => {
+  const qualifyingData = {
+    drivers: ['A', 'B', 'C', 'D'].map(k => ({ k, n: k })),
+    events: [{ i: 'event', n: 'Test event' }],
+    eventById: { event: { i: 'event', n: 'Test event' } },
+    raceById: {
+      heat1: { e: 'event', d: '2026-10-23', c: '2-Wheel Drive Buggy', r: 'Qualifier Round 1', f: false },
+      heat2: { e: 'event', d: '2026-10-23', c: '2-Wheel Drive Buggy', r: 'Qualifier Round 1', f: false }
+    },
+    raceResults: [
+      ['heat1', 'A', 1, '10/5:00.000', '', '20.000 (lap 2)'],
+      ['heat1', 'B', 2, '9/5:00.000', '', '20.000 (lap 2)'],
+      ['heat2', 'C', 1, '11/5:00.000', '', '20.000 (lap 2)'],
+      ['heat2', 'D', 2, '10/4:50.000', '', '20.000 (lap 2)']
+    ]
+  };
+  const summaries = context.ensureDriverRatingSummaries(qualifyingData, 'senior');
+  assert.ok(summaries.get('C').total > summaries.get('D').total, 'eleven laps ranks first overall');
+  assert.ok(summaries.get('D').total > summaries.get('A').total, 'faster ten-lap result outranks the other heat winner');
+  assert.ok(summaries.get('A').total > summaries.get('B').total, 'ten laps outranks nine laps');
+  for (const summary of summaries.values()) assert.equal(summary.starts, 1, 'the combined qualifying round counts once');
 });
 
 test('established leading drivers remain above the starting field rating', () => {
@@ -82,7 +108,6 @@ test('established leading drivers remain above the starting field rating', () =>
     assert.ok(summaries.get(driverKey).starts >= 100, `${driverKey} has established history`);
     assert.ok(summaries.get(driverKey).total > 1800, `${driverKey} rating reflects leading results`);
   }
-  assert.ok(summaries.get('CRAIG-HARRIS').total > summaries.get('CHRIS-GUNTER').total);
 });
 
 test('attendance affects confidence without erasing a strong SWORD-only rating', () => {

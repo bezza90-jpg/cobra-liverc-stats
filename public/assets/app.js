@@ -100,7 +100,7 @@ const metricDescriptions = {
   performance: 'Peer-relative performance using every valid record in the selected filters. Race-relative pace from usable heats and finals carries 70%; field-normalised published final results carry 30%. When only one type of evidence exists, the available evidence supplies the score.',
   consistency: 'LiveRC run consistency averaged from full-duration runs with at least five laps, after the attendance adjustment.',
   pace: 'Fastest lap as a percentage of the fastest valid lap in the same class at the same meeting, using runs with at least three completed laps. The meeting benchmark is 100%; closer to 100% is faster. This is the main guide for placing drivers into similarly paced heats.',
-  cRating: 'Competitive COBRA skill rating from qualifying heats and finals since January 2022; practice is excluded. Juniors have a separate rating pool from senior classes. Every driver starts at 1,500. Changes compare the result with every direct opponent, using 85% finishing position and 15% race-relative fastest-lap pace from runs of at least three laps. Upsets against highly rated drivers move the score most, finals carry more weight than qualifying, and attendance steadily increases confidence in the displayed rating.',
+  cRating: 'Competitive COBRA skill rating from qualifying rounds and finals since January 2022; practice is excluded. Qualifying uses the overall class position across every heat in that round, while finals use the published finishing order. Juniors have a separate rating pool from senior classes. Every driver starts at 1,500. Changes use 85% result position and 15% race-relative fastest-lap pace from runs of at least three laps. Upsets against highly rated drivers move the score most, finals carry more weight than qualifying, and attendance steadily increases confidence in the displayed rating.',
   eventRating: 'The signed cRating change from this meeting. It combines every recorded race at the meeting; positive means the driver exceeded the field expectation and negative means they finished below it.',
   laps: 'Total completed laps in all matching recorded runs.',
   distance: 'Estimated racing distance using 150 metres for each completed lap.',
@@ -181,10 +181,36 @@ function ensureDriverRatingSummaries(data = state.data, ratingClass = '') {
     || Number(Boolean(a.f)) - Number(Boolean(b.f))
     || String(a.r).localeCompare(String(b.r), 'en', { numeric: true })
     || idA.localeCompare(idB, 'en', { numeric: true }));
+  const sessions = [];
+  const qualifyingSessions = new Map();
+  const qualifyingResultLaps = run => Number(String(run?.[3] || '').match(/^(\d+)\//)?.[1] || 0);
+  const qualifyingResultTime = run => {
+    const result = String(run?.[3] || '');
+    const time = result.includes('/') ? result.slice(result.indexOf('/') + 1) : result;
+    const clock = time.match(/^(\d+):(\d+(?:\.\d+)?)/);
+    if (clock) return Number(clock[1]) * 60 + Number(clock[2]);
+    const seconds = Number.parseFloat(time);
+    return Number.isFinite(seconds) ? seconds : Infinity;
+  };
   for (const [raceId, race] of races) {
     if (!race?.d || race.d < '2022-01-01' || /^Practice\b/i.test(race.r || '') || !classMatches(race.c, ratingPool)) continue;
-    const field = (resultsByRace.get(raceId) || []).filter(run => Number(run[2]) > 0 && driverRatingSummaries.has(run[1]));
+    const qualifying = /^Qualifier\s+Round\b/i.test(race.r || '');
+    const sessionKey = qualifying ? `${race.d}|${race.e}|${race.c}|${String(race.r).toLowerCase()}` : `race:${raceId}`;
+    let session = qualifyingSessions.get(sessionKey);
+    if (!session) {
+      session = { race, qualifying, sessionKey, field: [] };
+      qualifyingSessions.set(sessionKey, session);
+      sessions.push(session);
+    }
+    session.field.push(...(resultsByRace.get(raceId) || []).filter(run => Number(run[2]) > 0 && driverRatingSummaries.has(run[1])));
+  }
+  for (const { race, qualifying, sessionKey, field } of sessions) {
     if (field.length < 2) continue;
+    const overallPosition = new Map();
+    if (qualifying) {
+      field.slice().sort((a, b) => qualifyingResultLaps(b) - qualifyingResultLaps(a) || qualifyingResultTime(a) - qualifyingResultTime(b) || Number(a[2]) - Number(b[2]) || String(a[1]).localeCompare(String(b[1]))).forEach((run, index) => overallPosition.set(run, index + 1));
+    }
+    const positionFor = run => qualifying ? overallPosition.get(run) : Number(run[2]);
     const before = new Map(field.map(run => [run[1], driverRatingSummaries.get(run[1]).total]));
     const pace = new Map(field
       .filter(run => completedLaps(run) >= 3)
@@ -198,7 +224,7 @@ function ensureDriverRatingSummaries(data = state.data, ratingClass = '') {
       let expected = 0;
       for (const opponent of field) {
         if (opponent === run) continue;
-        const finish = Number(run[2]) < Number(opponent[2]) ? 1 : Number(run[2]) === Number(opponent[2]) ? .5 : 0;
+        const finish = positionFor(run) < positionFor(opponent) ? 1 : positionFor(run) === positionFor(opponent) ? .5 : 0;
         const driverLap = pace.get(run[1]);
         const opponentLap = pace.get(opponent[1]);
         const lap = Number.isFinite(driverLap) && Number.isFinite(opponentLap)
@@ -211,12 +237,13 @@ function ensureDriverRatingSummaries(data = state.data, ratingClass = '') {
       return { run, before: before.get(run[1]), change: kFactor * (actual / opponents - expected / opponents) };
     });
     for (const update of updates) {
+      const raceId = update.run[0];
       const driverKey = update.run[1];
       const summary = driverRatingSummaries.get(driverKey);
       const startsBefore = summary.starts;
       summary.total = Math.max(100, summary.total + update.change);
       summary.starts += 1;
-      const raceChange = { raceId, date: race.d, eventId: race.e, change: update.change, before: update.before, after: summary.total, fieldSize: field.length, fieldStrength };
+      const raceChange = { raceId, sessionKey, date: race.d, eventId: race.e, change: update.change, before: update.before, after: summary.total, fieldSize: field.length, fieldStrength };
       summary.raceChanges.set(raceId, raceChange);
       const key = `${race.d}|${race.e}`;
       const event = data.eventById?.[race.e] || data.events?.find(item => item.i === race.e);
@@ -1002,7 +1029,7 @@ function renderProfileMetricEvidence(key, label) {
       const eventName = event?.u ? `<a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">${escapeHtml(meeting.name)}</a>` : escapeHtml(meeting.name);
       return `<tr><td>${dateFmt.format(new Date(`${meeting.date}T12:00:00Z`))}</td><td>${eventName}</td><td>${meeting.races}</td><td>${formatRating(meeting.before)}</td><td><strong>${ratingChangeHtml(meeting.change)}</strong></td><td>${formatRating(meeting.after)}</td></tr>`;
     }).join('');
-    content = `<p class="metric-evidence-note">Every driver starts at 1,500. Qualifying heats and finals move the rating according to direct opponents, finishing position, lap pace and field strength; practice is excluded and finals carry more weight. The bracketed figure is the latest meeting change.</p><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Start</th><th>Change</th><th>End</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="6">No linked rated races.</td></tr>'}</tbody></table></div>`;
+    content = `<p class="metric-evidence-note">Every driver starts at 1,500. Each qualifying round compares the overall class order across all heats; finals use the published finishing order. Result position, lap pace and field strength move the rating, practice is excluded, and finals carry more weight. The bracketed figure is the latest meeting change.</p><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Rated sessions</th><th>Start</th><th>Change</th><th>End</th></tr></thead><tbody>${rowHtml || '<tr><td colspan="6">No linked rated races.</td></tr>'}</tbody></table></div>`;
   } else if (eventMetric) {
     const useEntries = ['events','attendance','entries','eventTypes'].includes(key);
     let rows = useEntries ? entries.map(entry => {
