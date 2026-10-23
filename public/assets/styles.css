@@ -669,9 +669,10 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 #driverLeaderboard{scroll-margin-top:20px}
 
 /* Fastest lap timing uses the familiar racing purple/pink. */
-.fastest-lap,.driver-run-detail tr.lap-fastest>*{background:#7b2fa3!important;color:#fff!important;font-weight:850}
-.driver-run-detail tr.lap-near-fastest>*{background:#167a35!important;color:#fff!important;font-weight:800}
-.driver-run-detail tr.lap-slow>*{background:#a71931!important;color:#fff!important;font-weight:800}
+.fastest-lap{background:#7b2fa3!important;color:#fff!important;font-weight:850}
+.driver-run-detail tr.lap-fastest>td:last-child{color:#7b2fa3!important;font-weight:900}
+.driver-run-detail tr.lap-near-fastest>td:last-child{color:#167a35!important;font-weight:850}
+.driver-run-detail tr.lap-slow>td:last-child{color:#c51632!important;font-weight:850}
 
 /* Driver result drill-down: hover previews on desktop, tap/click pins on touch. */
 .driver-run-row{cursor:pointer;transition:background-color .16s ease,box-shadow .16s ease}
