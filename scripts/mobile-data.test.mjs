@@ -29,6 +29,12 @@ test('statistics drill-down tables use the phone card layout',async()=>{
  for(const className of ['profile-runs-table','run-laps-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.match(app,new RegExp(`class="${className}"`));
  for(const className of ['profile-events-table','profile-runs-table','metric-rating-table','metric-events-table','metric-runs-table']) assert.ok(css.includes(`.${className}`),`${className} has a mobile layout`);
  assert.ok(!css.includes('.race-results-table'),'the main race results keep their compact table layout');
+  assert.match(css,/#raceLapCharts \.lap-chart-scroll svg\{width:100%;min-width:0;height:auto\}/);
+  assert.match(css,/#raceLapCharts \.lap-chart-row\{grid-template-columns:1fr/);
+  assert.match(css,/\.race-results-wrap\{max-height:none;/);
+  assert.match(css,/:is\(\.run-summary-average-10,\.run-summary-average-15\)\{display:none\}/);
+  assert.match(app,/race-result-driver-row/);
+  assert.match(app,/race-result-driver-detail/);
  assert.match(css,/driver-races-detail-row[^}]*\[hidden\][^{]*\{display:none!important\}/);
  assert.match(css,/run-lap-list \.table-wrap\{max-height:360px;overflow-x:hidden/);
 });

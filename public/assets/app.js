@@ -867,12 +867,12 @@ async function loadDriverRunDetail(row) {
     const lapRows = allLaps.map(lap => `<tr id="driver-lap-${escapeHtml(raceId)}-${lap.lap}" class="${lap.lap === 1 ? '' : lapPerformanceClass(lap.seconds, best)}"><td>${lap.lap}</td><td>${lap.position ? `P${lap.position}` : '—'}</td><td>${Number(lap.seconds).toFixed(3)}s</td></tr>`).join('');
     const bestAverageCards = [3, 5, 10, 15].map(count => {
       const value = lapAverage(timedLaps, count);
-      return value === '—' ? '' : `<span><strong>${value}</strong><small>Top ${count} lap average</small></span>`;
+      return value === '—' ? '' : `<span class="run-summary-average run-summary-average-${count}"><strong>${value}</strong><small>Top ${count} lap average</small></span>`;
     }).join('');
     cell.innerHTML = `<div class="driver-run-detail">
       <div class="run-detail-summary">
         ${bestAverageCards}
-        <span><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small>Best timed lap</small></span>
+        <span class="run-summary-fastest"><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small>Fastest lap</small></span>
         <span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span>
         <span><strong>${timedLaps.length}</strong><small>Timed laps</small></span>
       </div>
@@ -971,9 +971,9 @@ function renderRaceExplorer(raceId) {
     return Number.isFinite(seconds) && seconds > 0 && (!best || seconds < lapTimeSeconds(best[5])) ? row : best;
   }, null);
   body.innerHTML = rows.length ? rows.map(row => `
-    <tr><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>${resultAvatarCell(row[1], race.c)}
+    <tr class="driver-run-row race-result-driver-row" data-race-id="${escapeHtml(raceId)}" data-driver-key="${escapeHtml(row[1])}" tabindex="0" role="button" aria-expanded="false" aria-label="Show lap times for ${escapeHtml(data.driverByKey[row[1]] || row[1])}"><td>${row[2] || '—'}</td><td><button type="button" class="driver-name" data-driver-key="${escapeHtml(row[1])}" aria-label="Open profile for ${escapeHtml(data.driverByKey[row[1]] || row[1])}">${escapeHtml(data.driverByKey[row[1]] || row[1])}</button></td>${resultAvatarCell(row[1], race.c)}
     <td>${row[8] ? `P${row[8]}` : '—'}</td><td>${escapeHtml(row[3] || '—')}</td><td>${escapeHtml(row[4] || '—')}</td>
-    <td${row === fastestRow ? ' class="fastest-lap" title="Fastest lap of this race"' : ''}>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td><td>${metricValueHelp('pace', paceForRun(row, data) === null ? '—' : `${paceForRun(row, data).toFixed(1)}%`, 'Pace')}</td><td class="potential-run">—</td></tr>`).join('') : '<tr><td colspan="11">No results were recorded for this race.</td></tr>';
+    <td${row === fastestRow ? ' class="fastest-lap" title="Fastest lap of this race"' : ''}>${escapeHtml(row[5] || '—')}</td><td>${escapeHtml(row[6] || '—')}</td><td>${escapeHtml(row[7] || '—')}</td><td>${metricValueHelp('pace', paceForRun(row, data) === null ? '—' : `${paceForRun(row, data).toFixed(1)}%`, 'Pace')}</td><td class="potential-run">—</td></tr><tr class="driver-run-detail-row race-result-driver-detail" hidden><td colspan="11"></td></tr>`).join('') : '<tr><td colspan="11">No results were recorded for this race.</td></tr>';
   hydrateResultAvatars(body);
 }
 
@@ -2221,8 +2221,41 @@ async function init() {
     $('raceEvent').addEventListener('change', () => updateRaceSelection(false));
     $('raceSelection').addEventListener('change', () => renderRaceExplorer($('raceSelection').value));
     $('raceExplorerResults').addEventListener('click', event => {
-      const button = event.target.closest('[data-driver-key]');
-      if (button) driverProfile(button.dataset.driverKey);
+      const lapPoint = event.target.closest('[data-lap-target]');
+      if (lapPoint) {
+        const detail = lapPoint.closest('.driver-run-detail');
+        detail?.querySelectorAll('.run-lap-selected').forEach(lapRow => lapRow.classList.remove('run-lap-selected'));
+        document.getElementById(lapPoint.dataset.lapTarget)?.classList.add('run-lap-selected');
+        return;
+      }
+      const retry = event.target.closest('.driver-run-retry');
+      if (retry) {
+        const detail = retry.closest('.driver-run-detail-row');
+        const row = detail?.previousElementSibling;
+        if (row?.classList.contains('race-result-driver-row')) loadDriverRunDetail(row);
+        return;
+      }
+      const profileButton = event.target.closest('.driver-name[data-driver-key]');
+      if (profileButton) { driverProfile(profileButton.dataset.driverKey); return; }
+      if (event.target.closest('a,button,.metric-help')) return;
+      const row = event.target.closest('.race-result-driver-row');
+      if (!row) return;
+      const detail = row.nextElementSibling;
+      const opening = detail?.hidden;
+      $('raceExplorerResults').querySelectorAll('.race-result-driver-row').forEach(other => {
+        if (other === row) return;
+        other.setAttribute('aria-expanded', 'false');
+        if (other.nextElementSibling?.classList.contains('race-result-driver-detail')) other.nextElementSibling.hidden = true;
+      });
+      if (opening) loadDriverRunDetail(row);
+      else if (detail) detail.hidden = true;
+      row.setAttribute('aria-expanded', String(Boolean(opening)));
+    });
+    $('raceExplorerResults').addEventListener('keydown', event => {
+      const row = event.target.closest('.race-result-driver-row');
+      if (!row || event.target !== row || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      row.click();
     });
     $('leaderboardBody').addEventListener('click', event => {
       const profileButton = event.target.closest('[data-profile-key]');
