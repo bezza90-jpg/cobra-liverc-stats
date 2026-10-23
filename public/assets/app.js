@@ -4,7 +4,7 @@ import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
-import {chartShareUrl, facebookShareLink, lapLineColour, lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261023-line-gradient';
+import {chartShareUrl, facebookShareLink, lapLineColour, lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261023-lap-readout';
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
 import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261023-click-preview';
 
@@ -849,9 +849,25 @@ function driverRunLapChart(laps, best, raceId, driverKey = '') {
   const points = laps.map(lap => {
     const timingClass = Number(lap.lap) === 1 ? '' : lapPerformanceClass(lap.seconds, best);
     const target = `driver-lap-${raceId}-${lap.lap}`;
-    return `<g role="button" tabindex="0" data-lap-target="${target}" aria-label="Outline lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></g>`;
+    return `<g role="button" tabindex="0" data-lap-target="${target}" data-lap-number="${lap.lap}" data-lap-time="${Number(lap.seconds).toFixed(3)}" aria-label="Outline lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></g>`;
   }).join('');
   return `<svg viewBox="0 0 630 210" role="img" aria-label="Selectable lap-time chart"><defs>${gradientParts.join('')}</defs><g class="run-lap-chart-grid">${grid}${lapTicks}<text x="48" y="14">Seconds</text><text x="324" y="208" text-anchor="middle">Lap number</text></g>${lineParts.join('')}<g class="run-lap-chart-points">${points}</g></svg>`;
+}
+
+function selectRunLapPoint(lapPoint) {
+  const detail = lapPoint.closest('.driver-run-detail');
+  detail?.querySelectorAll('.run-lap-selected').forEach(row => row.classList.remove('run-lap-selected'));
+  document.getElementById(lapPoint.dataset.lapTarget)?.classList.add('run-lap-selected');
+  detail?.querySelectorAll('[data-lap-target].lap-chart-selected').forEach(point => point.classList.remove('lap-chart-selected'));
+  lapPoint.classList.add('lap-chart-selected');
+  const readout = detail?.querySelector('.lap-point-readout');
+  if (readout) readout.textContent = `Lap ${lapPoint.dataset.lapNumber} · ${lapPoint.dataset.lapTime}s`;
+}
+
+function syncDrilldownHeight(container) {
+  container.querySelectorAll('.compact,.driver-races-table,.race-results-wrap,.profile-metric-evidence > .table-wrap').forEach(wrap => {
+    wrap.classList.toggle('drilldown-expanded', Boolean(wrap.querySelector('[aria-expanded="true"]')));
+  });
 }
 
 async function loadDriverRunDetail(row) {
@@ -895,7 +911,7 @@ async function loadDriverRunDetail(row) {
         <span><strong>${timedLaps.length}</strong><small>Timed laps</small></span>
       </div>
       <div class="run-detail-columns"><div class="run-lap-list"><div class="table-wrap compact"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Race position</th><th>Time</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
-      <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to jump to that lap.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId, driverKey)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">Open full COBRA lap chart</a>${facebookShareLink(raceId, driverKey)}${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
+      <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p><p class="lap-point-readout" aria-live="polite">Select a point to see its lap time.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId, driverKey)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">Open full COBRA lap chart</a>${facebookShareLink(raceId, driverKey)}${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
     </div>`;
   } catch (error) {
     delete detail.dataset.loaded;
@@ -2244,9 +2260,7 @@ async function init() {
     $('raceExplorerResults').addEventListener('click', event => {
       const lapPoint = event.target.closest('[data-lap-target]');
       if (lapPoint) {
-        const detail = lapPoint.closest('.driver-run-detail');
-        detail?.querySelectorAll('.run-lap-selected').forEach(lapRow => lapRow.classList.remove('run-lap-selected'));
-        document.getElementById(lapPoint.dataset.lapTarget)?.classList.add('run-lap-selected');
+        selectRunLapPoint(lapPoint);
         return;
       }
       const retry = event.target.closest('.driver-run-retry');
@@ -2271,6 +2285,7 @@ async function init() {
       if (opening) loadDriverRunDetail(row);
       else if (detail) detail.hidden = true;
       row.setAttribute('aria-expanded', String(Boolean(opening)));
+      syncDrilldownHeight($('raceExplorerResults'));
     });
     $('raceExplorerResults').addEventListener('keydown', event => {
       const row = event.target.closest('.race-result-driver-row');
@@ -2316,9 +2331,7 @@ async function init() {
     const handleProfileDrilldownClick = (container, event) => {
       const lapPoint = event.target.closest('[data-lap-target]');
       if (lapPoint) {
-        const detail = lapPoint.closest('.driver-run-detail');
-        detail?.querySelectorAll('.run-lap-selected').forEach(row => row.classList.remove('run-lap-selected'));
-        document.getElementById(lapPoint.dataset.lapTarget)?.classList.add('run-lap-selected');
+        selectRunLapPoint(lapPoint);
         return;
       }
       const retry = event.target.closest('.driver-run-retry');
@@ -2344,6 +2357,7 @@ async function init() {
         detailRow.hidden = !opening;
         groupButton.setAttribute('aria-expanded', String(opening));
         groupButton.closest('tr')?.setAttribute('aria-expanded', String(opening));
+        syncDrilldownHeight(container);
         return;
       }
       if (event.target.closest('a,button,.metric-help')) return;
@@ -2365,6 +2379,7 @@ async function init() {
         row.setAttribute('aria-expanded', 'false');
         row.dataset.pinned = 'false';
       }
+      syncDrilldownHeight(container);
     };
     $('driverEventDetails').addEventListener('click', event => handleProfileDrilldownClick($('driverEventDetails'), event));
     $('driverEventDetails').addEventListener('keydown', event => {
