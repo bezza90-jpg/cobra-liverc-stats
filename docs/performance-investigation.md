@@ -52,6 +52,10 @@ Wix Custom Code now contains the enabled item “COBRA direct feature navigation
 
 Live checks verified both header logos, the populated distance map (10 loaded tiles), chart comparison selections for Mark Giaquinto/Russell Thomas (11 graphs), and the fullscreen replay timings dialog with all nine drivers. Local checks also covered responsive mobile menus, embedded fallback, Current Event results opening in a new tab, and representative schedules, avatars, club and About pages. Site validation and relevant regression tests passed. No controlled cold-load timing claim is made: the change removes the Wix iframe startup dependency for direct visits, but network/data/image loading still takes time.
 
+## Shared Wix and RaceHub menu — 23 October 2026
+
+`docs/wix-menu-reference.json` is the single menu definition. RaceHub pages and the hosted Wix header loader are generated from it during every navigation build. `docs/wix-racehub-navigation.html` is now a small permanent Wix Custom Code loader rather than a copied header snapshot, so later menu additions are deployed to both headers from the same source. The installed Wix Custom Code item must be replaced once with this new loader; after that, ordinary menu changes need no separate Wix edit.
+
 To roll back navigation, disable that single Custom Code item in Wix Settings > Custom Code. To roll back hosting as well, restore the recorded original Pages settings (no custom domain, HTTPS enabled); existing GitHub iframe URLs then resume serving directly. Do not remove the racehub CNAME while leaving links to it enabled. The verified pre-change backups are recorded above. Source and notes are mirrored to the Z-drive repository.
 
 ## 4 October 2026 image download audit
