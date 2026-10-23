@@ -23,7 +23,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=12';
+  link.href = '../assets/event-entries.css?v=13';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -175,7 +175,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       const booking=element('a','event-entry-source','Book this event ↗');
       booking.href=meeting.bookingUrl; booking.target='_blank'; booking.rel='noopener'; panel.append(booking);
     }
-    const eventSummary = currentEventPage ? document.querySelector('main.info-main > .panel') : null;
+    const eventSummary = currentEventPage ? document.getElementById('eventTitle')?.closest('.panel') : null;
     (eventSummary || content).append(panel);
   }
   if (!data.entries.length) {
