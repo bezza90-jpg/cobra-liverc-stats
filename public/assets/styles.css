@@ -355,6 +355,9 @@ details .table-wrap { margin: 0 14px 14px; }
 .race-result-title { margin: 0 0 12px; font-size: 1.05rem; }
 .driver-races-toggle { min-width:58px; padding:3px 7px; color:var(--green-dark); background:#f4faf5; border:1px solid #d5e6d8; border-radius:999px; font-size:.68rem; font-weight:850; text-align:center; white-space:nowrap; }
 .driver-races-toggle:hover,.driver-races-toggle[aria-expanded="true"] { color:#fff; background:var(--green-dark); border-color:var(--green-dark); }
+.profile-event-row,.profile-evidence-event-row { cursor:pointer; }
+.profile-event-row:hover > td,.profile-evidence-event-row:hover > td,.profile-event-row[aria-expanded="true"] > td,.profile-evidence-event-row[aria-expanded="true"] > td { background:#edf8ef; }
+.profile-event-row:focus-visible,.profile-evidence-event-row:focus-visible { outline:3px solid var(--lime); outline-offset:-3px; }
 .driver-races-detail-row > td { padding:0 8px 10px; background:#f7faf8; }
 .driver-races-table { width:100%; max-height:340px; margin:0; background:#fff; border:1px solid #b9c9bd; border-radius:8px; box-shadow:inset 0 1px 0 rgba(255,255,255,.7); }
 .driver-races-table table { min-width:920px; font-size:.82rem; }
@@ -379,11 +382,17 @@ details .table-wrap { margin: 0 14px 14px; }
 .profile-metric-evidence-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:10px; }
 .profile-metric-evidence-heading .eyebrow { margin:0 0 3px; }
 .profile-metric-evidence-heading h3 { margin:0; font-size:1.05rem; }
+.profile-metric-evidence-actions { display:flex; align-items:center; gap:8px; }
+.profile-metric-evidence-fullscreen { min-height:32px; padding:6px 11px; color:#fff; background:var(--green-dark); border:0; border-radius:7px; font-size:.75rem; font-weight:850; white-space:nowrap; }
 .profile-metric-evidence-close { width:32px; height:32px; padding:0; flex:0 0 auto; color:#314038; background:#e7eee9; border:0; border-radius:50%; font-size:1.25rem; line-height:1; }
 .profile-metric-evidence .table-wrap { max-height:330px; background:#fff; }
 .profile-metric-evidence table { font-size:.7rem; }
 .profile-metric-evidence th,.profile-metric-evidence td { padding:7px 6px; text-align:center; }
 .profile-metric-evidence th:nth-child(2),.profile-metric-evidence td:nth-child(2) { text-align:left; white-space:normal; }
+.profile-metric-evidence.fullscreen { position:fixed; z-index:12000; inset:0; width:100%; height:100vh; height:100dvh; margin:0; padding:clamp(14px,2vw,28px); overflow:auto; border:0; border-radius:0; box-shadow:none; }
+.profile-metric-evidence.fullscreen > .table-wrap { max-height:calc(100dvh - 105px); }
+.profile-metric-evidence.fullscreen .driver-races-table { max-height:calc(100dvh - 170px); }
+@media (max-width:600px) { .profile-metric-evidence-fullscreen { padding:6px 8px; font-size:.68rem; } }
 .profile-section { margin-top: 28px; }
 .profile-section h3 { margin: 0 0 12px; font-size: 1.2rem; }
 .profile-breakdown-grid { display:grid; grid-template-columns:minmax(0,3fr) minmax(300px,2fr); gap:14px; align-items:start; margin-top:20px; }
