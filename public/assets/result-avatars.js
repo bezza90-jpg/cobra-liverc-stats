@@ -83,11 +83,20 @@ export async function hydrateResultAvatars(root = document) {
     image.fetchPriority = 'auto';
     image.decoding = 'async';
     image.tabIndex = 0;
+    image.setAttribute('role', 'button');
+    image.setAttribute('aria-label', 'Enlarge car avatar');
     image.title = 'Enlarge car avatar';
     image.addEventListener('pointerenter', () => showPreview(image));
     image.addEventListener('pointerleave', () => { if (preview) preview.hidden = true; });
     image.addEventListener('focus', () => showPreview(image));
     image.addEventListener('blur', () => { if (preview) preview.hidden = true; });
+    image.addEventListener('click', event => { event.stopPropagation(); showPreview(image); });
+    image.addEventListener('keydown', event => {
+      if (!['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      event.stopPropagation();
+      showPreview(image);
+    });
     image.addEventListener('error', () => {
       if (image.dataset.fallback) { image.src = image.dataset.fallback; delete image.dataset.fallback; }
       else image.remove();
