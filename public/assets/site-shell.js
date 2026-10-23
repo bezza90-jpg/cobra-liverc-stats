@@ -48,6 +48,7 @@ export function initNavigationPrefetch(root = document) {
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return;
   const queued = new Set();
+  const supportsSpeculationRules = typeof HTMLScriptElement !== 'undefined' && HTMLScriptElement.supports?.('speculationrules');
   let hoverTimer = 0;
   const candidate = target => {
     const anchor = target?.closest?.('a[href]');
@@ -63,6 +64,13 @@ export function initNavigationPrefetch(root = document) {
     const url = candidate(target);
     if (!url) return;
     queued.add(url.href);
+    if (supportsSpeculationRules) {
+      const rules = root.createElement('script');
+      rules.type = 'speculationrules';
+      rules.textContent = JSON.stringify({prefetch: [{source: 'list', urls: [url.href], eagerness: 'immediate'}]});
+      root.head.append(rules);
+      return;
+    }
     const hint = root.createElement('link');
     hint.rel = 'prefetch';
     hint.as = 'document';

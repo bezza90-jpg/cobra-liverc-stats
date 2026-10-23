@@ -248,6 +248,9 @@ h2 { margin: 0; font-size: clamp(1.5rem, 4vw, 2.1rem); letter-spacing: -.035em; 
 .leaderboard-ranking select { height: 40px; }
 .leaderboard-ranking .result-count { margin: 0; }
 .leaderboard-scroll-hint { margin: 0 0 8px; color: var(--muted); font-size: .76rem; }
+.statistics-page #driverLeaderboard,
+.statistics-page .head-to-head,
+.statistics-page main > .method { content-visibility: auto; contain-intrinsic-size: auto 800px; }
 .leaderboard-table-wrap { max-width: 100%; overscroll-behavior-inline: contain; scrollbar-gutter: stable; }
 .leaderboard-table-wrap th, .leaderboard-table-wrap td { padding-inline: 10px; }
 .leaderboard-table-wrap th button { width: 100%; padding: 0 14px 0 0; color: inherit; background: transparent; border: 0; border-radius: 0; font: inherit; letter-spacing: inherit; text-align: right; text-transform: inherit; white-space: nowrap; }
