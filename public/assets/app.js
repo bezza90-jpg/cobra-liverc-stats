@@ -491,7 +491,7 @@ function ensureEnhancedMarkup() {
     document.head.insertAdjacentHTML('beforeend', `<style id="driver-profile-runtime-styles">
       .driver-name{padding:0;color:#067b14;background:transparent;border:0;border-radius:0;font-weight:850;text-align:left;text-decoration:underline;text-decoration-color:#9dd7a5;text-underline-offset:3px}.driver-name:hover{color:#044f0c;background:transparent;text-decoration-color:currentColor}
       .driver-dialog{width:min(1500px,calc(100% - 24px));max-height:94vh;padding:0;color:#111714;background:#fff;border:0;border-radius:16px;box-shadow:0 28px 90px rgba(0,0,0,.35)}.driver-dialog::backdrop{background:rgba(3,10,6,.72);backdrop-filter:blur(3px)}.dialog-shell{position:relative;padding:clamp(22px,4vw,38px)}.dialog-close{position:absolute;top:14px;right:14px;width:42px;height:42px;padding:0;color:#344039;background:#eef3ef;border-radius:50%;font-size:1.65rem;line-height:1}.dialog-close:hover{color:#fff;background:#067b14}.profile-context{margin:8px 52px 22px 0;color:#637069}.profile-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.profile-stats article{min-height:106px;padding:16px;background:#f3f7f4;border:1px solid #dfe6e1;border-top:3px solid #08a31a;border-radius:9px}.profile-stats strong{display:block;font-size:1.65rem;line-height:1}.profile-stats span{display:block;margin-top:8px;color:#637069;font-size:.72rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase}.profile-section{margin-top:28px}.profile-section h3{margin:0 0 12px;font-size:1.2rem}.profile-history{max-height:520px}.profile-history th:first-child,.profile-history td:first-child{text-align:left}.profile-history a,.profile-section a{color:#067b14;font-weight:800}
-      .race-explorer-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(280px,1.5fr) repeat(3,auto);align-items:end;gap:12px;margin-bottom:22px}.race-result-title{margin:0 0 12px;font-size:1.05rem}.inline-races summary{padding:3px 8px;color:#067b14;font-size:.78rem;white-space:nowrap}.inline-races[open]{min-width:58px}.inline-races>.table-wrap{position:fixed;z-index:1005;top:50%;left:50%;width:min(1240px,calc(100vw - 48px));max-height:min(74vh,760px);margin:0;transform:translate(-50%,-50%);background:#fff;border:1px solid #9fb5a4;border-radius:14px;box-shadow:0 26px 90px #0008}.inline-races>.table-wrap table{min-width:1040px;font-size:.82rem}.inline-races>.table-wrap th,.inline-races>.table-wrap td{padding:10px 9px}.inline-races-close{position:sticky;z-index:3;top:8px;left:calc(100% - 92px);display:block;margin:8px 8px 0 auto;padding:8px 14px;color:#fff;background:#067b14;border:0;border-radius:999px;font-weight:900}@media(max-width:820px){.race-explorer-controls{grid-template-columns:1fr 1fr}.inline-races>.table-wrap{width:calc(100vw - 20px);max-height:82vh}.inline-races>.table-wrap table{min-width:980px}}@media(max-width:520px){.race-explorer-controls{grid-template-columns:1fr}}
+      .race-explorer-controls{display:grid;grid-template-columns:minmax(220px,1fr) minmax(280px,1.5fr) repeat(3,auto);align-items:end;gap:12px;margin-bottom:22px}.race-result-title{margin:0 0 12px;font-size:1.05rem}.driver-races-toggle{min-width:58px;padding:3px 7px;color:#067b14;background:#f4faf5;border:1px solid #d5e6d8;border-radius:999px;font-size:.68rem;font-weight:850;text-align:center;white-space:nowrap}.driver-races-toggle:hover,.driver-races-toggle[aria-expanded="true"]{color:#fff;background:#067b14;border-color:#067b14}.driver-races-detail-row>td{padding:0 8px 10px;background:#f7faf8}.driver-races-table{width:100%;max-height:340px;margin:0;background:#fff;border:1px solid #b9c9bd;border-radius:8px}.driver-races-table table{min-width:920px;font-size:.82rem}.driver-races-table th,.driver-races-table td{padding:10px 9px;text-align:center}@media(max-width:820px){.race-explorer-controls{grid-template-columns:1fr 1fr}.driver-races-table{max-height:420px}}@media(max-width:520px){.race-explorer-controls{grid-template-columns:1fr}}
       .update-schedule{position:relative;z-index:1;display:inline-block;margin:8px 0 0 10px;color:#b8c9bd;font-size:.78rem}@media(max-width:520px){.update-schedule{display:block;margin-left:0}}
       .archive-link{position:relative;z-index:1;display:inline-block;margin:8px 0 0 10px;padding:9px 16px;color:#055f10;background:#fff;border:1px solid #fff;border-radius:6px;box-shadow:0 5px 18px rgba(0,0,0,.2);font-size:.78rem;font-weight:900;text-decoration:none}.archive-link:hover{color:#fff;background:#08a31a;border-color:#08a31a}.youtube-channel-link{color:#fff;background:#c01919;border-color:#c01919}.youtube-channel-link:hover{color:#fff;background:#941111;border-color:#941111}.class-tabs{display:inline-flex;flex-wrap:wrap;gap:0;margin-top:14px;border:1px solid #b9c5bd;border-radius:5px;overflow:hidden}.class-tabs button{padding:8px 12px;color:#26332b;background:#edf1ee;border:0;border-right:1px solid #b9c5bd;border-radius:0;font-size:.76rem}.class-tabs button:last-child{border-right:0}.class-tabs button[aria-pressed="true"]{color:#fff;background:#067b14}@media(max-width:520px){.archive-link{display:block;width:max-content;margin-left:0}.class-tabs{display:flex}.class-tabs button{flex:1 1 auto}}
     </style>`);
@@ -840,7 +840,7 @@ function renderRaceExplorer(raceId) {
   $('raceResultLink').hidden = !race.u;
   const video = sharedRaceVideo(data.raceResults, data.videos, raceId);
   $('raceVideoLink').href = video?.url || '#';
-  $('raceVideoLink').textContent = video ? `Watch Matthew’s ${video.round || 'race'} video ▶` : 'Watch Matthew’s race video ▶';
+  $('raceVideoLink').textContent = 'Watch this race ▶';
   $('raceVideoLink').title = video ? 'You are in this race' : '';
   $('raceVideoLink').hidden = !video;
   const rows = data.raceResults.filter(row => row[0] === raceId).sort((a, b) => a[2] - b[2]);
@@ -1866,12 +1866,15 @@ function driverProfile(driverKey) {
       const race = data.raceById[run[0]];
       const raceName = race.u ? `<a href="${escapeHtml(race.u)}" target="_blank" rel="noopener">${escapeHtml(race.n)}</a>` : escapeHtml(race.n);
       const video = sharedRaceVideo(data.raceResults, data.videos, run[0], driverKey);
-      const videoLink = video ? `<a class="race-video-inline" href="${escapeHtml(video.url)}" target="_blank" rel="noopener" title="You are in this race">Watch Matthew’s video ▶</a>` : '—';
+      const videoLink = video ? `<a class="race-video-inline" href="${escapeHtml(video.url)}" target="_blank" rel="noopener" title="You are in this race">Watch this race ▶</a>` : '—';
       const runPace = paceForRun(run, data);
       return `<tr class="driver-run-row" data-race-id="${escapeHtml(run[0])}" data-driver-key="${escapeHtml(driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show complete lap result for ${escapeHtml(race.r)} ${escapeHtml(race.n)}"><td>${escapeHtml(race.r)}</td><td>${raceName}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td><td>${metricValueHelp('pace', runPace === null ? '—' : `${runPace.toFixed(1)}%`, 'Pace')}</td><td>${videoLink}</td></tr><tr class="driver-run-detail-row" hidden><td colspan="9"></td></tr>`;
     }).join('');
-    const raceDrilldown = `<details class="inline-races"><summary>${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}</summary><div class="table-wrap" role="dialog" aria-label="Individual race results"><button type="button" class="inline-races-close">Close</button><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${runRows}</tbody></table></div></details>`;
-    return `<tr><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${raceDrilldown}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${metricValueHelp('pace', eventPace === null ? '—' : `${eventPace.toFixed(1)}%`, 'Pace')}</td><td>${ratingChangeMetricHelp(eventRating)}</td></tr>`;
+    const raceLabel = `${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}`;
+    const raceDrilldown = `<button type="button" class="driver-races-toggle" aria-expanded="false">${raceLabel}</button>`;
+    const eventRow = `<tr><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${raceDrilldown}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${metricValueHelp('pace', eventPace === null ? '—' : `${eventPace.toFixed(1)}%`, 'Pace')}</td><td>${ratingChangeMetricHelp(eventRating)}</td></tr>`;
+    const detailRow = `<tr class="driver-races-detail-row" hidden><td colspan="12"><div class="table-wrap driver-races-table" aria-label="Individual race results"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${runRows}</tbody></table></div></td></tr>`;
+    return `${eventRow}${detailRow}`;
   }).join('') || '<tr><td colspan="12">No completed finals within these filters.</td></tr>';
 
   state.profileKey = driverKey;
@@ -2032,7 +2035,7 @@ async function init() {
       data.videos = videos;
       const video = sharedRaceVideo(data.raceResults, videos, $('raceSelection').value);
       $('raceVideoLink').href = video?.url || '#';
-      $('raceVideoLink').textContent = video ? `Watch Matthew’s ${video.round || 'race'} video ▶` : 'Watch Matthew’s race video ▶';
+      $('raceVideoLink').textContent = 'Watch this race ▶';
       $('raceVideoLink').title = video ? 'You are in this race' : '';
       $('raceVideoLink').hidden = !video;
       if ($('driverDialog').open && state.profileKey) driverProfile(state.profileKey);
@@ -2123,32 +2126,33 @@ async function init() {
       event.preventDefault();
       row.click();
     });
-    $('driverEventDetails').addEventListener('pointerover', event => {
-      const targetRow = event.target.closest('.driver-run-row,.driver-run-detail-row');
-      const row = targetRow?.classList.contains('driver-run-detail-row') ? targetRow.previousElementSibling : targetRow;
-      if (row && matchMedia('(hover:hover)').matches) loadDriverRunDetail(row);
-    });
-    $('driverEventDetails').addEventListener('pointerout', event => {
-      const targetRow = event.target.closest('.driver-run-row,.driver-run-detail-row');
-      const row = targetRow?.classList.contains('driver-run-detail-row') ? targetRow.previousElementSibling : targetRow;
-      if (!row || row.dataset.pinned === 'true' || !matchMedia('(hover:hover)').matches) return;
-      const detail = row.nextElementSibling;
-      setTimeout(() => {
-        if (!row.matches(':hover') && !detail?.matches(':hover') && row.dataset.pinned !== 'true') {
-          if (detail) detail.hidden = true;
-          row.setAttribute('aria-expanded', 'false');
-        }
-      }, 80);
-    });
     $('driverEventDetails').addEventListener('click', event => {
-      const close = event.target.closest('.inline-races-close');
-      if (close) { close.closest('details')?.removeAttribute('open'); return; }
+      const groupButton = event.target.closest('.driver-races-toggle');
+      if (groupButton) {
+        const detailRow = groupButton.closest('tr')?.nextElementSibling;
+        if (!detailRow?.classList.contains('driver-races-detail-row')) return;
+        const opening = detailRow.hidden;
+        $('driverEventDetails').querySelectorAll('.driver-races-detail-row').forEach(other => {
+          if (other === detailRow) return;
+          other.hidden = true;
+          other.previousElementSibling?.querySelector('.driver-races-toggle')?.setAttribute('aria-expanded', 'false');
+        });
+        detailRow.hidden = !opening;
+        groupButton.setAttribute('aria-expanded', String(opening));
+        return;
+      }
       if (event.target.closest('a,button,.metric-help')) return;
       const row = event.target.closest('.driver-run-row');
       if (!row) return;
       const detail = row.nextElementSibling;
       const wasPinned = row.dataset.pinned === 'true';
       if (!wasPinned) {
+        $('driverEventDetails').querySelectorAll('.driver-run-row').forEach(other => {
+          if (other === row) return;
+          other.dataset.pinned = 'false';
+          other.setAttribute('aria-expanded', 'false');
+          if (other.nextElementSibling?.classList.contains('driver-run-detail-row')) other.nextElementSibling.hidden = true;
+        });
         row.dataset.pinned = 'true';
         loadDriverRunDetail(row);
       } else {
