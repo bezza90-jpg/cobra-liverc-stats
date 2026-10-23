@@ -687,10 +687,23 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .run-detail-summary small{margin-top:5px;color:#c8dbcdd9;font-size:.68rem;font-weight:800;text-transform:uppercase}
 .run-detail-columns{display:grid;grid-template-columns:minmax(280px,1.5fr) minmax(190px,.7fr);gap:16px}
 .run-detail-columns h4{margin:0 0 8px}
+.run-lap-list .table-wrap{max-height:360px;scroll-behavior:smooth}
+.run-lap-list tr{scroll-margin-top:36px}
+.run-detail-chart{position:sticky;top:12px;align-self:start;min-width:0;padding:14px;background:#07170d;color:#fff;border:1px solid #315340;border-radius:9px}
+.run-detail-chart h4{font-size:1.05rem}
+.run-lap-chart-help{margin:0 0 8px;color:#c8dbcdd9;font-size:.78rem}
+.run-lap-chart-scroll{overflow-x:auto}
+.run-lap-chart-scroll svg{display:block;width:100%;min-width:420px;height:auto;background:#0c2113;border-radius:6px}
+.run-lap-chart-grid line{stroke:#315340;stroke-width:1}.run-lap-chart-grid text{fill:#c8dbcdd9;font-size:11px}
+.run-lap-chart-line{fill:none;stroke:#d8ebdf;stroke-width:2.5;stroke-linejoin:round}
+.run-lap-chart-points circle{fill:#fff;stroke:#a3f329;stroke-width:2;cursor:pointer;transition:r .15s ease,stroke-width .15s ease}
+.run-lap-chart-points circle.lap-fastest{fill:#b25ce0;stroke:#f1ceff}.run-lap-chart-points circle.lap-near-fastest{fill:#16a34a;stroke:#b7f7ca}.run-lap-chart-points circle.lap-slow{fill:#d52b45;stroke:#ffc2cb}
+.run-lap-chart-points a:hover circle,.run-lap-chart-points a:focus circle{r:9px;stroke:#fff;stroke-width:4;outline:none}
+.run-lap-chart-legend{display:flex;gap:8px 14px;flex-wrap:wrap;margin:9px 0 12px;color:#d5e4d9;font-size:.72rem;font-weight:800}.run-lap-chart-legend span{display:flex;align-items:center;gap:5px}.run-lap-chart-legend i{width:12px;height:12px;border-radius:50%}.run-lap-chart-legend .lap-fastest{background:#b25ce0}.run-lap-chart-legend .lap-near-fastest{background:#16a34a}.run-lap-chart-legend .lap-slow{background:#d52b45}
 .run-detail-links{display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:14px;background:#fff;border:1px solid #d6e2d9;border-radius:8px}
 .run-detail-links a{color:#067b14;font-weight:850}
 .run-detail-links p{margin:4px 0 0;color:#657269;font-size:.78rem;line-height:1.45}
-@media(max-width:760px){.run-detail-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.run-detail-columns{grid-template-columns:1fr}.driver-run-detail{padding:12px 10px 16px}}
+@media(max-width:760px){.run-detail-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.run-detail-columns{grid-template-columns:1fr}.run-detail-chart{position:relative;top:auto}.driver-run-detail{padding:12px 10px 16px}}
 
 /* Driver development charts */
 .profile-trend-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
