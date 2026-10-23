@@ -51,6 +51,8 @@ test('every archived track photograph exists locally and keeps its Facebook sour
     if(event.designImage)assert.ok(existsSync(new URL(`track-gallery/${event.designImage}`,publicRoot)),`${eventId}: ${event.designImage}`);
     for(const photo of photos){
       assert.ok(existsSync(new URL(`track-gallery/${photo.image}`,publicRoot)),`${eventId}: ${photo.image}`);
+      const thumbnail=photo.image.replace('../track-photos/','../track-photo-thumbnails/').replace(/\.[^.]+$/,'.webp');
+      assert.ok(existsSync(new URL(`track-gallery/${thumbnail}`,publicRoot)),`${eventId}: ${thumbnail}`);
       if(!event.sourcePost)assert.equal(photo.location,'House of Sport',eventId);
     }
   }
@@ -69,6 +71,7 @@ test('track gallery offers results and 2D replay for every event',()=>{
   assert.match(source,/3D track model available/);
   assert.match(source,/design=track/);
   assert.match(source,/cache:'no-store'/);
+  assert.match(source,/photoThumbnail\(photo\.image\)/);
 });
 
 test('events without a separate plan preview the same track used by the 2D replay',()=>{
