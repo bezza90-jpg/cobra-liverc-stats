@@ -57,6 +57,10 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(html,/id="raceFacebookShare"/);
   assert.match(app,/facebookShareLink\(raceId, driverKey\)/);
   assert.match(styles,/\.facebook-share\{/);
+  assert.match(styles,/\.leaderboard-source-panel details \.table-wrap \{ max-height:none;/);
+  assert.match(styles,/\.leaderboard-source-collapse \{ position:sticky;/);
+  assert.match(app,/data-collapse-leaderboard/);
+  assert.match(app,/driverRow\.scrollIntoView\(\{ block: 'center' \}\)/);
  assert.match(css,/driver-races-detail-row[^}]*\[hidden\][^{]*\{display:none!important\}/);
  assert.match(css,/run-lap-list \.table-wrap\{max-height:none;overflow-x:hidden;overflow-y:visible\}/);
   assert.match(css,/\.driver-run-detail\{position:sticky;left:0;box-sizing:border-box;width:calc\(100vw - 40px\);max-width:calc\(100vw - 40px\)/);
