@@ -65,4 +65,5 @@ test('statistics drill-down tables use the phone card layout',async()=>{
  assert.match(css,/run-lap-list \.table-wrap\{max-height:none;overflow-x:hidden;overflow-y:visible\}/);
   assert.match(css,/\.driver-run-detail\{position:sticky;left:0;box-sizing:border-box;width:calc\(100vw - 40px\);max-width:calc\(100vw - 40px\)/);
   assert.match(css,/\.run-detail-chart\{position:relative;top:auto;box-sizing:border-box;width:100%;min-width:0;max-width:100%/);
+  assert.match(css,/\.run-detail-links p\{max-width:100%;white-space:normal;overflow-wrap:anywhere/);
 });
