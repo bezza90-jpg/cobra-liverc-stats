@@ -18,8 +18,18 @@ test('3D replay keeps the complete responsive site menu',()=>{
   assert.match(html,/class="cobra-mobile-menu"/);
   assert.match(html,/class="cobra-site-menu"/);
   assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=5"/);
-  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=4"/);
+  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=5"/);
   assert.match(html,/class="cobra-gpw-logo"/);
+});
+
+test('shared shell anticipates internal navigation without wasting restricted connections',()=>{
+  const source=readFileSync(new URL('../public/assets/site-shell.js',import.meta.url),'utf8');
+  assert.match(source,/rel = 'prefetch'/);
+  assert.match(source,/hint\.as = 'document'/);
+  assert.match(source,/connection\?\.saveData/);
+  assert.match(source,/effectiveType/);
+  assert.match(source,/url\.origin !== location\.origin/);
+  assert.match(source,/setTimeout\(\(\) => prefetch\(event\.target\), 80\)/);
 });
 
 test('standalone pages use the shared Club Series hero branding',()=>{
