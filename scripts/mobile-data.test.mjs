@@ -33,7 +33,10 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(css,/#raceLapCharts \.lap-chart-scroll svg\{width:100%;min-width:0;height:auto\}/);
   assert.match(css,/#raceLapCharts \.lap-chart-row\{grid-template-columns:1fr/);
   assert.match(css,/\.race-results-wrap\{max-height:none;/);
-  assert.match(css,/\.race-result-driver-detail \.run-detail-summary\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(css,/\.race-result-driver-detail \.run-detail-summary\{grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+  assert.match(css,/\.driver-run-detail \.run-detail-summary\{grid-template-columns:repeat\(6,minmax\(0,1fr\)\)/);
+  assert.match(css,/run-detail-summary>span:nth-last-child\(-n\+2\)\{grid-column:span 3\}/);
+  assert.match(css,/\.run-laps-table\{font-size:\.74rem\}/);
   assert.match(css,/\.race-result-driver-detail \.run-detail-summary>span\{min-height:44px;padding:5px 6px/);
   assert.match(css,/:is\(\.run-summary-average-10,\.run-summary-average-15\)\{display:none\}/);
   assert.match(app,/race-result-driver-row/);
@@ -45,11 +48,13 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(styles,/\.fastest-lap\{background:transparent!important;color:#7b2fa3!important;font-weight:900\}/);
   assert.match(styles,/\.driver-races-toggle\[aria-expanded="true"\]::after\{content:' ↓ shown below'/);
   assert.match(styles,/\.table-wrap\.drilldown-expanded \{ max-height:none !important; overflow-y:visible; \}/);
+  assert.match(styles,/\.statistics-page \.table-wrap:has\(\[aria-expanded="true"\]\) \{ max-height:none !important; overflow-y:visible; \}/);
   assert.match(app,/syncDrilldownHeight\(container\)/);
+  assert.match(app,/container\.closest\('\.table-wrap'\)/);
   assert.match(app,/lapPoint\.dataset\.lapTime/);
   assert.match(html,/id="raceFacebookShare"/);
   assert.match(app,/facebookShareLink\(raceId, driverKey\)/);
   assert.match(styles,/\.facebook-share\{/);
  assert.match(css,/driver-races-detail-row[^}]*\[hidden\][^{]*\{display:none!important\}/);
- assert.match(css,/run-lap-list \.table-wrap\{max-height:360px;overflow-x:hidden/);
+ assert.match(css,/run-lap-list \.table-wrap\{max-height:none;overflow-x:hidden;overflow-y:visible\}/);
 });
