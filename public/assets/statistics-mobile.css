@@ -93,8 +93,10 @@
   .statistics-page .race-result-driver-detail:not([hidden]){display:table-row!important}
   .statistics-page .race-result-driver-detail>td{display:table-cell!important;width:auto;padding:0!important}
   .statistics-page .race-result-driver-detail .driver-run-detail{position:sticky;left:0;width:calc(100vw - 40px);min-width:0;padding:10px 0 14px}
-  .statistics-page .race-result-driver-detail .run-detail-summary{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
-  .statistics-page .race-result-driver-detail .run-detail-summary>span{min-height:58px;padding:8px}
+  .statistics-page .race-result-driver-detail .run-detail-summary{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-bottom:10px}
+  .statistics-page .race-result-driver-detail .run-detail-summary>span{min-height:44px;padding:5px 6px;border-top-width:2px}
+  .statistics-page .race-result-driver-detail .run-detail-summary strong{font-size:.9rem;line-height:1.05}
+  .statistics-page .race-result-driver-detail .run-detail-summary small{margin-top:2px;font-size:.52rem;line-height:1.15}
   .statistics-page .race-result-driver-detail .run-summary-fastest{order:-1}
   .statistics-page :is(.run-summary-average-10,.run-summary-average-15){display:none}
   .statistics-page #raceLapCharts{padding:12px;overflow:hidden}

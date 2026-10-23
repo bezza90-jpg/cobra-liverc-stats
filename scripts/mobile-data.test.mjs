@@ -32,6 +32,8 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(css,/#raceLapCharts \.lap-chart-scroll svg\{width:100%;min-width:0;height:auto\}/);
   assert.match(css,/#raceLapCharts \.lap-chart-row\{grid-template-columns:1fr/);
   assert.match(css,/\.race-results-wrap\{max-height:none;/);
+  assert.match(css,/\.race-result-driver-detail \.run-detail-summary\{grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/);
+  assert.match(css,/\.race-result-driver-detail \.run-detail-summary>span\{min-height:44px;padding:5px 6px/);
   assert.match(css,/:is\(\.run-summary-average-10,\.run-summary-average-15\)\{display:none\}/);
   assert.match(app,/race-result-driver-row/);
   assert.match(app,/race-result-driver-detail/);
