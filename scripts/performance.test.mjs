@@ -88,6 +88,13 @@ test('ordinary statistics visits leave journey and map code on demand', async ()
   assert.doesNotMatch(html, /rel="modulepreload" href="assets\/load-map\.js/);
 });
 
+test('long statistics sections defer off-screen rendering without constraining their expanded height', async () => {
+  const css = await read('public/assets/styles.css');
+  assert.match(css, /\.statistics-page #driverLeaderboard,[\s\S]*content-visibility: auto/);
+  assert.match(css, /contain-intrinsic-size: auto 800px/);
+  assert.doesNotMatch(css, /#driverLeaderboard[^}]*max-height/);
+});
+
 
 test('setup context preserves final podium links for every event and driver', async () => {
   const fullText = await read('public/data/dashboard.json');
