@@ -358,6 +358,12 @@ details .table-wrap { margin: 0 14px 14px; }
 .race-results-table th,.race-results-table td{padding:9px 7px}
 .race-results-table th{font-size:.62rem;letter-spacing:.025em}
 .race-results-table .driver-name{font-size:.72rem}
+.race-result-heading{display:flex;align-items:center;gap:10px;margin:10px 0}
+.race-result-heading .race-result-title{margin:0}
+.facebook-share{display:inline-grid;place-items:center;flex:0 0 auto;width:32px;height:32px;padding:0;border:1px solid #0866ff;border-radius:50%;background:#0866ff;color:#fff;text-decoration:none;box-shadow:0 2px 7px #082c3c26;transition:transform .15s ease,box-shadow .15s ease}
+.facebook-share svg{width:24px;height:24px;fill:currentColor}
+.facebook-share:hover,.facebook-share:focus-visible{transform:translateY(-1px) scale(1.05);box-shadow:0 4px 11px #082c3c42;outline:3px solid #9bc2ff;outline-offset:2px}
+.facebook-share[hidden]{display:none}
 .result-avatar-cell{width:64px;text-align:center!important}
 .result-avatar{display:block;width:52px;height:32px;margin:auto;object-fit:contain;cursor:zoom-in}
 .result-avatar:focus-visible{outline:2px solid #087b19;outline-offset:3px}
@@ -716,6 +722,7 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
 .run-lap-chart-points [role="button"]:hover circle,.run-lap-chart-points [role="button"]:focus circle{r:9px;stroke:#fff;stroke-width:4;outline:none}
 .run-lap-chart-legend{display:flex;gap:8px 14px;flex-wrap:wrap;margin:9px 0 12px;color:#d5e4d9;font-size:.72rem;font-weight:800}.run-lap-chart-legend span{display:flex;align-items:center;gap:5px}.run-lap-chart-legend i{width:12px;height:12px;border-radius:50%}.run-lap-chart-legend .lap-fastest{background:#b25ce0}.run-lap-chart-legend .lap-near-fastest{background:#16a34a}.run-lap-chart-legend .lap-slow{background:#d52b45}
 .run-detail-links{display:flex;flex-direction:column;align-items:flex-start;gap:9px;padding:14px;background:#fff;border:1px solid #d6e2d9;border-radius:8px}
+.run-detail-links .facebook-share{width:30px;height:30px;color:#fff}
 .run-detail-links a{color:#067b14;font-weight:850}
 .run-detail-links p{margin:4px 0 0;color:#657269;font-size:.78rem;line-height:1.45}
 @media(max-width:760px){.run-detail-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.run-detail-columns{grid-template-columns:1fr}.run-detail-chart{position:relative;top:auto}.driver-run-detail{padding:12px 10px 16px}}
