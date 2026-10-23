@@ -13,6 +13,7 @@ function actionLink(label,href,className=''){
   return `<a class="${className}" href="${escapeHtml(href)}"${href.startsWith('http')?' target="_blank" rel="noopener"':''}>${escapeHtml(label)}</a>`;
 }
 function photoPlaceholder(index){return `<div class="track-photo-placeholder"><div><strong>Photo ${index}</strong><span>Ready for this event’s track photograph.</span></div></div>`;}
+function photoThumbnail(src){return src.replace('../track-photos/','../track-photo-thumbnails/').replace(/\.[^.]+$/,'.webp');}
 function loadImage(src){
   return new Promise((resolve,reject)=>{const image=new Image();image.onload=()=>resolve(image);image.onerror=reject;image.src=src;});
 }
@@ -56,7 +57,7 @@ async function renderEvent(id,updateAddress=true){
   else if(!image)$('designPlaceholder').innerHTML='<strong>Track design not available</strong><span>The archive keeps this space ready when a plan is added.</span>';
   $('photoSource').hidden=!photos.length;
   if(photos.length)$('photoSource').href=entry.sourcePost||gallery.facebookGroup||'https://www.facebook.com/groups/cobracardiff';
-  $('photoScroller').innerHTML=photos.length?photos.map((photo,index)=>`<button class="track-photo" type="button" data-image="${escapeHtml(photo.image)}" data-caption="${escapeHtml(photo.caption||`${event.name} track photograph ${index+1}`)}"><img src="${escapeHtml(photo.image)}" alt="${escapeHtml(photo.caption||`${event.name} track photograph ${index+1}`)}" loading="lazy"><span>View fullscreen</span></button>`).join(''):[1,2,3].map(photoPlaceholder).join('');
+  $('photoScroller').innerHTML=photos.length?photos.map((photo,index)=>`<button class="track-photo" type="button" data-image="${escapeHtml(photo.image)}" data-caption="${escapeHtml(photo.caption||`${event.name} track photograph ${index+1}`)}"><img src="${escapeHtml(photoThumbnail(photo.image))}" alt="${escapeHtml(photo.caption||`${event.name} track photograph ${index+1}`)}" loading="${index<2?'eager':'lazy'}" decoding="async"><span>View fullscreen</span></button>`).join(''):[1,2,3].map(photoPlaceholder).join('');
   lightboxItems=[...(image?[{image,caption:`${event.name} track design`}]:[]),...photos];
   $('eventSelect').value=activeId;document.querySelectorAll('[data-event-id]').forEach(button=>button.setAttribute('aria-current',String(button.dataset.eventId)===activeId?'true':'false'));
   if(updateAddress){const url=new URL(location.href);url.searchParams.set('event',activeId);history.replaceState({},'',url);}
