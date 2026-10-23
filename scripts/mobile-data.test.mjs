@@ -38,9 +38,12 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(css,/:is\(\.run-summary-average-10,\.run-summary-average-15\)\{display:none\}/);
   assert.match(app,/race-result-driver-row/);
   assert.match(app,/race-result-driver-detail/);
+  assert.match(app,/class="leaderboard-event-results"/);
+  assert.match(app,/sourcePanel.*handleProfileDrilldownClick/);
   assert.match(styles,/\.race-results-wrap\{max-height:500px\}/);
   assert.match(styles,/\.race-results-table\{min-width:0;table-layout:auto;font-size:\.72rem\}/);
   assert.match(styles,/\.fastest-lap\{background:transparent!important;color:#7b2fa3!important;font-weight:900\}/);
+  assert.match(styles,/\.driver-races-toggle\[aria-expanded="true"\]::after\{content:' ↓ shown below'/);
  assert.match(css,/driver-races-detail-row[^}]*\[hidden\][^{]*\{display:none!important\}/);
  assert.match(css,/run-lap-list \.table-wrap\{max-height:360px;overflow-x:hidden/);
 });
