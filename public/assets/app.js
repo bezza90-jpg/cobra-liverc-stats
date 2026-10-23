@@ -904,16 +904,16 @@ async function loadDriverRunDetail(row) {
     const lapRows = allLaps.map(lap => `<tr id="driver-lap-${escapeHtml(raceId)}-${lap.lap}" class="${lap.lap === 1 ? '' : lapPerformanceClass(lap.seconds, best)}"><td>${lap.lap}</td><td>${lap.position ? `P${lap.position}` : '—'}</td><td>${Number(lap.seconds).toFixed(3)}s</td></tr>`).join('');
     const bestAverageCards = [3, 5, 10, 15].map(count => {
       const value = lapAverage(timedLaps, count);
-      return value === '—' ? '' : `<span class="run-summary-average run-summary-average-${count}"><strong>${value}</strong><small>Top ${count} lap average</small></span>`;
+      return value === '—' ? '' : `<span class="run-summary-average run-summary-average-${count}"><strong>${value}</strong><small data-mobile-label="Top ${count}">Top ${count} lap average</small></span>`;
     }).join('');
     cell.innerHTML = `<div class="driver-run-detail">
       <div class="run-detail-summary">
         ${bestAverageCards}
-        <span class="run-summary-fastest"><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small>Fastest lap</small></span>
-        <span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small>Average timed lap</small></span>
-        <span><strong>${timedLaps.length}</strong><small>Timed laps</small></span>
+        <span class="run-summary-fastest"><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small data-mobile-label="Fastest">Fastest lap</small></span>
+        <span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small data-mobile-label="Average">Average timed lap</small></span>
+        <span><strong>${timedLaps.length}</strong><small data-mobile-label="Laps">Timed laps</small></span>
       </div>
-      <div class="run-detail-columns"><div class="run-lap-list"><div class="table-wrap compact"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Race position</th><th>Time</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
+      <div class="run-detail-columns"><div class="run-lap-list"><div class="table-wrap compact"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Pos</th><th>Time</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
       <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p><p class="lap-point-readout" aria-live="polite">Select a point to see its lap time.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId, driverKey)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">Open full COBRA lap chart</a>${facebookShareLink(raceId, driverKey)}${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
     </div>`;
   } catch (error) {
