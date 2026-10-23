@@ -4,7 +4,7 @@ import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
-import {renderLapCharts} from './lap-charts.js?v=20260928-same-tab';
+import {lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261023-lap-colours';
 import { loadMap } from './load-map.js?v=20260928-local';
 import { journeyRoadDistanceKm, journeyRoadRoute, journeyRoadMilestones } from './journey-route.js?v=20261005-roads';
 import {createDistanceRoute} from './journey-route-geometry.js?v=20261005-roads';
@@ -742,6 +742,25 @@ function profileRaceDetail(eventRuns, driverKey, data, colspan) {
   return `<tr class="driver-races-detail-row" hidden><td colspan="${colspan}"><div class="table-wrap driver-races-table" aria-label="Individual race results"><table><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${profileRunRows(eventRuns, driverKey, data)}</tbody></table></div></td></tr>`;
 }
 
+const driverRaceDetailCache = new Map();
+
+function driverRaceDetailUrl(raceId) {
+  return new URL(`../virtual-race-replay/races/${encodeURIComponent(raceId)}.json`, import.meta.url);
+}
+
+function prefetchDriverRunDetails(container) {
+  const raceIds = [...container.querySelectorAll('.driver-run-row[data-race-id]')]
+    .slice(0, 8)
+    .map(row => row.dataset.raceId)
+    .filter(raceId => raceId && !driverRaceDetailCache.has(raceId));
+  raceIds.forEach(raceId => {
+    fetch(driverRaceDetailUrl(raceId))
+      .then(response => response.ok ? response.json() : Promise.reject(new Error('Lap records unavailable')))
+      .then(race => driverRaceDetailCache.set(raceId, race))
+      .catch(() => {});
+  });
+}
+
 async function loadDriverRunDetail(row) {
   const detail = row?.nextElementSibling;
   if (!detail?.classList.contains('driver-run-detail-row')) return;
@@ -751,12 +770,18 @@ async function loadDriverRunDetail(row) {
   detail.dataset.loaded = 'true';
   const cell = detail.querySelector('td');
   cell.innerHTML = '<div class="driver-run-detail" role="status">Loading lap-by-lap result…</div>';
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000);
   try {
     const raceId = row.dataset.raceId;
     const driverKey = row.dataset.driverKey;
-    const response = await fetch(new URL(`../virtual-race-replay/races/${encodeURIComponent(raceId)}.json`, import.meta.url));
-    if (!response.ok) throw new Error('Lap records unavailable');
-    const race = await response.json();
+    let race = driverRaceDetailCache.get(raceId);
+    if (!race) {
+      const response = await fetch(driverRaceDetailUrl(raceId), { signal: controller.signal });
+      if (!response.ok) throw new Error('Lap records unavailable');
+      race = await response.json();
+      driverRaceDetailCache.set(raceId, race);
+    }
     const driver = race.drivers?.find(item => canonicalDriverKey(item.key || item.id || item.name) === driverKey);
     if (!driver) throw new Error('This driver has no lap record in the race file');
     const allLaps = (driver.laps || []).filter(lap => Number.isFinite(Number(lap.seconds)) && Number(lap.seconds) > 0);
@@ -764,7 +789,7 @@ async function loadDriverRunDetail(row) {
     const best = timedLaps.length ? Math.min(...timedLaps.map(lap => Number(lap.seconds))) : null;
     const averageTimed = timedLaps.length ? average(timedLaps.map(lap => Number(lap.seconds))) : null;
     const source = race.source || state.data.raceById[raceId]?.u;
-    const lapRows = allLaps.map(lap => `<tr${Number(lap.seconds) === best ? ' class="fastest-lap"' : ''}><td>${lap.lap}</td><td>${Number(lap.seconds).toFixed(3)}s</td><td>${lap.position ? `P${lap.position}` : '—'}</td></tr>`).join('');
+    const lapRows = allLaps.map(lap => `<tr class="${lap.lap === 1 ? '' : lapPerformanceClass(lap.seconds, best)}"><td>${lap.lap}</td><td>${Number(lap.seconds).toFixed(3)}s</td><td>${lap.position ? `P${lap.position}` : '—'}</td></tr>`).join('');
     cell.innerHTML = `<div class="driver-run-detail">
       <div class="run-detail-summary">
         <span><strong>${lapAverage(timedLaps, 3)}</strong><small>Top 3 lap average</small></span>
@@ -777,7 +802,11 @@ async function loadDriverRunDetail(row) {
       <div class="run-detail-links"><h4>Open result</h4><a href="./lap-charts/?race=${encodeURIComponent(raceId)}&driver=${encodeURIComponent(driverKey)}">COBRA lap charts</a>${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is listed but excluded from the Top 3 and Top 5 averages.</p></div></div>
     </div>`;
   } catch (error) {
-    cell.innerHTML = `<div class="driver-run-detail"><p>${escapeHtml(error.message)}. The official summary above remains available.</p></div>`;
+    delete detail.dataset.loaded;
+    const message = error?.name === 'AbortError' ? 'Lap details are taking longer than expected' : error.message;
+    cell.innerHTML = `<div class="driver-run-detail"><p>${escapeHtml(message)}. The official summary above remains available.</p><button type="button" class="driver-run-retry">Try again</button></div>`;
+  } finally {
+    clearTimeout(timeout);
   }
 }
 
@@ -996,6 +1025,7 @@ function renderProfileMetricEvidence(key, label) {
   panel.classList.remove('fullscreen');
   panel.innerHTML = `<div class="profile-metric-evidence-heading"><div><p class="eyebrow">Metric evidence</p><h3>Where ${escapeHtml(label)} comes from</h3></div><div class="profile-metric-evidence-actions"><button type="button" class="profile-metric-evidence-fullscreen" aria-pressed="false">Full screen</button><button type="button" class="profile-metric-evidence-close" aria-label="Close metric evidence">×</button></div></div>${content}`;
   panel.hidden = false;
+  prefetchDriverRunDetails(panel);
   panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 }
 
@@ -2146,6 +2176,13 @@ async function init() {
       row.click();
     });
     const handleProfileDrilldownClick = (container, event) => {
+      const retry = event.target.closest('.driver-run-retry');
+      if (retry) {
+        const detail = retry.closest('.driver-run-detail-row');
+        const row = detail?.previousElementSibling;
+        if (row?.classList.contains('driver-run-row')) loadDriverRunDetail(row);
+        return;
+      }
       const eventRow = event.target.closest('.profile-event-row,.profile-evidence-event-row');
       const groupButton = event.target.closest('.driver-races-toggle') || (eventRow && !event.target.closest('a,button,.metric-help') ? eventRow.querySelector('.driver-races-toggle') : null);
       if (groupButton) {

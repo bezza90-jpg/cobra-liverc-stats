@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { addSiteShell } from './site-shell.mjs';
 const shellOnlyPages = ['grand-prix-wales/', 'grand-prix-wales/event-guide/', 'grand-prix-wales/announcements/', 'grand-prix-wales/venue/', 'grand-prix-wales/race-centre/', 'grand-prix-wales/driver-finder/'];
-const pages = ['', 'sword/', 'club/', 'podiums/', 'track-gallery/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/', 'club-news/', 'virtual-race-replay/', 'website-guides/', ...shellOnlyPages];
+const pages = ['', 'sword/', 'club/', 'podiums/', 'track-gallery/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/', 'club-news/', 'lap-charts/', 'virtual-race-replay/', 'website-guides/', ...shellOnlyPages];
 const links = [
   ['', 'Race Stats'], ['sword/', 'SWORD Championship'], ['club/', 'Club Series'],
   ['podiums/', 'Podium Gallery'], ['track-gallery/', 'Track Gallery'], ['setups/', 'Setups & Tips'], ['https://www.cobracardiff.co.uk/event-list', 'Events'], ['event/', 'Current Event'],
