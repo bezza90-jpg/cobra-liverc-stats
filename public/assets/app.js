@@ -811,9 +811,24 @@ function profileRaceDetail(eventRuns, driverKey, data, colspan) {
 }
 
 const driverRaceDetailCache = new Map();
+const driverRaceDetailRequests = new Map();
 
 function driverRaceDetailUrl(raceId) {
   return new URL(`../virtual-race-replay/races/${encodeURIComponent(raceId)}.json`, import.meta.url);
+}
+
+function requestDriverRaceDetail(raceId) {
+  if (driverRaceDetailCache.has(raceId)) return Promise.resolve(driverRaceDetailCache.get(raceId));
+  if (driverRaceDetailRequests.has(raceId)) return driverRaceDetailRequests.get(raceId);
+  const request = fetch(driverRaceDetailUrl(raceId))
+    .then(response => response.ok ? response.json() : Promise.reject(new Error('Lap records unavailable')))
+    .then(race => {
+      driverRaceDetailCache.set(raceId, race);
+      return race;
+    })
+    .finally(() => driverRaceDetailRequests.delete(raceId));
+  driverRaceDetailRequests.set(raceId, request);
+  return request;
 }
 
 function prefetchDriverRunDetails(container) {
@@ -822,10 +837,7 @@ function prefetchDriverRunDetails(container) {
     .map(row => row.dataset.raceId)
     .filter(raceId => raceId && !driverRaceDetailCache.has(raceId));
   raceIds.forEach(raceId => {
-    fetch(driverRaceDetailUrl(raceId))
-      .then(response => response.ok ? response.json() : Promise.reject(new Error('Lap records unavailable')))
-      .then(race => driverRaceDetailCache.set(raceId, race))
-      .catch(() => {});
+    requestDriverRaceDetail(raceId).catch(() => {});
   });
 }
 
@@ -883,21 +895,26 @@ async function loadDriverRunDetail(row) {
   detail.dataset.loaded = 'true';
   const cell = detail.querySelector('td');
   cell.innerHTML = '<div class="driver-run-detail" role="status">Loading lap-by-lap result…</div>';
-  const controller = new AbortController();
   const slowNotice = setTimeout(() => {
     const status = cell.querySelector('[role="status"]');
     if (status) status.textContent = 'Still loading lap-by-lap result…';
   }, 8000);
-  const timeout = setTimeout(() => controller.abort(), 25000);
+  let timeout;
   try {
     const raceId = row.dataset.raceId;
     const driverKey = row.dataset.driverKey;
     let race = driverRaceDetailCache.get(raceId);
     if (!race) {
-      const response = await fetch(driverRaceDetailUrl(raceId), { signal: controller.signal });
-      if (!response.ok) throw new Error('Lap records unavailable');
-      race = await response.json();
-      driverRaceDetailCache.set(raceId, race);
+      race = await Promise.race([
+        requestDriverRaceDetail(raceId),
+        new Promise((_, reject) => {
+          timeout = setTimeout(() => {
+            const error = new Error('Lap details are taking longer than expected');
+            error.name = 'AbortError';
+            reject(error);
+          }, 25000);
+        })
+      ]);
     }
     const driver = race.drivers?.find(item => canonicalDriverKey(item.key || item.id || item.name) === driverKey);
     if (!driver) throw new Error('This driver has no lap record in the race file');

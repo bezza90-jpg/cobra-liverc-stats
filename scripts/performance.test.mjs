@@ -98,7 +98,9 @@ test('long statistics sections defer off-screen rendering without constraining t
 test('lap detail requests survive the occasional ten-second browser stall', async () => {
   const app = await read('public/assets/app.js');
   assert.match(app, /Still loading lap-by-lap result/);
-  assert.match(app, /controller\.abort\(\), 25000/);
+  assert.match(app, /}, 25000/);
+  assert.match(app, /driverRaceDetailRequests\.has\(raceId\)/);
+  assert.match(app, /requestDriverRaceDetail\(raceId\)\.catch/);
 });
 
 
