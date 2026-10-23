@@ -17,7 +17,7 @@ test('3D replay keeps the complete responsive site menu',()=>{
   const html=readFileSync(new URL('../public/virtual-race-replay/3d.html',import.meta.url),'utf8');
   assert.match(html,/class="cobra-mobile-menu"/);
   assert.match(html,/class="cobra-site-menu"/);
-  assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=5"/);
+  assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=6"/);
   assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=6"/);
   assert.match(html,/class="cobra-gpw-logo"/);
 });
@@ -52,4 +52,16 @@ test('the Events menu ends with the track gallery',()=>{
   const events=html.match(/<details class="cobra-menu-group"><summary>Events<\/summary><div>(.*?)<\/div><\/details>/s)?.[1]||'';
   assert.match(events,/Events &amp; booking/);
   assert.match(events,/Track gallery<\/a>$/);
+});
+
+test('mobile menu promotes both virtual replay views without removing grouped links',()=>{
+  const html=addSiteShell('<html><head></head><body><main>Race</main></body></html>','../');
+  const css=readFileSync(new URL('../public/assets/site-shell.css',import.meta.url),'utf8');
+  assert.match(html,/class="cobra-mobile-replay-links"/);
+  assert.match(html,/href="\.\.\/virtual-race-replay\/">▶ 2D Replay<\/a>/);
+  assert.match(html,/href="\.\.\/virtual-race-replay\/3d\.html">◆ 3D Replay<\/a>/);
+  assert.equal((html.match(/2D Virtual Replay<\/a>/g)||[]).length,2);
+  assert.equal((html.match(/3D Virtual Replay<\/a>/g)||[]).length,2);
+  assert.match(css,/\.cobra-mobile-replay-links\{display:grid/);
+  assert.match(css,/max-height:calc\(100dvh - 70px\)/);
 });
