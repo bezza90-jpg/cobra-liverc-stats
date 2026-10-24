@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-24T00:25:48.464Z",
+  "updatedAt": "2026-10-24T01:32:59.016Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -185,6 +185,15 @@
       "chassis": "Schumacher",
       "chassisSource": "wix",
       "transponder": "2223753"
+    },
+    {
+      "driverKey": "JONATHAN-PUZEY",
+      "driverName": "JONATHAN PUZEY",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Associated",
+      "chassisSource": "wix",
+      "transponder": "7390713"
     },
     {
       "driverKey": "KEVIN-GREENWAY",
