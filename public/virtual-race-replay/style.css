@@ -50,3 +50,77 @@ header .race-date{font-size:20px;font-weight:750;color:#ecf2ed;margin:0 0 8px}
 
 .download-replay{border-color:#78b951;background:#1d4023;color:#dfffd0;font-weight:750}.download-replay:hover{background:#285b30}.download-replay.recording{background:#4d3420;color:#ffe0a6}.download-status{min-height:1.5em;margin:5px 0 0;color:#bff29e;font-size:13px}
 .car-nameplate{pointer-events:none}.car-nameplate rect{fill:#071209e8;stroke:#dff6e4;stroke-width:1.5}.car-nameplate text{fill:#fff;font:bold 14px system-ui,sans-serif;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:#071209;stroke-width:2px;letter-spacing:.02em}
+
+/* Landscape fullscreen replay: let the actual circuit use the available
+   height. Previously separate clock/control rows reduced the image to a tiny
+   central thumbnail even though the fullscreen dialog filled the viewport. */
+@media(orientation:landscape) and (max-height:600px) and (max-width:1200px){
+  .replay-fullscreen[open]{
+    position:fixed;inset:0;display:block;
+    width:100vw;height:100dvh;max-width:none;max-height:none;
+    padding:0!important;overflow:hidden;
+  }
+  .replay-fullscreen .fullscreen-content{
+    position:absolute;inset:0;display:block;width:100%;height:100%;
+    min-height:0;overflow:hidden;
+  }
+  .replay-fullscreen .fullscreen-panels{width:100%;height:100%}
+  .replay-fullscreen .fullscreen-panels>.player,
+  .replay-fullscreen .fullscreen-panels>.standings{
+    height:100%;min-height:0;
+  }
+  .replay-fullscreen .player:not([hidden]){
+    display:flex;align-items:stretch;justify-content:stretch;
+  }
+  .replay-fullscreen .track{
+    display:block;position:relative;flex:1 1 auto;
+    width:100%;height:100%;min-height:0;max-height:none;aspect-ratio:auto;
+  }
+  .replay-fullscreen .track>img{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:contain;object-position:center;
+  }
+  .replay-fullscreen .track>svg{
+    position:absolute;inset:0;width:100%;height:100%;max-width:none;max-height:none;
+  }
+  .replay-fullscreen .fullscreen-nav{
+    position:absolute;z-index:10;top:env(safe-area-inset-top,0px);
+    left:env(safe-area-inset-left,0px);right:env(safe-area-inset-right,0px);
+    padding:5px 9px;background:#09130bc9;backdrop-filter:blur(5px);
+  }
+  .replay-fullscreen .fullscreen-nav button{min-height:34px;padding:4px 10px}
+  .replay-fullscreen .fullscreen-clock{
+    position:absolute;z-index:9;top:calc(env(safe-area-inset-top,0px) + 43px);
+    left:0;right:0;pointer-events:none;
+  }
+  .replay-fullscreen .fullscreen-clock .bar{
+    padding:2px 12px;background:#101b12b8;
+  }
+  .replay-fullscreen .fullscreen-clock .bar strong{font-size:17px}
+  .replay-fullscreen .fullscreen-clock .tag{font-size:10px}
+  .replay-fullscreen .fullscreen-clock #raceStatus{font-size:11px}
+  .replay-fullscreen .swipe-hint{display:none}
+  .replay-fullscreen .fullscreen-controls{
+    position:absolute;z-index:10;left:0;right:0;bottom:0;
+    padding:4px env(safe-area-inset-right,6px) max(3px,env(safe-area-inset-bottom,0px)) env(safe-area-inset-left,6px);
+    border-top:1px solid #46654a;
+    background:#09130be8;backdrop-filter:blur(6px);
+  }
+  .replay-fullscreen .fullscreen-controls .controls{padding:0 6px}
+  .replay-fullscreen .fullscreen-controls .buttons{
+    display:flex;flex-wrap:nowrap;align-items:center;gap:5px;
+  }
+  .replay-fullscreen .fullscreen-controls .buttons button{
+    flex:0 1 auto;min-width:0;min-height:30px;padding:3px 9px;
+    font-size:12px;white-space:nowrap;
+  }
+  .replay-fullscreen .fullscreen-controls .buttons .download-replay{display:none}
+  .replay-fullscreen .fullscreen-controls .buttons label{
+    display:flex;align-items:center;gap:4px;font-size:11px;margin-left:auto;
+  }
+  .replay-fullscreen .fullscreen-controls select{padding:3px 5px;font-size:11px}
+  .replay-fullscreen .fullscreen-controls .timeline-label{display:none}
+  .replay-fullscreen .fullscreen-controls input[type=range]{
+    display:block;height:15px;margin:0;
+  }
+}
