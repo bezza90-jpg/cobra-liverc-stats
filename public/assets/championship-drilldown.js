@@ -56,6 +56,7 @@ async function loadRound(details) {
     const races = racesForDriver(eventData, row.dataset.className, row.dataset.driverKey);
     body.dataset.loaded = 'true';
     body.innerHTML = races.length ? races.map(raceMarkup).join('') : '<p class="info-muted">No race details are available for this round yet.</p>';
+    scheduleMobileChampionshipAlignment(row.closest('tbody'));
   } catch {
     body.innerHTML = '<p class="info-muted">These races are taking longer than expected. Close and reopen this round to try again.</p>';
   }
@@ -78,6 +79,7 @@ async function toggleRace(button) {
     if (!driver) throw new Error('Driver result missing');
     body.dataset.loaded = 'true';
     body.innerHTML = driverDetail(race, driver);
+    scheduleMobileChampionshipAlignment(row.closest('tbody'));
   } catch {
     body.innerHTML = '<p class="info-muted">Lap details are taking longer than expected. Close and reopen this race to try again.</p>';
   }
@@ -105,7 +107,7 @@ function openDriver(tbody, mainRow) {
   mainRow.setAttribute('aria-expanded', 'true');
   mainRow.querySelector('.championship-driver-toggle')?.setAttribute('aria-expanded', 'true');
   tbody.closest('.table-wrap')?.classList.add('drilldown-expanded');
-  alignMobileChampionshipDetail(tbody);
+  scheduleMobileChampionshipAlignment(tbody);
   const firstRound = row.querySelector('.championship-round[open]');
   if (firstRound) loadRound(firstRound);
 }
@@ -145,16 +147,27 @@ function alignMobileChampionshipDetail(tbody) {
   }
 }
 
+// Re-align after asynchronous race/chart markup has changed the intrinsic
+// table width. The old adjustment only ran when opening the driver row.
+function scheduleMobileChampionshipAlignment(tbody) {
+  if (!tbody) return;
+  requestAnimationFrame(() => {
+    alignMobileChampionshipDetail(tbody);
+    requestAnimationFrame(() => alignMobileChampionshipDetail(tbody));
+  });
+}
+
 export function bindChampionshipDrilldown(tbody) {
   if (!tbody || tbody.dataset.championshipDrilldownBound === 'true') return;
   tbody.dataset.championshipDrilldownBound = 'true';
   const scrollWrap = tbody.closest('.championship-table');
-  scrollWrap?.addEventListener('scroll', () => alignMobileChampionshipDetail(tbody), {passive:true});
-  window.addEventListener('resize', () => alignMobileChampionshipDetail(tbody), {passive:true});
+  scrollWrap?.addEventListener('scroll', () => scheduleMobileChampionshipAlignment(tbody), {passive:true});
+  window.addEventListener('resize', () => scheduleMobileChampionshipAlignment(tbody), {passive:true});
 
   tbody.addEventListener('toggle', event => {
     const details = event.target.closest?.('.championship-round');
     if (details?.open) loadRound(details);
+    scheduleMobileChampionshipAlignment(tbody);
   }, true);
   tbody.addEventListener('click', event => {
     const point = event.target.closest('[data-event-lap-target]');
