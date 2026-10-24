@@ -20,9 +20,16 @@ export function orderedPublishedRaces(eventData) {
   return [...(eventData?.races || [])].filter(race => race?.id).reverse();
 }
 
-export function timedLapsFor(driver) {
+export function isFinalRace(race) {
+  if (typeof race?.isFinal === 'boolean') return race.isFinal;
+  if (typeof race?.f === 'boolean') return race.f;
+  if (typeof race?.f === 'number') return race.f !== 0;
+  const round = String(race?.round || race?.r || '').trim();
+  return /(?:final|main events?)/i.test(round) && !/(?:semi|quarter|practice|qualif)/i.test(round);
+}
+export function timedLapsFor(driver, race = null) {
   const laps = (driver?.laps || []).filter(lap => Number.isFinite(Number(lap?.seconds)) && Number(lap.seconds) > 0);
-  return laps.length > 1 ? laps.slice(1) : laps;
+  return isFinalRace(race) && laps.length > 1 ? laps.filter(lap => Number(lap.lap) !== 1) : laps;
 }
 
 export function bestLapAverage(laps, count) {
@@ -47,7 +54,7 @@ function formatTime(seconds) {
   return `${minutes}:${(value % 60).toFixed(3).padStart(6, '0')}`;
 }
 
-function lapChart(laps, best, targetPrefix) {
+function lapChart(laps, best, targetPrefix, race) {
   if (!laps.length) return '<p class="info-muted">No timed laps were published for this driver.</p>';
   // A narrower viewBox keeps labels and touch targets legible on phones.
   // Desktop retains the existing 630px chart geometry.
@@ -77,12 +84,12 @@ function lapChart(laps, best, targetPrefix) {
   const ticks = laps.map(lap => `<text x="${x(lap.lap)}" y="${mobileChart ? height - 30 : height - 12}" text-anchor="middle">${lap.lap}</text>`).join('');
   const points = laps.map(lap => {
     // The first crossing is plotted but must not be treated as a timed lap.
-    const timingClass = Number(lap.lap) === 1 ? 'lap-opening' : lapPerformanceClass(lap.seconds, best);
+    const timingClass = isFinalRace(race) && Number(lap.lap) === 1 ? 'lap-opening' : lapPerformanceClass(lap.seconds, best);
     const target = `${targetPrefix}-${lap.lap}`;
     return `<g role="button" tabindex="0" data-event-lap-target="${escapeHtml(target)}" data-lap-number="${lap.lap}" data-lap-time="${Number(lap.seconds).toFixed(3)}" aria-label="Outline lap ${lap.lap}, ${Number(lap.seconds).toFixed(3)} seconds"><circle class="${timingClass}" cx="${x(lap.lap)}" cy="${y(lap.seconds)}" r="6"><title>Lap ${lap.lap} · ${Number(lap.seconds).toFixed(3)}s</title></circle></g>`;
   }).join('');
   const gradientPrefix=('event-'+targetPrefix).replace(/[^a-z0-9_-]/gi,'-'),gradientParts=[],lineParts=[];
-  laps.slice(1).forEach((lap,index)=>{const previous=laps[index],id=gradientPrefix+'-'+index;gradientParts.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}"><stop offset="0" stop-color="${Number(previous.lap) === 1 ? "#9fb3a5" : lapLineColour(previous.seconds,best)}"/><stop offset="1" stop-color="${lapLineColour(lap.seconds,best)}"/></linearGradient>`);lineParts.push(`<line class="run-lap-chart-line" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}" style="stroke:url(#${id})"/>`);});
+  laps.slice(1).forEach((lap,index)=>{const previous=laps[index],id=gradientPrefix+'-'+index;gradientParts.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}"><stop offset="0" stop-color="${isFinalRace(race) && Number(previous.lap) === 1 ? "#9fb3a5" : lapLineColour(previous.seconds,best)}"/><stop offset="1" stop-color="${lapLineColour(lap.seconds,best)}"/></linearGradient>`);lineParts.push(`<line class="run-lap-chart-line" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}" style="stroke:url(#${id})"/>`);});
   return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Selectable lap-time chart"><defs>${gradientParts.join('')}</defs><g class="run-lap-chart-grid">${grid}${ticks}<text x="${left}" y="14">Seconds</text><text x="${width / 2}" y="${mobileChart ? height - 8 : 208}" text-anchor="middle">Lap number</text></g>${lineParts.join('')}<g class="run-lap-chart-points">${points}</g></svg>`;
 }
 
@@ -92,7 +99,7 @@ function average(values) {
 
 export function driverDetail(race, driver) {
   const allLaps = (driver.laps || []).filter(lap => Number.isFinite(Number(lap.seconds)) && Number(lap.seconds) > 0);
-  const timedLaps = timedLapsFor(driver);
+  const timedLaps = timedLapsFor(driver, race);
   const best = timedLaps.length ? Math.min(...timedLaps.map(lap => Number(lap.seconds))) : null;
   const averageTimed = average(timedLaps.map(lap => Number(lap.seconds)));
   const safeRace = escapeHtml(race.id);
@@ -103,10 +110,10 @@ export function driverDetail(race, driver) {
     return value === null ? '' : `<span class="run-summary-average run-summary-average-${count}"><strong>${value.toFixed(3)}s</strong><small data-mobile-label="Top ${count}">Top ${count} lap average</small></span>`;
   }).join('');
   const rows = allLaps.map(lap => {
-    const timingClass = Number(lap.lap) === 1 || best === null ? '' : lapPerformanceClass(lap.seconds, best);
+    const timingClass = (isFinalRace(race) && Number(lap.lap) === 1) || best === null ? '' : lapPerformanceClass(lap.seconds, best);
     return `<tr id="${prefix}-${lap.lap}" class="${timingClass}"><td>${lap.lap}</td><td>${Number(lap.seconds).toFixed(3)}s</td><td>${lap.position ? `P${lap.position}` : '—'}</td></tr>`;
   }).join('');
-  return `<div class="driver-run-detail current-event-driver-detail"><div class="run-detail-summary">${averages}<span class="run-summary-fastest"><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small data-mobile-label="Fastest">Fastest lap</small></span><span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small data-mobile-label="Average">Average timed lap</small></span><span><strong>${timedLaps.length}</strong><small data-mobile-label="Laps">Timed laps</small></span></div><div class="run-detail-columns"><div class="run-lap-list"><h4>${escapeHtml(driver.name)} lap times</h4><div class="table-wrap"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Time</th><th>Pos</th></tr></thead><tbody>${rows}</tbody></table></div></div><aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p><p class="lap-point-readout" aria-live="polite">Select a point to see its lap time.</p><div class="run-lap-chart-scroll">${lapChart(allLaps, best, prefix)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="../lap-charts/?race=${encodeURIComponent(race.id)}&driver=${encodeURIComponent(driver.key || driver.name)}">Open full COBRA lap chart</a>${facebookShareLink(race.id,driver.key||driver.id||driver.name)}<a href="../virtual-race-replay/?race=${encodeURIComponent(race.id)}">Watch 2D replay</a></div></aside></div></div>`;
+  return `<div class="driver-run-detail current-event-driver-detail"><div class="run-detail-summary">${averages}<span class="run-summary-fastest"><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small data-mobile-label="Fastest">Fastest lap</small></span><span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small data-mobile-label="Average">Average timed lap</small></span><span><strong>${timedLaps.length}</strong><small data-mobile-label="Laps">Timed laps</small></span></div><div class="run-detail-columns"><div class="run-lap-list"><h4>${escapeHtml(driver.name)} lap times</h4><div class="table-wrap"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Time</th><th>Pos</th></tr></thead><tbody>${rows}</tbody></table></div></div><aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p><p class="lap-point-readout" aria-live="polite">Select a point to see its lap time.</p><div class="run-lap-chart-scroll">${lapChart(allLaps, best, prefix, race)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="../lap-charts/?race=${encodeURIComponent(race.id)}&driver=${encodeURIComponent(driver.key || driver.name)}">Open full COBRA lap chart</a>${facebookShareLink(race.id,driver.key||driver.id||driver.name)}<a href="../virtual-race-replay/?race=${encodeURIComponent(race.id)}">Watch 2D replay</a></div></aside></div></div>`;
 }
 
 function standingsMarkup(race) {
