@@ -356,6 +356,36 @@ class Viewer{
         faces.push(polygon(rim,wheel,'#090d0b','car-hub'));
       }
     }
+    if(car.vehicleType==='truck'){
+      // Short-course truck: full-width enclosed pickup shell, cab, bonnet and
+      // rear deck. Keep tyre geometry and driver colours; omit buggy rear wing.
+      box(-.96,.96,-.92,.92,-.62,-.17,body,'truck-body');
+      box(.38,.97,-.83,.83,-.18,.13,secondary,'truck-hood');
+      box(-.92,-.37,-.88,.88,-.18,.08,third,'truck-bed');
+      // Sloping windshield and tall pickup cab.
+      quad([[-.46,-.70,.05],[.24,-.70,.70],[.24,.70,.70],[-.46,.70,.05]],body,'truck-roof');
+      quad([[.24,-.70,.70],[.42,-.70,.13],[.42,.70,.13],[.24,.70,.70]],glass,'truck-windshield');
+      quad([[-.46,-.70,.05],[-.46,-.70,.70],[.24,-.70,.70],[.42,-.70,.13]],colour(secondary,.88),'truck-door');
+      quad([[-.46,.70,.05],[.42,.70,.13],[.24,.70,.70],[-.46,.70,.70]],colour(secondary,.88),'truck-door');
+      box(-.46,.24,-.70,.70,.69,.76,body,'truck-roof');
+      quad([[-.55,-.71,.10],[-.55,-.71,.61],[-.46,-.71,.70],[-.46,-.71,.10]],glass,'truck-rear-window');
+      quad([[-.55,.71,.10],[-.46,.71,.10],[-.46,.71,.70],[-.55,.71,.61]],glass,'truck-rear-window');
+      // Broad fenders and lower bumpers give the silhouette its truck stance.
+      for(const side of [-1,1]){
+        const inside=side<0?-.91:.77,outside=side<0?-.77:.91;
+        box(-.95,-.51,inside,outside,-.65,-.13,accent,'truck-fender');
+        box(.47,.97,inside,outside,-.65,-.13,accent,'truck-fender');
+      }
+      box(.96,1.04,-.94,.94,-.63,-.39,dark,'truck-bumper');
+      box(-1.04,-.96,-.94,.94,-.63,-.39,dark,'truck-bumper');
+      // Tailgate panel and bed cover distinguish the rear from a buggy.
+      box(-1.00,-.93,-.87,.87,-.20,.12,third,'truck-tailgate');
+      if(car.onFire){
+        const cx=Number(car.x??routePoint?.x)||0,cy=Number(car.y??routePoint?.y)||0,phase=Number(car.firePhase)||0,base=Math.max(.52,(Number(car.z)||0)+.28);
+        for(let i=0;i<3;i++){let a=i*Math.PI*2/3+phase*.12;faces.push(polygon([vec(cx+Math.cos(a)*.25,cy+Math.sin(a)*.25,base),vec(cx+Math.cos(a+.9)*.25,cy+Math.sin(a+.9)*.25,base),vec(cx,cy,base+.9+.1*Math.sin(phase+i))],['#ff4616','#ff941f','#ffe150'][i],'#8d1800','car-fire'));}
+      }
+      return faces;
+    }
     // The chassis and shell stay narrow between the wheels, with a pointed
     // nose and a raised central cockpit rather than a full-width sedan body.
     box(-.78,.68,-.46,.46,-.78,-.56,dark,'car-chassis');
