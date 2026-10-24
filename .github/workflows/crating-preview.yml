@@ -1,0 +1,27 @@
+name: Review cRating pools (unpublished)
+on:
+  push:
+    branches:
+      - review/crating-2wd-4wd-comparison
+    paths:
+      - scripts/preview-cratings.mjs
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Calculate historical rating comparison without publishing
+        run: node scripts/preview-cratings.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unpublished-crating-comparison
+          path: |
+            crating-preview/comparison.csv
+            crating-preview/summary.json
+          retention-days: 14
