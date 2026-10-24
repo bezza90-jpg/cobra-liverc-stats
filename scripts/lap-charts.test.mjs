@@ -30,3 +30,15 @@ test('full driver chart connects lap one to lap two while keeping its timing sca
  assert.equal((compact.match(/class="lap-chart-line"/g)||[]).length,1);
  assert.ok(fullLapScale(driver).min>16);
 });
+
+test('non-final rounds include lap one in chart scales and line segments',()=>{
+ const driver={key:'QUAL',name:'Qualifier',laps:[{lap:1,seconds:24},{lap:2,seconds:18},{lap:3,seconds:18.2}]};
+ const race={id:'qual',name:'Qualifier',isFinal:false,drivers:[driver]};
+ const html=lapChartMarkup(race,race,{fitFullRange:true});
+ assert.match(html,/Lap 1 is a full timed lap/);
+ assert.equal((html.match(/class="lap-chart-line"/g)||[]).length,2);
+ assert.ok(fullLapScale(driver,true).max>24);
+ const finalHtml=lapChartMarkup({...race,isFinal:true},{...race,isFinal:true},{fitFullRange:true});
+ assert.match(finalHtml,/opening crossing does not set the time scale/);
+ assert.ok(fullLapScale(driver,false).max<24);
+});
