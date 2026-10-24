@@ -2298,22 +2298,37 @@ async function init() {
     $('leaderboardClassTabs').addEventListener('click', event => {
       const button = event.target.closest('[data-class-filter]');
       if (!button) return;
-      // Rebuilding a leaderboard can substantially shorten the document. Safari
-      // may then adjust the scroll position, moving the filter buttons away.
-      // Preserve the tabs' viewport position across the class switch.
       const tabs = $('leaderboardClassTabs');
-      const topBefore = tabs.getBoundingClientRect().top;
-      const scrollBefore = window.scrollY;
+      const beforeY = window.scrollY;
+      const beforeTop = tabs.getBoundingClientRect().top;
+      // The class switch also replaces the Race Explorer and an asynchronous
+      // lap chart further down the page. Safari's scroll anchoring may follow
+      // that disappearing content instead of the button the user tapped.
+      // Lock the document's scrollable extent during this complete refresh.
+      const root = document.documentElement;
+      const priorMinHeight = root.style.minHeight;
+      const priorAnchor = root.style.overflowAnchor;
+      root.style.minHeight = Math.max(root.scrollHeight, beforeY + window.innerHeight + 40) + 'px';
+      root.style.overflowAnchor = 'none';
+      const restorePosition = () => {
+        if (!tabs.isConnected) return;
+        const delta = tabs.getBoundingClientRect().top - beforeTop;
+        if (Math.abs(delta) > 1) window.scrollTo({ top: window.scrollY + delta, behavior: 'instant' });
+        // Preserve the actual page position as well as the visual tab anchor.
+        if (Math.abs(window.scrollY - beforeY) > 2) window.scrollTo({ top: beforeY, behavior: 'instant' });
+      };
       $('classFilter').value = button.dataset.classFilter;
       if ($('classFilter').value === 'Junior Racers' && $('minimumFinals').value === '10') $('minimumFinals').value = '5';
       syncClassButtons();
       refresh();
-      const restorePosition = () => {
-        const movement = tabs.getBoundingClientRect().top - topBefore;
-        if (Math.abs(movement) > 1) window.scrollBy(0, movement);
-      };
       restorePosition();
-      requestAnimationFrame(restorePosition);
+      requestAnimationFrame(() => requestAnimationFrame(restorePosition));
+      setTimeout(restorePosition, 150);
+      setTimeout(() => {
+        restorePosition();
+        root.style.overflowAnchor = priorAnchor;
+        root.style.minHeight = priorMinHeight;
+      }, 850);
     });
     $('driverSearch').addEventListener('input', renderLeaderboard);
     $('leaderboardMetric').addEventListener('change', () => {
