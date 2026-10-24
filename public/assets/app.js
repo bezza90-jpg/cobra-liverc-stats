@@ -875,9 +875,9 @@ function prefetchDriverRunDetails(container) {
   });
 }
 
-function driverRunLapChart(laps, best, raceId, driverKey = '') {
+function driverRunLapChart(laps, best, raceId, driverKey = '', isFinal = true) {
   if (!laps.length || best === null) return '<p>No lap chart is available for this race.</p>';
-  const timed = laps.length > 1 ? laps.slice(1) : laps;
+  const timed = isFinal && laps.length > 1 ? laps.filter(lap => Number(lap.lap) !== 1) : laps;
   const values = timed.map(lap => Number(lap.seconds));
   const low = Math.min(...values);
   const high = Math.max(...values);
@@ -953,12 +953,13 @@ async function loadDriverRunDetail(row) {
     const driver = race.drivers?.find(item => canonicalDriverKey(item.key || item.id || item.name) === driverKey);
     if (!driver) throw new Error('This driver has no lap record in the race file');
     const allLaps = (driver.laps || []).filter(lap => Number.isFinite(Number(lap.seconds)) && Number(lap.seconds) > 0);
-    const timedLaps = allLaps.length > 1 ? allLaps.slice(1) : allLaps;
+    const finalRun = typeof race.isFinal === 'boolean' ? race.isFinal : Boolean(state.data.raceById[raceId]?.f);
+    const timedLaps = finalRun && allLaps.length > 1 ? allLaps.filter(lap => Number(lap.lap) !== 1) : allLaps;
     const best = timedLaps.length ? Math.min(...timedLaps.map(lap => Number(lap.seconds))) : null;
     const averageTimed = timedLaps.length ? average(timedLaps.map(lap => Number(lap.seconds))) : null;
     const source = race.source || state.data.raceById[raceId]?.u;
     const fullLapChartUrl = prefetchFullLapChart(raceId, driverKey);
-    const lapRows = allLaps.map(lap => `<tr id="driver-lap-${escapeHtml(raceId)}-${lap.lap}" class="${lap.lap === 1 ? '' : lapPerformanceClass(lap.seconds, best)}"><td>${lap.lap}</td><td>${Number(lap.seconds).toFixed(3)}s</td><td>${lap.position ? `P${lap.position}` : '—'}</td></tr>`).join('');
+    const lapRows = allLaps.map(lap => `<tr id="driver-lap-${escapeHtml(raceId)}-${lap.lap}" class="${finalRun && lap.lap === 1 ? '' : lapPerformanceClass(lap.seconds, best)}"><td>${lap.lap}</td><td>${Number(lap.seconds).toFixed(3)}s</td><td>${lap.position ? `P${lap.position}` : '—'}</td></tr>`).join('');
     const bestAverageCards = [3, 5, 10, 15].map(count => {
       const value = lapAverage(timedLaps, count);
       return value === '—' ? '' : `<span class="run-summary-average run-summary-average-${count}"><strong>${value}</strong><small data-mobile-label="Top ${count}">Top ${count} lap average</small></span>`;
@@ -971,7 +972,7 @@ async function loadDriverRunDetail(row) {
         <span><strong>${timedLaps.length}</strong><small data-mobile-label="Laps">Timed laps</small></span>
       </div>
       <div class="run-detail-columns"><div class="run-lap-list"><div class="table-wrap compact"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Lap time</th><th>Pos</th></tr></thead><tbody>${lapRows || '<tr><td colspan="3">No lap times recorded.</td></tr>'}</tbody></table></div></div>
-      <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p><p class="lap-point-readout" aria-live="polite">Select a point to see its lap time.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId, driverKey)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="${escapeHtml(fullLapChartUrl)}">Open full COBRA lap chart</a>${facebookShareLink(raceId, driverKey)}${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
+      <aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p><p class="lap-point-readout" aria-live="polite">Select a point to see its lap time.</p><div class="run-lap-chart-scroll">${driverRunLapChart(allLaps, best, raceId, driverKey, finalRun)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="${escapeHtml(fullLapChartUrl)}">Open full COBRA lap chart</a>${facebookShareLink(raceId, driverKey)}${source ? `<a href="${escapeHtml(source)}" target="_blank" rel="noopener">Original LiveRC result ↗</a>` : ''}<p>The opening crossing is excluded from the Top 3, Top 5 and lap colours.</p></div></aside></div>
     </div>`;
   } catch (error) {
     delete detail.dataset.loaded;
