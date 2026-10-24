@@ -127,11 +127,21 @@ function alignMobileChampionshipDetail(tbody) {
   const panel = tbody.querySelector('.championship-driver-detail-row:not([hidden]) .championship-driver-detail');
   if (!wrap || !panel) return;
   if (window.matchMedia('(max-width:760px)').matches) {
-    panel.style.setProperty('--championship-scroll-x', wrap.scrollLeft + 'px');
-    panel.style.setProperty('--championship-visible-width', Math.max(240, wrap.clientWidth - 18) + 'px');
+    // The detail lives inside a much wider standings table. Align against
+    // the VISIBLE wrapper rectangle, not its horizontal scroll position:
+    // the containing table cell can start well away from the wrapper edge.
+    const available = Math.max(240, wrap.clientWidth - 24);
+    panel.style.setProperty('--championship-visible-width', available + 'px');
+    const oldOffset = Number(panel.dataset.mobileOffset || 0);
+    const actualLeft = panel.getBoundingClientRect().left;
+    const desiredLeft = wrap.getBoundingClientRect().left + 12;
+    const offset = oldOffset + desiredLeft - actualLeft;
+    panel.dataset.mobileOffset = String(offset);
+    panel.style.setProperty('--championship-scroll-x', offset + 'px');
   } else {
     panel.style.removeProperty('--championship-scroll-x');
     panel.style.removeProperty('--championship-visible-width');
+    delete panel.dataset.mobileOffset;
   }
 }
 
