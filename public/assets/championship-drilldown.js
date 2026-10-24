@@ -105,6 +105,7 @@ function openDriver(tbody, mainRow) {
   mainRow.setAttribute('aria-expanded', 'true');
   mainRow.querySelector('.championship-driver-toggle')?.setAttribute('aria-expanded', 'true');
   tbody.closest('.table-wrap')?.classList.add('drilldown-expanded');
+  alignMobileChampionshipDetail(tbody);
   const firstRound = row.querySelector('.championship-round[open]');
   if (firstRound) loadRound(firstRound);
 }
@@ -119,9 +120,28 @@ function selectLapPoint(point) {
   if (readout) readout.textContent = `Lap ${point.dataset.lapNumber} · ${point.dataset.lapTime}s`;
 }
 
+// Keep an expanded championship panel stationary within the visible portion
+// of a horizontally scrolled standings table on phones.
+function alignMobileChampionshipDetail(tbody) {
+  const wrap = tbody.closest('.championship-table');
+  const panel = tbody.querySelector('.championship-driver-detail-row:not([hidden]) .championship-driver-detail');
+  if (!wrap || !panel) return;
+  if (window.matchMedia('(max-width:760px)').matches) {
+    panel.style.setProperty('--championship-scroll-x', wrap.scrollLeft + 'px');
+    panel.style.setProperty('--championship-visible-width', Math.max(240, wrap.clientWidth - 18) + 'px');
+  } else {
+    panel.style.removeProperty('--championship-scroll-x');
+    panel.style.removeProperty('--championship-visible-width');
+  }
+}
+
 export function bindChampionshipDrilldown(tbody) {
   if (!tbody || tbody.dataset.championshipDrilldownBound === 'true') return;
   tbody.dataset.championshipDrilldownBound = 'true';
+  const scrollWrap = tbody.closest('.championship-table');
+  scrollWrap?.addEventListener('scroll', () => alignMobileChampionshipDetail(tbody), {passive:true});
+  window.addEventListener('resize', () => alignMobileChampionshipDetail(tbody), {passive:true});
+
   tbody.addEventListener('toggle', event => {
     const details = event.target.closest?.('.championship-round');
     if (details?.open) loadRound(details);
