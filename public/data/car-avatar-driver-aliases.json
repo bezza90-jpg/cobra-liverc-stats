@@ -33,5 +33,15 @@
     "driverKey": "BRUCE",
     "displayName": "Paul \"Bruce\" Curtis",
     "profileName": "Paul \"Bruce\" Curtis"
+  },
+  "THOMAS-SPENCER-JENKINS": {
+    "driverKey": "TOM-JENKINS",
+    "displayName": "Tom Jenkins",
+    "profileName": "Tom Jenkins"
+  },
+  "CHRISTOPHER-LEONARD": {
+    "driverKey": "CHRIS-LEONARD",
+    "displayName": "Chris Leonard",
+    "profileName": "Chris Leonard"
   }
 }
