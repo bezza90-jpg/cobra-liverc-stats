@@ -307,3 +307,83 @@
     width:100%;max-width:100%;overflow-x:auto;
   }
 }
+
+/* Race Explorer structural mobile cards: release expanded laps from the
+   desktop table's intrinsic eleven-column width. */
+@media(max-width:700px){
+  .statistics-page #raceExplorer .race-results-wrap{
+    display:block!important;box-sizing:border-box;width:100%!important;
+    max-width:100%!important;min-width:0!important;
+    overflow-x:hidden!important;overflow-y:visible!important;
+  }
+  .statistics-page #raceExplorer .race-results-wrap > table{
+    display:block!important;box-sizing:border-box;width:100%!important;
+    min-width:0!important;max-width:100%!important;table-layout:auto!important;
+  }
+  .statistics-page #raceExplorer .race-results-wrap > table > thead{
+    position:absolute!important;width:1px;height:1px;overflow:hidden;
+    clip-path:inset(50%);
+  }
+  .statistics-page #raceExplorer .race-results-wrap > table > tbody{
+    display:grid!important;grid-template-columns:minmax(0,1fr);
+    gap:8px;box-sizing:border-box;width:100%!important;min-width:0!important;
+  }
+  .statistics-page #raceExplorer .race-result-driver-row{
+    display:grid!important;box-sizing:border-box;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    padding:10px;gap:6px 12px;border:1px solid #d1ded4;border-radius:9px;
+    background:#fff;
+  }
+  .statistics-page #raceExplorer .race-result-driver-row > td{
+    display:flex!important;box-sizing:border-box;align-items:center;
+    justify-content:space-between;gap:8px;padding:5px 0!important;
+    border:0!important;min-width:0!important;max-width:100%;
+    text-align:right!important;white-space:normal!important;overflow-wrap:anywhere;
+  }
+  .statistics-page #raceExplorer .race-result-driver-row > td::before{
+    flex:0 0 auto;text-align:left;font-size:.65rem;font-weight:800;
+    letter-spacing:.025em;color:#53655a;text-transform:uppercase;
+  }
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(1)::before{content:'Pos'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(2)::before{content:'Driver'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(3)::before{content:'Avatar'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(4)::before{content:'Qualifying'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(5)::before{content:'Laps / time'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(6)::before{content:'Behind'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(7)::before{content:'Fastest'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(8)::before{content:'Average'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(9)::before{content:'Consistency'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(10)::before{content:'Pace'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(11)::before{content:'Potential'}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(2){
+    grid-column:1/-1;justify-content:flex-start;
+  }
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(2)::before{margin-right:10px}
+  .statistics-page #raceExplorer .race-result-driver-row > td:nth-child(2) .driver-name{
+    min-width:0;white-space:normal;overflow-wrap:anywhere;text-align:left;
+  }
+  .statistics-page #raceExplorer .race-result-driver-detail:not([hidden]){
+    display:block!important;box-sizing:border-box;width:100%!important;
+    min-width:0!important;max-width:100%!important;
+    margin:0 0 12px;padding:0!important;border:0!important;
+  }
+  .statistics-page #raceExplorer .race-result-driver-detail > td{
+    display:block!important;box-sizing:border-box;
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    padding:0!important;border:0!important;
+  }
+  .statistics-page #raceExplorer .race-result-driver-detail .driver-run-detail{
+    position:static!important;left:auto!important;
+    width:100%!important;min-width:0!important;max-width:100%!important;
+    box-sizing:border-box;padding:8px!important;overflow:visible!important;
+  }
+  .statistics-page #raceExplorer .race-result-driver-detail .run-detail-summary{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:100%!important;
+  }
+  .statistics-page #raceExplorer .race-result-driver-detail .run-detail-columns{
+    display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+    width:100%!important;
+  }
+}
