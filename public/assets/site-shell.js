@@ -47,8 +47,12 @@ export function initNavigationPrefetch(root = document) {
   if (root.documentElement) root.documentElement.dataset.cobraPrefetchReady = 'true';
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   if (connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || '')) return;
-  const queued = new Set();
   const supportsSpeculationRules = typeof HTMLScriptElement !== 'undefined' && HTMLScriptElement.supports?.('speculationrules');
+  // Legacy document prefetch can compete with the real navigation triggered
+  // by the same click in Firefox and Safari. Use only browser-managed
+  // speculation after a deliberate mouse hover.
+  if (!supportsSpeculationRules) return;
+  const queued = new Set();
   let hoverTimer = 0;
   const candidate = target => {
     const anchor = target?.closest?.('a[href]');
@@ -64,27 +68,17 @@ export function initNavigationPrefetch(root = document) {
     const url = candidate(target);
     if (!url) return;
     queued.add(url.href);
-    if (supportsSpeculationRules) {
-      const rules = root.createElement('script');
-      rules.type = 'speculationrules';
-      rules.textContent = JSON.stringify({prefetch: [{source: 'list', urls: [url.href], eagerness: 'immediate'}]});
-      root.head.append(rules);
-      return;
-    }
-    const hint = root.createElement('link');
-    hint.rel = 'prefetch';
-    hint.as = 'document';
-    hint.href = url.href;
-    root.head.append(hint);
+    const rules = root.createElement('script');
+    rules.type = 'speculationrules';
+    rules.textContent = JSON.stringify({prefetch: [{source: 'list', urls: [url.href], eagerness: 'immediate'}]});
+    root.head.append(rules);
   };
   root.addEventListener('pointerover', event => {
     if (event.pointerType && event.pointerType !== 'mouse') return;
     clearTimeout(hoverTimer);
-    hoverTimer = setTimeout(() => prefetch(event.target), 80);
+    hoverTimer = setTimeout(() => prefetch(event.target), 300);
   }, {passive: true});
   root.addEventListener('pointerout', () => clearTimeout(hoverTimer), {passive: true});
-  root.addEventListener('focusin', event => prefetch(event.target), {passive: true});
-  root.addEventListener('pointerdown', event => prefetch(event.target), {passive: true});
 }
 
 const SEARCH_PAGES = [

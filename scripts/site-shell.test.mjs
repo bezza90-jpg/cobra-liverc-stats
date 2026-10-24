@@ -18,21 +18,23 @@ test('3D replay keeps the complete responsive site menu',()=>{
   assert.match(html,/class="cobra-mobile-menu"/);
   assert.match(html,/class="cobra-site-menu"/);
   assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=6"/);
-  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=6"/);
+  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=7"/);
   assert.match(html,/class="cobra-gpw-logo"/);
 });
 
-test('shared shell anticipates internal navigation without wasting restricted connections',()=>{
+test('shared shell prefetches only after deliberate hover in browsers with managed speculation',()=>{
   const source=readFileSync(new URL('../public/assets/site-shell.js',import.meta.url),'utf8');
   assert.match(source,/HTMLScriptElement\.supports\?\.\('speculationrules'\)/);
   assert.match(source,/rules\.type = 'speculationrules'/);
   assert.match(source,/eagerness: 'immediate'/);
-  assert.match(source,/rel = 'prefetch'/);
-  assert.match(source,/hint\.as = 'document'/);
+  assert.match(source,/if \(!supportsSpeculationRules\) return/);
+  assert.doesNotMatch(source,/rel = 'prefetch'/);
   assert.match(source,/connection\?\.saveData/);
   assert.match(source,/effectiveType/);
   assert.match(source,/url\.origin !== location\.origin/);
-  assert.match(source,/setTimeout\(\(\) => prefetch\(event\.target\), 80\)/);
+  assert.match(source,/setTimeout\(\(\) => prefetch\(event\.target\), 300\)/);
+  assert.doesNotMatch(source,/addEventListener\('pointerdown'/);
+  assert.doesNotMatch(source,/addEventListener\('focusin'/);
 });
 
 test('standalone pages use the shared Club Series hero branding',()=>{
