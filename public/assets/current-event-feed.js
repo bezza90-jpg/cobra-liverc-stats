@@ -49,12 +49,15 @@ function formatTime(seconds) {
 
 function lapChart(laps, best, targetPrefix) {
   if (!laps.length) return '<p class="info-muted">No timed laps were published for this driver.</p>';
-  const width = 630;
-  const height = 210;
-  const left = 48;
-  const right = 18;
+  // A narrower viewBox keeps labels and touch targets legible on phones.
+  // Desktop retains the existing 630px chart geometry.
+  const mobileChart = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 760px)').matches;
+  const width = mobileChart ? 360 : 630;
+  const height = mobileChart ? 240 : 210;
+  const left = mobileChart ? 45 : 48;
+  const right = mobileChart ? 16 : 18;
   const top = 20;
-  const bottom = 34;
+  const bottom = mobileChart ? 48 : 34;
   const values = laps.map(lap => Number(lap.seconds));
   const minimum = Math.min(...values);
   const maximum = Math.max(...values);
@@ -71,7 +74,7 @@ function lapChart(laps, best, targetPrefix) {
     const label = high - ratio * (high - low);
     return `<line x1="${left}" x2="${width - right}" y1="${yPosition}" y2="${yPosition}"/><text x="${left - 7}" y="${yPosition + 4}" text-anchor="end">${label.toFixed(1)}</text>`;
   }).join('');
-  const ticks = laps.map(lap => `<text x="${x(lap.lap)}" y="${height - 12}" text-anchor="middle">${lap.lap}</text>`).join('');
+  const ticks = laps.map(lap => `<text x="${x(lap.lap)}" y="${mobileChart ? height - 30 : height - 12}" text-anchor="middle">${lap.lap}</text>`).join('');
   const points = laps.map(lap => {
     const timingClass = lapPerformanceClass(lap.seconds, best);
     const target = `${targetPrefix}-${lap.lap}`;
@@ -79,7 +82,7 @@ function lapChart(laps, best, targetPrefix) {
   }).join('');
   const gradientPrefix=('event-'+targetPrefix).replace(/[^a-z0-9_-]/gi,'-'),gradientParts=[],lineParts=[];
   laps.slice(1).forEach((lap,index)=>{const previous=laps[index],id=gradientPrefix+'-'+index;gradientParts.push(`<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}"><stop offset="0" stop-color="${lapLineColour(previous.seconds,best)}"/><stop offset="1" stop-color="${lapLineColour(lap.seconds,best)}"/></linearGradient>`);lineParts.push(`<line class="run-lap-chart-line" x1="${x(previous.lap)}" y1="${y(previous.seconds)}" x2="${x(lap.lap)}" y2="${y(lap.seconds)}" style="stroke:url(#${id})"/>`);});
-  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Selectable lap-time chart"><defs>${gradientParts.join('')}</defs><g class="run-lap-chart-grid">${grid}${ticks}<text x="${left}" y="14">Seconds</text><text x="324" y="208" text-anchor="middle">Lap number</text></g>${lineParts.join('')}<g class="run-lap-chart-points">${points}</g></svg>`;
+  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Selectable lap-time chart"><defs>${gradientParts.join('')}</defs><g class="run-lap-chart-grid">${grid}${ticks}<text x="${left}" y="14">Seconds</text><text x="${width / 2}" y="${mobileChart ? height - 8 : 208}" text-anchor="middle">Lap number</text></g>${lineParts.join('')}<g class="run-lap-chart-points">${points}</g></svg>`;
 }
 
 function average(values) {
