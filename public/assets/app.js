@@ -2298,10 +2298,22 @@ async function init() {
     $('leaderboardClassTabs').addEventListener('click', event => {
       const button = event.target.closest('[data-class-filter]');
       if (!button) return;
+      // Rebuilding a leaderboard can substantially shorten the document. Safari
+      // may then adjust the scroll position, moving the filter buttons away.
+      // Preserve the tabs' viewport position across the class switch.
+      const tabs = $('leaderboardClassTabs');
+      const topBefore = tabs.getBoundingClientRect().top;
+      const scrollBefore = window.scrollY;
       $('classFilter').value = button.dataset.classFilter;
       if ($('classFilter').value === 'Junior Racers' && $('minimumFinals').value === '10') $('minimumFinals').value = '5';
       syncClassButtons();
       refresh();
+      const restorePosition = () => {
+        const movement = tabs.getBoundingClientRect().top - topBefore;
+        if (Math.abs(movement) > 1) window.scrollBy(0, movement);
+      };
+      restorePosition();
+      requestAnimationFrame(restorePosition);
     });
     $('driverSearch').addEventListener('input', renderLeaderboard);
     $('leaderboardMetric').addEventListener('change', () => {
