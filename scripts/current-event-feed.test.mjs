@@ -45,11 +45,18 @@ test('current event lap points publish an exact selected-lap readout', async () 
 
 test('current event and championship charts scale inside their detail panel', async () => {
   const source = await readFile(new URL('../public/assets/current-event-feed.js', import.meta.url), 'utf8');
-  assert.match(source, /<div class="run-lap-chart-scroll">\$\{lapChart\(timedLaps, best, prefix\)\}<\/div>/);
+  assert.match(source, /<div class="run-lap-chart-scroll">\$\{lapChart\(allLaps, best, prefix\)\}<\/div>/);
 });
 
 test('lap detail tables place the coloured lap time before the neutral position', async () => {
   const source = await readFile(new URL('../public/assets/current-event-feed.js', import.meta.url), 'utf8');
   assert.match(source, /<th>Lap<\/th><th>Time<\/th><th>Pos<\/th>/);
   assert.match(source, /<td>\$\{lap\.lap\}<\/td><td>\$\{Number\(lap\.seconds\)\.toFixed\(3\)\}s<\/td><td>\$\{lap\.position/);
+});
+
+test('lap one appears on charts but is not included in timed averages', async () => {
+  const source = await readFile(new URL('../public/assets/current-event-feed.js', import.meta.url), 'utf8');
+  assert.match(source, /lapChart\(allLaps, best, prefix\)/);
+  assert.match(source, /Number\(lap\.lap\) === 1 \? 'lap-opening'/);
+  assert.match(source, /const timedLaps = timedLapsFor\(driver\)/);
 });
