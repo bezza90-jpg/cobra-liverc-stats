@@ -123,3 +123,49 @@
   .statistics-page #raceLapCharts .lap-chart-expand{overflow-x:hidden}
   .statistics-page #raceLapCharts .lap-chart-scroll svg{width:100%;min-width:0;height:auto}
 }
+
+/* 2026-10-24: Keep expanded results and lap drill-downs inside phone viewport. */
+@media (max-width:700px){
+  .statistics-page, .statistics-page main, .statistics-page main > *,
+  .statistics-page .driver-dialog, .statistics-page .dialog-shell,
+  .statistics-page .profile-history, .statistics-page .profile-metric-evidence,
+  .statistics-page .driver-races-table, .statistics-page .table-wrap{
+    box-sizing:border-box;min-width:0;max-width:100%;
+  }
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table){
+    box-sizing:border-box;width:100%!important;min-width:0!important;max-width:100%!important;
+  }
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody{
+    box-sizing:border-box;min-width:0;max-width:100%;
+  }
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row){
+    box-sizing:border-box;grid-template-columns:minmax(0,1fr)!important;min-width:0;max-width:100%;
+  }
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row)>td{
+    box-sizing:border-box;grid-column:1/-1;min-width:0;width:100%;max-width:100%;align-items:center;
+    overflow-wrap:anywhere;word-break:normal;
+  }
+  .statistics-page :is(.leaderboard-event-results,.profile-events-table,.profile-runs-table,.metric-rating-table,.metric-events-table,.metric-runs-table)>tbody>tr:not(.driver-races-detail-row):not(.driver-run-detail-row)>td > *{
+    min-width:0;max-width:100%;overflow-wrap:anywhere;
+  }
+  .statistics-page .driver-run-detail,.statistics-page .race-result-driver-detail .driver-run-detail{
+    position:relative;left:auto;box-sizing:border-box;width:100%;max-width:100%;min-width:0;
+  }
+  .statistics-page .driver-run-detail .run-detail-summary,
+  .statistics-page .race-result-driver-detail .run-detail-summary{
+    grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
+  }
+  .statistics-page .driver-run-detail .run-detail-summary>span,
+  .statistics-page .race-result-driver-detail .run-detail-summary>span{
+    box-sizing:border-box;min-width:0;padding:10px 8px;min-height:66px;
+  }
+  .statistics-page .driver-run-detail .run-detail-summary strong,
+  .statistics-page .race-result-driver-detail .run-detail-summary strong{font-size:1.05rem;white-space:normal}
+  .statistics-page .driver-run-detail .run-detail-summary small,
+  .statistics-page .race-result-driver-detail .run-detail-summary small{font-size:.65rem;line-height:1.3;white-space:normal}
+  .statistics-page .driver-run-detail .run-detail-summary small[data-mobile-label]::after{content:none}
+  .statistics-page .run-detail-columns,.statistics-page .run-lap-list,.statistics-page .run-detail-chart{
+    box-sizing:border-box;min-width:0;max-width:100%;
+  }
+  .statistics-page .run-lap-chart-scroll,.statistics-page #raceLapCharts .lap-chart-scroll{max-width:100%;overflow-x:auto}
+}
