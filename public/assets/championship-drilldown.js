@@ -1,4 +1,4 @@
-import { driverDetail } from './current-event-feed.js?v=20261024-mobile-chart-geometry';
+import { driverDetail } from './current-event-feed.js?v=20261024-show-opening-lap';
 
 const eventCache = new Map();
 const raceCache = new Map();
