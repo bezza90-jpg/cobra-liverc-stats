@@ -136,6 +136,25 @@ function setPlaying(next){cancelAnimationFrame(frame);frame=0;playing=Boolean(ne
 function setTime(value){time=Math.max(0,Math.min(duration,Number(value)||0));render(true);}
 function addViewerReplayControls(){
   const toolbar=viewer.container.querySelector('.c3-toolbar'),controls=document.createElement('span'),mobileBar=document.createElement('div');controls.className='c3-replay-controls';controls.dataset.replayControls='';controls.innerHTML='<button type="button" data-replay-action="restart">↺</button><button type="button" data-replay-action="back">−10s</button><button type="button" data-replay-action="play">▶ Play</button><button type="button" data-replay-action="forward">+10s</button><input type="range" min="0" max="1" step="0.01" value="0" aria-label="Race time" data-replay-time><output data-replay-clock>0:00.0</output><label>Speed <select data-replay-speed><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><label>Driver <select data-replay-focus><option value="">All drivers</option></select></label>';mobileBar.className='c3-mobile-replay-bar';mobileBar.innerHTML='<button type="button" data-mobile-replay-play>▶ Play</button><button type="button" data-action="mobile-controls" aria-expanded="false">☰ Controls</button>';
+  // Mobile starts in a viewer-first layout. The extra controls still offer
+  // an explicit way to choose a different event or return to the compact view.
+  const pageToggle=document.createElement('button');
+  pageToggle.type='button';
+  pageToggle.dataset.mobilePageSettings='';
+  const updatePageToggle=()=>{
+    const minimal=document.body.classList.contains('mobile-replay-minimal');
+    pageToggle.textContent=minimal?'Choose event / full page':'Focus on replay';
+    pageToggle.setAttribute('aria-pressed',String(!minimal));
+  };
+  pageToggle.addEventListener('click',()=>{
+    document.body.classList.toggle('mobile-replay-minimal');
+    updatePageToggle();
+    viewer.setMobileControls(false);
+    window.scrollTo({top:0,behavior:'instant'});
+    requestAnimationFrame(()=>viewer.resize());
+  });
+  updatePageToggle();
+  toolbar.append(pageToggle);
   viewer.container.insertBefore(mobileBar,toolbar);toolbar.append(controls);mobileBar.querySelector('[data-mobile-replay-play]').addEventListener('click',()=>$('play').click());controls.addEventListener('click',event=>{const action=event.target.closest('[data-replay-action]')?.dataset.replayAction;if(action==='restart')setTime(0);if(action==='back')setTime(time-10);if(action==='forward')setTime(time+10);if(action==='play')$('play').click();});controls.querySelector('[data-replay-time]').addEventListener('input',event=>setTime(event.target.value));controls.querySelector('[data-replay-speed]').addEventListener('change',event=>{$('speed').value=event.target.value;});controls.querySelector('[data-replay-focus]').addEventListener('change',event=>{$('focus').value=event.target.value;$('focus').dispatchEvent(new Event('change'));});$('speed').addEventListener('change',()=>{controls.querySelector('[data-replay-speed]').value=$('speed').value;});
 }
 function placeYouTubeLink(){const link=$('youtube'),toolbar=viewer.container.querySelector('.c3-toolbar');if(link&&toolbar)toolbar.insertBefore(link,toolbar.querySelector('.c3-grow'));}
@@ -166,7 +185,7 @@ async function start(){
     json('../data/videos.json?v=20261017-current-races').then(data=>{raceVideos=data.videos||[];updateYouTubeLink();}).catch(()=>{});design=await loadDesign();design.motionProfile=currentMotionEvents.has(String(eventId))?'current':'legacy-smooth';
     const measured=!design.flatReplay;$('physicsStatus').textContent=measured?'Measured ramps · gravity 9.81 m/s²':'Flat replay · no inferred jumps';
     $('replayMethod').innerHTML=measured?'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times. Their position between timing-loop crossings is estimated along the confirmed Track Designer centre line. Ramp heights are measured; airborne motion uses gravity at 9.81 m/s².':'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times and follow the confirmed event route. This plan does not contain measured ramp positions, so the replay deliberately keeps the cars on the flat circuit.';
-    viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:!trackOnlyMode,flyover:trackFlyoverMode,trackOnly:trackOnlyMode});addViewerReplayControls();if(!trackOnlyMode){addLiveTiming();placeYouTubeLink();}configurePhysics();
+    viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:!trackOnlyMode,flyover:trackFlyoverMode,trackOnly:trackOnlyMode});if(!galleryFlyoverMode&&!trackOnlyMode)document.body.classList.add('mobile-replay-minimal');addViewerReplayControls();if(!trackOnlyMode){addLiveTiming();placeYouTubeLink();}configurePhysics();
     if(trackOnlyMode){document.body.classList.add('track-only-mode');viewer.container.classList.add('c3-track-only');$('raceSelect').closest('label').hidden=true;$('focus').closest('label').hidden=true;$('official').hidden=true;$('youtube').hidden=true;document.querySelector('.replay-controls').hidden=true;document.querySelector('.race-order').hidden=true;$('replayMethod').hidden=true;viewer.container.querySelector('[data-replay-controls]').hidden=true;const mobileReplayBar=viewer.container.querySelector('.c3-mobile-replay-bar');if(trackExploreMode)mobileReplayBar.hidden=true;else{mobileReplayBar.classList.add('c3-flyover-menu-only');mobileReplayBar.querySelector('[data-mobile-replay-play]').hidden=true;}viewer.container.querySelector('[data-action="car-labels"]').hidden=true;const flyoverButton=viewer.container.querySelector('[data-action="flyover"]');if(trackExploreMode)flyoverButton.hidden=true;else flyoverButton.textContent='Track flyover';}
     $('raceSelect').disabled=false;await loadRace(initial);if(trackFlyoverMode){resetFlyoverViewport();requestAnimationFrame(()=>requestAnimationFrame(resetFlyoverViewport));}if(raceFlyoverMode&&!trackOnlyMode){viewer.startFlyover(true);resetFlyoverViewport();requestAnimationFrame(()=>requestAnimationFrame(resetFlyoverViewport));}if(autoPlay&&!trackOnlyMode)setPlaying(true);if(trackOnlyMode){$('raceTitle').textContent=trackFlyoverMode?'Automatic flyover of the measured track · no cars shown':'Drag to rotate · right-drag to pan · scroll to zoom · no cars shown';$('status').textContent=trackFlyoverMode?'Track flyover running':'Explore the track from any angle';}
   }catch(error){$('status').textContent=error.message;$('status').className='error';console.error(error);}
