@@ -847,3 +847,7 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
     display:flex;flex-wrap:wrap;gap:8px 12px;white-space:normal;
   }
 }
+
+/* The entire championship row opens race history; the round total is informational. */
+.championship-round-count{display:inline-block;font-weight:800;color:var(--ink);white-space:nowrap}
+@media(max-width:760px){.championship-round-count{font-size:.78rem}}
