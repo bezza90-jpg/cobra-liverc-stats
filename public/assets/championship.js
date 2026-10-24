@@ -160,7 +160,7 @@ function render() {
     return `<tr class="championship-driver-row" data-driver-key="${escapeHtml(driver.driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show ${escapeHtml(driver.name)} championship races">
       <td>${driver.rank}${driver.tied ? '=' : ''}</td><td><a class="driver-name" href="../?driver=${encodeURIComponent(driver.driverKey)}">${escapeHtml(driver.name)}</a></td>
       <td class="result-avatar-cell" data-avatar-driver="${escapeHtml(driver.driverKey)}" data-avatar-class="${escapeHtml(activeClass)}" aria-label="Avatar"></td>
-      <td><button type="button" class="championship-driver-toggle" aria-expanded="false">${driver.results.length}<span> rounds</span></button></td>${roundCells}
+      <td><span class="championship-round-count" aria-label="${driver.results.length} completed rounds">${driver.results.length} rounds</span></td>${roundCells}
       <td>${driver.highestDrop || '—'}</td><td class="championship-total">${driver.total}</td><td>${driver.tqs}</td><td>${driver.wins}</td>
     </tr><tr class="championship-driver-detail-row" hidden data-driver-key="${escapeHtml(driver.driverKey)}" data-driver-name="${escapeHtml(driver.name)}" data-class-name="${escapeHtml(activeClass)}" data-rounds="${roundData}"><td colspan="${detailColspan}"></td></tr>`;
   }).join('') : `<tr><td colspan="${8 + events.length}" class="empty-standings">No ${escapeHtml(classLabels[activeClass] || activeClass)} results have been published for this championship yet.</td></tr>`;
