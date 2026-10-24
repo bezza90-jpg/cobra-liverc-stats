@@ -23,7 +23,8 @@ test('championship drilldown finds every race for the selected driver and class'
 
 test('championship rows include an accessible lazy drilldown', async () => {
   const source = await readFile(new URL('../public/assets/championship.js', import.meta.url), 'utf8');
-  assert.match(source, /championship-driver-toggle/);
+  assert.match(source, /championship-round-count/);
+  assert.doesNotMatch(source, /<button type="button" class="championship-driver-toggle"/);
   assert.match(source, /tabindex="0" role="button" aria-expanded="false"/);
   assert.match(source, /aria-expanded="false"/);
   assert.match(source, /championship-driver-detail-row/);
