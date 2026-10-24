@@ -827,3 +827,23 @@ body.embedded-tracker-page #closeJourneyMap { display:none; }
   .championship-race-body .run-lap-list .table-wrap{overflow-x:hidden}
   .championship-race-body .run-laps-table{width:100%;min-width:0;table-layout:fixed}
 }
+
+/* Give championship lap charts the full available mobile width and a
+   taller chart area without stretching their SVG axes. */
+@media(max-width:760px){
+  .championship-race-body .run-detail-chart{
+    box-sizing:border-box;display:block;width:100%!important;
+    min-width:0!important;max-width:100%!important;padding:12px!important;
+  }
+  .championship-race-body .run-lap-chart-scroll{
+    display:block;box-sizing:border-box;width:100%!important;
+    min-width:0!important;max-width:100%!important;overflow:hidden!important;
+  }
+  .championship-race-body .run-lap-chart-scroll svg{
+    display:block!important;width:100%!important;max-width:100%!important;
+    min-width:0!important;height:auto!important;aspect-ratio:auto;
+  }
+  .championship-race-body .run-lap-chart-legend{
+    display:flex;flex-wrap:wrap;gap:8px 12px;white-space:normal;
+  }
+}
