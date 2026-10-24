@@ -197,3 +197,47 @@
     min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;
   }
 }
+
+/* Leaderboard source drill-down is nested in a wide desktop leaderboard table.
+   Constrain the nested panel itself, not just its result cards. */
+@media(max-width:700px){
+  .statistics-page .leaderboard-source-row>td{padding:0!important}
+  .statistics-page .leaderboard-source-panel{
+    position:sticky;left:0;box-sizing:border-box;
+    width:calc(100vw - 32px)!important;max-width:calc(100vw - 32px)!important;
+    min-width:0!important;padding:12px!important;overflow:visible;
+  }
+  .statistics-page .leaderboard-source-heading{
+    display:flex;flex-direction:column;align-items:stretch;min-width:0;max-width:100%;gap:10px;
+  }
+  .statistics-page .leaderboard-source-heading>div{min-width:0;max-width:100%;overflow-wrap:anywhere}
+  .statistics-page .leaderboard-source-heading .profile-open{
+    box-sizing:border-box;width:100%;max-width:100%;white-space:normal;min-height:44px;
+  }
+  .statistics-page .leaderboard-source-collapse{
+    position:static;box-sizing:border-box;max-width:100%;width:100%;margin:0 0 10px;
+    white-space:normal;overflow-wrap:anywhere;
+  }
+  .statistics-page .leaderboard-source-panel .source-scorecards{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-width:0;max-width:100%;
+  }
+  .statistics-page .leaderboard-source-panel .source-scorecards>span{
+    box-sizing:border-box;min-width:0;max-width:100%;padding:10px;overflow-wrap:anywhere;
+  }
+  .statistics-page .leaderboard-source-panel details{
+    box-sizing:border-box;width:100%;min-width:0;max-width:100%;
+  }
+  .statistics-page .leaderboard-source-panel details .table-wrap{
+    box-sizing:border-box;width:calc(100% - 16px);min-width:0;max-width:calc(100% - 16px);
+    margin:0 8px 8px!important;overflow-x:hidden!important;
+  }
+  .statistics-page .leaderboard-source-panel .leaderboard-event-results,
+  .statistics-page .leaderboard-source-panel .leaderboard-event-results tbody,
+  .statistics-page .leaderboard-source-panel .leaderboard-event-results tbody>tr{
+    box-sizing:border-box;width:100%!important;min-width:0!important;max-width:100%!important;
+  }
+  .statistics-page .leaderboard-source-panel .leaderboard-event-results tbody>tr>td{
+    box-sizing:border-box;min-width:0!important;max-width:100%!important;
+    white-space:normal!important;overflow-wrap:anywhere!important;
+  }
+}
