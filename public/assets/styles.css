@@ -148,6 +148,36 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .championship-total { color: var(--green-dark); font-size: 1.05rem; font-weight: 950; }
 .empty-standings { padding: 36px; color: var(--muted); text-align: center !important; }
 .round-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.championship-driver-toggle { min-width:74px; padding:7px 9px; color:var(--green-dark); background:#e9f7ec; border:1px solid #b8dbc0; border-radius:999px; font:inherit; font-weight:900; cursor:pointer; white-space:nowrap; }
+.championship-driver-toggle span { font-size:.68rem; font-weight:750; }
+.championship-driver-toggle[aria-expanded="true"] { color:#fff; background:var(--green-dark); }
+.championship-driver-row-open>td { background:#e1f4e5; border-bottom-color:#8ccc98; }
+.championship-driver-detail-row>td { padding:0!important; text-align:left!important; background:#f7faf8; }
+.championship-driver-detail { position:sticky; left:0; box-sizing:border-box; width:min(1120px,calc(100vw - 40px)); padding:20px; border-left:4px solid #08a31a; }
+.championship-driver-detail>header { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px; }
+.championship-driver-detail h3 { margin:3px 0; }
+.championship-driver-detail header p { margin:0; color:var(--muted); }
+.championship-collapse { padding:9px 14px; color:#fff; background:var(--green-dark); border:0; border-radius:7px; font-weight:900; cursor:pointer; }
+.championship-rounds { display:grid; gap:9px; }
+.championship-round { overflow:hidden; border:1px solid #ccddd0; border-radius:9px; background:#fff; }
+.championship-round>summary { display:flex; min-height:48px; box-sizing:border-box; padding:10px 13px; align-items:center; justify-content:space-between; gap:14px; cursor:pointer; }
+.championship-round>summary span:first-child { min-width:0; }
+.championship-round>summary strong,.championship-round>summary small { display:block; }
+.championship-round>summary strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.championship-round>summary small { margin-bottom:3px; color:var(--muted); font-size:.68rem; }
+.championship-round>summary span:last-child { color:var(--green-dark); font-size:.76rem; font-weight:850; white-space:nowrap; }
+.championship-round-body { padding:0 10px 10px; }
+.championship-race { border-top:1px solid #e0e9e2; }
+.championship-race:first-child { border-top:0; }
+.championship-race-toggle { display:flex; width:100%; min-height:52px; padding:9px 8px; align-items:center; justify-content:space-between; gap:14px; color:var(--ink); background:transparent; border:0; text-align:left; cursor:pointer; }
+.championship-race-toggle span:first-child { min-width:0; }
+.championship-race-toggle strong,.championship-race-toggle small { display:block; }
+.championship-race-toggle small { margin-bottom:2px; color:var(--muted); font-size:.66rem; }
+.championship-race-toggle span:last-child { color:var(--green-dark); font-size:.76rem; font-weight:850; white-space:nowrap; }
+.championship-race-toggle[aria-expanded="true"] b { display:inline-block; transform:rotate(180deg); }
+.championship-race-body:not([hidden]) { padding:7px 0 12px; }
+.championship-race-body .driver-run-detail { border-left:0; border-radius:8px; background:#f3f8f4; }
+@media(max-width:760px){.championship-driver-detail{width:calc(100vw - 24px);padding:14px 10px 16px}.championship-driver-detail>header{align-items:flex-start}.championship-collapse{position:sticky;top:8px;z-index:2}.championship-round>summary{align-items:flex-start}.championship-round>summary span:last-child{font-size:.7rem}.championship-race-toggle{align-items:flex-start}.championship-race-toggle span:last-child{max-width:105px;white-space:normal;text-align:right}.championship-driver-toggle{min-width:62px}.championship-driver-toggle span{display:none}}
 .podium-main { width: min(1380px, calc(100% - 32px)); padding: 28px 0 50px; }
 .podium-layout { display: grid; grid-template-columns: 275px minmax(0, 1fr); gap: 22px; align-items: start; }
 .podium-sidebar { position: sticky; top: 18px; padding: 22px; }
