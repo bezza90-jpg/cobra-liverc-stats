@@ -124,6 +124,12 @@ function addLiveTiming(){
   button.type='button';button.dataset.timingToggle='';button.className='active';button.textContent='Race timings';button.setAttribute('aria-pressed','true');
   button.addEventListener('click',()=>{const visible=panel.hidden;panel.hidden=!visible;ghost.hidden=!visible;button.classList.toggle('active',visible);button.setAttribute('aria-pressed',String(visible));});
   toolbar.insertBefore(button,toolbar.querySelector('.c3-grow'));wrap.append(panel,ghost);
+  // Keep the track unobstructed when first opening the compact mobile view.
+  if(window.matchMedia('(max-width:720px)').matches&&!galleryFlyoverMode){
+    panel.hidden=true;ghost.hidden=true;
+    button.classList.remove('active');button.setAttribute('aria-pressed','false');
+    viewer.container.classList.remove('c3-timing-front');
+  }
 }
 function render(force=false){
   advanceFollowDriver();
