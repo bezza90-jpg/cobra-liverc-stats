@@ -1,4 +1,4 @@
-import { driverDetail } from './current-event-feed.js?v=20261024-show-opening-lap';
+import { driverDetail } from './current-event-feed.js?v=20261024-round-aware-laps';
 
 const eventCache = new Map();
 const raceCache = new Map();
