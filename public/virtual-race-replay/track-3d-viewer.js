@@ -245,7 +245,7 @@ class Viewer{
       <button type="button" data-view="3d" class="active">3D view</button><button type="button" data-action="rotate">Rotate around track</button><button type="button" data-action="flyover">Follow driver</button><span class="c3-flight-controls" data-flight-controls><button type="button" data-action="flight-pause">Ⅱ Pause</button><label>Speed <select data-flight-speed><option value="2.5">Slow</option><option value="4.5" selected>Normal</option><option value="6.5">Fast</option><option value="8.5">Very fast</option></select></label><label>Height <input type="range" min="2.5" max="12" step="0.1" value="6.7" data-flight-height><output data-flight-height-value>6.7 m</output></label><label>Tilt <input type="range" min="15" max="70" step="1" value="34" data-flight-tilt><output data-flight-tilt-value>34°</output></label><button type="button" data-action="flight-reset">Reset camera</button></span><button type="button" data-action="car-labels">Driver names</button><button type="button" data-action="labels">Ramp names</button>
       <button type="button" data-action="reset">Reset</button><button type="button" data-action="zoom-out" aria-label="Zoom out">− Zoom</button><button type="button" data-action="zoom-in" aria-label="Zoom in">+ Zoom</button>
       <span class="c3-grow"></span><button type="button" data-action="open">Open design</button><button type="button" data-action="image">Export image</button><button type="button" data-action="fullscreen">Fullscreen</button><input class="c3-file" type="file" accept="application/json,.json">
-    </div><div class="c3-canvas-wrap"><canvas class="c3-canvas" aria-label="Interactive 3D track view"></canvas><div class="c3-overlay"><div class="c3-title">COBRA track</div><div class="c3-meta">Waiting for a Track Designer file</div><div class="c3-scale" data-scale>2× height for clarity</div></div><div class="c3-help">Drag to orbit · right-drag to pan · scroll to zoom</div></div><div class="c3-status"><span data-stat="route">Route waiting</span><span data-stat="ramps">Ramps waiting</span><span data-stat="warning"></span></div>`;
+    </div><div class="c3-canvas-wrap"><canvas class="c3-canvas" aria-label="Interactive 3D track view"></canvas><div class="c3-overlay"><div class="c3-title">COBRA track</div><div class="c3-meta">Waiting for a Track Designer file</div><div class="c3-scale" data-scale>2× height for clarity</div></div><div class="c3-help">Drag to orbit · right-drag to pan · scroll to zoom · on mobile use one finger to rotate and pinch to zoom</div></div><div class="c3-status"><span data-stat="route">Route waiting</span><span data-stat="ramps">Ramps waiting</span><span data-stat="warning"></span></div>`;
     this.canvas=this.container.querySelector('canvas');this.ctx=this.canvas.getContext('2d');this.wrap=this.container.querySelector('.c3-canvas-wrap');this.title=this.container.querySelector('.c3-title');this.meta=this.container.querySelector('.c3-meta');this.scaleNote=this.container.querySelector('[data-scale]');this.help=this.container.querySelector('.c3-help');this.file=this.container.querySelector('.c3-file');this.flightControls=this.container.querySelector('[data-flight-controls]');this.flightHeightInput=this.container.querySelector('[data-flight-height]');this.flightTiltInput=this.container.querySelector('[data-flight-tilt]');this.flightSpeedInput=this.container.querySelector('[data-flight-speed]');this.flightPauseButton=this.container.querySelector('[data-action="flight-pause"]');
     this.container.querySelector('[data-action="car-labels"]').classList.toggle('active',this.showCarLabels);this.container.querySelector('[data-action="labels"]').classList.toggle('active',this.showLabels);this.updateScaleNote();
   }
@@ -256,9 +256,62 @@ class Viewer{
     this.flightSpeedInput.addEventListener('change',event=>{this.flyoverSpeed=Number(event.target.value);this.updateFlyoverControls();});
     this.file.addEventListener('change',async()=>{try{let file=this.file.files[0];if(!file)return;this.setDesign(JSON.parse(await file.text()));}catch(error){this.showError(error.message);}finally{this.file.value='';}});
     this.canvas.addEventListener('contextmenu',event=>event.preventDefault());
-    this.canvas.addEventListener('pointerdown',event=>{this.stopMotion();this.canvas.setPointerCapture(event.pointerId);this.drag={x:event.clientX,y:event.clientY,button:event.button,target:{...this.target}};});
-    this.canvas.addEventListener('pointermove',event=>{if(!this.drag)return;let dx=event.clientX-this.drag.x,dy=event.clientY-this.drag.y;if(this.drag.button===2||event.shiftKey){let scale=Math.max(this.design?.carpet.width||30,this.design?.carpet.height||18)/Math.max(380,this.canvas.clientWidth);this.target.x=this.drag.target.x-dx*scale;this.target.y=this.drag.target.y+dy*scale;}else{this.yaw-=dx*.008;this.elevation=clamp(this.elevation+dy*.006,.12,1.54);}this.drag.x=event.clientX;this.drag.y=event.clientY;this.drag.target={...this.target};this.draw();});
-    this.canvas.addEventListener('pointerup',()=>this.drag=null);this.canvas.addEventListener('pointercancel',()=>this.drag=null);
+    // Pointer Events support both desktop mouse orbit/pan and mobile gestures:
+    // one finger orbits, two fingers pinch to zoom. Track each touch separately
+    // so lifting one finger does not cause a jump or an accidental orbit.
+    this.touchPointers=new Map();
+    const beginDrag=event=>{this.drag={id:event.pointerId,x:event.clientX,y:event.clientY,button:event.button,target:{...this.target}};};
+    const pinchDistance=()=>{const touches=[...this.touchPointers.values()];return touches.length<2?0:Math.hypot(touches[1].x-touches[0].x,touches[1].y-touches[0].y);};
+    this.canvas.addEventListener('pointerdown',event=>{
+      if(event.pointerType==='touch'){
+        event.preventDefault();
+        this.touchPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+        this.canvas.setPointerCapture(event.pointerId);
+        if(this.touchPointers.size===1){this.stopMotion();beginDrag(event);}
+        else if(this.touchPointers.size===2){this.drag=null;this.pinchDistance=pinchDistance();}
+        return;
+      }
+      this.stopMotion();this.canvas.setPointerCapture(event.pointerId);beginDrag(event);
+    });
+    this.canvas.addEventListener('pointermove',event=>{
+      if(event.pointerType==='touch'){
+        if(!this.touchPointers.has(event.pointerId))return;
+        event.preventDefault();
+        this.touchPointers.set(event.pointerId,{x:event.clientX,y:event.clientY});
+        if(this.touchPointers.size>=2){
+          const distance=pinchDistance();
+          if(distance>0&&this.pinchDistance>0){
+            const factor=distance/this.pinchDistance;
+            if(this.flyover)this.flyoverZoom=clamp(this.flyoverZoom*factor,.6,2.2);
+            else this.zoom=clamp(this.zoom*factor,.45,4);
+            this.draw();
+          }
+          this.pinchDistance=distance;
+          return;
+        }
+      }
+      if(!this.drag||this.drag.id!==event.pointerId)return;
+      let dx=event.clientX-this.drag.x,dy=event.clientY-this.drag.y;
+      if(event.pointerType!=='touch'&&(this.drag.button===2||event.shiftKey)){
+        let scale=Math.max(this.design?.carpet.width||30,this.design?.carpet.height||18)/Math.max(380,this.canvas.clientWidth);
+        this.target.x=this.drag.target.x-dx*scale;this.target.y=this.drag.target.y+dy*scale;
+      }else{
+        this.yaw-=dx*.008;this.elevation=clamp(this.elevation+dy*.006,.12,1.54);
+      }
+      this.drag.x=event.clientX;this.drag.y=event.clientY;this.drag.target={...this.target};this.draw();
+    });
+    const finishPointer=event=>{
+      if(event.pointerType==='touch'){
+        this.touchPointers.delete(event.pointerId);
+        if(this.touchPointers.size===1){
+          const [id,point]=this.touchPointers.entries().next().value;
+          beginDrag({pointerId:id,clientX:point.x,clientY:point.y,button:0});
+        }else this.drag=null;
+        this.pinchDistance=this.touchPointers.size>=2?pinchDistance():0;
+      }else if(this.drag?.id===event.pointerId)this.drag=null;
+    };
+    this.canvas.addEventListener('pointerup',finishPointer);
+    this.canvas.addEventListener('pointercancel',finishPointer);
     this.canvas.addEventListener('wheel',event=>{event.preventDefault();if(this.flyover){this.flyoverZoom=clamp(this.flyoverZoom*Math.exp(-event.deltaY*.001),.6,2.2);this.draw();return;}this.stopMotion();let anchor=this.groundAtPointer(event),nextZoom=clamp(this.zoom*Math.exp(-event.deltaY*.001),.45,4);if(nextZoom===this.zoom)return;this.zoom=nextZoom;if(anchor){let shifted=this.groundAtPointer(event);if(shifted){this.target.x+=anchor.x-shifted.x;this.target.y+=anchor.y-shifted.y;}}this.draw();},{passive:false});
     this.resizeObserver=new ResizeObserver(()=>this.resize());this.resizeObserver.observe(this.wrap);this.fullscreenHandler=()=>{this.updateFullscreenButton();requestAnimationFrame(()=>this.resize());};document.addEventListener('fullscreenchange',this.fullscreenHandler);
     this.messageHandler=event=>{if(window.opener&&event.source!==window.opener)return;if(event.data?.type==='cobra-3d-design'&&event.data.design)this.setDesign(event.data.design);};
