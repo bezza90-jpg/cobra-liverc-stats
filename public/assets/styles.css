@@ -149,6 +149,9 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .empty-standings { padding: 36px; color: var(--muted); text-align: center !important; }
 .round-links { display: flex; flex-wrap: wrap; gap: 10px; }
 .championship-driver-toggle { min-width:74px; padding:7px 9px; color:var(--green-dark); background:#e9f7ec; border:1px solid #b8dbc0; border-radius:999px; font:inherit; font-weight:900; cursor:pointer; white-space:nowrap; }
+.championship-driver-row { cursor:pointer; }
+.championship-driver-row:hover>td { background:#edf8ef; }
+.championship-driver-row:focus-visible { outline:3px solid #69b939; outline-offset:-3px; }
 .championship-driver-toggle span { font-size:.68rem; font-weight:750; }
 .championship-driver-toggle[aria-expanded="true"] { color:#fff; background:var(--green-dark); }
 .championship-driver-row-open>td { background:#e1f4e5; border-bottom-color:#8ccc98; }
