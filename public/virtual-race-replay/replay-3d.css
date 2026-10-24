@@ -8,3 +8,40 @@
 .c3-track-only [data-replay-controls],.c3-track-only .c3-mobile-replay-bar[hidden],.c3-track-only [data-action="car-labels"][hidden],.c3-track-only [data-action="flyover"][hidden]{display:none!important}.track-only-mode .selectors label[hidden],.track-only-mode .selectors a[hidden],.track-only-mode .replay-controls[hidden],.track-only-mode .race-order[hidden],.track-only-mode .explain[hidden]{display:none!important}
 
 @media(max-width:720px),(orientation:landscape) and (max-height:520px) and (max-width:1024px){.race-flyover-mode{overflow:hidden}.race-flyover-mode .cobra-site-header,.race-flyover-mode main>.crumbs,.race-flyover-mode main>.intro,.race-flyover-mode main>.selectors,.race-flyover-mode main>.replay-controls,.race-flyover-mode main>.race-order,.race-flyover-mode main>.explain,.race-flyover-mode>.cobra-site-footer{display:none!important}.race-flyover-mode main{width:100%;height:100dvh;margin:0;padding:0;overflow:hidden}.race-flyover-mode #viewer,.race-flyover-mode #viewer>.cobra3d{width:100%;height:100dvh!important;min-height:100dvh;margin:0;border-radius:0}.race-flyover-mode .cobra3d .c3-mobile-replay-bar{display:grid;grid-template-columns:.8fr 1.2fr;gap:6px;padding:7px;background:#102219;border-bottom:1px solid #355642}.race-flyover-mode .cobra3d .c3-mobile-replay-bar.c3-flyover-menu-only{grid-template-columns:1fr}.race-flyover-mode .cobra3d .c3-mobile-replay-bar.c3-flyover-menu-only [data-action="mobile-controls"]{grid-column:1}.race-flyover-mode .cobra3d:not(.c3-mobile-controls-open) .c3-toolbar{display:none}.race-flyover-mode .cobra3d.c3-mobile-controls-open .c3-toolbar{display:grid;position:absolute;z-index:9;top:57px;right:0;left:0;max-height:calc(100dvh - 57px);overflow:auto;background:#102219;box-shadow:0 12px 30px #000c}.race-flyover-mode .cobra3d .c3-canvas-wrap{height:auto!important;min-height:0;flex:1}}
+
+/* Default mobile 3D replay to a viewer-first presentation.
+   The top Play / Controls bar remains visible; additional controls open
+   temporarily over the viewer without taking up permanent screen height. */
+@media(max-width:720px){
+  body.mobile-replay-minimal{overflow:hidden}
+  .mobile-replay-minimal>.cobra-site-header,
+  .mobile-replay-minimal main>.crumbs,
+  .mobile-replay-minimal main>.intro,
+  .mobile-replay-minimal main>.selectors,
+  .mobile-replay-minimal main>.replay-controls,
+  .mobile-replay-minimal main>.race-order,
+  .mobile-replay-minimal main>.explain,
+  .mobile-replay-minimal>.cobra-site-footer{display:none!important}
+  .mobile-replay-minimal main{box-sizing:border-box;width:100%;height:100dvh;margin:0;padding:0;overflow:hidden}
+  .mobile-replay-minimal #viewer,
+  .mobile-replay-minimal #viewer>.cobra3d{
+    box-sizing:border-box;display:flex;flex-direction:column;
+    width:100%;height:100dvh!important;min-height:0!important;
+    margin:0;border:0;border-radius:0;overflow:hidden;
+  }
+  .mobile-replay-minimal .cobra3d .c3-mobile-replay-bar{
+    display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:7px;
+    flex:0 0 auto;background:#102219;border-bottom:1px solid #355642;
+  }
+  .mobile-replay-minimal .cobra3d .c3-canvas-wrap{
+    flex:1 1 auto;height:auto!important;min-height:0!important;
+  }
+  .mobile-replay-minimal .cobra3d .c3-status{display:none}
+  .mobile-replay-minimal .cobra3d:not(.c3-mobile-controls-open) .c3-toolbar{display:none!important}
+  .mobile-replay-minimal .cobra3d.c3-mobile-controls-open .c3-toolbar{
+    display:grid;position:absolute;z-index:12;top:57px;left:0;right:0;
+    width:100%;max-height:calc(100dvh - 57px);overflow-y:auto;
+    background:#102219;box-shadow:0 12px 30px #000c;
+  }
+  .mobile-replay-minimal .cobra3d .c3-timing-overlay[hidden]{display:none!important}
+}
