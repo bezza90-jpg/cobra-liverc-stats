@@ -86,7 +86,7 @@ function average(values) {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
 }
 
-function driverDetail(race, driver) {
+export function driverDetail(race, driver) {
   const allLaps = (driver.laps || []).filter(lap => Number.isFinite(Number(lap.seconds)) && Number(lap.seconds) > 0);
   const timedLaps = timedLapsFor(driver);
   const best = timedLaps.length ? Math.min(...timedLaps.map(lap => Number(lap.seconds))) : null;
