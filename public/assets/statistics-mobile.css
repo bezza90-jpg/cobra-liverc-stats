@@ -252,7 +252,7 @@
     position:relative;overflow-x:auto!important;overflow-y:auto;
     -webkit-overflow-scrolling:touch;
   }
-  .statistics-page #raceExplorer .race-results-table{
+  .statistics-page #raceExplorer .race-results-wrap > table{
     width:max-content;min-width:100%;max-width:none;table-layout:auto;
   }
   .statistics-page #raceExplorer .race-result-driver-detail:not([hidden]){
