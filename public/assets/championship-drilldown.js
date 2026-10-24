@@ -1,4 +1,4 @@
-import { driverDetail } from './current-event-feed.js?v=20261024-chart-fit';
+import { driverDetail } from './current-event-feed.js?v=20261024-mobile-chart-geometry';
 
 const eventCache = new Map();
 const raceCache = new Map();
