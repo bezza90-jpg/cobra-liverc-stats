@@ -4,7 +4,8 @@ import {
   bestLapAverage,
   lapPerformanceClass,
   orderedPublishedRaces,
-  timedLapsFor
+  timedLapsFor,
+  isFinalRace
 } from '../public/assets/current-event-feed.js';
 import { readFile } from 'node:fs/promises';
 
@@ -18,7 +19,7 @@ test('the opening crossing is excluded from lap averages', () => {
     { lap: 1, seconds: 8.2 },
     { lap: 2, seconds: 17.1 },
     { lap: 3, seconds: 16.9 }
-  ] });
+  ] }, {isFinal:true});
   assert.deepEqual(timed.map(lap => lap.lap), [2, 3]);
 });
 
@@ -45,7 +46,7 @@ test('current event lap points publish an exact selected-lap readout', async () 
 
 test('current event and championship charts scale inside their detail panel', async () => {
   const source = await readFile(new URL('../public/assets/current-event-feed.js', import.meta.url), 'utf8');
-  assert.match(source, /<div class="run-lap-chart-scroll">\$\{lapChart\(allLaps, best, prefix\)\}<\/div>/);
+  assert.match(source, /<div class="run-lap-chart-scroll">\$\{lapChart\(allLaps, best, prefix, race\)\}<\/div>/);
 });
 
 test('lap detail tables place the coloured lap time before the neutral position', async () => {
@@ -56,7 +57,15 @@ test('lap detail tables place the coloured lap time before the neutral position'
 
 test('lap one appears on charts but is not included in timed averages', async () => {
   const source = await readFile(new URL('../public/assets/current-event-feed.js', import.meta.url), 'utf8');
-  assert.match(source, /lapChart\(allLaps, best, prefix\)/);
-  assert.match(source, /Number\(lap\.lap\) === 1 \? 'lap-opening'/);
-  assert.match(source, /const timedLaps = timedLapsFor\(driver\)/);
+  assert.match(source, /lapChart\(allLaps, best, prefix, race\)/);
+  assert.match(source, /isFinalRace\(race\) && Number\(lap\.lap\) === 1 \? 'lap-opening'/);
+  assert.match(source, /const timedLaps = timedLapsFor\(driver, race\)/);
+});
+
+test('practice and qualifying include lap one, finals exclude the opening crossing',()=>{
+  const driver={laps:[{lap:1,seconds:17.8},{lap:2,seconds:17.1},{lap:3,seconds:16.9}]};
+  assert.equal(isFinalRace({isFinal:false,round:'Qualifier Round 1'}),false);
+  assert.equal(isFinalRace({isFinal:true,round:'Main Events'}),true);
+  assert.deepEqual(timedLapsFor(driver,{isFinal:false}).map(lap=>lap.lap),[1,2,3]);
+  assert.deepEqual(timedLapsFor(driver,{isFinal:true}).map(lap=>lap.lap),[2,3]);
 });
