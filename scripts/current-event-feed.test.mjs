@@ -42,3 +42,14 @@ test('current event lap points publish an exact selected-lap readout', async () 
   assert.match(source, /lap-point-readout/);
   assert.match(source, /lapPoint\.dataset\.lapTime/);
 });
+
+test('current event and championship charts scale inside their detail panel', async () => {
+  const source = await readFile(new URL('../public/assets/current-event-feed.js', import.meta.url), 'utf8');
+  assert.match(source, /<div class="run-lap-chart-scroll">\$\{lapChart\(timedLaps, best, prefix\)\}<\/div>/);
+});
+
+test('lap detail tables place the coloured lap time before the neutral position', async () => {
+  const source = await readFile(new URL('../public/assets/current-event-feed.js', import.meta.url), 'utf8');
+  assert.match(source, /<th>Lap<\/th><th>Time<\/th><th>Pos<\/th>/);
+  assert.match(source, /<td>\$\{lap\.lap\}<\/td><td>\$\{Number\(lap\.seconds\)\.toFixed\(3\)\}s<\/td><td>\$\{lap\.position/);
+});
