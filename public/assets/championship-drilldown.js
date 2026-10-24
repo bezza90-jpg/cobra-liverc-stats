@@ -88,6 +88,7 @@ function closeDriver(tbody, row) {
   row.hidden = true;
   row.querySelector('.championship-driver-detail')?.remove();
   mainRow?.classList.remove('championship-driver-row-open');
+  mainRow?.setAttribute('aria-expanded', 'false');
   mainRow?.querySelector('.championship-driver-toggle')?.setAttribute('aria-expanded', 'false');
   if (!tbody.querySelector('.championship-driver-detail-row:not([hidden])')) tbody.closest('.table-wrap')?.classList.remove('drilldown-expanded');
 }
@@ -101,6 +102,7 @@ function openDriver(tbody, mainRow) {
   row.hidden = false;
   row.firstElementChild.innerHTML = driverMarkup(row);
   mainRow.classList.add('championship-driver-row-open');
+  mainRow.setAttribute('aria-expanded', 'true');
   mainRow.querySelector('.championship-driver-toggle')?.setAttribute('aria-expanded', 'true');
   tbody.closest('.table-wrap')?.classList.add('drilldown-expanded');
   const firstRound = row.querySelector('.championship-round[open]');
@@ -132,12 +134,20 @@ export function bindChampionshipDrilldown(tbody) {
     const raceButton = event.target.closest('.championship-race-toggle');
     if (raceButton) return toggleRace(raceButton);
     const toggle = event.target.closest('.championship-driver-toggle');
-    if (toggle) openDriver(tbody, toggle.closest('.championship-driver-row'));
+    if (toggle) return openDriver(tbody, toggle.closest('.championship-driver-row'));
+    const mainRow = event.target.closest('.championship-driver-row');
+    if (mainRow && !event.target.closest('a,button,input,select,textarea')) openDriver(tbody, mainRow);
   });
   tbody.addEventListener('keydown', event => {
     const point = event.target.closest('[data-event-lap-target]');
-    if (!point || !['Enter', ' '].includes(event.key)) return;
-    event.preventDefault();
-    selectLapPoint(point);
+    if (point && ['Enter', ' '].includes(event.key)) {
+      event.preventDefault();
+      return selectLapPoint(point);
+    }
+    const mainRow = event.target.closest('.championship-driver-row');
+    if (mainRow && event.target === mainRow && ['Enter', ' '].includes(event.key)) {
+      event.preventDefault();
+      openDriver(tbody, mainRow);
+    }
   });
 }

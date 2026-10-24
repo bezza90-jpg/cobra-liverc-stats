@@ -24,6 +24,7 @@ test('championship drilldown finds every race for the selected driver and class'
 test('championship rows include an accessible lazy drilldown', async () => {
   const source = await readFile(new URL('../public/assets/championship.js', import.meta.url), 'utf8');
   assert.match(source, /championship-driver-toggle/);
+  assert.match(source, /tabindex="0" role="button" aria-expanded="false"/);
   assert.match(source, /aria-expanded="false"/);
   assert.match(source, /championship-driver-detail-row/);
   assert.match(source, /championship-drilldown\.js/);
@@ -34,4 +35,5 @@ test('round and race data are fetched only after expansion', async () => {
   assert.match(source, /virtual-race-replay\/events/);
   assert.match(source, /virtual-race-replay\/races/);
   assert.match(source, /driverDetail\(race, driver\)/);
+  assert.match(source, /event\.target\.closest\('\.championship-driver-row'\)/);
 });

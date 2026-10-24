@@ -157,7 +157,7 @@ function render() {
       return { id: result.eventId, name: event?.n || `Round ${result.eventId}`, date: result.date, position: result.position, score: result.score, tq: result.tq };
     });
     const roundData = escapeHtml(JSON.stringify(completedRounds));
-    return `<tr class="championship-driver-row" data-driver-key="${escapeHtml(driver.driverKey)}">
+    return `<tr class="championship-driver-row" data-driver-key="${escapeHtml(driver.driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show ${escapeHtml(driver.name)} championship races">
       <td>${driver.rank}${driver.tied ? '=' : ''}</td><td><a class="driver-name" href="../?driver=${encodeURIComponent(driver.driverKey)}">${escapeHtml(driver.name)}</a></td>
       <td class="result-avatar-cell" data-avatar-driver="${escapeHtml(driver.driverKey)}" data-avatar-class="${escapeHtml(activeClass)}" aria-label="Avatar"></td>
       <td><button type="button" class="championship-driver-toggle" aria-expanded="false">${driver.results.length}<span> rounds</span></button></td>${roundCells}
@@ -165,7 +165,7 @@ function render() {
     </tr><tr class="championship-driver-detail-row" hidden data-driver-key="${escapeHtml(driver.driverKey)}" data-driver-name="${escapeHtml(driver.name)}" data-class-name="${escapeHtml(activeClass)}" data-rounds="${roundData}"><td colspan="${detailColspan}"></td></tr>`;
   }).join('') : `<tr><td colspan="${8 + events.length}" class="empty-standings">No ${escapeHtml(classLabels[activeClass] || activeClass)} results have been published for this championship yet.</td></tr>`;
   import('./result-avatars.js?v=20261004-display').then(({hydrateResultAvatars}) => hydrateResultAvatars($('standingsBody')));
-  import('./championship-drilldown.js?v=20261024-round-races').then(({bindChampionshipDrilldown}) => bindChampionshipDrilldown($('standingsBody')));
+  import('./championship-drilldown.js?v=20261024-row-click').then(({bindChampionshipDrilldown}) => bindChampionshipDrilldown($('standingsBody')));
 
   $('roundLinks').innerHTML = events.length ? events.map((event, index) => `<a class="event-link" href="${escapeHtml(event.u)}" target="_blank" rel="noopener">Round ${index + 1}: ${escapeHtml(event.n)}</a>`).join('') : '<p class="empty-state">Rounds will appear automatically after LiveRC publishes the results.</p>';
   $('rulesSummary').textContent = `100 points for 1st, reducing by one point per overall position. TQ earns 1 bonus point. Up to the best ${config.bestRounds} rounds count. DNS and DNF score their published overall position. Ties are decided by the highest dropped score; if that is also equal, the position remains tied.`;
