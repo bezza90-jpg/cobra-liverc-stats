@@ -37,9 +37,9 @@
     <section class="panel avatar-upload-panel" aria-labelledby="uploadTitle">
       <div>
         <p class="eyebrow">Photo guidance</p><h2 id="uploadTitle">Make your car easy to recognise</h2>
-        <p>Photograph the whole car from the side or three-quarter view. Leave some space around the wheels and wing. Cars should travel <strong>left to right, facing mostly right</strong>, like Matt Hodges’s car below.</p>
+        <p>Photograph the whole car in a <strong>three-quarter view facing right</strong>, like Matt Hodges’s car below. Leave clear space around every wheel, the front bumper and the complete rear wing.</p>
         <figure class="avatar-direction-example"><img src="../assets/matt-hodges-car.png" alt="Matt Hodges’s green RC buggy pointing to the right"><figcaption>Example direction: ← back of car &nbsp; · &nbsp; front of car →</figcaption></figure>
-        <p>A photo facing left is fine. Tick <strong>Flip horizontally</strong> below and COBRA will turn it around when preparing the avatar. COBRA removes the background, reviews the prepared image and approves it before publication. Your original remains private.</p>
+        <p><strong>Side-on, left-facing, clipped or unclear photographs will be declined.</strong> COBRA removes the background and reviews the prepared image before publication. Your original remains private.</p>
       </div>
       <form id="avatarForm" method="post" enctype="application/x-www-form-urlencoded" target="avatarUploadTarget" novalidate>
         <label for="driverSearch">Driver name</label>
@@ -51,14 +51,18 @@
         <label for="className">Class shown in the photo</label><select id="className" required><option value="">Choose class</option><option value="2-Wheel Drive Buggy">2WD</option><option value="4-Wheel Drive Buggy">4WD</option><option value="Vintage">Vintage</option><option value="Trucks">Trucks</option></select>
         <span class="avatar-upload-hint">Junior drivers: choose the car class you race, such as 2WD or 4WD.</span>
         <label for="carPhoto">Photo of your car</label><input id="carPhoto" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" required>
-        <span class="avatar-upload-hint">JPG, PNG or WebP, up to 6 MB. Clear side views work best.</span>
-        <label for="notificationEmail">Email me when it is live <span aria-hidden="true">(optional)</span></label>
+        <span class="avatar-upload-hint">JPG, PNG or WebP, up to 6 MB. Use a clear three-quarter view facing right, with the whole car and wing visible.</span>
+        <label for="notificationEmail">Email me when it is published or if there is an issue <span aria-hidden="true">(optional)</span></label>
         <input id="notificationEmail" name="notificationEmail" type="email" inputmode="email" autocomplete="email" maxlength="200" placeholder="you@example.com">
-        <span class="avatar-upload-hint">Used only for a one-time confirmation after the approved image has been processed, published and checked live. It is not shown on the website.</span>
+        <span class="avatar-upload-hint">Used only to tell you when the image is published, or if you need to upload a replacement. It is not shown on the website.</span>
         <div class="avatar-upload-preview" id="photoPreview" hidden><img id="previewImage" alt="Preview of the selected car photo"></div>
-        <label class="avatar-flip"><input id="flipPhoto" type="checkbox"> Flip horizontally if the car faces left</label>
-        <label class="avatar-flip"><input id="consent" type="checkbox" required> I own this photo or have permission to share it with COBRA.</label>
-        <input type="hidden" name="driverKey" id="submittedDriverKey"><input type="hidden" name="className" id="submittedClassName"><input type="hidden" name="flip" id="submittedFlip"><input type="hidden" name="fileName" id="submittedFileName"><input type="hidden" name="fileType" id="submittedFileType"><input type="hidden" name="fileBase64" id="fileBase64">
+        <fieldset class="avatar-format-check"><legend>Photo format check</legend><p>Confirm all three before submitting:</p>
+          <label><input id="checkThreeQuarter" type="checkbox" required> The car is shown in a three-quarter view, not side-on.</label>
+          <label><input id="checkFacingRight" type="checkbox" required> The front of the car faces right, matching the example.</label>
+          <label><input id="checkWholeCar" type="checkbox" required> The whole car, every wheel and the complete wing are clear and inside the frame.</label>
+        </fieldset>
+        <label class="avatar-check"><input id="consent" type="checkbox" required> I own this photo or have permission to share it with COBRA.</label>
+        <input type="hidden" name="driverKey" id="submittedDriverKey"><input type="hidden" name="className" id="submittedClassName"><input type="hidden" name="fileName" id="submittedFileName"><input type="hidden" name="fileType" id="submittedFileType"><input type="hidden" name="fileBase64" id="fileBase64">
         <input type="hidden" name="clientNonce" id="clientNonce">
         <input type="text" name="website" class="avatar-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
         <button id="submitAvatar" type="submit" disabled>Submit photo for approval</button>
@@ -68,6 +72,6 @@
     </section>
   </main>
   <footer><span>COBRA · Cardiff Off Road Buggy Racing Association</span><a href="../about/">About COBRA</a><a href="../briefing/">Drivers Briefing</a><a href="../">Back to race statistics</a><a class="website-guides-link" href="../website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>
-  <script type="module" src="../assets/avatar-upload.js?v=20261021-live-email"></script>
+  <script type="module" src="../assets/avatar-upload.js?v=20261025-photo-format"></script>
 <!-- cobra-footer:start --><footer class="cobra-site-footer"><a href="https://www.cobracardiff.co.uk/"><img src="../assets/cobra-header-logo.png" width="220" height="56" alt="COBRA home" loading="lazy" decoding="async"></a><p>South Wales TQ HQ<br>BRCA.org Affiliated Club</p><p>Off Road Buggy Racing Club • South Wales</p><nav aria-label="Footer"><a href="../website-guides/">Help &amp; Website Guides</a><a href="https://www.facebook.com/groups/cobracardiff">Facebook</a><a href="https://www.youtube.com/@Bezza90">YouTube</a></nav><p>© 2026 COBRA. Beryl Media Productions. All rights reserved.</p></footer><!-- cobra-footer:end --></body>
 </html>

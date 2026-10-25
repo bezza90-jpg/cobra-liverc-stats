@@ -6,6 +6,12 @@ let selectedDriver = null;
 let activeMatch = -1;
 let pendingNonce = '';
 let uploadTimer = 0;
+let uploadConfigured = false;
+
+const formatChecks = ['checkThreeQuarter', 'checkFacingRight', 'checkWholeCar'];
+function updateSubmitReadiness() {
+  $('submitAvatar').disabled = !uploadConfigured || !formatChecks.every(id => $(id).checked);
+}
 
 function closeMatches() {
   $('driverMatches').hidden = true;
@@ -77,7 +83,8 @@ async function initialise() {
       throw new Error('Photo uploading is being connected. Please try again shortly.');
     }
     $('avatarForm').action = endpoint;
-    $('submitAvatar').disabled = false;
+    uploadConfigured = true;
+    updateSubmitReadiness();
     $('driverSearch').setCustomValidity('Choose your name from the matching list.');
     status('Choose your driver, class and car photo.');
   } catch (error) {
@@ -116,10 +123,11 @@ $('carPhoto').addEventListener('change', () => {
     $('previewImage').src = previewUrl;
   }
 });
-$('flipPhoto').addEventListener('change', () => $('previewImage').classList.toggle('flipped', $('flipPhoto').checked));
+formatChecks.forEach(id => $(id).addEventListener('change', updateSubmitReadiness));
 $('avatarForm').addEventListener('submit', event => {
   event.preventDefault();
   if (!$('avatarForm').reportValidity()) return;
+  if (!formatChecks.every(id => $(id).checked)) { status('Confirm that the photo matches all three format requirements.'); return; }
   if (!selectedDriver) { $('driverSearch').focus(); status('Choose your name from the matching list.'); return; }
   const photo = $('carPhoto').files[0];
   if (!photo || !/^image\/(?:jpeg|png|webp)$/.test(photo.type) || photo.size > 6_000_000) {
@@ -134,7 +142,6 @@ $('avatarForm').addEventListener('submit', event => {
     pendingNonce = globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(36).slice(2)}`;
     $('submittedDriverKey').value = selectedDriver.k;
     $('submittedClassName').value = $('className').value;
-    $('submittedFlip').value = $('flipPhoto').checked ? 'yes' : 'no';
     $('submittedFileName').value = photo.name.slice(0, 140);
     $('submittedFileType').value = photo.type;
     $('fileBase64').value = String(reader.result).split(',')[1] || '';
@@ -143,7 +150,7 @@ $('avatarForm').addEventListener('submit', event => {
     clearTimeout(uploadTimer);
     uploadTimer = setTimeout(() => {
       if (!pendingNonce) return;
-      $('submitAvatar').disabled = false;
+      updateSubmitReadiness();
       status('The upload did not return a result. Please check your connection and try again.');
       pendingNonce = '';
     }, 90000);
@@ -158,14 +165,14 @@ window.addEventListener('message', event => {
   if (!trustedGoogle || !result || result.type !== 'cobra-avatar-upload' || !pendingNonce || result.nonce !== pendingNonce) return;
   clearTimeout(uploadTimer);
   pendingNonce = '';
-  $('submitAvatar').disabled = false;
+  updateSubmitReadiness();
   status(String(result.message || (result.ok ? 'Photo received.' : 'The upload could not be completed.')));
   if (result.ok) {
     $('avatarForm').reset();
     selectedDriver = null;
     $('driverSearch').setCustomValidity('Choose your name from the matching list.');
     $('photoPreview').hidden = true;
-    $('previewImage').classList.remove('flipped');
+    updateSubmitReadiness();
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     previewUrl = '';
   }
