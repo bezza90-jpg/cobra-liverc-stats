@@ -3,9 +3,12 @@ name: Sync current Wix event entries
 on:
   workflow_dispatch:
   schedule:
-    # Offset from the busy start of each hour. Booking changes are normally
-    # detected within five minutes, subject to GitHub's scheduler queue.
-    - cron: "2-57/5 * * * *"
+    # Keep these as three independent schedules. GitHub had begun coalescing
+    # the former stepped expression into gaps of several hours. Together these
+    # still request one refresh every five minutes, away from minute zero.
+    - cron: "2,17,32,47 * * * *"
+    - cron: "7,22,37,52 * * * *"
+    - cron: "12,27,42,57 * * * *"
 
 permissions:
   contents: write

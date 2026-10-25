@@ -326,9 +326,10 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
 }
 
 if (roots.length) {
+  const fresh = path => `${path}${path.includes('?') ? '&' : '?'}fresh=${Date.now()}`;
   Promise.all([
-    fetch('../data/next-event-entries.json', {cache:'no-cache'}).then(response => { if (!response.ok) throw Error('Entries unavailable'); return response.json(); }),
-    fetch('../data/wix-current-event-entries.json', {cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({})),
+    fetch(fresh('../data/next-event-entries.json'), {cache:'no-store'}).then(response => { if (!response.ok) throw Error('Entries unavailable'); return response.json(); }),
+    fetch(fresh('../data/wix-current-event-entries.json'), {cache:'no-store'}).then(response => response.ok ? response.json() : {}).catch(() => ({})),
     fetch('../data/car-avatar-driver-aliases.json', {cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({}))
     ,fetch('../data/event-capacities.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/event-calendar.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))

@@ -1,0 +1,58 @@
+name: Guard Wix booking sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    # An independent safety net for GitHub scheduler delays. It does not read
+    # customer data; it only checks when the protected sync last ran.
+    - cron: "4,19,34,49 * * * *"
+
+permissions:
+  actions: write
+  contents: read
+  issues: write
+
+concurrency:
+  group: cobra-wix-entry-sync-guard
+  cancel-in-progress: true
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Restart a delayed booking sync and maintain its alert
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          workflow="sync-wix-event-entries.yml"
+          title="Wix booking sync is stale"
+          latest="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow "$workflow" --limit 1 --json createdAt,status,conclusion,databaseId --jq '.[0]')"
+          if [[ -z "$latest" || "$latest" == "null" ]]; then
+            age=999999
+            detail="No booking-sync run was found."
+          else
+            created="$(jq -r '.createdAt' <<<"$latest")"
+            age=$(( $(date -u +%s) - $(date -u -d "$created" +%s) ))
+            detail="Latest run $(jq -r '.databaseId' <<<"$latest") was created at $created with status $(jq -r '.status' <<<"$latest") and result $(jq -r '.conclusion // "pending"' <<<"$latest")."
+          fi
+
+          if (( age > 1200 )); then
+            echo "$detail Booking sync is $((age / 60)) minutes old; dispatching a recovery run."
+            gh workflow run "$workflow" --repo "$GITHUB_REPOSITORY" --ref main
+          else
+            echo "$detail Booking sync is recent."
+          fi
+
+          issue="$(gh api "repos/$GITHUB_REPOSITORY/issues?state=open&per_page=100" --jq ".[] | select(.pull_request == null) | select(.title == \"$title\") | .number" | head -n 1)"
+          if (( age > 3600 )); then
+            body="$detail The independent guard found no booking sync in the last $((age / 60)) minutes and dispatched a recovery run. Check the Actions page and Wix credentials if the recovery fails."
+            if [[ -n "$issue" ]]; then
+              gh issue comment "$issue" --repo "$GITHUB_REPOSITORY" --body "$body"
+            else
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "$title" --body "$body"
+            fi
+          elif [[ -n "$issue" ]]; then
+            gh issue close "$issue" --repo "$GITHUB_REPOSITORY" --comment "The booking sync is running again. $detail"
+          fi
