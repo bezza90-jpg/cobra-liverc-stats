@@ -8,7 +8,7 @@ import {chartShareUrl, facebookShareLink, lapLineColour, lapPerformanceClass, re
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
 import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261023-click-preview';
 
-const state = { data: null, profileKey: '', leaderboardSort: { key: 'rank', direction: 'asc' } };
+const state = { data: null, profileKey: '', leaderboardClass: 'senior', leaderboardSort: { key: 'rank', direction: 'asc' } };
 let journeyMap = null;
 let journeyMapLayers = null;
 let journeyDriverMarkers = new Map();
@@ -424,7 +424,7 @@ function classMatches(className, selectedClass) {
 }
 
 function syncClassButtons() {
-  const selected = $('classFilter').value;
+  const selected = state.leaderboardClass || $('classFilter').value;
   document.querySelectorAll('[data-class-filter]').forEach(button => {
     button.setAttribute('aria-pressed', String(button.dataset.classFilter === selected));
   });
@@ -576,7 +576,8 @@ function ensureEnhancedMarkup() {
 }
 
 function calculateLeaderboard() {
-  const { from, to, eventType, className, minimumFinals, search } = filters();
+  const { from, to, eventType, className: statisticsClass, minimumFinals, search } = filters();
+  const className = state.leaderboardClass || statisticsClass;
   const data = state.data;
   const metricKey = $('leaderboardMetric')?.value || 'average';
   const careerRanking = careerRankingMetrics.has(metricKey);
@@ -2313,43 +2314,17 @@ async function init() {
     });
     $('classFilter').addEventListener('change', () => {
       if ($('classFilter').value === 'Junior Racers' && $('minimumFinals').value === '10') $('minimumFinals').value = '5';
+      state.leaderboardClass = $('classFilter').value;
       syncClassButtons();
       refresh();
     });
     $('leaderboardClassTabs').addEventListener('click', event => {
       const button = event.target.closest('[data-class-filter]');
       if (!button) return;
-      const tabs = $('leaderboardClassTabs');
-      const beforeY = window.scrollY;
-      const beforeTop = tabs.getBoundingClientRect().top;
-      // The class switch also replaces the Race Explorer and an asynchronous
-      // lap chart further down the page. Safari's scroll anchoring may follow
-      // that disappearing content instead of the button the user tapped.
-      // Lock the document's scrollable extent during this complete refresh.
-      const root = document.documentElement;
-      const priorMinHeight = root.style.minHeight;
-      const priorAnchor = root.style.overflowAnchor;
-      root.style.minHeight = Math.max(root.scrollHeight, beforeY + window.innerHeight + 40) + 'px';
-      root.style.overflowAnchor = 'none';
-      const restorePosition = () => {
-        if (!tabs.isConnected) return;
-        const delta = tabs.getBoundingClientRect().top - beforeTop;
-        if (Math.abs(delta) > 1) window.scrollTo({ top: window.scrollY + delta, behavior: 'instant' });
-        // Preserve the actual page position as well as the visual tab anchor.
-        if (Math.abs(window.scrollY - beforeY) > 2) window.scrollTo({ top: beforeY, behavior: 'instant' });
-      };
-      $('classFilter').value = button.dataset.classFilter;
-      if ($('classFilter').value === 'Junior Racers' && $('minimumFinals').value === '10') $('minimumFinals').value = '5';
+      state.leaderboardClass = button.dataset.classFilter;
+      if (state.leaderboardClass === 'Junior Racers' && $('minimumFinals').value === '10') $('minimumFinals').value = '5';
       syncClassButtons();
-      refresh();
-      restorePosition();
-      requestAnimationFrame(() => requestAnimationFrame(restorePosition));
-      setTimeout(restorePosition, 150);
-      setTimeout(() => {
-        restorePosition();
-        root.style.overflowAnchor = priorAnchor;
-        root.style.minHeight = priorMinHeight;
-      }, 850);
+      renderLeaderboard();
     });
     $('driverSearch').addEventListener('input', renderLeaderboard);
     $('leaderboardMetric').addEventListener('change', () => {
@@ -2689,6 +2664,7 @@ async function init() {
       $('toDate').value = data.meta.latestEventDate;
       $('eventTypeFilter').value = '';
       $('classFilter').value = 'senior';
+      state.leaderboardClass = 'senior';
       $('minimumFinals').value = '10';
       $('leaderboardMetric').value = 'average';
       $('driverSearch').value = '';

@@ -30,6 +30,9 @@ test('statistics open and reset on the latest two-year activity window', () => {
   assert.match(app, /activityWindow === 'all' \? ''/);
   assert.match(app, /leaderboardActivityWindow/);
   assert.match(app, /data-class-filter="senior"[^>]*>Combined<\/button>/);
+  assert.match(app, /state\.leaderboardClass = button\.dataset\.classFilter;/);
+  assert.match(app, /syncClassButtons\(\);\s*renderLeaderboard\(\);/);
+  assert.doesNotMatch(app, /const beforeTop = tabs\.getBoundingClientRect\(\)\.top/);
 });
 test('default tracker retains every recent racer and excludes older attendance without sampling', () => {
  const context=vm.createContext({}); vm.runInContext(functionSource('recentJourneyDrivers'),context);
