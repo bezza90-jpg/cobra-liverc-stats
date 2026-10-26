@@ -12,6 +12,13 @@ const formatChecks = ['checkThreeQuarter', 'checkFacingRight', 'checkWholeCar'];
 function updateSubmitReadiness() {
   $('submitAvatar').disabled = !uploadConfigured || !formatChecks.every(id => $(id).checked);
 }
+const invitationParams = new URLSearchParams(location.search);
+const invitedDriver = (() => {
+  const token = invitationParams.get('gpwToken') || '';
+  const key = invitationParams.get('driverKey') || '';
+  const name = invitationParams.get('driver') || '';
+  return /^[0-9a-f-]{72}$/i.test(token) && /^[A-Za-z0-9_-]+$/.test(key) && name.trim() ? { token, k: key, n: name.trim().slice(0, 120) } : null;
+})();
 
 function closeMatches() {
   $('driverMatches').hidden = true;
@@ -77,12 +84,17 @@ async function initialise() {
     drivers = (directory.drivers || []).filter(driver => /^[A-Za-z0-9_-]+$/.test(String(driver.k)) && driver.n && driver.k !== 'BOB-BOBTECH-GELSTHARP')
       .map(driver => ({ k: String(driver.k), n: String(driver.n) }))
       .sort((a, b) => a.n.localeCompare(b.n, 'en-GB'));
+    if (invitedDriver && !drivers.some(driver => driver.k === invitedDriver.k)) drivers.push({ k: invitedDriver.k, n: invitedDriver.n });
     if (!drivers.length) throw new Error('No drivers are available yet.');
     const endpoint = String(config.webAppUrl || '');
     if (!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(endpoint)) {
       throw new Error('Photo uploading is being connected. Please try again shortly.');
     }
     $('avatarForm').action = endpoint;
+    if (invitedDriver) {
+      $('gpwToken').value = invitedDriver.token;
+      chooseDriver(drivers.find(driver => driver.k === invitedDriver.k) || invitedDriver);
+    }
     uploadConfigured = true;
     updateSubmitReadiness();
     $('driverSearch').setCustomValidity('Choose your name from the matching list.');
