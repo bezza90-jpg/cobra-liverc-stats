@@ -55,6 +55,9 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(styles,/\.run-laps-table th:nth-child\(2\).*\{width:46%;text-align:center\}/);
   assert.match(styles,/tr\.lap-fastest>td:nth-child\(2\)/);
   assert.match(app,/<th>Lap<\/th><th>Lap time<\/th><th>Pos<\/th>/);
+  assert.match(app,/\.driver-dialog \.profile-events-table>tbody\{display:grid!important/);
+  assert.match(app,/\.driver-dialog \.profile-events-table>tbody > tr:not\(\.driver-races-detail-row\)/);
+  assert.doesNotMatch(app,/\.driver-dialog \.profile-events-table tbody/);
   assert.match(styles,/\.statistics-page \.table-wrap:has\(\[aria-expanded="true"\]\) \{ max-height:none !important; overflow-y:visible; \}/);
   assert.match(app,/syncDrilldownHeight\(container\)/);
   assert.match(app,/container\.closest\('\.table-wrap'\)/);

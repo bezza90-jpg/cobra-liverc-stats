@@ -564,12 +564,12 @@ function ensureEnhancedMarkup() {
         .driver-dialog .profile-stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
         .driver-dialog .profile-history{width:100%!important;overflow-x:hidden!important}
         .driver-dialog .profile-events-table{display:block!important;box-sizing:border-box;width:100%!important;min-width:0!important;max-width:100%!important;table-layout:auto!important}
-        .driver-dialog .profile-events-table thead{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)}
-        .driver-dialog .profile-events-table tbody{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px;width:100%!important;min-width:0!important}
-        .driver-dialog .profile-events-table tbody > tr:not(.driver-races-detail-row){display:grid!important;box-sizing:border-box;grid-template-columns:minmax(0,1fr)!important;gap:6px;width:100%!important;min-width:0!important;max-width:100%!important;padding:10px!important;border:1px solid #c9d8cd;border-top:3px solid #08a31a;border-radius:9px}
-        .driver-dialog .profile-events-table tbody > tr:not(.driver-races-detail-row) > td{display:flex!important;box-sizing:border-box;grid-column:1/-1!important;align-items:center;justify-content:space-between;gap:12px;width:100%!important;min-width:0!important;max-width:100%!important;padding:8px!important;text-align:right!important;white-space:normal!important;overflow-wrap:anywhere!important}
-        .driver-dialog .profile-events-table tbody > tr:not(.driver-races-detail-row) > td::before{flex:0 0 auto;text-align:left}
-        .driver-dialog .profile-events-table tbody > tr:not(.driver-races-detail-row) > td > *{min-width:0!important;max-width:100%!important;overflow-wrap:anywhere!important}
+        .driver-dialog .profile-events-table>thead{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip-path:inset(50%)}
+        .driver-dialog .profile-events-table>tbody{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px;width:100%!important;min-width:0!important}
+        .driver-dialog .profile-events-table>tbody > tr:not(.driver-races-detail-row){display:grid!important;box-sizing:border-box;grid-template-columns:minmax(0,1fr)!important;gap:6px;width:100%!important;min-width:0!important;max-width:100%!important;padding:10px!important;border:1px solid #c9d8cd;border-top:3px solid #08a31a;border-radius:9px}
+        .driver-dialog .profile-events-table>tbody > tr:not(.driver-races-detail-row) > td{display:flex!important;box-sizing:border-box;grid-column:1/-1!important;align-items:center;justify-content:space-between;gap:12px;width:100%!important;min-width:0!important;max-width:100%!important;padding:8px!important;text-align:right!important;white-space:normal!important;overflow-wrap:anywhere!important}
+        .driver-dialog .profile-events-table>tbody > tr:not(.driver-races-detail-row) > td::before{flex:0 0 auto;text-align:left}
+        .driver-dialog .profile-events-table>tbody > tr:not(.driver-races-detail-row) > td > *{min-width:0!important;max-width:100%!important;overflow-wrap:anywhere!important}
         .driver-dialog .profile-events-table .driver-races-detail-row,.driver-dialog .profile-events-table .driver-races-detail-row > td{display:block!important;box-sizing:border-box;width:100%!important;min-width:0!important;max-width:100%!important}
         .driver-dialog .profile-events-table .driver-races-detail-row[hidden]{display:none!important}
       }
