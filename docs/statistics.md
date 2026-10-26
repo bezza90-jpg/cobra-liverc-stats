@@ -51,7 +51,7 @@ Statistics race explorer and Virtual Race Replay display a race-position chart, 
 
 Individual charts share one time scale within the race. Driver selection overlays lap times; new-tab comparison links preserve the selection. Desktop hover/keyboard focus enlarges charts. Mobile users can scroll charts horizontally or open the full chart. Exact data tables provide an accessible alternative.
 
-Facebook buttons open a sharing composer; nothing is posted automatically. Each race and driver has a generated public HTML page and 1200×630 JPEG Open Graph image. Comparison links retain selection via query parameters; Facebook previews the whole-race overview for a comparison, not a custom selection image. Facebook controls its own preview cache.
+On phones, Facebook share buttons open the device share sheet with the RaceHub result link attached; the driver can then choose Facebook and its destination, or copy the link into a specific group. On desktop, the button opens Facebook's web sharing composer. Nothing is posted automatically. Each race and driver has a generated public HTML page and 1200×630 JPEG Open Graph image. Comparison links retain selection via query parameters; Facebook previews the whole-race overview for a comparison, not a custom selection image. Facebook controls its own preview cache.
 
 The publish workflow runs scripts/build-chart-shares.mjs after validating and saving refreshed race data, before uploading the site. Generated public/lap-charts/share files are deployment artifacts, not committed media. The renderer uses pinned @napi-rs/canvas 0.1.100 and enforces a 650 MB image budget.
 

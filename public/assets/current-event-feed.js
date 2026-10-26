@@ -1,5 +1,5 @@
 import { nextMeeting } from './event-calendar.js?v=20260926-midnight';
-import { facebookShareLink, lapLineColour } from './lap-charts.js?v=20261024-round-aware-laps';
+import { facebookShareLink, lapLineColour } from './lap-charts.js?v=20261026-native-share';
 
 const REFRESH_MS = 60_000;
 const raceCache = new Map();

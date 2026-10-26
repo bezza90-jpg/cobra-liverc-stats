@@ -1,3 +1,4 @@
+import {facebookComposerUrl} from './mobile-share.js?v=20261026-native-share';
 const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const lapHighlightThresholds = { near: 0.3, slow: 1.5 };
 export function lapPerformanceClass(seconds, best) {
@@ -51,8 +52,8 @@ export function chartShareUrl(raceId,driver='') {
  return new URL('../lap-charts/share/'+suffix,import.meta.url).href;
 }
 export function facebookShareLink(raceId,driver='') {
- const share='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(chartShareUrl(raceId,driver));
- return '<a class="facebook-share" target="_blank" rel="noopener" href="'+share+'" aria-label="Share to Facebook" title="Share to Facebook"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.7 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5H17V3.6c-.7-.1-1.5-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4v2.3H8.2V13h2.6v8h2.9Z"/></svg></a>';
+ const target=chartShareUrl(raceId,driver),share=facebookComposerUrl(target);
+ return '<a class="facebook-share" target="_blank" rel="noopener" href="'+share+'" data-native-share-url="'+escape(target)+'" aria-label="Share this result" title="Share this result"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13.7 21v-8h2.7l.4-3.1h-3.1v-2c0-.9.3-1.5 1.6-1.5H17V3.6c-.7-.1-1.5-.2-2.3-.2-2.3 0-3.9 1.4-3.9 4v2.3H8.2V13h2.6v8h2.9Z"/></svg></a>';
 }
 export function replayComparisonUrl(raceId,keys) {const url=new URL('../virtual-race-replay/',import.meta.url);url.searchParams.set('race',raceId);keys.forEach(k=>url.searchParams.append('compare',k));return url.href;}
 export function positionChartMarkup(race,comparison=false){
@@ -91,6 +92,6 @@ export function bindLapChartInteractions(container){
 }
 export function renderLapCharts(container,race,initial=[]){
  container.innerHTML=positionChartMarkup(race)+'<fieldset class="lap-chart-choices"><legend>Compare drivers</legend><p>Select two or more drivers to overlay their lap times.</p>'+race.drivers.map(d=>'<label><input type="checkbox" value="'+escape(d.key||d.id)+'" '+(initial.includes(String(d.key||d.id))?'checked':'')+'> '+escape(d.name)+'</label>').join('')+'</fieldset><div class="lap-comparison" aria-live="polite"></div>'+lapChartMarkup(race);
- const update=()=>{const keys=[...container.querySelectorAll('.lap-chart-choices input:checked')].map(e=>e.value),area=container.querySelector('.lap-comparison');if(!keys.length){area.innerHTML='';return;}const selected={...race,drivers:race.drivers.filter(d=>keys.includes(String(d.key||d.id)))};const url=new URL(chartUrl(race.id));keys.forEach(k=>url.searchParams.append('compare',k));area.innerHTML=positionChartMarkup(selected,true)+'<p><a class="lap-chart-open" target="_self" rel="noopener" href="'+escape(replayComparisonUrl(race.id,keys))+'">Open comparison in Virtual Replay ↗</a> · <a class="lap-chart-open" target="_self" rel="noopener" href="'+escape(url.href)+'">Open selected comparison ↗</a> · <a class="lap-chart-open" target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url.href)+'">Share selected comparison to Facebook ↗</a></p><p class="lap-chart-intro">Shared comparison links keep your driver selection. Facebook’s preview image shows the race overview.</p>';};
+ const update=()=>{const keys=[...container.querySelectorAll('.lap-chart-choices input:checked')].map(e=>e.value),area=container.querySelector('.lap-comparison');if(!keys.length){area.innerHTML='';return;}const selected={...race,drivers:race.drivers.filter(d=>keys.includes(String(d.key||d.id)))};const url=new URL(chartUrl(race.id));keys.forEach(k=>url.searchParams.append('compare',k));area.innerHTML=positionChartMarkup(selected,true)+'<p><a class="lap-chart-open" target="_self" rel="noopener" href="'+escape(replayComparisonUrl(race.id,keys))+'">Open comparison in Virtual Replay ↗</a> · <a class="lap-chart-open" target="_self" rel="noopener" href="'+escape(url.href)+'">Open selected comparison ↗</a> · <a class="lap-chart-open" target="_blank" rel="noopener" href="'+facebookComposerUrl(url.href)+'" data-native-share-url="'+escape(url.href)+'">Share selected comparison ↗</a></p><p class="lap-chart-intro">On phones this opens the share sheet with the comparison link attached. Facebook’s preview image shows the race overview.</p>';};
  container.onchange=e=>{if(e.target.matches('.lap-chart-choices input'))update();};bindLapChartInteractions(container);update();
 }

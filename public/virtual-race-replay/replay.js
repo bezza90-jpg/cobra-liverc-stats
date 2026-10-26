@@ -1,5 +1,5 @@
 import {canonicalDriverKey} from '../assets/driver-identity.js';
-import {renderLapCharts} from '../assets/lap-charts.js?v=20261023-lap-colours';
+import {renderLapCharts} from '../assets/lap-charts.js?v=20261026-native-share';
 import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
 import {legacyJumpProfile} from './jumps.js?v=20261020-original-2d-jumps-1';

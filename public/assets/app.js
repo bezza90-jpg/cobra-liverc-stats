@@ -4,7 +4,7 @@ import {trackerDrivers} from './tracker-priority.js';
 import {loadStatisticsData} from './statistics-data.js';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
-import {chartShareUrl, facebookShareLink, lapLineColour, lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261023-lap-readout';
+import {chartShareUrl, facebookShareLink, lapLineColour, lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261026-native-share';
 import {sharedRaceVideo} from './shared-race-video.js?v=20260929-shared-races';
 import {hydrateResultAvatars, resultAvatarCell} from './result-avatars.js?v=20261023-click-preview';
 
@@ -1126,7 +1126,11 @@ function renderRaceExplorer(raceId) {
   }
   const event = data.eventById[race.e];
   $('raceResultTitle').textContent = `${event?.n || ''} — ${race.n}`;
-  $('raceFacebookShare').href = 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(chartShareUrl(raceId));
+  const raceShareUrl = chartShareUrl(raceId);
+  $('raceFacebookShare').href = 'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(raceShareUrl);
+  $('raceFacebookShare').dataset.nativeShareUrl = raceShareUrl;
+  $('raceFacebookShare').ariaLabel = 'Share this race result';
+  $('raceFacebookShare').title = 'Share this race result';
   $('raceFacebookShare').hidden = false;
   $('raceEventLink').href = event?.u || '#';
   $('raceEventLink').hidden = !event?.u;

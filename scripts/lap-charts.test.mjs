@@ -2,8 +2,18 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {chartData,focusedLapScale,fullLapScale,lapChartMarkup,lapLineColour,positionChartMarkup,chartUrl,chartShareUrl,replayComparisonUrl} from '../public/assets/lap-charts.js';
+import {canUseNativeShare,facebookComposerUrl,nativeSharePayload} from '../public/assets/mobile-share.js';
 const race=JSON.parse(readFileSync(new URL('../public/virtual-race-replay/races/7072625.json',import.meta.url)));
-test('recorded laps and common scale preserve real race values',()=>{const d=chartData(race);assert.equal(d.drivers.length,9);assert.equal(d.lastLap,18);assert.ok(d.min<13.495&&d.max>25.604);const html=lapChartMarkup(race);assert.match(html,/13\.967/);assert.match(html,/MARK GIAQUINTO/);assert.equal((html.match(/class="lap-chart-row"/g)||[]).length,9);assert.match(html,/Share to Facebook/);});
+test('recorded laps and common scale preserve real race values',()=>{const d=chartData(race);assert.equal(d.drivers.length,9);assert.equal(d.lastLap,18);assert.ok(d.min<13.495&&d.max>25.604);const html=lapChartMarkup(race);assert.match(html,/13\.967/);assert.match(html,/MARK GIAQUINTO/);assert.equal((html.match(/class="lap-chart-row"/g)||[]).length,9);assert.match(html,/Share this result/);assert.match(html,/data-native-share-url=/);});
+
+test('phone share buttons use the native composer while desktop retains Facebook fallback',()=>{
+ const url='https://racehub.cobracardiff.co.uk/lap-charts/share/7072625/';
+ assert.equal(facebookComposerUrl(url),'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url));
+ assert.equal(canUseNativeShare({share(){},maxTouchPoints:1},{matchMedia:()=>({matches:false})}),true);
+ assert.equal(canUseNativeShare({share(){},maxTouchPoints:0},{matchMedia:()=>({matches:false})}),false);
+ assert.equal(canUseNativeShare({maxTouchPoints:1},{matchMedia:()=>({matches:true})}),false);
+ assert.deepEqual(nativeSharePayload(url),{title:'COBRA RaceHub',text:'COBRA RaceHub race result',url});
+});
 test('embedded individual charts keep the complete heat scale',()=>{const first={...race,drivers:[race.drivers[0]]},second={...race,drivers:[race.drivers[1]]},heatScale=focusedLapScale({laps:race.drivers.flatMap(d=>d.laps)}),firstScale=focusedLapScale(race.drivers[0]),firstHtml=lapChartMarkup(first,race),secondHtml=lapChartMarkup(second,race);assert.notDeepEqual([firstScale.min,firstScale.max],[heatScale.min,heatScale.max]);for(const value of [heatScale.min,heatScale.max]){assert.match(firstHtml,new RegExp('>'+value.toFixed(1)+'<'));assert.match(secondHtml,new RegExp('>'+value.toFixed(1)+'<'));}assert.match(firstHtml,/Every driver chart in this heat uses the same focused scale/);});
 test('opened driver chart fits every racing lap including the slowest',()=>{const driver={key:'ROGER-MILLS',name:'ROGER MILLS',laps:[{lap:1,seconds:9},{lap:2,seconds:18},{lap:3,seconds:18.2},{lap:4,seconds:31.5}]},scale=fullLapScale(driver),html=lapChartMarkup({id:'roger',name:'A Final',drivers:[driver]},{id:'roger',drivers:[driver]},{fitFullRange:true});assert.ok(scale.min<18);assert.ok(scale.max>31.5);assert.match(html,new RegExp('>'+scale.max.toFixed(1)+'<'));assert.match(html,/scaled to show the selected driver’s full recorded lap-time range/);assert.match(html,/data-chart-lap="4"[^>]*cy="(?!25(?:\.0)?")/);});
 test('linked single-driver charts open their exact lap-time table',()=>{const selected={...race,drivers:[race.drivers[0]]};assert.match(lapChartMarkup(selected,race,{showExactLaps:true}),/<details class="lap-chart-values" open>/);assert.doesNotMatch(lapChartMarkup(selected,race),/<details class="lap-chart-values" open>/);});
