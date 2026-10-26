@@ -141,8 +141,10 @@ const metricDescriptions = {
   qualifyingAverage: 'Average published qualifying position; a smaller number is better.',
   fastestLap: 'Fastest recorded valid lap time within the selected filters.',
   placesGained: 'Average qualifying position minus overall finishing position; a positive figure means places were gained.',
-  count: 'Ranked is the number meeting the selected minimum-finals rule. Recorded is every driver with a published final inside the current filters.'
+  count: 'Ranked is the number meeting the selected minimum-finals rule. cRating, Pace and Consistency use complete career history and the selected recent-activity rule. Other rankings use the selected date range.'
 };
+
+const careerRankingMetrics = new Set(['cRating', 'pace', 'consistency']);
 
 function metricHelp(value, description, label = '') {
   const text = String(value ?? '—');
@@ -402,9 +404,9 @@ function inRange(date, from, to) {
   return (!from || date >= from) && (!to || date <= to);
 }
 
-function oneYearBefore(date) {
+function yearsBefore(date, years = 1) {
   const [year, month, day] = date.split('-').map(Number);
-  const value = new Date(Date.UTC(year - 1, month - 1, day));
+  const value = new Date(Date.UTC(year - years, month - 1, day));
   return value.toISOString().slice(0, 10);
 }
 
@@ -463,12 +465,12 @@ function ensureEnhancedMarkup() {
   if (!$('liveRcArchiveLink')) $('updateSchedule')?.insertAdjacentHTML('afterend', '<a class="archive-link" id="liveRcArchiveLink" href="https://cobracardiff.liverc.com/events/" target="_blank" rel="noopener">Event Results</a>');
   if (!$('youtubeChannelLink')) $('liveRcArchiveLink')?.insertAdjacentHTML('afterend', '<a class="archive-link youtube-channel-link" id="youtubeChannelLink" href="https://www.youtube.com/@Bezza90/videos" target="_blank" rel="noopener">Race Videos ▶</a>');
   if (!$('leaderboardClassTabs')) $('leaderboardTitle')?.insertAdjacentHTML('afterend', `<div class="class-tabs" id="leaderboardClassTabs" aria-label="Leaderboard class">
-    <button type="button" data-class-filter="2-Wheel Drive Buggy" aria-pressed="false">2WD</button><button type="button" data-class-filter="4-Wheel Drive Buggy" aria-pressed="false">4WD</button><button type="button" data-class-filter="Junior Racers" aria-pressed="false">Junior Racers</button><button type="button" data-class-filter="Trucks" aria-pressed="false">Trucks</button><button type="button" data-class-filter="Vintage" aria-pressed="false">Vintage</button>
+    <button type="button" data-class-filter="senior" aria-pressed="true" title="Combine all senior classes">Combined</button><button type="button" data-class-filter="2-Wheel Drive Buggy" aria-pressed="false">2WD</button><button type="button" data-class-filter="4-Wheel Drive Buggy" aria-pressed="false">4WD</button><button type="button" data-class-filter="Junior Racers" aria-pressed="false">Junior Racers</button><button type="button" data-class-filter="Trucks" aria-pressed="false">Trucks</button><button type="button" data-class-filter="Vintage" aria-pressed="false">Vintage</button>
   </div>`);
-  if (!$('leaderboardMetric')) $('leaderboardCount')?.insertAdjacentHTML('beforebegin', `<label class="runtime-rank-control">Rank leaderboard by<select id="leaderboardMetric"><option value="average">Av overall finish</option><option value="performance">Performance score</option><option value="pace">Pace</option><option value="cRating">cRating</option><option value="finals">Finals completed</option><option value="laps">Total laps</option><option value="distance">Distance raced</option><option value="trackTime">Time on track</option><option value="runs">Recorded runs</option><option value="raceWins">Individual race wins</option><option value="overallWins">Overall wins</option><option value="podiums">Podiums</option><option value="tqs">TQs</option><option value="podiumRate">Podium rate</option><option value="winRate">Overall win rate</option><option value="topFiveRate">Top-five rate</option><option value="tqRate">TQ rate</option><option value="consistency">Adjusted consistency</option><option value="bestConsistency">Best run consistency</option><option value="highConsistencyRuns">Runs at 95%+</option><option value="lapSpread">Av fastest-to-average gap</option><option value="qualifyingAverage">Av qualifying position</option><option value="fastestLap">Fastest lap</option><option value="placesGained">Av places gained</option></select></label>`);
+  if (!$('leaderboardMetric')) $('leaderboardCount')?.insertAdjacentHTML('beforebegin', `<label class="runtime-rank-control">Rank leaderboard by<select id="leaderboardMetric"><option value="average">Av overall finish</option><option value="performance">Performance score</option><option value="pace">Pace</option><option value="cRating">cRating</option><option value="finals">Finals completed</option><option value="laps">Total laps</option><option value="distance">Distance raced</option><option value="trackTime">Time on track</option><option value="runs">Recorded runs</option><option value="raceWins">Individual race wins</option><option value="overallWins">Overall wins</option><option value="podiums">Podiums</option><option value="tqs">TQs</option><option value="podiumRate">Podium rate</option><option value="winRate">Overall win rate</option><option value="topFiveRate">Top-five rate</option><option value="tqRate">TQ rate</option><option value="consistency">Adjusted consistency</option><option value="bestConsistency">Best run consistency</option><option value="highConsistencyRuns">Runs at 95%+</option><option value="lapSpread">Av fastest-to-average gap</option><option value="qualifyingAverage">Av qualifying position</option><option value="fastestLap">Fastest lap</option><option value="placesGained">Av places gained</option></select></label><label class="runtime-rank-control">Career ranking activity<select id="leaderboardActivityWindow"><option value="1">Raced in the last year</option><option value="2" selected>Raced in the last 2 years</option><option value="3">Raced in the last 3 years</option><option value="5">Raced in the last 5 years</option><option value="all">All historical drivers</option></select></label>`);
   const minimum = $('minimumFinals');
   if (minimum) {
-    minimum.innerHTML = '<option value="1">1+ final</option><option value="5">5+ finals</option><option value="10">10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option>';
+    minimum.innerHTML = '<option value="1">Any published final</option><option value="5">5+ finals</option><option value="10">10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option>';
     minimum.value = '10';
   }
   const definition = document.querySelector('.definition');
@@ -576,6 +578,20 @@ function ensureEnhancedMarkup() {
 function calculateLeaderboard() {
   const { from, to, eventType, className, minimumFinals, search } = filters();
   const data = state.data;
+  const metricKey = $('leaderboardMetric')?.value || 'average';
+  const careerRanking = careerRankingMetrics.has(metricKey);
+  const rankingFrom = careerRanking ? '' : from;
+  const rankingTo = careerRanking ? '' : to;
+  const activityWindow = $('leaderboardActivityWindow')?.value || '2';
+  const activeSince = activityWindow === 'all' ? '' : yearsBefore(data.meta.latestEventDate, Number(activityWindow));
+  const activeDrivers = new Set();
+  if (careerRanking && activeSince) {
+    for (const run of data.raceResults) {
+      const race = data.raceById[run[0]];
+      if (!race || race.d < activeSince || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
+      activeDrivers.add(run[1]);
+    }
+  }
   const stats = new Map(data.drivers.map(driver => [driver.k, {
     driverKey: driver.k, name: driver.n, junior: Boolean(driver.j), finals: 0,
     entries: 0, overallWins: 0, podiums: 0, topFive: 0, tqs: 0, positionTotal: 0,
@@ -586,7 +602,7 @@ function calculateLeaderboard() {
 
   for (const entry of data.entries) {
     const [eventId, date, cls, driverKey] = entry;
-    if (!inRange(date, from, to) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
+    if (!inRange(date, rankingFrom, rankingTo) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
     const row = stats.get(driverKey);
     if (row) row.entries += 1;
   }
@@ -600,7 +616,7 @@ function calculateLeaderboard() {
 
   for (const result of data.eventResults) {
     const [eventId, date, cls, driverKey, finalPosition] = result;
-    if (!isPublishedFinal(result) || !inRange(date, from, to) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
+    if (!isPublishedFinal(result) || !inRange(date, rankingFrom, rankingTo) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
     const row = stats.get(driverKey);
     if (!row) continue;
     const fieldSize = fieldSizes.get(`${eventId}|${cls}`) || 1;
@@ -625,7 +641,7 @@ function calculateLeaderboard() {
   for (const run of data.raceResults) {
     const [raceId, driverKey, position, , , fastestLap, averageLap, consistency] = run;
     const race = data.raceById[raceId];
-    if (!race || !inRange(race.d, from, to) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
+    if (!race || !inRange(race.d, rankingFrom, rankingTo) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
     const row = stats.get(driverKey);
     if (!row) continue;
     row.runs += 1;
@@ -649,7 +665,7 @@ function calculateLeaderboard() {
     }
   }
 
-  const eligible = [...stats.values()].filter(row => row.finals > 0);
+  const eligible = [...stats.values()].filter(row => row.finals > 0 && (!careerRanking || !activeSince || activeDrivers.has(row.driverKey)));
   state.leaderboardEligibleCount = eligible.length;
   const ranked = eligible
     .filter(row => row.finals >= minimumFinals)
@@ -989,6 +1005,11 @@ function renderLeaderboard() {
   state.leaderboardRows = new Map(rows.map(row => [row.driverKey, row]));
   const metricKey = $('leaderboardMetric')?.value || 'average';
   const metric = leaderboardMetrics[metricKey] || leaderboardMetrics.average;
+  const activityControl = $('leaderboardActivityWindow');
+  if (activityControl) {
+    activityControl.disabled = !careerRankingMetrics.has(metricKey);
+    activityControl.title = activityControl.disabled ? 'This ranking uses the selected statistics date range.' : 'Limit career rankings by the driver’s most recent COBRA activity.';
+  }
   const fixedAverageHeading = document.querySelector('#driverLeaderboard [data-leaderboard-sort="average"]');
   if (fixedAverageHeading) fixedAverageHeading.hidden = metricKey === 'average';
   if ($('leaderboardMetricHeading')) {
@@ -2275,7 +2296,7 @@ async function init() {
     $('updatedStatus').textContent = `Last updated ${dateTimeFmt.format(new Date(data.meta.generatedAt))} UK time`;
     $('toDate').max = data.meta.latestEventDate;
     $('toDate').value = data.meta.latestEventDate;
-    $('fromDate').value = oneYearBefore(data.meta.latestEventDate);
+    $('fromDate').value = yearsBefore(data.meta.latestEventDate, 2);
 
     for (const className of data.classes) $('classFilter').insertAdjacentHTML('beforeend', `<option value="${escapeHtml(className)}">${escapeHtml(classLabels[className] || className)}</option>`);
     $('classFilter').value = 'senior';
@@ -2335,6 +2356,7 @@ async function init() {
       state.leaderboardSort = { key: 'rank', direction: 'asc' };
       renderLeaderboard();
     });
+    $('leaderboardActivityWindow')?.addEventListener('change', renderLeaderboard);
     $('driverLeaderboard').querySelector('thead').addEventListener('click', event => {
       const heading = event.target.closest('[data-leaderboard-sort]');
       if (!heading) return;
@@ -2663,7 +2685,7 @@ async function init() {
     $('compareDrivers').addEventListener('click', () => compareDrivers(false));
     $('comparisonEvent').addEventListener('change', () => compareDrivers(true));
     $('resetFilters').addEventListener('click', () => {
-      $('fromDate').value = oneYearBefore(data.meta.latestEventDate);
+      $('fromDate').value = yearsBefore(data.meta.latestEventDate, 2);
       $('toDate').value = data.meta.latestEventDate;
       $('eventTypeFilter').value = '';
       $('classFilter').value = 'senior';

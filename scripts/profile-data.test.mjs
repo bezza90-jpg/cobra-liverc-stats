@@ -22,6 +22,15 @@ const profileHelpers = {
   metricHelp: (_value, _description) => String(_value),
   metricValueHelp: (_key, value) => String(value)
 };
+test('statistics open and reset on the latest two-year activity window', () => {
+  const twoYearDefault = /\$\('fromDate'\)\.value = yearsBefore\(data\.meta\.latestEventDate, 2\);/g;
+  assert.equal(app.match(twoYearDefault)?.length, 2);
+  assert.match(app, /careerRankingMetrics = new Set\(\['cRating', 'pace', 'consistency'\]\)/);
+  assert.match(app, /race\.d < activeSince/);
+  assert.match(app, /activityWindow === 'all' \? ''/);
+  assert.match(app, /leaderboardActivityWindow/);
+  assert.match(app, /data-class-filter="senior"[^>]*>Combined<\/button>/);
+});
 test('default tracker retains every recent racer and excludes older attendance without sampling', () => {
  const context=vm.createContext({}); vm.runInContext(functionSource('recentJourneyDrivers'),context);
  const keys=context.recentJourneyDrivers([{driverKey:'OLD',lastDate:'2024-09-28'},{driverKey:'BOUNDARY',lastDate:'2024-09-29'},{driverKey:'NEW',lastDate:'2026-09-20'}],new Date('2026-09-29T12:00:00Z'));

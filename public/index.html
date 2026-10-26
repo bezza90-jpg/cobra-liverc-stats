@@ -68,7 +68,7 @@
         <label>To date<input type="date" id="toDate"></label>
         <label>Event type<select id="eventTypeFilter"><option value="">All official events</option><option value="sword">SWORD</option><option value="club">Club Days</option></select></label>
         <label>Class<select id="classFilter"><option value="senior">All senior classes</option></select></label>
-        <label>Minimum finals<select id="minimumFinals"><option value="1">1+ final</option><option value="5">5+ finals</option><option value="10" selected>10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option></select></label>
+        <label>Minimum finals<select id="minimumFinals"><option value="1">Any published final</option><option value="5">5+ finals</option><option value="10" selected>10+ finals</option><option value="20">20+ finals</option><option value="30">30+ finals</option></select></label>
         <label class="statistics-driver-search">Find a driver<input type="search" id="driverSearch" placeholder="Start typing a name…"></label>
       </div>
     </section>
@@ -96,6 +96,7 @@
           <p class="eyebrow">Filtered record book</p>
           <h2 id="leaderboardTitle">Driver leaderboard</h2>
           <div class="class-tabs" id="leaderboardClassTabs" aria-label="Leaderboard class">
+            <button type="button" data-class-filter="senior" aria-pressed="true" title="Combine all senior classes">Combined</button>
             <button type="button" data-class-filter="2-Wheel Drive Buggy" aria-pressed="false">2WD</button>
             <button type="button" data-class-filter="4-Wheel Drive Buggy" aria-pressed="false">4WD</button>
             <button type="button" data-class-filter="Junior Racers" aria-pressed="false">Junior Racers</button>
@@ -113,6 +114,9 @@
             <option value="consistency">Adjusted consistency</option><option value="bestConsistency">Best run consistency</option><option value="highConsistencyRuns">Runs at 95%+</option>
             <option value="lapSpread">Av fastest-to-average gap</option><option value="qualifyingAverage">Av qualifying position</option>
             <option value="fastestLap">Fastest lap</option><option value="placesGained">Av places gained</option>
+          </select></label>
+          <label>Career ranking activity<select id="leaderboardActivityWindow">
+            <option value="1">Raced in the last year</option><option value="2" selected>Raced in the last 2 years</option><option value="3">Raced in the last 3 years</option><option value="5">Raced in the last 5 years</option><option value="all">All historical drivers</option>
           </select></label>
           <p class="result-count" id="leaderboardCount"></p>
         </div>
@@ -138,7 +142,7 @@
           <tbody id="leaderboardBody"></tbody>
         </table>
       </div>
-      <p class="definition">Choose any ranking measure above. Performance uses every valid peer-relative pace and finishing record. Average finish, Pace and consistency use the attendance adjustment: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals. Activity totals always use every matching run.</p>
+      <p class="definition">Choose any ranking measure above. cRating, Pace and consistency use each driver's complete COBRA history; use Career ranking activity to choose how recently a driver must have raced, or turn that filter off. Other measures use the selected date range. Average finish, Pace and consistency use the attendance adjustment: no result is discarded below 10 finals; one is discarded at 10, then one additional lowest result for every five further finals.</p>
       <details class="metric-guide">
         <summary>How to read these figures</summary>
         <div class="metric-guide-grid">
@@ -267,6 +271,6 @@
     <a href="about/">About COBRA</a><a href="briefing/">Drivers Briefing</a>
     <a href="https://cobracardiff.liverc.com/events/" rel="noopener" target="_top">View source results on LiveRC</a>
   <a class="website-guides-link" href="./website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>
-  <script type="module" src="assets/app.js?v=20261025-leaderboard-no-jump-v2"></script>
+  <script type="module" src="assets/app.js?v=20261026-career-active-rankings"></script>
 <!-- cobra-footer:start --><footer class="cobra-site-footer"><a href="https://www.cobracardiff.co.uk/"><img src="./assets/cobra-header-logo.png" width="220" height="56" alt="COBRA home" loading="lazy" decoding="async"></a><p>South Wales TQ HQ<br>BRCA.org Affiliated Club</p><p>Off Road Buggy Racing Club • South Wales</p><nav aria-label="Footer"><a href="./website-guides/">Help &amp; Website Guides</a><a href="https://www.facebook.com/groups/cobracardiff">Facebook</a><a href="https://www.youtube.com/@Bezza90">YouTube</a></nav><p>© 2026 COBRA. Beryl Media Productions. All rights reserved.</p></footer><!-- cobra-footer:end --></body>
 </html>
