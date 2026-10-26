@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-26T21:11:51.259Z",
+  "updatedAt": "2026-10-26T22:10:14.720Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -538,6 +538,14 @@
       "chassisSource": "wix"
     },
     {
+      "driverKey": "NATHAN-NOTLEY",
+      "driverName": "Nathan Notley",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix"
+    },
+    {
       "driverKey": "NEIL-SMITH",
       "driverName": "NEIL SMITH",
       "className": "4-Wheel Drive Buggy",
@@ -654,6 +662,12 @@
       "countryCode": "GB",
       "chassis": "Associated",
       "chassisSource": "wix"
+    },
+    {
+      "driverName": "LEO N.",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": ""
     },
     {
       "driverName": "LEO S.",
