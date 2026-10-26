@@ -1,10 +1,15 @@
 {
-  "checkedAt": "2026-10-26T18:45:29.140294+00:00",
+  "checkedAt": "2026-10-26T19:47:18.436228+00:00",
   "updated": 0,
   "failures": {
     "CAERON-JENKINS|2-Wheel Drive Buggy": {
       "id": "94181e0c-c216-4e2a-8a97-90e6edabe355",
       "revision": "10gZqbCW-vC5FioMlNluAvgGhHfU175Os",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "LIAM-TOOLE|4-Wheel Drive Buggy": {
+      "id": "6984b2f3-681e-451a-ada5-df224454f85a",
+      "revision": "1ibxn5yS8K8ChiMwGlX-A3Cvaets2Whze",
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     }
   }
