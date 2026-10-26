@@ -45,6 +45,17 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-10-19T22:56:41Z"
+    },
+    "GRAHAM-KEEP|2-Wheel Drive Buggy": {
+      "submissionIdHash": "f3ecda3aca5cd6ab9d02477473242c4d0a369eb4394f95cb7f77e92451408900",
+      "reviewedFileIdHash": "634bd228b49a6860211295a77710009bd59c7cf6d65435e2e46a8af3a746270a",
+      "sha256": "085847aef7f9b67fdf6118540e66ce85b4017d33af64389c4fa2930eb751400d",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-26"
     }
   },
   "publishedAssets": {
@@ -206,7 +217,9 @@
     "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png": "f9a15dabdb66f27896bcb079b0097210fd7eef40",
     "assets/car-avatar-thumbnails/CHRIS-GUNTER-AUTO-4WD.webp": "d38bd88502742410fe810d1653e72fd45e9fbfb9",
     "assets/car-avatars/MIKE-DRISCOLL-REVIEWED-2WD.png": "a952ca1f102588771a4e88255fcc59c8c600d2ee",
-    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-REVIEWED-2WD.webp": "0d22c8ce49e30491399d18b0e17573ad0edbbb7e"
+    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-REVIEWED-2WD.webp": "0d22c8ce49e30491399d18b0e17573ad0edbbb7e",
+    "assets/car-avatars/GRAHAM-KEEP-REVIEWED-2WD.png": "cecbb8b1f4e2c95c807a1fc78d621c025b27fd95",
+    "assets/car-avatar-thumbnails/GRAHAM-KEEP-REVIEWED-2WD.webp": "22fe173599ff67a610a5f9af90eec95b173249c6"
   },
   "assignments": {
     "BRUCE": {
@@ -380,6 +393,9 @@
     },
     "CHRIS-GUNTER": {
       "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png"
+    },
+    "GRAHAM-KEEP": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/GRAHAM-KEEP-REVIEWED-2WD.png"
     }
   },
   "blockedRevisionHashes": [
