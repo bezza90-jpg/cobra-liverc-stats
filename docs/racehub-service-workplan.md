@@ -84,18 +84,20 @@ These are response targets, not guaranteed resolution times. Keep the first clie
 
 | Element | Market-informed standard | Fair team-member price | Minimum sustainable price |
 | --- | ---: | ---: | ---: |
-| RaceHub Basic setup | £1,250 | **£950** | £750 |
-| Basic low-managed | £59/month | **£49/month** | £39/month |
-| Check-in setup | £295 | **£225** | £195 |
-| Check-in management | £20/month | **£15/month** | £10/month |
-| Managed Car Avatar setup | £395 | **£325** | £295 |
-| Managed avatars | £30/month | **£25/month** | £20/month |
-| Semi-managed service | £189/month | **£129/month** | £99/month |
-| Additional work | £60/hour | **£50/hour** | £40/hour |
+| RaceHub Club setup | £2,250 | **£1,500** | £1,250 |
+| Club low-managed | £119/month | **£79/month** | £69/month |
+| Standalone Check-in setup | £650 | **£450** | £395 |
+| Check-in management | £35/month | **£25/month** | £20/month |
+| Beryl Track Designer, first year | £695 | **£495** | £395 |
+| Track Designer updates/support | £149/year | **£99/year** | £79/year |
+| Managed Car Avatar setup | £495 | **£350** | £325 |
+| Managed avatars | £35/month | **£25/month** | £20/month |
+| Semi-managed service | £219/month | **£149/month** | £129/month |
+| Additional work | £60/hour | **£50/hour** | £45/hour |
 
 The recommended team-member price is the middle column. It gives the club a meaningful reduction while still recognising the setup time, responsibility and future support. The minimum column should be used only with a tightly limited scope, prompt cooperation and no expectation of inclusive custom changes.
 
-Published UK maintenance plans for ordinary websites commonly cluster around £40–£99 per month, with ecommerce, booking and hands-on plans at or above £99. RaceHub includes data integration and operational responsibility beyond ordinary maintenance, which supports the standard prices above.
+Generic ticket systems can provide basic check-in cheaply or include it in per-ticket fees, while specialist RC timing software may cost tens of pounds per month or several hundred pounds as a licence. RaceHub's value is the combined club branding, Wix workflow, LiveRC processing, migration, monitoring and accountable support. The detailed comparable-product evidence, replacement values and standalone Check-in/Track Designer cost models are in `docs/beryl-product-portfolio.md`.
 
 Review any discounted price after 12 months. Record the standard value and discount separately on the quotation so the benefit to the club is visible.
 
