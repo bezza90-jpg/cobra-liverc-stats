@@ -2,7 +2,6 @@ import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {londonDate} from './sync-wix-event-entries.mjs';
 import {validReserveEndpoint} from '../public/assets/event-reserves.js';
-import {validTransponder} from '../public/assets/transponder-number.js';
 
 const data = async name => JSON.parse(await readFile(new URL(`../public/data/${name}`, import.meta.url), 'utf8'));
 const [calendar, snapshot, capacities, reserve] = await Promise.all([
@@ -32,7 +31,7 @@ for (const entry of snapshot.entries || []) {
   assert(entry.driverName && entry.className, 'The Wix entry feed contains an incomplete entry.');
   assert(!seen.has(id), `The Wix entry feed contains a duplicate: ${id}.`);
   seen.add(id);
-  assert(!entry.transponder || validTransponder(entry.transponder), `The Wix entry feed contains an invalid transponder for ${entry.driverName}.`);
+  assert(!Object.hasOwn(entry,'transponder') && !Object.hasOwn(entry,'transponderSource'), `The public Wix entry feed contains private transponder data for ${entry.driverName}.`);
   assert(String(entry.chassis || '').length <= 80, `The Wix entry feed contains an invalid chassis for ${entry.driverName}.`);
 }
 

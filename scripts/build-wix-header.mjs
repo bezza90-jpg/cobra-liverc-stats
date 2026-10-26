@@ -1,8 +1,9 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {siteHeader} from './site-shell.mjs';
+import {clubConfig} from './club-config.mjs';
 
 const check=process.argv.includes('--check');
-const root='https://racehub.cobracardiff.co.uk/';
+const root=clubConfig.urls.raceHub;
 const header=siteHeader(root);
 const loader=`import {initSiteHeader,initBackToTop,initNavigationPrefetch,initViewportStability} from './site-shell.js?v=8';
 
@@ -38,7 +39,7 @@ new MutationObserver(install).observe(document.documentElement,{subtree:true,chi
 install();
 `;
 const links=readFileSync(new URL('../docs/wix-racehub-links.html',import.meta.url),'utf8').trim();
-const snippet=`${links}\n<link rel="stylesheet" href="${root}assets/site-shell.css?v=6">\n<script type="module" src="${root}assets/wix-site-shell.js"></script>\n`;
+const snippet=`${links}\n<link rel="stylesheet" href="${root}assets/club-theme.css?v=1">\n<link rel="stylesheet" href="${root}assets/site-shell.css?v=6">\n<script type="module" src="${root}assets/wix-site-shell.js"></script>\n`;
 
 const outputs=[
   [new URL('../public/assets/wix-site-shell.js',import.meta.url),loader],

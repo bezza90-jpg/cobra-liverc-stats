@@ -17,8 +17,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
-      - name: Check entry, transponder, chassis, capacity and reserve rules
+      - name: Check private input, public privacy, chassis, capacity and reserve rules
         run: |
+          node scripts/audit-public-personal-data.mjs
+          node --test scripts/public-entry-data.test.mjs
           node --test scripts/sync-wix-event-entries.test.mjs scripts/transponder-history.test.mjs scripts/event-entry-merge.test.mjs scripts/event-capacity.test.mjs scripts/check-wix-ticket-readiness.test.mjs
           node scripts/check-booking-readiness.mjs
       - name: Check live Wix ticket limits and opening time

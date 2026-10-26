@@ -55,7 +55,7 @@ test('next event entries combine the LiveRC roster with published chassis and co
  const entries=[{driverName:'MATTHEW HODGES',className:'2-Wheel Drive Buggy',transponder:'1234567'}];
  const result=enrichNextEventEntries(meeting,entries,{'MATTHEW-HODGES':{name:'Team Associated'}},{defaultCountryCode:'GB',drivers:{'MATTHEW-HODGES':{countryCode:'GB-WLS'}}});
  assert.equal(result.type,'sword');
- assert.deepEqual(result.entries[0],{driverKey:'MATTHEW-HODGES',driverName:'MATTHEW HODGES',className:'2-Wheel Drive Buggy',countryCode:'GB-WLS',chassis:'Team Associated',transponder:'1234567'});
+ assert.deepEqual(result.entries[0],{driverKey:'MATTHEW-HODGES',driverName:'MATTHEW HODGES',className:'2-Wheel Drive Buggy',countryCode:'GB-WLS',chassis:'Team Associated'});
 });
 test('Wix bookings appear before LiveRC and merge without duplicates',()=>{
  const meeting={eventId:'123'};

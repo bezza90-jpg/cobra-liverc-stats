@@ -61,7 +61,7 @@ async function importEvent(event) {
     return {
       entryKey: `${event.liveRcEventId}|${row.className}|${key}`,
       liveRcEventId: event.liveRcEventId, eventDate: event.date, eventName: event.name,
-      className: row.className, driverKey: key, driverName: row.driverName, transponder: row.transponder
+      className: row.className, driverKey: key, driverName: row.driverName,
     };
   });
   const qualifyingResults = qualifyingRows.map(row => {

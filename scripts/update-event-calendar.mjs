@@ -6,6 +6,7 @@ import { readFile, writeFile, rename } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { BASE_URL, driverKey, fetchText, parseArchive, parseEntryList, parseEventIndex, parseOverall } from './lib/liverc.mjs';
 import { londonDate } from '../public/assets/event-calendar.js';
+import {publicEntryFeed} from './lib/public-entry-data.mjs';
 export function calendarMeetings(events) {
   return events.filter(event => /^\d{4}-\d{2}-\d{2}$/.test(event.date) &&
     !/\b(test|testing|cancelled|canceled)\b/i.test(event.name) &&
@@ -53,8 +54,7 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
         className: entry.className,
         countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
         chassis: entry.chassisSource === 'wix' ? entry.chassis : chassisChoice(override, liveChassis),
-        ...(entry.chassisSource ? {chassisSource:entry.chassisSource} : {}),
-        transponder: entry.transponder
+        ...(entry.chassisSource ? {chassisSource:entry.chassisSource} : {})
       };
     })
   };
@@ -124,7 +124,7 @@ async function updateNextEventEntries(meetings, today) {
   const chassis = JSON.parse(await readFile(new URL('../public/data/liverc-chassis.json', import.meta.url), 'utf8').catch(() => '{}'));
   const overrides = JSON.parse(await readFile(new URL('../public/data/next-event-entry-overrides.json', import.meta.url), 'utf8').catch(() => '{}'));
   const mergedEntries=mergeWixEntries(meeting,entries,wixSnapshot);
-  await writeIfChanged(destination, enrichNextEventEntries(meeting, mergedEntries, chassis, overrides));
+  await writeIfChanged(destination, publicEntryFeed(enrichNextEventEntries(meeting, mergedEntries, chassis, overrides)));
   return mergedEntries.length;
 }
 export async function updateEventCalendar(events) {

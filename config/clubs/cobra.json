@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "cobra-cardiff",
+  "name": "Cardiff Off Road Buggy Racing Association",
+  "shortName": "COBRA",
+  "raceHubName": "COBRA RaceHub",
+  "edition": "full",
+  "features": {
+    "bookings": true,
+    "checkIn": true,
+    "currentEvent": true,
+    "results": true,
+    "championships": true,
+    "podiums": true,
+    "trackGallery": true,
+    "schedules": true,
+    "briefing": true,
+    "setups": true,
+    "avatars": true,
+    "distanceTracker": true,
+    "replays": true,
+    "clubNews": true,
+    "guides": true,
+    "grandPrixWales": true
+  },
+  "urls": {
+    "home": "https://www.cobracardiff.co.uk/",
+    "raceHub": "https://racehub.cobracardiff.co.uk/",
+    "events": "https://www.cobracardiff.co.uk/event-list",
+    "media": "https://www.cobracardiff.co.uk/media",
+    "contact": "https://www.cobracardiff.co.uk/contact"
+  },
+  "logos": {
+    "header": "assets/cobra-header-logo.png",
+    "footer": "assets/cobra-header-logo.png",
+    "headerAlt": "COBRA",
+    "partner": "assets/gpw-logo.webp",
+    "partnerAlt": "Grand Prix of Wales event logo",
+    "partnerUrl": "https://www.cobracardiff.co.uk/grand-prix-wales"
+  },
+  "theme": {
+    "primary": "#008700",
+    "primaryBright": "#08a31a",
+    "primaryDark": "#067b14",
+    "accent": "#9bf22f",
+    "ink": "#07140a",
+    "surface": "#ffffff",
+    "wash": "#eff8ef"
+  },
+  "footer": {
+    "strapline": "South Wales TQ HQ\nBRCA.org Affiliated Club",
+    "description": "Off Road Buggy Racing Club • South Wales",
+    "credit": "Beryl Media Productions"
+  },
+  "social": {
+    "facebook": "https://www.facebook.com/groups/cobracardiff",
+    "youtube": "https://www.youtube.com/@Bezza90"
+  },
+  "analytics": {
+    "cloudflareToken": "8bd96a91178344ddb3c5078533d44dde"
+  },
+  "wix": {
+    "ticketTypes": {
+      "Junior Entry": ["Junior Racers", "Junior Transponder Number", "Junior Chassis"],
+      "2WD Entry": ["2-Wheel Drive Buggy", "2WD Transponder Number", "2WD Chassis"],
+      "2WD SWORD Entry": ["2-Wheel Drive Buggy", "2WD Transponder Number", "2WD Chassis"],
+      "4WD Entry": ["4-Wheel Drive Buggy", "4WD Transponder Number", "4WD Chassis"],
+      "4WD SWORD Entry": ["4-Wheel Drive Buggy", "4WD Transponder Number", "4WD Chassis"],
+      "Vintage Entry": ["Vintage", "Vintage Transponder Number", "Vintage Chassis"],
+      "Mother Trucker Entry": ["Trucks", "Truck Transponder Number", "Truck Chassis"],
+      "Mother Truckers Entry": ["Trucks", "Truck Transponder Number", "Truck Chassis"]
+    }
+  }
+}

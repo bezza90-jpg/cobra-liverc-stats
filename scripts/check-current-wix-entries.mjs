@@ -1,15 +1,13 @@
 import {readFile} from 'node:fs/promises';
 import {mergeCurrentWixEntries,applyConfirmedChassis} from '../public/assets/event-entry-merge.js';
-import {validTransponder} from '../public/assets/transponder-number.js';
 
 const file = async name => JSON.parse(await readFile(new URL(`../public/data/${name}`, import.meta.url), 'utf8'));
 const key = row => `${String(row.driverName || '').trim().toUpperCase()}|${String(row.className || '').trim().toUpperCase()}`;
 const nameKey = row => String(row.driverName || '').trim().toUpperCase();
 const wix = await file('wix-current-event-entries.json').catch(() => null);
 const source = await file('next-event-entries.json');
-const history = await file('transponder-history.json').catch(() => []);
 const confirmed = await file('confirmed-event-chassis.json').catch(() => ({}));
-const published = applyConfirmedChassis(mergeCurrentWixEntries(source,wix || {},history),confirmed);
+const published = applyConfirmedChassis(mergeCurrentWixEntries(source,wix || {}),confirmed);
 if (wix?.entries?.length && (!wix.eventDate || wix.eventDate === published.date)) {
   const actual = new Map();
   const actualByName = new Map();
@@ -26,9 +24,8 @@ if (wix?.entries?.length && (!wix.eventDate || wix.eventDate === published.date)
     const shown = actual.get(key(row));
     if (!shown && row.className === 'Junior Racers' && actualByName.get(nameKey(row))) return false;
     if (!shown) return true;
-    return (row.chassis && String(shown.chassis || '').toUpperCase() !== String(row.chassis).toUpperCase()) ||
-      (validTransponder(row.transponder) && row.transponderSource !== 'history' && String(shown.transponder || '') !== String(row.transponder));
+    return row.chassis && String(shown.chassis || '').toUpperCase() !== String(row.chassis).toUpperCase();
   });
   if (problems.length) throw Error(`Current Wix entries differ from the public list: ${problems.map(row => `${row.driverName} — ${row.className}`).join(', ')}`);
 }
-console.log('Current Wix entries, chassis and transponders match the public entry list.');
+console.log('Current Wix entries and chassis match the public entry list; private transponders are not published.');

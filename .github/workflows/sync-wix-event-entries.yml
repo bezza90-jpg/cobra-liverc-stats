@@ -38,7 +38,9 @@ jobs:
           WIX_SITE_ID: ${{ secrets.WIX_SITE_ID }}
           WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
       - name: Confirm upcoming-event, capacity and reserve configuration
-        run: node scripts/check-booking-readiness.mjs
+        run: |
+          node scripts/audit-public-personal-data.mjs
+          node scripts/check-booking-readiness.mjs
       - name: Save safe public entry data
         run: |
           if [[ -n "$(git status --porcelain public/data/wix-current-event-entries.json)" ]]; then

@@ -243,11 +243,11 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     const wrap = element('div', 'event-entry-table-wrap');
     const table = element('table', 'event-entry-table');
     const head = document.createElement('thead');
-    head.innerHTML = '<tr><th scope="col">Country</th><th scope="col">No.</th><th scope="col">Driver</th><th scope="col" class="event-entry-avatar-heading">Avatar</th><th scope="col">Chassis</th><th scope="col">Transponder</th></tr>';
+    head.innerHTML = '<tr><th scope="col">Country</th><th scope="col">No.</th><th scope="col">Driver</th><th scope="col" class="event-entry-avatar-heading">Avatar</th><th scope="col">Chassis</th></tr>';
     const body = document.createElement('tbody');
     for (const [index, entry] of entries.entries()) {
       const row = document.createElement('tr');
-      row.dataset.search = `${entry.driverName} ${entry.bookingName || ''} ${entry.className} ${entry.chassis} ${entry.transponder}`.toLowerCase();
+      row.dataset.search = `${entry.driverName} ${entry.bookingName || ''} ${entry.className} ${entry.chassis}`.toLowerCase();
       const country = document.createElement('td');
       const flag = String(entry.countryCode).toUpperCase() === 'GB' ? element('img', 'event-entry-flag-image') : element('span', 'event-entry-flag', countryFlag(entry.countryCode));
       if (flag.tagName === 'IMG') { flag.src = '../assets/gb-flag.svg'; flag.alt = 'United Kingdom'; flag.width = 32; flag.height = 16; }
@@ -301,11 +301,9 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       } else { chassis.textContent = entry.chassis || 'Not listed'; }
       chassis.dataset.label = 'Chassis';
       if (!entry.chassis) chassis.classList.add('event-entry-missing');
-      const transponder = element('td', 'event-entry-transponder', entry.transponder || 'Not listed');
-      transponder.dataset.label = 'Transponder';
       const number = element('td', 'event-entry-number', String(index + 1));
       number.dataset.label = 'No.';
-      row.append(country, number, driver, avatarCell, chassis, transponder);
+      row.append(country, number, driver, avatarCell, chassis);
       body.append(row);
     }
     table.append(head, body);
@@ -336,12 +334,13 @@ if (roots.length) {
     ,fetch('../data/car-avatars.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatar-source-revisions.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/confirmed-event-chassis.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-    ,fetch('../data/transponder-history.json', {cache:'no-cache'}).then(r=>r.ok?r.json():[]).catch(()=>([]))
-  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed,history]) => {
+  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed]) => {
     roots.forEach(root => {
       const meeting=nextMeeting(calendar.events || [],expectedType(root));
-      const combined=applyConfirmedChassis(entriesForMeeting(data,wix,meeting,history),confirmed);
-      render(root,{...combined,entries:combined.entries.map(entry=>entryIdentity(entry,aliases))},capacity,calendar,avatars,revisions);
+      const identifiedData={...data,entries:(data.entries || []).map(entry=>entryIdentity(entry,aliases))};
+      const identifiedWix={...wix,entries:(wix.entries || []).map(entry=>entryIdentity(entry,aliases))};
+      const combined=applyConfirmedChassis(entriesForMeeting(identifiedData,identifiedWix,meeting),confirmed);
+      render(root,combined,capacity,calendar,avatars,revisions);
     });
   })
     .catch(() => roots.forEach(root => {

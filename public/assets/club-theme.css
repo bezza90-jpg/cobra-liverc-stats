@@ -1,0 +1,14 @@
+:root{
+  --club-primary:#008700;
+  --club-primary-bright:#08a31a;
+  --club-primary-dark:#067b14;
+  --club-accent:#9bf22f;
+  --club-ink:#07140a;
+  --club-surface:#ffffff;
+  --club-wash:#eff8ef;
+  --green:var(--club-primary-bright);
+  --green-dark:var(--club-primary-dark);
+  --ink:var(--club-ink);
+  --surface:var(--club-surface);
+  --wash:var(--club-wash);
+}

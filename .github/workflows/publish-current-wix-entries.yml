@@ -28,6 +28,8 @@ jobs:
           node-version: "20"
       - name: Validate the booking feed and public entry merge
         run: |
+          node scripts/audit-public-personal-data.mjs
+          node --test scripts/public-entry-data.test.mjs
           node --test scripts/sync-wix-event-entries.test.mjs scripts/transponder-history.test.mjs scripts/event-entry-merge.test.mjs scripts/event-capacity.test.mjs
           node scripts/check-booking-readiness.mjs
           node scripts/check-current-wix-entries.mjs

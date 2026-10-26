@@ -34,20 +34,20 @@ test('current Wix ticket quantities reach the event page before the first bookin
  assert.deepEqual(mergeCurrentWixEntries(source,wix).ticketLimits,{'2-Wheel Drive Buggy':64});
 });
 
-test('confirmed CSV chassis applies to that event and class without changing transponders or new Wix bookings',()=>{
+test('confirmed CSV chassis applies to that event and class without publishing private transponders',()=>{
  const data={...meeting,entries:[{driverName:'HARRY DAVIS',className:'2-Wheel Drive Buggy',chassis:'Kyosho',transponder:'5032515'},{driverName:'HARRY DAVIS',className:'4-Wheel Drive Buggy',chassis:'Schumacher'},{driverName:'NEW DRIVER',className:'2-Wheel Drive Buggy',chassis:'TLR'}]};
  const config={...meeting,entries:[{driverName:'Harry Davis',className:'2-Wheel Drive Buggy',chassis:'Team Associated'}]};
  const result=applyConfirmedChassis(data,config);
  assert.equal(result.entries[0].chassis,'Team Associated');
- assert.equal(result.entries[0].transponder,'5032515');
+ assert.equal(Object.hasOwn(result.entries[0],'transponder'),false);
  assert.equal(result.entries[1].chassis,'Schumacher');
  assert.equal(result.entries[2].chassis,'TLR');
  assert.equal(applyConfirmedChassis({...data,eventId:'next'},config).entries[0].chassis,'Kyosho');
 });
 
-test('a Wix nickname for the same unique class and transponder does not consume another space',()=>{
- const data={...meeting,entries:[{driverName:'CHRIS LEONARD',className:'2-Wheel Drive Buggy',transponder:'7956159'}]};
- const wix={eventDate:meeting.date,entries:[{driverName:'CHRISWITHAC RC',className:'2-Wheel Drive Buggy',transponder:'7956159'}]};
+test('an explicitly mapped Wix alias does not consume another space',()=>{
+ const data={...meeting,entries:[{driverName:'CHRIS LEONARD',driverKey:'CHRISTOPHER-LEONARD',className:'2-Wheel Drive Buggy'}]};
+ const wix={eventDate:meeting.date,entries:[{driverName:'CHRIS LEONARD',driverKey:'CHRIS-LEONARD',className:'2-Wheel Drive Buggy'}]};
  assert.equal(mergeCurrentWixEntries(data,wix).entries.length,1);
 });
 test('distinct booked drivers sharing a transponder still consume separate spaces',()=>{

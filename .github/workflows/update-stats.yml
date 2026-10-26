@@ -105,7 +105,7 @@ jobs:
 
       - name: Validate dashboard data
         if: github.event_name != 'schedule' || github.event.schedule != '3-58/5 9-18 * * 0' || steps.race_day.outputs.run == 'yes'
-        run: npm run build:navigation && npm run check
+        run: npm run build:navigation && npm run audit:privacy && npm run check
 
       - name: Save updated results
         if: github.event_name != 'schedule' || github.event.schedule != '3-58/5 9-18 * * 0' || steps.race_day.outputs.run == 'yes'

@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "basic-rc-club",
+  "name": "Basic RC Club",
+  "shortName": "BASIC RC",
+  "raceHubName": "Basic RC RaceHub",
+  "edition": "basic",
+  "features": {
+    "bookings": true,
+    "checkIn": true,
+    "currentEvent": true,
+    "results": true,
+    "championships": false,
+    "podiums": false,
+    "trackGallery": false,
+    "schedules": false,
+    "briefing": false,
+    "setups": false,
+    "avatars": false,
+    "distanceTracker": false,
+    "replays": false,
+    "clubNews": false,
+    "guides": false,
+    "grandPrixWales": false
+  },
+  "urls": {
+    "home": "https://www.basic-rc-club.co.uk/",
+    "raceHub": "https://racehub.basic-rc-club.co.uk/",
+    "events": "https://www.basic-rc-club.co.uk/event-list",
+    "media": "https://www.basic-rc-club.co.uk/media",
+    "contact": "https://www.basic-rc-club.co.uk/contact"
+  },
+  "logos": {
+    "header": "assets/club-header-logo.png",
+    "footer": "assets/club-header-logo.png",
+    "headerAlt": "Basic RC Club",
+    "partner": "",
+    "partnerAlt": "",
+    "partnerUrl": ""
+  },
+  "theme": {
+    "primary": "#174ea6",
+    "primaryBright": "#2878d8",
+    "primaryDark": "#103c80",
+    "accent": "#f8cf3c",
+    "ink": "#091526",
+    "surface": "#ffffff",
+    "wash": "#eef4fc"
+  },
+  "footer": {
+    "strapline": "BRCA affiliated RC club",
+    "description": "Bookings, entries and race results",
+    "credit": "Managed RaceHub service"
+  },
+  "social": {"facebook": "", "youtube": ""},
+  "analytics": {"cloudflareToken": ""},
+  "wix": {
+    "ticketTypes": {
+      "2WD Entry": ["2-Wheel Drive Buggy", "2WD Transponder Number", "2WD Chassis"],
+      "4WD Entry": ["4-Wheel Drive Buggy", "4WD Transponder Number", "4WD Chassis"]
+    }
+  }
+}

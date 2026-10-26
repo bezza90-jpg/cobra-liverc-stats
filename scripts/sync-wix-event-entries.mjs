@@ -1,18 +1,11 @@
 import {readFile,writeFile,rename} from 'node:fs/promises';
 import {pathToFileURL} from 'node:url';
-import {transponderHistory,usePreviousTransponders,validTransponder} from './lib/transponder-history.mjs';
+import {validTransponder} from './lib/transponder-history.mjs';
+import {clubConfig} from './club-config.mjs';
+import {publicEntryFeed} from './lib/public-entry-data.mjs';
 
 const API='https://www.wixapis.com';
-export const TICKETS={
-  'Junior Entry':['Junior Racers','Junior Transponder Number','Junior Chassis'],
-  '2WD Entry':['2-Wheel Drive Buggy','2WD Transponder Number','2WD Chassis'],
-  '2WD SWORD Entry':['2-Wheel Drive Buggy','2WD Transponder Number','2WD Chassis'],
-  '4WD Entry':['4-Wheel Drive Buggy','4WD Transponder Number','4WD Chassis'],
-  '4WD SWORD Entry':['4-Wheel Drive Buggy','4WD Transponder Number','4WD Chassis'],
-  'Vintage Entry':['Vintage','Vintage Transponder Number','Vintage Chassis'],
-  'Mother Trucker Entry':['Trucks','Truck Transponder Number','Truck Chassis'],
-  'Mother Truckers Entry':['Trucks','Truck Transponder Number','Truck Chassis']
-};
+export const TICKETS=clubConfig.wix.ticketTypes;
 
 export function bookingSlug(url) {
   try { return new URL(url).pathname.split('/').filter(Boolean).at(-1) || ''; }
@@ -204,7 +197,7 @@ export async function sync({site,key}) {
   const calendar=JSON.parse(await readFile(new URL('../public/data/event-calendar.json',import.meta.url),'utf8'));
   const today=londonDate();
   const meeting=(calendar.events || []).filter(event=>event.date>=today && event.bookingUrl).sort((a,b)=>a.date.localeCompare(b.date))[0];
-  if (!meeting) throw Error('No upcoming COBRA event with a Wix booking page was found.');
+  if (!meeting) throw Error(`No upcoming ${clubConfig.shortName} event with a Wix booking page was found.`);
   const slug=bookingSlug(meeting.bookingUrl), events=await upcomingEvents(site,key);
   const event=events.find(row=>row.slug===slug);
   if (!event) throw Error(`No upcoming Wix event matched ${slug}.`);
@@ -212,15 +205,15 @@ export async function sync({site,key}) {
   const [rows,orders,definitions]=await Promise.all([guests(event.id,site,key),listOrders(event.id,site,key),ticketDefinitions(event.id,site,key)]);
   const counts={}; for (const order of orders) counts[order.status]=(counts[order.status] || 0)+1;
   console.log('Wix order statuses: '+JSON.stringify(counts));
-  const history=transponderHistory(JSON.parse(await readFile(new URL('../data/raw/entries.json',import.meta.url),'utf8')),today);
-  const entries=usePreviousTransponders(applySeasonClassOverrides(entriesFromOrders(orders,rows,mapping),meeting.date),history);
+  const entries=applySeasonClassOverrides(entriesFromOrders(orders,rows,mapping),meeting.date);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
   let value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),ticketLimits:ticketLimitsFromDefinitions(definitions),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
   const admin=JSON.parse(await readFile(new URL('../public/data/admin-event-entries.json',import.meta.url),'utf8').catch(error=>{if (error.code==='ENOENT') return 'null';throw error;}));
   value=mergeAdminEntries(value,admin);
-  value.entries=usePreviousTransponders(value.entries,history).sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName));
+  value.entries=value.entries.sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName));
   console.log('Published entry sources: '+JSON.stringify(value.entrySources || {wix:value.entries.length,admin:0}));
-  return {configured:true,changed:await writeIfChanged(new URL('../public/data/wix-current-event-entries.json',import.meta.url),value,admin?.removeEntries || []),entries:value.entries.length};
+  const publicValue=publicEntryFeed(value);
+  return {configured:true,changed:await writeIfChanged(new URL('../public/data/wix-current-event-entries.json',import.meta.url),publicValue,admin?.removeEntries || []),entries:publicValue.entries.length};
 }
 if (process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href) {
   const result=await sync({site:process.env.WIX_SITE_ID,key:process.env.WIX_API_KEY});

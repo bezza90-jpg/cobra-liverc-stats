@@ -9,6 +9,12 @@ Race statistics, championship tables and race-day information for Cardiff Off Ro
 - [Site rules and automation timings](docs/site-rules.md): update schedules, event rollover, approvals, caches and backups.
 
 - [Maintenance and publishing](docs/maintenance.md): where to edit content, local commands, automated updates and deployment.
+- [Standalone club service](docs/multi-club-service.md): separate club deployments, branding, Wix Events and low/semi-managed service boundaries.
+- [Suggested service pricing](docs/service-pricing.md): setup, low-managed, semi-managed and additional-work pricing.
+- [Club-service workplan](docs/racehub-service-workplan.md): onboarding, accounts, Wix, data import, optional modules, testing, costs and maintenance boundaries.
+- [Club manager specification](docs/club-manager-spec.md): module-aware controls, roles, self-maintaining workflows and escalation rules.
+- [UK data-protection compliance plan](docs/uk-data-protection-compliance.md): roles, data map, lawful bases, children, PECR, security, retention, rights and launch gate.
+- [Current privacy gap audit](docs/current-privacy-gap-audit.md): launch blockers and the engineering sequence needed before an external club goes live.
 - [Back up the current GitHub version](docs/maintenance.md#backing-up-the-current-github-version): save a dated ZIP locally without including uncommitted edits.
 - [Statistics and scoring](docs/statistics.md): filters, leaderboard calculations, championships and import rules.
 - [Uploads and approvals](docs/uploads.md): driver setups, podium photographs and car avatars.
