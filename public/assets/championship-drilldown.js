@@ -13,15 +13,31 @@ function formatDate(value) {
 
 async function fetchJson(url, cache) {
   if (!cache.has(url)) {
-    cache.set(url, fetch(url, { cache: 'no-cache' }).then(response => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    cache.set(url, fetch(url, { cache: 'force-cache', signal:controller.signal }).then(response => {
       if (!response.ok) throw new Error(`Request failed: ${response.status}`);
       return response.json();
+    }).finally(() => {
+      clearTimeout(timeout);
     }).catch(error => {
       cache.delete(url);
       throw error;
     }));
   }
   return cache.get(url);
+}
+
+function raceUrl(raceId) {
+  return `../virtual-race-replay/races/${encodeURIComponent(raceId)}.json`;
+}
+
+function preloadRaces(races) {
+  if (!races.length) return;
+  fetchJson(raceUrl(races[0].id),raceCache).catch(()=>{});
+  const remaining=()=>Promise.allSettled(races.slice(1).map(race=>fetchJson(raceUrl(race.id),raceCache)));
+  if ('requestIdleCallback' in window) window.requestIdleCallback(remaining,{timeout:1500});
+  else setTimeout(remaining,150);
 }
 
 export function racesForDriver(eventData, className, driverKey) {
@@ -56,6 +72,7 @@ async function loadRound(details) {
     const races = racesForDriver(eventData, row.dataset.className, row.dataset.driverKey);
     body.dataset.loaded = 'true';
     body.innerHTML = races.length ? races.map(raceMarkup).join('') : '<p class="info-muted">No race details are available for this round yet.</p>';
+    preloadRaces(races);
     scheduleMobileChampionshipAlignment(row.closest('tbody'));
   } catch {
     body.innerHTML = '<p class="info-muted">These races are taking longer than expected. Close and reopen this round to try again.</p>';
@@ -73,7 +90,7 @@ async function toggleRace(button) {
   body.innerHTML = '<p class="info-muted">Loading lap times and chart…</p>';
   const row = article.closest('.championship-driver-detail-row');
   try {
-    const url = `../virtual-race-replay/races/${encodeURIComponent(article.dataset.raceId)}.json`;
+    const url = raceUrl(article.dataset.raceId);
     const race = await fetchJson(url, raceCache);
     const driver = (race.drivers || []).find(item => String(item.key || item.id || item.name) === row.dataset.driverKey);
     if (!driver) throw new Error('Driver result missing');
@@ -81,7 +98,7 @@ async function toggleRace(button) {
     body.innerHTML = driverDetail(race, driver);
     scheduleMobileChampionshipAlignment(row.closest('tbody'));
   } catch {
-    body.innerHTML = '<p class="info-muted">Lap details are taking longer than expected. Close and reopen this race to try again.</p>';
+    body.innerHTML = '<p class="info-muted">Lap details are taking longer than expected.</p><button type="button" class="championship-race-retry">Try again</button>';
   }
 }
 
@@ -174,6 +191,18 @@ export function bindChampionshipDrilldown(tbody) {
     if (point) return selectLapPoint(point);
     const collapse = event.target.closest('.championship-collapse');
     if (collapse) return closeDriver(tbody, collapse.closest('.championship-driver-detail-row'));
+    const retry = event.target.closest('.championship-race-retry');
+    if (retry) {
+      const article=retry.closest('.championship-race');
+      const body=article?.querySelector('.championship-race-body');
+      const button=article?.querySelector('.championship-race-toggle');
+      if (!article || !body || !button) return;
+      raceCache.delete(raceUrl(article.dataset.raceId));
+      body.hidden=true;
+      delete body.dataset.loaded;
+      button.setAttribute('aria-expanded','false');
+      return toggleRace(button);
+    }
     const raceButton = event.target.closest('.championship-race-toggle');
     if (raceButton) return toggleRace(raceButton);
     const toggle = event.target.closest('.championship-driver-toggle');

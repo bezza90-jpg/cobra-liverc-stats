@@ -36,5 +36,8 @@ test('round and race data are fetched only after expansion', async () => {
   assert.match(source, /virtual-race-replay\/events/);
   assert.match(source, /virtual-race-replay\/races/);
   assert.match(source, /driverDetail\(race, driver\)/);
+  assert.match(source, /cache: 'force-cache'/);
+  assert.match(source, /preloadRaces\(races\)/);
+  assert.match(source, /championship-race-retry/);
   assert.match(source, /event\.target\.closest\('\.championship-driver-row'\)/);
 });

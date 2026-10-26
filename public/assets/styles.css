@@ -183,6 +183,7 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .championship-race-toggle span:last-child { color:var(--green-dark); font-size:.76rem; font-weight:850; white-space:nowrap; }
 .championship-race-toggle[aria-expanded="true"] b { display:inline-block; transform:rotate(180deg); }
 .championship-race-body:not([hidden]) { padding:7px 0 12px; }
+.championship-race-retry{margin:8px 0;padding:8px 13px;color:#fff;background:var(--green-dark);border:0;border-radius:7px;font:inherit;font-weight:900;cursor:pointer}
 .championship-race-body .driver-run-detail { border-left:0; border-radius:8px; background:#f3f8f4; }
 @media(max-width:760px){.championship-driver-detail{width:calc(100vw - 24px);padding:14px 10px 16px}.championship-driver-detail>header{align-items:flex-start}.championship-collapse{position:sticky;top:8px;z-index:2}.championship-round>summary{align-items:flex-start}.championship-round>summary span:last-child{font-size:.7rem}.championship-race-toggle{align-items:flex-start}.championship-race-toggle span:last-child{max-width:105px;white-space:normal;text-align:right}.championship-driver-toggle{min-width:62px}.championship-driver-toggle span{display:none}}
 .podium-main { width: min(1380px, calc(100% - 32px)); padding: 28px 0 50px; }
