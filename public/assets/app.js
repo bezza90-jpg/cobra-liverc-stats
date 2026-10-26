@@ -112,6 +112,8 @@ let paceCacheData = null;
 let fastestLapByRace = new Map();
 let driverRatingData = null;
 let driverRatingSummaryPools = new Map();
+let leaderboardAggregateData = null;
+const leaderboardAggregateCache = new Map();
 const metricDescriptions = {
   rank: 'Position after sorting by the selected leaderboard measure.',
   finals: 'Published overall final results completed within the selected filters.',
@@ -585,105 +587,98 @@ function calculateLeaderboard() {
   const rankingTo = careerRanking ? '' : to;
   const activityWindow = $('leaderboardActivityWindow')?.value || '2';
   const activeSince = activityWindow === 'all' ? '' : yearsBefore(data.meta.latestEventDate, Number(activityWindow));
-  const activeDrivers = new Set();
-  if (careerRanking && activeSince) {
+  if (leaderboardAggregateData !== data) {
+    leaderboardAggregateData = data;
+    leaderboardAggregateCache.clear();
+  }
+  const aggregateKey = JSON.stringify([rankingFrom, rankingTo, eventType, className]);
+  let preparedRows = leaderboardAggregateCache.get(aggregateKey);
+  if (!preparedRows) {
+    const stats = new Map(data.drivers.map(driver => [driver.k, {
+      driverKey: driver.k, name: driver.n, junior: Boolean(driver.j), finals: 0,
+      entries: 0, overallWins: 0, podiums: 0, topFive: 0, tqs: 0, positionTotal: 0,
+      performanceTotal: 0, best: Infinity, consistencyTotal: 0, consistencyRuns: 0,
+      runs: 0, laps: 0, seconds: 0, raceWins: 0, fastestLap: Infinity, bestConsistency: 0, highConsistencyRuns: 0, lastRaceDate: '',
+      positions: [], performances: [], consistencies: [], paces: [], ratingRuns: [], placesGained: [], qualifyingPositions: [], lapSpreads: []
+    }]));
+
+    for (const entry of data.entries) {
+      const [eventId, date, cls, driverKey] = entry;
+      if (!inRange(date, rankingFrom, rankingTo) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
+      const row = stats.get(driverKey);
+      if (row) row.entries += 1;
+    }
+
+    const fieldSizes = new Map();
+    for (const result of data.eventResults) {
+      if (!isPublishedFinal(result)) continue;
+      const key = `${result[0]}|${result[2]}`;
+      fieldSizes.set(key, (fieldSizes.get(key) || 0) + 1);
+    }
+
+    for (const result of data.eventResults) {
+      const [eventId, date, cls, driverKey, finalPosition] = result;
+      if (!isPublishedFinal(result) || !inRange(date, rankingFrom, rankingTo) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
+      const row = stats.get(driverKey);
+      if (!row) continue;
+      const fieldSize = fieldSizes.get(`${eventId}|${cls}`) || 1;
+      const performance = fieldSize <= 1 ? 100 : 100 * (fieldSize - finalPosition) / (fieldSize - 1);
+      row.finals += 1;
+      row.positionTotal += finalPosition;
+      row.performanceTotal += Math.max(0, performance);
+      row.positions.push(finalPosition);
+      row.performances.push(Math.max(0, performance));
+      row.best = Math.min(row.best, finalPosition);
+      if (finalPosition === 1) row.overallWins += 1;
+      if (finalPosition <= 3) row.podiums += 1;
+      if (finalPosition <= 5) row.topFive += 1;
+      if (Number(result[5]) === 1) row.tqs += 1;
+      const qualifyingPosition = Number(result[5]);
+      if (Number.isFinite(qualifyingPosition) && qualifyingPosition > 0) {
+        row.qualifyingPositions.push(qualifyingPosition);
+        row.placesGained.push(qualifyingPosition - finalPosition);
+      }
+    }
+
     for (const run of data.raceResults) {
-      const race = data.raceById[run[0]];
-      if (!race || race.d < activeSince || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
-      activeDrivers.add(run[1]);
+      const [raceId, driverKey, position, , , fastestLap, averageLap, consistency] = run;
+      const race = data.raceById[raceId];
+      if (!race || !inRange(race.d, rankingFrom, rankingTo) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
+      const row = stats.get(driverKey);
+      if (!row) continue;
+      row.lastRaceDate = race.d > row.lastRaceDate ? race.d : row.lastRaceDate;
+      row.runs += 1;
+      row.ratingRuns.push(run);
+      row.laps += completedLaps(run);
+      row.seconds += runTimeSeconds(run);
+      if (Number(position) === 1) row.raceWins += 1;
+      const lap = lapTimeSeconds(fastestLap);
+      if (Number.isFinite(lap) && lap > 0) row.fastestLap = Math.min(row.fastestLap, lap);
+      const pace = paceForRun(run, data);
+      if (Number.isFinite(pace)) row.paces.push(pace);
+      const averageLapValue = lapTimeSeconds(averageLap);
+      if (Number.isFinite(lap) && lap > 0 && Number.isFinite(averageLapValue) && averageLapValue >= lap) row.lapSpreads.push(averageLapValue - lap);
+      const value = Number.parseFloat(consistency);
+      if (Number.isFinite(value) && isCompleteConsistencyRun(run, data)) {
+        row.consistencyTotal += value;
+        row.consistencyRuns += 1;
+        row.consistencies.push(value);
+        row.bestConsistency = Math.max(row.bestConsistency, value);
+        if (value >= 95) row.highConsistencyRuns += 1;
+      }
     }
-  }
-  const stats = new Map(data.drivers.map(driver => [driver.k, {
-    driverKey: driver.k, name: driver.n, junior: Boolean(driver.j), finals: 0,
-    entries: 0, overallWins: 0, podiums: 0, topFive: 0, tqs: 0, positionTotal: 0,
-    performanceTotal: 0, best: Infinity, consistencyTotal: 0, consistencyRuns: 0,
-    runs: 0, laps: 0, seconds: 0, raceWins: 0, fastestLap: Infinity, bestConsistency: 0, highConsistencyRuns: 0,
-    positions: [], performances: [], consistencies: [], paces: [], ratingRuns: [], placesGained: [], qualifyingPositions: [], lapSpreads: []
-  }]));
 
-  for (const entry of data.entries) {
-    const [eventId, date, cls, driverKey] = entry;
-    if (!inRange(date, rankingFrom, rankingTo) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
-    const row = stats.get(driverKey);
-    if (row) row.entries += 1;
-  }
-
-  const fieldSizes = new Map();
-  for (const result of data.eventResults) {
-    if (!isPublishedFinal(result)) continue;
-    const key = `${result[0]}|${result[2]}`;
-    fieldSizes.set(key, (fieldSizes.get(key) || 0) + 1);
-  }
-
-  for (const result of data.eventResults) {
-    const [eventId, date, cls, driverKey, finalPosition] = result;
-    if (!isPublishedFinal(result) || !inRange(date, rankingFrom, rankingTo) || !eventMatches(eventId, eventType) || !classMatches(cls, className)) continue;
-    const row = stats.get(driverKey);
-    if (!row) continue;
-    const fieldSize = fieldSizes.get(`${eventId}|${cls}`) || 1;
-    const performance = fieldSize <= 1 ? 100 : 100 * (fieldSize - finalPosition) / (fieldSize - 1);
-    row.finals += 1;
-    row.positionTotal += finalPosition;
-    row.performanceTotal += Math.max(0, performance);
-    row.positions.push(finalPosition);
-    row.performances.push(Math.max(0, performance));
-    row.best = Math.min(row.best, finalPosition);
-    if (finalPosition === 1) row.overallWins += 1;
-    if (finalPosition <= 3) row.podiums += 1;
-    if (finalPosition <= 5) row.topFive += 1;
-    if (Number(result[5]) === 1) row.tqs += 1;
-    const qualifyingPosition = Number(result[5]);
-    if (Number.isFinite(qualifyingPosition) && qualifyingPosition > 0) {
-      row.qualifyingPositions.push(qualifyingPosition);
-      row.placesGained.push(qualifyingPosition - finalPosition);
-    }
-  }
-
-  for (const run of data.raceResults) {
-    const [raceId, driverKey, position, , , fastestLap, averageLap, consistency] = run;
-    const race = data.raceById[raceId];
-    if (!race || !inRange(race.d, rankingFrom, rankingTo) || !eventMatches(race.e, eventType) || !classMatches(race.c, className)) continue;
-    const row = stats.get(driverKey);
-    if (!row) continue;
-    row.runs += 1;
-    row.ratingRuns.push(run);
-    row.laps += completedLaps(run);
-    row.seconds += runTimeSeconds(run);
-    if (Number(position) === 1) row.raceWins += 1;
-    const lap = lapTimeSeconds(fastestLap);
-    if (Number.isFinite(lap) && lap > 0) row.fastestLap = Math.min(row.fastestLap, lap);
-    const pace = paceForRun(run, data);
-    if (Number.isFinite(pace)) row.paces.push(pace);
-    const averageLapValue = lapTimeSeconds(averageLap);
-    if (Number.isFinite(lap) && lap > 0 && Number.isFinite(averageLapValue) && averageLapValue >= lap) row.lapSpreads.push(averageLapValue - lap);
-    const value = Number.parseFloat(consistency);
-    if (Number.isFinite(value) && isCompleteConsistencyRun(run, data)) {
-      row.consistencyTotal += value;
-      row.consistencyRuns += 1;
-      row.consistencies.push(value);
-      row.bestConsistency = Math.max(row.bestConsistency, value);
-      if (value >= 95) row.highConsistencyRuns += 1;
-    }
-  }
-
-  const eligible = [...stats.values()].filter(row => row.finals > 0 && (!careerRanking || !activeSince || activeDrivers.has(row.driverKey)));
-  state.leaderboardEligibleCount = eligible.length;
-  const ranked = eligible
-    .filter(row => row.finals >= minimumFinals)
-    .map(row => {
+    preparedRows = [...stats.values()].filter(row => row.finals > 0).map(row => {
       const keptPositions = attendanceAdjustedResults(row.positions);
       const keptConsistencies = attendanceAdjustedResults(row.consistencies, true);
       const keptPaces = attendanceAdjustedResults(row.paces, true);
-      const performance = combinedPerformanceScore(row.performances, row.paces);
-      const consistency = average(keptConsistencies);
-      const pace = average(keptPaces);
       const ratingSummary = driverRatingSummary(row.driverKey, data, className);
       return {
         ...row,
         average: average(keptPositions),
-        performance,
-        consistency,
-        pace,
+        performance: combinedPerformanceScore(row.performances, row.paces),
+        consistency: average(keptConsistencies),
+        pace: average(keptPaces),
         cRating: ratingSummary.total,
         ratingSummary,
         placesGainedAverage: average(row.placesGained),
@@ -694,7 +689,14 @@ function calculateLeaderboard() {
         winRate: row.finals ? 100 * row.overallWins / row.finals : 0,
         tqRate: row.finals ? 100 * row.tqs / row.finals : 0
       };
-    })
+    });
+    leaderboardAggregateCache.set(aggregateKey, preparedRows);
+  }
+
+  const eligible = preparedRows.filter(row => !careerRanking || !activeSince || row.lastRaceDate >= activeSince);
+  state.leaderboardEligibleCount = eligible.length;
+  const ranked = eligible
+    .filter(row => row.finals >= minimumFinals)
     .sort((a, b) => compareLeaderboardRows(a, b, $('leaderboardMetric')?.value || 'average'))
     .map((row, index) => ({ ...row, rank: index + 1 }));
 

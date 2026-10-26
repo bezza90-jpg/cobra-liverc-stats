@@ -26,13 +26,16 @@ test('statistics open and reset on the latest two-year activity window', () => {
   const twoYearDefault = /\$\('fromDate'\)\.value = yearsBefore\(data\.meta\.latestEventDate, 2\);/g;
   assert.equal(app.match(twoYearDefault)?.length, 2);
   assert.match(app, /careerRankingMetrics = new Set\(\['cRating', 'pace', 'consistency'\]\)/);
-  assert.match(app, /race\.d < activeSince/);
   assert.match(app, /activityWindow === 'all' \? ''/);
   assert.match(app, /leaderboardActivityWindow/);
   assert.match(app, /data-class-filter="senior"[^>]*>Combined<\/button>/);
   assert.match(app, /state\.leaderboardClass = button\.dataset\.classFilter;/);
   assert.match(app, /syncClassButtons\(\);\s*renderLeaderboard\(\);/);
   assert.doesNotMatch(app, /const beforeTop = tabs\.getBoundingClientRect\(\)\.top/);
+  assert.match(app, /const leaderboardAggregateCache = new Map\(\);/);
+  assert.match(app, /leaderboardAggregateCache\.get\(aggregateKey\)/);
+  assert.match(app, /leaderboardAggregateCache\.set\(aggregateKey, preparedRows\)/);
+  assert.match(app, /row\.lastRaceDate >= activeSince/);
 });
 test('default tracker retains every recent racer and excludes older attendance without sampling', () => {
  const context=vm.createContext({}); vm.runInContext(functionSource('recentJourneyDrivers'),context);
