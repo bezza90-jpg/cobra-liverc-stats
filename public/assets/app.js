@@ -1274,7 +1274,6 @@ function renderProfileMetricEvidence(key, label) {
   panel.innerHTML = `<div class="profile-metric-evidence-heading"><div><p class="eyebrow">Metric evidence</p><h3>Where ${escapeHtml(label)} comes from</h3></div><div class="profile-metric-evidence-actions"><button type="button" class="profile-metric-evidence-fullscreen" aria-pressed="false">Full screen</button><button type="button" class="profile-metric-evidence-close" aria-label="Close metric evidence">×</button></div></div>${content}`;
   panel.hidden = false;
   prefetchDriverRunDetails(panel);
-  panel.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
 }
 
 function distanceJourneyStat(runs, driverKey) {
@@ -2438,7 +2437,6 @@ async function init() {
           driverRow.setAttribute('aria-expanded', 'false');
           driverRow.setAttribute('aria-label', `Show source results for ${driverRow.querySelector('.driver-name')?.textContent || 'driver'}`);
           driverRow.focus({ preventScroll: true });
-          driverRow.scrollIntoView({ block: 'center' });
         }
         return;
       }
@@ -2470,12 +2468,6 @@ async function init() {
       if (!row.hidden) {
         const panel = row.querySelector('.leaderboard-source-panel');
         prefetchDriverRunDetails(panel || row);
-        if (window.matchMedia('(max-width: 700px)').matches) {
-          requestAnimationFrame(() => {
-            panel?.scrollIntoView({ block: 'start', behavior: 'smooth' });
-            panel?.focus({ preventScroll: true });
-          });
-        }
       }
     });
     $('leaderboardBody').addEventListener('keydown', event => {

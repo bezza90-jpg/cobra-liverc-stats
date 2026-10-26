@@ -42,6 +42,39 @@ export function initBackToTop() {
   update();
 }
 
+// Keep the control a visitor used in the same place on screen while a page
+// replaces tables, cards or expanded content beneath it. Ordinary links and
+// the explicit Back to top control retain their normal navigation behaviour.
+export function initViewportStability(root = document) {
+  if (root.documentElement?.dataset.cobraViewportStable) return;
+  if (root.documentElement) root.documentElement.dataset.cobraViewportStable = 'true';
+  let revision = 0;
+  const preserve = target => {
+    const control = target?.closest?.('button,select,summary,[role="button"]');
+    if (!control || control.closest('a[href]') || control.matches('.cobra-back-to-top,[data-allow-scroll]')) return;
+    const token = ++revision;
+    const controlTop = control.getBoundingClientRect().top;
+    const fallback = control.closest('[data-viewport-anchor],section,.panel,details');
+    const fallbackTop = fallback?.getBoundingClientRect().top;
+    const scrollTop = window.scrollY;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (token !== revision) return;
+      const anchor = control.isConnected && control.getClientRects().length ? control : fallback;
+      const beforeTop = anchor === control ? controlTop : fallbackTop;
+      if (anchor?.isConnected && Number.isFinite(beforeTop) && anchor.getClientRects().length) {
+        const movement = anchor.getBoundingClientRect().top - beforeTop;
+        if (Math.abs(movement) > 1) window.scrollBy({ top: movement, behavior: 'auto' });
+      } else if (Math.abs(window.scrollY - scrollTop) > 1) {
+        window.scrollTo({ top: scrollTop, behavior: 'auto' });
+      }
+    }));
+  };
+  root.addEventListener('click', event => preserve(event.target), true);
+  root.addEventListener('change', event => {
+    if (event.target?.matches?.('select')) preserve(event.target);
+  }, true);
+}
+
 export function initNavigationPrefetch(root = document) {
   if (root.documentElement?.dataset.cobraPrefetchReady) return;
   if (root.documentElement) root.documentElement.dataset.cobraPrefetchReady = 'true';
@@ -144,3 +177,4 @@ function initSiteSearch(shell) {
 initSiteHeader();
 initBackToTop();
 initNavigationPrefetch();
+initViewportStability();

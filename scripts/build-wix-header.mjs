@@ -4,7 +4,7 @@ import {siteHeader} from './site-shell.mjs';
 const check=process.argv.includes('--check');
 const root='https://racehub.cobracardiff.co.uk/';
 const header=siteHeader(root);
-const loader=`import {initSiteHeader,initBackToTop,initNavigationPrefetch} from './site-shell.js?v=6';
+const loader=`import {initSiteHeader,initBackToTop,initNavigationPrefetch,initViewportStability} from './site-shell.js?v=8';
 
 const markup=${JSON.stringify(header)};
 const stylesheet=new URL('./site-shell.css?v=6',import.meta.url).href;
@@ -31,6 +31,7 @@ const install=()=>{
   initSiteHeader(replacement);
   initBackToTop();
   initNavigationPrefetch();
+  initViewportStability();
 };
 
 new MutationObserver(install).observe(document.documentElement,{subtree:true,childList:true});
