@@ -67,6 +67,10 @@ test('statistics drill-down tables use the phone card layout',async()=>{
   assert.match(styles,/\.leaderboard-source-collapse \{ position:sticky;/);
   assert.match(app,/data-collapse-leaderboard/);
   assert.match(app,/driverRow\.scrollIntoView\(\{ block: 'center' \}\)/);
+  assert.match(app,/panel\?\.scrollIntoView\(\{ block: 'start', behavior: 'smooth' \}\)/);
+  assert.match(app,/Expanded ranking evidence/);
+  assert.match(css,/\.leaderboard-evidence-banner/);
+  assert.match(css,/\.leaderboard-source-panel\{[^}]*border:3px solid #078719/);
  assert.match(css,/driver-races-detail-row[^}]*\[hidden\][^{]*\{display:none!important\}/);
  assert.match(css,/run-lap-list \.table-wrap\{max-height:none;overflow-x:hidden;overflow-y:visible\}/);
   assert.match(css,/\.driver-run-detail\{position:sticky;left:0;box-sizing:border-box;width:calc\(100vw - 40px\);max-width:calc\(100vw - 40px\)/);

@@ -206,7 +206,27 @@
     position:sticky;left:0;box-sizing:border-box;
     width:calc(100vw - 32px)!important;max-width:calc(100vw - 32px)!important;
     min-width:0!important;padding:12px!important;overflow:visible;
+    border:3px solid #078719;border-radius:12px;background:#f4faf5;
+    box-shadow:0 12px 32px rgba(0,55,15,.2);
+    scroll-margin-top:10px;
   }
+  .statistics-page .leaderboard-evidence-banner{
+    position:relative;display:grid;grid-template-columns:minmax(0,1fr);gap:2px;
+    margin:-4px -4px 14px;padding:12px 14px 16px;border-radius:8px;
+  }
+  .statistics-page .leaderboard-evidence-banner::after{
+    position:absolute;right:16px;bottom:-11px;content:'↓';display:grid;place-items:center;
+    width:30px;height:30px;color:#06270d;background:#9cf63e;border:3px solid #fff;border-radius:50%;
+    font-size:1rem;font-weight:950;box-shadow:0 4px 10px rgba(0,0,0,.18);
+  }
+  .statistics-page .leaderboard-evidence-banner span{font-size:.62rem}
+  .statistics-page .leaderboard-evidence-banner strong{font-size:1.05rem}
+  .statistics-page .leaderboard-evidence-banner small{margin:3px 0 0;color:#d8f1dc;font-size:.72rem}
+  .statistics-page .leaderboard-evidence-note{font-size:.76rem}
+  .statistics-page .selected-evidence-score{
+    box-sizing:border-box;width:100%;max-width:100%;grid-template-columns:minmax(0,auto) minmax(0,1fr);
+  }
+  .statistics-page .selected-evidence-score strong{font-size:1.3rem;overflow-wrap:anywhere}
   .statistics-page .leaderboard-source-heading{
     display:flex;flex-direction:column;align-items:stretch;min-width:0;max-width:100%;gap:10px;
   }

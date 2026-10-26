@@ -788,8 +788,14 @@ function updateLeaderboardSortHeadings() {
 
 function leaderboardEvidence(row) {
   const data = state.data;
-  const { from, to, eventType, className } = filters();
-  const matches = (eventId, date, cls) => inRange(date, from, to) && eventMatches(eventId, eventType) && classMatches(cls, className);
+  const { from, to, eventType } = filters();
+  const metricKey = $('leaderboardMetric')?.value || 'average';
+  const metric = leaderboardMetrics[metricKey] || leaderboardMetrics.average;
+  const className = state.leaderboardClass || filters().className;
+  const careerRanking = careerRankingMetrics.has(metricKey);
+  const rankingFrom = careerRanking ? '' : from;
+  const rankingTo = careerRanking ? '' : to;
+  const matches = (eventId, date, cls) => inRange(date, rankingFrom, rankingTo) && (metricKey === 'cRating' || eventMatches(eventId, eventType)) && classMatches(cls, className);
   const finals = data.eventResults
     .filter(result => result[3] === row.driverKey && isPublishedFinal(result) && matches(result[0], result[1], result[2]))
     .sort((a, b) => b[1].localeCompare(a[1]) || a[2].localeCompare(b[2]));
@@ -814,16 +820,57 @@ function leaderboardEvidence(row) {
   const runRows = runs.map(run => {
     const race = data.raceById[run[0]];
     const event = data.eventById[race.e];
-    const source = race.u ? `<a href="${escapeHtml(race.u)}" target="_blank" rel="noopener">LiveRC ↗</a>` : '—';
     const pace = paceForRun(run, data);
-    return `<tr><td>${dateFmt.format(new Date(`${race.d}T12:00:00Z`))}</td><td>${escapeHtml(event?.n || race.e)}</td><td>${escapeHtml(race.c)}</td><td>${escapeHtml(race.r)}</td><td>${escapeHtml(race.n)}</td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[4] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${escapeHtml(run[7] || '—')}</td><td>${metricValueHelp('pace', pace === null ? '—' : `${pace.toFixed(1)}%`, 'Pace')}</td><td>${source}</td></tr>`;
+    const consistency = Number.parseFloat(run[7]);
+    const change = row.ratingSummary?.raceChanges?.get(run[0])?.change;
+    const label = `${race.r} ${race.n}`;
+    return `<tr class="driver-run-row" data-race-id="${escapeHtml(run[0])}" data-driver-key="${escapeHtml(row.driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show lap times and chart for ${escapeHtml(label)}"><td>${dateFmt.format(new Date(`${race.d}T12:00:00Z`))}</td><td><strong>${escapeHtml(event?.n || race.e)}</strong><small>${escapeHtml(race.r)} · ${escapeHtml(race.n)} · ${escapeHtml(race.c)}</small></td><td>P${run[2]}</td><td>${escapeHtml(run[3] || '—')}</td><td>${escapeHtml(run[5] || '—')}</td><td>${escapeHtml(run[6] || '—')}</td><td>${Number.isFinite(consistency) ? `${consistency.toFixed(2)}%` : '—'}</td><td>${metricValueHelp('pace', pace === null ? '—' : `${pace.toFixed(1)}%`, 'Pace')}</td><td>${ratingChangeHtml(change)}</td></tr><tr class="driver-run-detail-row" hidden><td colspan="9"></td></tr>`;
   }).join('');
-  return `<div class="leaderboard-source-panel">
-    <div class="leaderboard-source-heading"><div><p class="eyebrow">Result sources</p><h3>${escapeHtml(row.name)}</h3><p>${finals.length} published final${finals.length === 1 ? '' : 's'} · ${runs.length} recorded run${runs.length === 1 ? '' : 's'}</p></div><button type="button" class="profile-open" data-profile-key="${escapeHtml(row.driverKey)}">Open full driver profile</button></div>
+
+  const ratingMeetings = metricKey === 'cRating' ? (row.ratingSummary?.meetings || []) : [];
+  const ratingRows = ratingMeetings.map(meeting => {
+    const event = data.eventById?.[meeting.eventId];
+    const eventName = event?.u ? `<a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">${escapeHtml(meeting.name)}</a>` : escapeHtml(meeting.name);
+    const ratedRuns = runs.filter(run => {
+      const race = data.raceById[run[0]];
+      return row.ratingSummary?.raceChanges?.has(run[0]) && race?.e === meeting.eventId && race.d === meeting.date;
+    }).sort((a, b) => {
+      const raceA = data.raceById[a[0]];
+      const raceB = data.raceById[b[0]];
+      return journeyRoundOrder(raceA?.r) - journeyRoundOrder(raceB?.r) || (raceA?.n || '').localeCompare(raceB?.n || '');
+    });
+    const raceLabel = `${ratedRuns.length} rated race${ratedRuns.length === 1 ? '' : 's'}`;
+    const eventRow = `<tr class="profile-evidence-event-row" tabindex="0" role="button" aria-expanded="false" aria-label="Show ${escapeHtml(raceLabel)} for ${escapeHtml(meeting.name)}"><td>${dateFmt.format(new Date(`${meeting.date}T12:00:00Z`))}</td><td>${eventName}</td><td><button type="button" class="driver-races-toggle" aria-expanded="false">${raceLabel}</button></td><td>${formatRating(meeting.before)}</td><td>${ratingChangeHtml(meeting.change)}</td><td>${formatRating(meeting.after)}</td></tr>`;
+    return `${eventRow}${profileRaceDetail(ratedRuns, row.driverKey, data, 6)}`;
+  }).join('');
+
+  const finalMetricKeys = new Set(['average','finals','overallWins','podiums','tqs','podiumRate','winRate','topFiveRate','tqRate','qualifyingAverage','placesGained']);
+  const runMetricKeys = new Set(['pace','consistency','laps','distance','trackTime','runs','raceWins','bestConsistency','highConsistencyRuns','lapSpread','fastestLap']);
+  const showFinalsFirst = finalMetricKeys.has(metricKey) || metricKey === 'performance';
+  const showRunsFirst = runMetricKeys.has(metricKey) || metricKey === 'performance';
+  const contextText = careerRanking
+    ? `${escapeHtml(className === 'senior' ? 'Combined senior classes' : className)} · complete available history`
+    : `${escapeHtml(className === 'senior' ? 'Combined senior classes' : className)}${rankingFrom || rankingTo ? ` · ${escapeHtml(rankingFrom || 'earliest')} to ${escapeHtml(rankingTo || 'latest')}` : ''}`;
+  const evidenceNote = metricKey === 'cRating'
+    ? 'Every rated meeting used in this cRating is listed below. Open a meeting, then a race, to see its lap times and chart.'
+    : showFinalsFirst && showRunsFirst
+      ? 'This score combines published finishing results with recorded race pace. Both source lists are available below.'
+      : showFinalsFirst
+        ? 'The published event results used for this ranking are listed below. Open an event, then a race, to see lap times and its chart.'
+        : 'The recorded runs used for this ranking are listed below. Select any run to see every lap and its chart.';
+  const selectedMetricDisplay = metricKey === 'cRating'
+    ? ratingMetricHelp(row.ratingSummary)
+    : metricHelp(metric.display ? metric.display(row) : metric.value(row), metricDescriptions[metricKey], metric.label);
+  return `<div class="leaderboard-source-panel" tabindex="-1" data-evidence-metric="${escapeHtml(metricKey)}">
+    <div class="leaderboard-evidence-banner"><span>Expanded ranking evidence</span><strong>${escapeHtml(metric.label)}</strong><small>↓ Results and lap drill-downs are open below</small></div>
+    <div class="leaderboard-source-heading"><div><p class="eyebrow">Where the ${escapeHtml(metric.label)} score comes from</p><h3>${escapeHtml(row.name)}</h3><p>${contextText} · ${finals.length} published final${finals.length === 1 ? '' : 's'} · ${runs.length} recorded run${runs.length === 1 ? '' : 's'}</p></div><button type="button" class="profile-open" data-profile-key="${escapeHtml(row.driverKey)}">Open full driver profile</button></div>
     <button type="button" class="leaderboard-source-collapse" data-collapse-leaderboard aria-label="Collapse results for ${escapeHtml(row.name)}">↑ Collapse</button>
-    <div class="source-scorecards"><span>${ratingMetricHelp(row.ratingSummary)}<small>cRating</small></span><span>${metricValueHelp('pace', row.pace === null ? '—' : `${row.pace.toFixed(1)}%`, 'Pace')}<small>Pace</small></span><span>${metricValueHelp('performance', row.performance.toFixed(1), 'Performance')}<small>Performance</small></span><span>${metricValueHelp('consistency', row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`, 'Consistency')}<small>Consistency</small></span></div>
-    <details open><summary>Published overall results (${finals.length})</summary><div class="table-wrap compact"><table class="leaderboard-event-results"><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Class</th><th>Overall</th><th>Qualifying</th><th>Final</th></tr></thead><tbody>${finalRows || '<tr><td colspan="7">No published finals match these filters.</td></tr>'}</tbody></table></div></details>
-    <details><summary>Individual LiveRC runs (${runs.length})</summary><div class="table-wrap compact"><table><thead><tr><th>Date</th><th>Event</th><th>Class</th><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Behind</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Source</th></tr></thead><tbody>${runRows || '<tr><td colspan="13">No individual runs match these filters.</td></tr>'}</tbody></table></div></details>
+    <div class="selected-evidence-score"><small>Selected ranking</small><strong>${selectedMetricDisplay}</strong><span>${escapeHtml(metric.label)}</span></div>
+    <p class="leaderboard-evidence-note">${evidenceNote}</p>
+    <div class="source-scorecards"><span${metricKey === 'cRating' ? ' class="active-evidence-score"' : ''}>${ratingMetricHelp(row.ratingSummary)}<small>cRating</small></span><span${metricKey === 'pace' ? ' class="active-evidence-score"' : ''}>${metricValueHelp('pace', row.pace === null ? '—' : `${row.pace.toFixed(1)}%`, 'Pace')}<small>Pace</small></span><span${metricKey === 'performance' ? ' class="active-evidence-score"' : ''}>${metricValueHelp('performance', row.performance.toFixed(1), 'Performance')}<small>Performance</small></span><span${metricKey === 'consistency' ? ' class="active-evidence-score"' : ''}>${metricValueHelp('consistency', row.consistency === null ? '—' : `${row.consistency.toFixed(1)}%`, 'Consistency')}<small>Consistency</small></span></div>
+    ${metricKey === 'cRating' ? `<details open><summary>Rated meetings forming this cRating (${ratingMeetings.length})</summary><div class="table-wrap compact"><table class="metric-rating-table"><thead><tr><th>Date</th><th>Event</th><th>Rated races</th><th>Start</th><th>Change</th><th>End</th></tr></thead><tbody>${ratingRows || '<tr><td colspan="6">No linked rated races.</td></tr>'}</tbody></table></div></details>` : ''}
+    <details${showFinalsFirst ? ' open' : ''}><summary>Published overall results (${finals.length})</summary><div class="table-wrap compact"><table class="leaderboard-event-results"><thead><tr><th>Date</th><th>Event</th><th>Races</th><th>Class</th><th>Overall</th><th>Qualifying</th><th>Final</th></tr></thead><tbody>${finalRows || '<tr><td colspan="7">No published finals contribute to this selected ranking.</td></tr>'}</tbody></table></div></details>
+    <details${showRunsFirst ? ' open' : ''}><summary>Recorded runs and lap evidence (${runs.length})</summary><div class="table-wrap compact"><table class="metric-runs-table"><thead><tr><th>Date</th><th>Event / race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>cRating gain</th></tr></thead><tbody>${runRows || '<tr><td colspan="9">No recorded runs contribute to this selected ranking.</td></tr>'}</tbody></table></div></details>
   </div>`;
 }
 
@@ -2398,7 +2445,12 @@ async function init() {
       const profileButton = event.target.closest('[data-profile-key]');
       if (profileButton) { driverProfile(profileButton.dataset.profileKey); return; }
       const nameButton = event.target.closest('.driver-name[data-driver-key]');
-      if (nameButton) { driverProfile(nameButton.dataset.driverKey); return; }
+      if (nameButton) {
+        const leaderboardRow = nameButton.closest('.leaderboard-driver-row');
+        if (leaderboardRow) leaderboardRow.click();
+        else driverProfile(nameButton.dataset.driverKey);
+        return;
+      }
       const sourcePanel = event.target.closest('.leaderboard-source-panel');
       if (sourcePanel) { handleProfileDrilldownClick(sourcePanel, event); return; }
       if (event.target.closest('a,button,.metric-help,details,summary')) return;
@@ -2415,6 +2467,16 @@ async function init() {
       row.hidden = !row.hidden;
       driverRow.setAttribute('aria-expanded', String(!row.hidden));
       driverRow.setAttribute('aria-label', `${row.hidden ? 'Show' : 'Hide'} source results for ${driverRow.querySelector('.driver-name')?.textContent || 'driver'}`);
+      if (!row.hidden) {
+        const panel = row.querySelector('.leaderboard-source-panel');
+        prefetchDriverRunDetails(panel || row);
+        if (window.matchMedia('(max-width: 700px)').matches) {
+          requestAnimationFrame(() => {
+            panel?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+            panel?.focus({ preventScroll: true });
+          });
+        }
+      }
     });
     $('leaderboardBody').addEventListener('keydown', event => {
       const sourcePanel = event.target.closest('.leaderboard-source-panel');

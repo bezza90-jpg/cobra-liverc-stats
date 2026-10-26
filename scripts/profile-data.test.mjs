@@ -37,6 +37,17 @@ test('statistics open and reset on the latest two-year activity window', () => {
   assert.match(app, /leaderboardAggregateCache\.set\(aggregateKey, preparedRows\)/);
   assert.match(app, /row\.lastRaceDate >= activeSince/);
 });
+test('leaderboard evidence follows the selected metric and drills through to laps', () => {
+  const evidence = functionSource('leaderboardEvidence');
+  assert.match(evidence, /state\.leaderboardClass \|\| filters\(\)\.className/);
+  assert.match(evidence, /careerRankingMetrics\.has\(metricKey\)/);
+  assert.match(evidence, /Rated meetings forming this cRating/);
+  assert.match(evidence, /Recorded runs and lap evidence/);
+  assert.match(evidence, /class="driver-run-row"/);
+  assert.match(evidence, /profileRaceDetail\(ratedRuns/);
+  assert.match(evidence, /Where the \$\{escapeHtml\(metric\.label\)\} score comes from/);
+  assert.match(app, /if \(leaderboardRow\) leaderboardRow\.click\(\)/);
+});
 test('default tracker retains every recent racer and excludes older attendance without sampling', () => {
  const context=vm.createContext({}); vm.runInContext(functionSource('recentJourneyDrivers'),context);
  const keys=context.recentJourneyDrivers([{driverKey:'OLD',lastDate:'2024-09-28'},{driverKey:'BOUNDARY',lastDate:'2024-09-29'},{driverKey:'NEW',lastDate:'2026-09-20'}],new Date('2026-09-29T12:00:00Z'));
