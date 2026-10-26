@@ -1,0 +1,64 @@
+{
+  "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
+  "liveRcEventId": "518556",
+  "eventDate": "2026-11-01",
+  "eventTitle": "COBRA SWORD Round 2",
+  "source": "Club-team admin places and event corrections confirmed for SWORD Round 2 on 19 October 2026",
+  "removeEntries": [
+    {
+      "driverName": "Haiden Hicks",
+      "className": "Junior Racers"
+    }
+  ],
+  "entries": [
+    {
+      "driverName": "Matthew Hodges",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "Matthew Hodges",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "Mike Driscoll",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "Mike Driscoll",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "TLR"
+    },
+    {
+      "driverName": "Steve Curtis-Rich",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Steve Curtis-Rich",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Bob Gelstharp",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Bob Gelstharp",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "Paul Curtis",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "Haiden Hicks",
+      "className": "2-Wheel Drive Buggy"
+    }
+  ]
+}

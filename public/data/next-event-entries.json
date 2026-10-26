@@ -1,0 +1,686 @@
+{
+  "eventId": "518556",
+  "title": "SWORD Round 2 EOS 2026/7",
+  "date": "2026-11-01",
+  "type": "sword",
+  "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
+  "updatedAt": "2026-10-26T01:44:24.913Z",
+  "entries": [
+    {
+      "driverKey": "ADAM-MCBRIDE",
+      "driverName": "Adam McBride",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "AINSLEY-EVANS",
+      "driverName": "Ainsley Evans",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "BOBTECH",
+      "driverName": "Bob \"Bobtech\" Gelstharp",
+      "bookingName": "Bob Gelstharp",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "CHRIS-GUNTER",
+      "driverName": "Chris Gunter",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "CHRISTOPHER-BAKER",
+      "driverName": "Christopher Baker",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "CHRIS-LEONARD",
+      "driverName": "Chris Leonard",
+      "bookingName": "Christopher Leonard",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "DALE-PRESTON",
+      "driverName": "Dale Preston",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "DAN-PULLEY",
+      "driverName": "Dan Pulley",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Pr",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "DANIEL-GRIFFITHS",
+      "driverName": "Daniel Griffiths",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "DAVID-MILFORD",
+      "driverName": "David Milford",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "DEWI-JONES",
+      "driverName": "Dewi Jones",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "FINLEY-OLDFIELD",
+      "driverName": "Finley Oldfield",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "GARETH-MANNING",
+      "driverName": "Gareth Manning",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "GRAHAM-KEEP",
+      "driverName": "Graham Keep",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "GREG-LANE",
+      "driverName": "Greg Lane",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "GREG-PARKER",
+      "driverName": "Greg Parker",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "HAIDEN-HICKS",
+      "driverName": "Haiden Hicks",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho"
+    },
+    {
+      "driverKey": "IAN-PEAKMAN",
+      "driverName": "Ian Peakman",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "IAN-TOWNSEND",
+      "driverName": "Ian Townsend",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "JAMIE-DAVIES",
+      "driverName": "Jamie Davies",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "JOHN-MORDEN",
+      "driverName": "John Morden",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "JON-PAISLEY",
+      "driverName": "Jon Paisley",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "JONATHAN-PUZEY",
+      "driverName": "Jonathan Puzey",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "KEVIN-GREENWAY",
+      "driverName": "Kevin Greenway",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MARK-GIAQUINTO",
+      "driverName": "Mark Giaquinto",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MARK-HICKS",
+      "driverName": "Mark Hicks",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MARTIN-PITMAN",
+      "driverName": "Martin Pitman",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MARTYN-HADLEY",
+      "driverName": "Martyn Hadley",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MARTYN-PRICE",
+      "driverName": "Martyn Price",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MATT-WOODIWISS",
+      "driverName": "Matt Woodiwiss",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MATTHEW-HODGES",
+      "driverName": "Matthew Hodges",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MIKE-DRISCOLL",
+      "driverName": "Mike Driscoll",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "NEIL-SMITH",
+      "driverName": "Neil Smith",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "OLLY-FROST",
+      "driverName": "Olly Frost",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "PAUL-TRODDEN",
+      "driverName": "Paul Trodden",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "XRay",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "RICHARD-HARRISON",
+      "driverName": "Richard Harrison",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "ROGER-MILLS",
+      "driverName": "Roger Mills",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "ROY-DAVIES",
+      "driverName": "Roy Davies",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "ROYSTON-STEWART",
+      "driverName": "Royston Stewart",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "RUSS-WILLIAMS",
+      "driverName": "Russ Williams",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "RUSSELL-THOMAS",
+      "driverName": "Russell Thomas",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "SCOTT-BOWKETT",
+      "driverName": "Scott Bowkett",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "SHAUN-OGDEN",
+      "driverName": "Shaun Ogden",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "SIMON-FISHER",
+      "driverName": "Simon Fisher",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "STEVE-CHAPMAN",
+      "driverName": "Steve Chapman",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "STEVE-CURTIS-RICH",
+      "driverName": "Steve Curtis-Rich",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "STEVEN-GRIFFITHS",
+      "driverName": "Steven Griffiths",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "TOM-JENKINS",
+      "driverName": "Tom Jenkins",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "ZACK-TRODDEN",
+      "driverName": "Zack Trodden",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "XRay",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "BOBTECH",
+      "driverName": "Bob \"Bobtech\" Gelstharp",
+      "bookingName": "Bob Gelstharp",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "CHRIS-GUNTER",
+      "driverName": "Chris Gunter",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "CHRIS-LEONARD",
+      "driverName": "Chris Leonard",
+      "bookingName": "Christopher Leonard",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "COLIN-COURT",
+      "driverName": "Colin Court",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "DAN-PULLEY",
+      "driverName": "Dan Pulley",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Pr",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "DAVID-MILFORD",
+      "driverName": "David Milford",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "DEWI-JONES",
+      "driverName": "Dewi Jones",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "EDWARD-SCOTT",
+      "driverName": "Edward Scott",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "FRAN-BRAVERY",
+      "driverName": "Fran Bravery",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "GREG-PARKER",
+      "driverName": "Greg Parker",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "IAN-PEAKMAN",
+      "driverName": "Ian Peakman",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "JON-PAISLEY",
+      "driverName": "Jon Paisley",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "LIAM-TOOLE",
+      "driverName": "Liam Toole",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MARK-GIAQUINTO",
+      "driverName": "Mark Giaquinto",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Kyosho",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MATT-WOODIWISS",
+      "driverName": "Matt Woodiwiss",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MATTHEW-HODGES",
+      "driverName": "Matthew Hodges",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MIKE-DRISCOLL",
+      "driverName": "Mike Driscoll",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "NEIL-SMITH",
+      "driverName": "Neil Smith",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "OLLY-FROST",
+      "driverName": "Olly Frost",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "BRUCE",
+      "driverName": "Paul \"Bruce\" Curtis",
+      "bookingName": "Paul Curtis",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "RICHARD-HARRISON",
+      "driverName": "Richard Harrison",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "ROBERT-WEST",
+      "driverName": "Robert West",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "RUSS-WILLIAMS",
+      "driverName": "Russ Williams",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "RUSSELL-THOMAS",
+      "driverName": "Russell Thomas",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Xray",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "SPENCER-FARLEY",
+      "driverName": "Spencer Farley",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "STEVE-CHAPMAN",
+      "driverName": "Steve Chapman",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "STEVE-CURTIS-RICH",
+      "driverName": "Steve Curtis-Rich",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "TIM-BRAVERY",
+      "driverName": "Tim Bravery",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "TOM-JENKINS",
+      "driverName": "Tom Jenkins",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "BEN-EVANS",
+      "driverName": "Ben Evans",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "COHEN-MANNING",
+      "driverName": "Cohen Manning",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Tlr",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "GEORGE-BRAY",
+      "driverName": "George Bray",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "LEO-SMITH",
+      "driverName": "Leo Smith",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "NOAH-MCBRIDE",
+      "driverName": "Noah McBride",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "SEB-FISHER",
+      "driverName": "Seb Fisher",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    }
+  ]
+}
