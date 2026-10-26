@@ -300,7 +300,14 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       if (slug) {
         const logo = element('img', 'event-entry-chassis-logo');
         logo.src = '../assets/manufacturers/' + slug + '.png'; logo.alt = entry.chassis; logo.title = entry.chassis; logo.loading = 'lazy';
-        logo.addEventListener('error', () => { chassis.textContent = entry.chassis; }, {once:true});
+        logo.addEventListener('error', () => {
+          if (!logo.dataset.retried) {
+            logo.dataset.retried = 'true';
+            logo.src = '../assets/manufacturers/' + slug + '.png?retry=' + Date.now();
+            return;
+          }
+          chassis.textContent = entry.chassis;
+        });
         chassis.append(logo);
       } else { chassis.textContent = entry.chassis || 'Not listed'; }
       chassis.dataset.label = 'Chassis';

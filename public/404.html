@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Page not found | COBRA RaceHub</title>
+  <script>
+    (() => {
+      const match=location.pathname.match(/^\/lap-charts\/share\/([^/]+)\/([^/]+)\/?$/);
+      if(!match)return;
+      try {
+        const race=decodeURIComponent(match[1]);
+        const driver=decodeURIComponent(match[2]);
+        const target=new URL('/lap-charts/share/'+encodeURIComponent(race)+'/',location.origin);
+        target.searchParams.set('driver',driver);
+        location.replace(target.href);
+      } catch {}
+    })();
+  </script>
+  <style>body{margin:0;background:#eef5f0;color:#101712;font:18px Arial,sans-serif}main{max-width:700px;margin:12vh auto;padding:32px;background:white;border-top:5px solid #08a527;border-radius:12px}a{color:#087c20;font-weight:700}</style>
+</head>
+<body><main><h1>That page could not be found</h1><p>The address may be an older link. Visit the <a href="/">COBRA RaceHub home page</a>.</p></main></body>
+</html>

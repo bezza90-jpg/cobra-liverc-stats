@@ -48,8 +48,9 @@ function positionLaps(driver){
 }
 export function chartUrl(raceId,driver='') {const url=new URL('../lap-charts/',import.meta.url);url.searchParams.set('race',raceId);if(driver)url.searchParams.set('driver',driver);return url.href;}
 export function chartShareUrl(raceId,driver='') {
- const suffix=encodeURIComponent(raceId)+'/'+(driver?encodeURIComponent(driver)+'/':'');
- return new URL('../lap-charts/share/'+suffix,import.meta.url).href;
+ const url=new URL('../lap-charts/share/'+encodeURIComponent(raceId)+'/',import.meta.url);
+ if(driver)url.searchParams.set('driver',driver);
+ return url.href;
 }
 export function facebookShareLink(raceId,driver='') {
  const target=chartShareUrl(raceId,driver),share=facebookComposerUrl(target);

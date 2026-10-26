@@ -112,6 +112,25 @@ test('expanded lap details prefetch their exact full chart page', async () => {
   assert.match(html, /lap-charts\.js\?v=20261024-linked-laps/);
 });
 
+test('Pages builds keep chart previews within a compact budget and remove stale output', async () => {
+  const generator = await read('scripts/build-chart-shares.mjs');
+  const workflow = await read('.github/workflows/update-stats.yml');
+  const notFound = await read('public/404.html');
+  assert.match(generator, /CHART_PREVIEW_BUDGET_MB\|\|150/);
+  assert.match(generator, /fs\.rmSync\(out,\{recursive:true,force:true\}\)/);
+  assert.doesNotMatch(workflow, /actions\/cache@/);
+  assert.match(workflow, /node scripts\/check-deployment-size\.mjs public/);
+  assert.match(workflow, /retention-days: 1/);
+  assert.match(notFound, /\/lap-charts\\\/share\\\/\(\[\^\/\]\+\)\\\/\(\[\^\/\]\+\)/);
+  assert.match(notFound, /target\.searchParams\.set\('driver',driver\)/);
+});
+
+test('event chassis logos retry after a deployment race before showing text', async () => {
+  const entries = await read('public/assets/event-entries.js');
+  assert.match(entries, /logo\.dataset\.retried/);
+  assert.match(entries, /\?retry=' \+ Date\.now\(\)/);
+});
+
 
 test('setup context preserves final podium links for every event and driver', async () => {
   const fullText = await read('public/data/dashboard.json');
