@@ -890,8 +890,12 @@ function profileRunRows(eventRuns, driverKey, data) {
   }).join('');
 }
 
+function profileRaceDetailContent(eventRuns, driverKey, data) {
+  return `<div class="table-wrap driver-races-table" aria-label="Individual race results"><table class="profile-runs-table"><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${profileRunRows(eventRuns, driverKey, data)}</tbody></table></div>`;
+}
+
 function profileRaceDetail(eventRuns, driverKey, data, colspan) {
-  return `<tr class="driver-races-detail-row" hidden><td colspan="${colspan}"><div class="table-wrap driver-races-table" aria-label="Individual race results"><table class="profile-runs-table"><thead><tr><th>Round</th><th>Race</th><th>Pos</th><th>Laps/time</th><th>Fastest</th><th>Average</th><th>Consistency</th><th>Pace</th><th>Video</th></tr></thead><tbody>${profileRunRows(eventRuns, driverKey, data)}</tbody></table></div></td></tr>`;
+  return `<tr class="driver-races-detail-row" hidden><td colspan="${colspan}">${profileRaceDetailContent(eventRuns, driverKey, data)}</td></tr>`;
 }
 
 const driverRaceDetailCache = new Map();
@@ -1979,7 +1983,33 @@ function renderCRatingTrend() {
   $('driverCRatingChart').innerHTML = `<div class="crating-summary"><div><strong>${formatRating(summary.total)}</strong><span>Current</span></div><div><strong>${formatRating(Math.max(1500, ...points.map(point => point.value)))}</strong><span>Peak</span></div><div><strong>${summary.starts}</strong><span>Rated races</span></div><div><strong>${summary.starts < 20 ? 'Provisional' : 'Established'}</strong><span>Status</span></div></div>${trendChartHtml(points, { ariaLabel: 'cRating history', benchmark: 1500 })}`;
 }
 
+let driverProfileRenderToken = 0;
+
 function driverProfile(driverKey) {
+  const data = state.data;
+  const driver = data.drivers.find(row => row.k === driverKey);
+  if (!driver) return;
+  const token = ++driverProfileRenderToken;
+  state.profileKey = driverKey;
+  $('driverProfileName').textContent = `${driver.n}${driver.j ? ' — Junior' : ''}`;
+  $('driverProfileContext').textContent = 'Loading driver statistics…';
+  $('driverProfileStats').innerHTML = '<p class="profile-loading" role="status">Loading driver statistics…</p>';
+  $('driverClassDetails').innerHTML = '';
+  $('driverConsistencyDetails').innerHTML = '';
+  $('driverEventDetails').innerHTML = '<tr><td colspan="12">Loading race history…</td></tr>';
+  renderProfileAvatar(driverKey);
+  const dialog = $('driverDialog');
+  if (!dialog.open) {
+    if (new URLSearchParams(location.search).get('tracker') === '1' || (window.self !== window.top && new URLSearchParams(location.search).has('map'))) dialog.show();
+    else if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+  }
+  requestAnimationFrame(() => setTimeout(() => {
+    if (token === driverProfileRenderToken && state.profileKey === driverKey) renderDriverProfile(driverKey);
+  }, 0));
+}
+
+function renderDriverProfile(driverKey) {
   const data = state.data;
   const driver = data.drivers.find(row => row.k === driverKey);
   if (!driver) return;
@@ -2043,7 +2073,6 @@ function driverProfile(driverKey) {
   const toLabel = to ? dateFmt.format(new Date(`${to}T12:00:00Z`)) : 'Latest result';
   $('driverProfileName').textContent = `${driver.n}${driver.j ? ' — Junior' : ''}`;
   $('driverProfileContext').textContent = `${fromLabel} to ${toLabel} · ${typeLabel} · ${classLabel}`;
-  renderProfileAvatar(driverKey);
   $('driverProfileStats').innerHTML = [
     profileStat(uniqueEvents.size, 'Events attended'),
     profileStat(eligibleEventIds.size ? `${Math.round(100 * uniqueEvents.size / eligibleEventIds.size)}%` : '—', 'Attendance rate'),
@@ -2166,7 +2195,7 @@ function driverProfile(driverKey) {
     const raceLabel = `${eventRuns.length} race${eventRuns.length === 1 ? '' : 's'}`;
     const raceDrilldown = `<button type="button" class="driver-races-toggle" aria-expanded="false">${raceLabel}</button>`;
     const eventRow = `<tr class="profile-event-row" tabindex="0" role="button" aria-expanded="false"><td>${dateFmt.format(new Date(`${date}T12:00:00Z`))}</td><td>${eventName}</td><td>${raceDrilldown}</td><td>${escapeHtml(cls)}</td><td>P${position}</td><td>${finalName}</td><td>${qualifyingPosition ? `P${qualifyingPosition}` : '—'}</td><td>${escapeHtml(final?.row[3] || publishedResult || '—')}</td><td>${escapeHtml(final?.row[5] || '—')}</td><td>${eventConsistency === null ? '—' : `${eventConsistency.toFixed(1)}%`}</td><td>${metricValueHelp('pace', eventPace === null ? '—' : `${eventPace.toFixed(1)}%`, 'Pace')}</td><td>${ratingChangeMetricHelp(eventRating)}</td></tr>`;
-    const detailRow = profileRaceDetail(eventRuns, driverKey, data, 12);
+    const detailRow = `<tr class="driver-races-detail-row" data-event-id="${escapeHtml(eventId)}" data-class-name="${escapeHtml(cls)}" hidden><td colspan="12"></td></tr>`;
     return `${eventRow}${detailRow}`;
   }).join('') || '<tr><td colspan="12">No completed finals within these filters.</td></tr>';
 
@@ -2180,12 +2209,6 @@ function driverProfile(driverKey) {
     const button = $(buttonId);
     if (panel) panel.hidden = true;
     if (button) { button.setAttribute?.('aria-expanded', 'false'); button.textContent = label; }
-  }
-  const dialog = $('driverDialog');
-  if (!dialog.open) {
-    if (new URLSearchParams(location.search).get('tracker') === '1' || (window.self !== window.top && new URLSearchParams(location.search).has('map'))) dialog.show();
-    else if (typeof dialog.showModal === 'function') dialog.showModal();
-    else dialog.setAttribute('open', '');
   }
 }
 
@@ -2502,6 +2525,18 @@ async function init() {
         const detailRow = groupButton.closest('tr')?.nextElementSibling;
         if (!detailRow?.classList.contains('driver-races-detail-row')) return;
         const opening = detailRow.hidden;
+        if (opening && detailRow.dataset.loaded !== 'true') {
+          const profile = state.profileEvidence;
+          const eventId = detailRow.dataset.eventId;
+          const className = detailRow.dataset.className;
+          const eventRuns = profile?.runs.filter(run => {
+            const race = profile.data.raceById[run[0]];
+            return race?.e === eventId && race.c === className;
+          }) || [];
+          detailRow.firstElementChild.innerHTML = profileRaceDetailContent(eventRuns, profile?.driverKey || state.profileKey, profile?.data || state.data);
+          detailRow.dataset.loaded = 'true';
+          prefetchDriverRunDetails(detailRow);
+        }
         container.querySelectorAll('.driver-races-detail-row').forEach(other => {
           if (other === detailRow) return;
           other.hidden = true;

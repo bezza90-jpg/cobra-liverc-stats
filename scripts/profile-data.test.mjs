@@ -22,6 +22,19 @@ const profileHelpers = {
   metricHelp: (_value, _description) => String(_value),
   metricValueHelp: (_key, value) => String(value)
 };
+test('driver profiles open immediately and defer detailed race history', () => {
+  const opener = functionSource('driverProfile');
+  const renderer = functionSource('renderDriverProfile');
+  assert.match(opener, /showModal/);
+  assert.match(opener, /Loading driver statistics/);
+  assert.match(opener, /requestAnimationFrame\(\(\) => setTimeout/);
+  assert.match(renderer, /data-event-id=/);
+  assert.doesNotMatch(renderer, /profileRaceDetail\(eventRuns/);
+  assert.match(app, /detailRow\.firstElementChild\.innerHTML = profileRaceDetailContent/);
+  assert.match(app, /detailRow\.dataset\.loaded = 'true'/);
+  assert.match(app, /prefetchDriverRunDetails\(detailRow\)/);
+});
+
 test('statistics open and reset on the latest two-year activity window', () => {
   const twoYearDefault = /\$\('fromDate'\)\.value = yearsBefore\(data\.meta\.latestEventDate, 2\);/g;
   assert.equal(app.match(twoYearDefault)?.length, 2);
@@ -74,8 +87,8 @@ test('driver class and consistency breakdowns include qualifying-only activity',
   const nodes = {};
   const data = {drivers:[{k:'TEST',n:'Test Racer'}],events:[{i:'e',d:'2026-09-20',t:'club'}],eventById:{e:{t:'club'}},entries:[['e','2026-09-20','Trucks','TEST']],eventResults:[],raceById:{r:{e:'e',d:'2026-09-20',c:'Trucks',l:300}},raceResults:[['r','TEST',1,'18/5:04.090','','16.000','16.894','96.2%']],videos:[]};
   const context = vm.createContext({...profileHelpers,state:{data},$:id=>nodes[id] ||= {open:true},filters:()=>({from:'',to:'',eventType:'',className:''}),renderProfileAvatar(){},sharedRaceVideo:()=>null,profileStat:()=>'',distanceJourneyStat:()=>'',classLabels:{},dateFmt:new Intl.DateTimeFormat('en-GB'),fmt:new Intl.NumberFormat('en-GB'),kmToMiles:n=>n,escapeHtml:String});
-  vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','combinedPerformanceScore','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','profileRunRows','profileRaceDetail','setupCRatingClassOptions','driverProfile'].map(functionSource).join('\n'),context);
-  context.driverProfile('TEST');
+  vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','combinedPerformanceScore','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','profileRunRows','profileRaceDetailContent','profileRaceDetail','setupCRatingClassOptions','renderDriverProfile'].map(functionSource).join('\n'),context);
+  context.renderDriverProfile('TEST');
   assert.match(nodes.driverClassDetails.innerHTML, /Trucks/);
   assert.doesNotMatch(nodes.driverClassDetails.innerHTML, /Infinity|NaN/);
   assert.match(nodes.driverConsistencyDetails.innerHTML, /96\.2%/);
@@ -87,9 +100,9 @@ test('every archived driver profile renders without broken numbers or missing co
   data.videos = [];
   const nodes = {};
   const context = vm.createContext({...profileHelpers,state:{data},$:id=>nodes[id] ||= {open:true},filters:()=>({from:'',to:'',eventType:'',className:''}),renderProfileAvatar(){},sharedRaceVideo:()=>null,profileStat:(value)=>String(value),distanceJourneyStat:()=>'',classLabels:{},dateFmt:new Intl.DateTimeFormat('en-GB'),fmt:new Intl.NumberFormat('en-GB'),kmToMiles:n=>n,escapeHtml:String});
-  vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','combinedPerformanceScore','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','profileRunRows','profileRaceDetail','setupCRatingClassOptions','driverProfile'].map(functionSource).join('\n'),context);
+  vm.runInContext(['inRange','isPublishedFinal','eventMatches','classMatches','attendanceAdjustedResults','countAndRate','average','combinedPerformanceScore','completedLaps','lapTimeSeconds','runTimeSeconds','isCompleteConsistencyRun','totalLaps','distanceRaced','trackTime','profileRunRows','profileRaceDetailContent','profileRaceDetail','setupCRatingClassOptions','renderDriverProfile'].map(functionSource).join('\n'),context);
   for (const driver of data.drivers) {
-    context.driverProfile(driver.k);
+    context.renderDriverProfile(driver.k);
     for (const id of ['driverProfileStats','driverClassDetails','driverConsistencyDetails','driverEventDetails']) {
       assert.doesNotMatch(nodes[id].innerHTML, /NaN|Infinity|undefined/, `${driver.k}: ${id}`);
     }
