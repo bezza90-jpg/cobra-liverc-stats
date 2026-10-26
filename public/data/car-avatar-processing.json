@@ -1,20 +1,10 @@
 {
-  "checkedAt": "2026-10-11T17:38:45.337906+00:00",
+  "checkedAt": "2026-10-26T18:45:29.140294+00:00",
   "updated": 0,
   "failures": {
-    "CHRIS-GUNTER|4-Wheel Drive Buggy": {
-      "id": "83e111ff-940d-49b5-a708-c4512e94f9a5",
-      "revision": "1aiSK3x1M6Or2UqaOenDbWxgYTUXMrP5X",
-      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
-    },
-    "BRUCE|Trucks": {
-      "id": "de3a5040-7aac-4bb9-a6de-fe1c2076a2e8",
-      "revision": "1Zg_1xEjMnoqHMNQSSg1CCuhOMYDHTK5_",
-      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
-    },
-    "ROGER-MILLS|2-Wheel Drive Buggy": {
-      "id": "0b82c643-afa7-4da5-84e4-615ba08f82ff",
-      "revision": "18SCaysJImYlxYFgmVN3gggvrTb2JHMJi",
+    "CAERON-JENKINS|2-Wheel Drive Buggy": {
+      "id": "94181e0c-c216-4e2a-8a97-90e6edabe355",
+      "revision": "10gZqbCW-vC5FioMlNluAvgGhHfU175Os",
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     }
   }
