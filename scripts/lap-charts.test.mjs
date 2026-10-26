@@ -24,6 +24,12 @@ test('position and comparison graphs retain each racer and exact values',()=>{as
 test('position graph begins at lap zero using the supplied start grid',()=>{const html=positionChartMarkup({id:'grid',drivers:[{name:'Grid driver',startPosition:3,laps:[{lap:1,position:1,seconds:20},{lap:2,position:2,seconds:20}]}]});assert.match(html,/Lap 0 shows the qualifying or recorded start position/);assert.match(html,/Grid driver · Start · P3/);assert.match(html,/>0<\/text>/);assert.match(html,/<td>Start<\/td><td>3<\/td>/);});
 test('chart links use the interactive view while shares use preview-card pages',()=>{const raceUrl=new URL(chartUrl('7072625'));assert.ok(raceUrl.pathname.endsWith('/lap-charts/'));assert.equal(raceUrl.searchParams.get('race'),'7072625');const driverUrl=new URL(chartUrl('7072625','MARK-GIAQUINTO'));assert.equal(driverUrl.searchParams.get('race'),'7072625');assert.equal(driverUrl.searchParams.get('driver'),'MARK-GIAQUINTO');assert.match(chartShareUrl('7072625'),/\/lap-charts\/share\/7072625\/$/);assert.match(chartShareUrl('7072625','MARK-GIAQUINTO'),/\/lap-charts\/share\/7072625\/MARK-GIAQUINTO\/$/);});
 
+test('every Facebook chart link targets a page with preview metadata',()=>{
+ const source=readFileSync(new URL('../public/assets/lap-charts.js',import.meta.url),'utf8');
+ assert.doesNotMatch(source,/facebookComposerUrl\(url\.href\)/);
+ assert.match(source,/facebookComposerUrl\(shareUrl\)/);
+});
+
 test('replay comparison preserves the race and multiple selected drivers',()=>{const u=new URL(replayComparisonUrl('7072625',['MARK-GIAQUINTO','RUSSELL-THOMAS']));assert.ok(u.pathname.endsWith('/virtual-race-replay/'));assert.equal(u.searchParams.get('race'),'7072625');assert.deepEqual(u.searchParams.getAll('compare'),['MARK-GIAQUINTO','RUSSELL-THOMAS']);});
 
 test('focused final-lap scale ignores lap one and trims isolated outliers',()=>{const scale=focusedLapScale({laps:[{lap:1,seconds:7},...Array.from({length:16},(_,i)=>({lap:i+2,seconds:17+(i%4)*.08})),{lap:18,seconds:30}]});assert.ok(scale.min>16);assert.ok(scale.max<20);assert.equal(scale.plottedLaps[0].lap,2);});
