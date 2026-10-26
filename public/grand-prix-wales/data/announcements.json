@@ -1,7 +1,15 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-10-22",
+  "updatedAt": "2026-10-26",
   "facebookPageUrl": "https://www.facebook.com/profile.php?id=61584502714320",
+  "preferredOrder": [
+    "Marcus Kaerup",
+    "Daniel Kobbervik",
+    "Michal Orlowski",
+    "Ben Smith",
+    "Tommy & Jamie Hall",
+    "Daniel Pole"
+  ],
   "posts": [
     {
       "driverName": "Marcus Kaerup",

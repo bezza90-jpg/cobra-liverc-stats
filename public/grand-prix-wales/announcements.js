@@ -1,7 +1,8 @@
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'})[char]);
 const safeUrl=value=>{if(value==null||String(value).trim()==='')return'';try{const url=new URL(String(value),location.href);return ['http:','https:'].includes(url.protocol)?url.href:''}catch{return''}};
+const orderPosts=(posts,preferredOrder)=>{const priorities=new Map((Array.isArray(preferredOrder)?preferredOrder:[]).map((name,index)=>[String(name).trim().toLocaleLowerCase(),index]));return posts.map((post,index)=>({post,index,priority:priorities.get(String(post?.driverName||'').trim().toLocaleLowerCase())})).sort((a,b)=>{const aRank=a.priority??Number.MAX_SAFE_INTEGER,bRank=b.priority??Number.MAX_SAFE_INTEGER;return aRank-bRank||a.index-b.index}).map(item=>item.post)};
 fetch('../data/announcements.json',{cache:'no-store'}).then(response=>response.json()).then(data=>{
-  const posts=Array.isArray(data.posts)?data.posts:[],pageUrl=safeUrl(data.facebookPageUrl),grid=document.querySelector('#announcementGrid');
+  const posts=orderPosts(Array.isArray(data.posts)?data.posts:[],data.preferredOrder),pageUrl=safeUrl(data.facebookPageUrl),grid=document.querySelector('#announcementGrid');
   if(pageUrl){const link=document.querySelector('#facebookPageLink');link.href=pageUrl;link.hidden=false}
   document.querySelector('#syncStatus').textContent=posts.length?`${posts.length} confirmed driver announcement${posts.length===1?'':'s'} shown. New posts can be added to the same gallery.`:'The gallery is ready for the next Facebook announcements.';
   if(!posts.length)return;
