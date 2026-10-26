@@ -8,7 +8,7 @@ test('shared navigation supports repository and domain roots, preserving Wix boo
     assert.equal(addSiteShell(html,base),html);
     assert.match(html,/https:\/\/www.cobracardiff.co.uk\/grand-prix-wales/);
     assert.match(html,/https:\/\/www.cobracardiff.co.uk\/event-list/);
-    for(const route of ['?tracker=1','schedule/?type=sword','virtual-race-replay/','virtual-race-replay/3d.html','track-gallery/','website-guides/']) assert.ok(html.includes('href="'+base+route+'"'));
+    for(const route of ['?tracker=1','schedule/?type=sword','virtual-race-replay/','virtual-race-replay/3d.html','track-gallery/','website-guides/','privacy/']) assert.ok(html.includes('href="'+base+route+'"'));
     assert.match(html,/2D Virtual Replay<\/a><a[^>]+>3D Virtual Replay<\/a>/);
     assert.equal((html.match(/class="cobra-site-header"/g)||[]).length,1);
   }
@@ -75,4 +75,20 @@ test('mobile menu promotes both virtual replay views without removing grouped li
   assert.equal((html.match(/3D Virtual Replay<\/a>/g)||[]).length,2);
   assert.match(css,/\.cobra-mobile-replay-links\{display:grid/);
   assert.match(css,/max-height:calc\(100dvh - 70px\)/);
+});
+
+
+test('privacy page explains public driver data, junior safeguards, payments, retention and storage',()=>{
+  const html=readFileSync(new URL('../public/privacy/index.html',import.meta.url),'utf8');
+  for(const phrase of [
+    'Privacy &amp; Cookie Policy',
+    'first name and surname initial',
+    'chassis and an approved car avatar',
+    'PayPal processes payment',
+    'Cloudflare Web Analytics',
+    'localStorage',
+    'sessionStorage',
+    'How long we keep information',
+    'Information Commissioner'
+  ]) assert.ok(html.includes(phrase), 'Missing privacy notice text: '+phrase);
 });
