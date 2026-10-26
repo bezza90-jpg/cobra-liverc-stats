@@ -198,7 +198,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
   const label=element('label','','My driver (on this device)');
   const picker=element('select');picker.setAttribute('aria-label','Choose my driver');
   picker.append(new Option('Choose your name',''));
-  const drivers=[...new Map(data.entries.map(e=>[e.driverKey,e.driverName])).entries()].sort((a,b)=>a[1].localeCompare(b[1]));
+  const drivers=[...new Map(data.entries.filter(e=>e.driverKey).map(e=>[e.driverKey,e.driverName])).entries()].sort((a,b)=>a[1].localeCompare(b[1]));
   for(const [key,name] of drivers) picker.append(new Option(name,key));
   let remembered='';try{remembered=localStorage.getItem('cobra-my-driver')||'';}catch{}
   if(drivers.some(([key])=>key===remembered)) picker.value=remembered;
@@ -287,9 +287,13 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       const driver = document.createElement('td');
       driver.dataset.label = 'Driver';
       const driverIdentity = element('span', 'event-entry-driver');
-      const profile = element('a', '', entry.driverName);
-      profile.href = `../?driver=${encodeURIComponent(entry.driverKey)}&returnTo=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
-      driverIdentity.append(profile);
+      if (entry.className === 'Junior Racers') {
+        driverIdentity.append(element('span', '', entry.driverName));
+      } else {
+        const profile = element('a', '', entry.driverName);
+        profile.href = `../?driver=${encodeURIComponent(entry.driverKey)}&returnTo=${encodeURIComponent(location.pathname + location.search + location.hash)}`;
+        driverIdentity.append(profile);
+      }
       driver.append(driverIdentity);
       const chassis = element('td');
       const slug = {'team associated':'team-associated','associated':'team-associated','schumacher':'schumacher','kyosho':'kyosho','xray':'xray','yokomo':'yokomo','tlr':'tlr','team losi racing':'tlr','sworkz':'sworkz','agama':'agama','tamiya':'tamiya','pr':'pr','pr racing':'pr','r1 wurks':'r1-wurks'}[String(entry.chassis || '').trim().toLowerCase()];
