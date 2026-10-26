@@ -45,6 +45,16 @@ test('duplicated Wix guest names are published once',()=>{
   assert.equal(publicDriverName('Nathan Notley','Nathan Notley'),'NATHAN NOTLEY');
   assert.equal(publicDriverName('Royston Stewart','Stewart'),'ROYSTON STEWART');
 });
+test('known Wix booking names are normalised before roster continuity checks',()=>{
+  assert.equal(publicDriverName('Thomas Spencer','Jenkins'),'TOM JENKINS');
+  assert.equal(publicDriverName('Thomas Spencer Jenkins','Thomas Spencer Jenkins'),'TOM JENKINS');
+  const previous={wixEventId:'event',eventDate:'2026-11-01',entries:[
+    {driverName:'Tom Jenkins',className:'2-Wheel Drive Buggy'},
+    {driverName:'Tom Jenkins',className:'4-Wheel Drive Buggy'}
+  ]};
+  const next={...previous,entries:previous.entries.map(row=>({...row,driverName:publicDriverName('Thomas Spencer','Jenkins')}))};
+  assert.doesNotThrow(()=>assertRosterContinuity(previous,next));
+});
 
 const attendingGuest={attendanceStatus:'ATTENDING',ticketNumber:'T1',guestDetails:{firstName:'Matthew',lastName:'Hodges'}};
 const ticket={ticketNumber:'T1',name:'2WD Entry'};

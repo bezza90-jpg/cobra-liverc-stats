@@ -6,6 +6,13 @@ import {publicEntryFeed} from './lib/public-entry-data.mjs';
 
 const API='https://www.wixapis.com';
 export const TICKETS=clubConfig.wix.ticketTypes;
+const PUBLIC_DRIVER_NAME_ALIASES=new Map([
+  ['THOMAS SPENCER JENKINS','TOM JENKINS']
+]);
+
+function canonicalPublicDriverName(value) {
+  return PUBLIC_DRIVER_NAME_ALIASES.get(value) || value;
+}
 
 export function bookingSlug(url) {
   try { return new URL(url).pathname.split('/').filter(Boolean).at(-1) || ''; }
@@ -38,10 +45,10 @@ export function publicDriverName(firstValue,lastValue) {
   if (!first || !last) return '';
   // Wix occasionally stores the full name in both guest fields. It can also
   // repeat the surname once at the join. Keep the safe public name concise.
-  if (first.includes(' ') && first.toUpperCase()===last.toUpperCase()) return first.toUpperCase();
+  if (first.includes(' ') && first.toUpperCase()===last.toUpperCase()) return canonicalPublicDriverName(first.toUpperCase());
   const words=`${first} ${last}`.toUpperCase().split(/\s+/).filter(Boolean);
   const collapsed=words.filter((word,index)=>index<2 || word!==words[index-1]);
-  return collapsed.join(' ');
+  return canonicalPublicDriverName(collapsed.join(' '));
 }
 export function publicEntries(guest,order,mapping) {
   const details=guest.guestDetails || {};
