@@ -1,5 +1,5 @@
 import { addSiteShell } from './site-shell.mjs';
-import { focusedLapScale } from '../public/assets/lap-charts.js';
+import { focusedLapScale, lapLineColour } from '../public/assets/lap-charts.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -21,7 +21,18 @@ function preview(race,driver){
  const x=l=>85+(l-1)/(last-1)*1050,rawY=v=>driver?450-(v-lo)/(hi-lo)*270:180+(v-lo)/(hi-lo)*270,y=v=>driver?Math.max(180,Math.min(450,rawY(v))):rawY(v);
  for(let i=0;i<5;i++){const v=lo+(hi-lo)*i/4;ctx.strokeStyle='#294033';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(85,y(v));ctx.lineTo(1135,y(v));ctx.stroke();text(driver?v.toFixed(1)+'s':'P'+Math.round(v),15,y(v)+5,15,'#c6d9cc');}
  for(let l=1;l<=last;l++){if(l!==1&&l!==last&&l%Math.max(1,Math.ceil(last/18)))continue;text(l,x(l)-5,478,14,'#c6d9cc');}text('LAP',570,504,15,'#c6d9cc');
- drivers.forEach((d,i)=>{ctx.strokeStyle=colors[i%colors.length];ctx.lineWidth=3;ctx.setLineDash(i%2?[8,4]:[]);ctx.beginPath();let previous=0;for(const l of d.laps){const v=driver?l.seconds:l.position;if(!Number.isFinite(v)||v<=0||(driver&&l.lap===1))continue;if(l.lap!==previous+1||!previous)ctx.moveTo(x(l.lap),y(v));else ctx.lineTo(x(l.lap),y(v));previous=l.lap;}ctx.stroke();ctx.setLineDash([]);if(!driver&&i<12){const col=i%3,row=Math.floor(i/3);text(d.name.slice(0,28),40+col*385,535+row*20,13,colors[i%colors.length]);}});
+ drivers.forEach((d,i)=>{
+  if(driver){
+   const racingLaps=d.laps.filter(l=>l.lap>1&&Number.isFinite(l.seconds)&&l.seconds>0),best=Math.min(...racingLaps.map(l=>l.seconds));let previous=null;
+   for(const lap of racingLaps){
+    if(previous&&lap.lap===previous.lap+1){const gradient=ctx.createLinearGradient(x(previous.lap),y(previous.seconds),x(lap.lap),y(lap.seconds));gradient.addColorStop(0,lapLineColour(previous.seconds,best));gradient.addColorStop(1,lapLineColour(lap.seconds,best));ctx.strokeStyle=gradient;ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(x(previous.lap),y(previous.seconds));ctx.lineTo(x(lap.lap),y(lap.seconds));ctx.stroke();}
+    previous=lap;
+   }
+   for(const lap of racingLaps){ctx.fillStyle=lapLineColour(lap.seconds,best);ctx.beginPath();ctx.arc(x(lap.lap),y(lap.seconds),6,0,Math.PI*2);ctx.fill();}
+  }else{
+   ctx.strokeStyle=colors[i%colors.length];ctx.lineWidth=3;ctx.setLineDash(i%2?[8,4]:[]);ctx.beginPath();let previous=0;for(const l of d.laps){const v=l.position;if(!Number.isFinite(v)||v<=0)continue;if(l.lap!==previous+1||!previous)ctx.moveTo(x(l.lap),y(v));else ctx.lineTo(x(l.lap),y(v));previous=l.lap;}ctx.stroke();ctx.setLineDash([]);if(i<12){const col=i%3,row=Math.floor(i/3);text(d.name.slice(0,28),40+col*385,535+row*20,13,colors[i%colors.length]);}
+  }
+ });
  if(driver){text('Every recorded lap · including first crossing',40,549,19,'#c6d9cc');text(driver.laps.length+' LAPS',40,585,22,'#a3f329');}text('cobracardiff.co.uk',910,615,18,'#a3f329');return cv.toBuffer('image/jpeg',40);
 }
 let pages=0,fallbacks=0;

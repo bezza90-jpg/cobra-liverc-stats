@@ -30,6 +30,14 @@ test('every Facebook chart link targets a page with preview metadata',()=>{
  assert.match(source,/facebookComposerUrl\(shareUrl\)/);
 });
 
+test('driver Facebook previews use the same green-to-red lap colours as the interactive chart',()=>{
+ const source=readFileSync(new URL('./build-chart-shares.mjs',import.meta.url),'utf8');
+ assert.match(source,/focusedLapScale, lapLineColour/);
+ assert.match(source,/createLinearGradient\(x\(previous\.lap\),y\(previous\.seconds\),x\(lap\.lap\),y\(lap\.seconds\)\)/);
+ assert.match(source,/gradient\.addColorStop\(0,lapLineColour\(previous\.seconds,best\)\)/);
+ assert.match(source,/gradient\.addColorStop\(1,lapLineColour\(lap\.seconds,best\)\)/);
+});
+
 test('replay comparison preserves the race and multiple selected drivers',()=>{const u=new URL(replayComparisonUrl('7072625',['MARK-GIAQUINTO','RUSSELL-THOMAS']));assert.ok(u.pathname.endsWith('/virtual-race-replay/'));assert.equal(u.searchParams.get('race'),'7072625');assert.deepEqual(u.searchParams.getAll('compare'),['MARK-GIAQUINTO','RUSSELL-THOMAS']);});
 
 test('focused final-lap scale ignores lap one and trims isolated outliers',()=>{const scale=focusedLapScale({laps:[{lap:1,seconds:7},...Array.from({length:16},(_,i)=>({lap:i+2,seconds:17+(i%4)*.08})),{lap:18,seconds:30}]});assert.ok(scale.min>16);assert.ok(scale.max<20);assert.equal(scale.plottedLaps[0].lap,2);});
