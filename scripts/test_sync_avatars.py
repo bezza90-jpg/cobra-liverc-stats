@@ -66,6 +66,33 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(manifest['BRUCE']['2-Wheel Drive Buggy'], 'assets/car-avatars/BRUCE-AUTO-2WD.png')
         self.assertNotIn('PAUL-CURTIS', manifest)
 
+    def test_state_prefers_canonical_record_over_legacy_alias_for_same_target(self):
+        sync.ALIASES.write_text(json.dumps({'PAUL-CURTIS': {'driverKey': 'BRUCE'}}))
+        (self.data/'avatar-upload-config.json').write_text(json.dumps({
+            'webAppUrl': 'https://script.google.com/macros/s/ABCDEFGHIJK/exec'
+        }))
+        records = [
+            {'driverKey':'PAUL-CURTIS','className':'2-Wheel Drive Buggy','id':'11111111-1111-1111-1111-111111111111','revision':'legacy-file-id'},
+            {'driverKey':'BRUCE','className':'2-Wheel Drive Buggy','id':'22222222-2222-2222-2222-222222222222','revision':'canonical-file-id'},
+        ]
+        with patch.object(sync, 'CONFIG', self.data/'avatar-upload-config.json'), patch.object(sync, 'request_jsonp', return_value={'avatars':records}):
+            _, current, _, photo_ids = sync.state()
+        self.assertEqual(current, {'BRUCE|2-Wheel Drive Buggy':'canonical-file-id'})
+        self.assertEqual(photo_ids, {'BRUCE|2-Wheel Drive Buggy':'22222222-2222-2222-2222-222222222222'})
+
+    def test_superseded_alias_revision_does_not_remove_canonical_asset(self):
+        sync.ALIASES.write_text(json.dumps({'PAUL-CURTIS': {'driverKey': 'BRUCE'}}))
+        image='assets/car-avatars/BRUCE-AUTO-2WD.png'
+        sync.MANIFEST.write_text(json.dumps({'BRUCE':{'2-Wheel Drive Buggy':image}}))
+        asset=self.root/'public'/image;asset.parent.mkdir(parents=True);asset.write_bytes(b'canonical')
+        current={'BRUCE|2-Wheel Drive Buggy':'canonical-file-id'}
+        previous={**current,'PAUL-CURTIS|2-Wheel Drive Buggy':'legacy-file-id'}
+        with patch.object(sync,'state',return_value=('url',current,previous,{'BRUCE|2-Wheel Drive Buggy':'id'})):
+            sync.publish()
+        self.assertEqual(json.loads(sync.MANIFEST.read_text())['BRUCE']['2-Wheel Drive Buggy'], image)
+        self.assertTrue(asset.is_file())
+        self.assertNotIn('PAUL-CURTIS|2-Wheel Drive Buggy', json.loads(sync.REVISIONS.read_text()))
+
     def test_new_submission_collision_does_not_overwrite_moved_avatar(self):
         (self.data/'car-avatar-class-moves.json').write_text(json.dumps({'DALE|2-Wheel Drive Buggy':'Trucks'}))
         with self.assertRaises(ValueError):

@@ -128,18 +128,32 @@ def state():
     records = request_jsonp(url, {"action": "list"}).get("avatars", [])
     if not isinstance(records, list):
         raise ValueError('Invalid approval list; existing published avatars are preserved.')
-    current = {}
-    photo_ids = {}
+    # Keep one approved source per final driver/class target. Historic upload
+    # names can remain in the sheet after a driver is given a canonical key;
+    # when both exist, the canonical record is authoritative. Ambiguous
+    # alias-only collisions still fail closed in validate_class_targets().
+    candidates = {}
     for entry in records:
         if not isinstance(entry, dict): raise ValueError('Malformed avatar record; aborting safely.')
         key, cls = str(entry.get("driverKey", "")), str(entry.get("className", ""))
         ident, revision = str(entry.get("id", "")), str(entry.get("revision", ""))
         if not (KEY.fullmatch(key) and cls in CLASS_SUFFIX and ID.fullmatch(ident) and FILE_ID.fullmatch(revision)):
             raise ValueError('Invalid approved avatar record; existing assets are preserved.')
-        if key not in HIDDEN_DRIVER_KEYS:
-            pair = f"{key}|{cls}"
-            current[pair] = revision
-            photo_ids[pair] = ident
+        if key in HIDDEN_DRIVER_KEYS:
+            continue
+        pair = f"{key}|{cls}"
+        canonical = canonical_driver_key(key)
+        target = assigned_target(canonical, cls)
+        priority = int(key == target[0]) + int(cls == target[1])
+        existing = candidates.get(target)
+        if existing is None or priority > existing[0]:
+            candidates[target] = (priority, pair, revision, ident)
+        elif priority == existing[0]:
+            # Preserve both so the existing collision guard can stop an
+            # genuinely ambiguous class assignment without overwriting files.
+            candidates[(target, pair)] = (priority, pair, revision, ident)
+    current = {candidate[1]: candidate[2] for candidate in candidates.values()}
+    photo_ids = {candidate[1]: candidate[3] for candidate in candidates.values()}
     return url, current, read_json(REVISIONS), photo_ids
 
 
@@ -299,6 +313,10 @@ def publish(retry_id=''):
         previous[pair] = revision
         changes += 1
 
+    current_targets = {
+        assigned_target(canonical_driver_key(pair.split('|', 1)[0]), pair.split('|', 1)[1])
+        for pair in current
+    }
     for pair in set(previous) - set(current):
         if manually_kept(pair, previous[pair]):
             previous.pop(pair)
@@ -307,6 +325,13 @@ def publish(retry_id=''):
         source_driver_key, cls = pair.split("|", 1)
         origin_key = canonical_driver_key(source_driver_key)
         driver_key, target_class = assigned_target(origin_key, cls)
+        if (driver_key, target_class) in current_targets:
+            # A canonical source superseded a legacy alias for the same final
+            # slot. Drop only the old revision marker; the live asset belongs
+            # to the still-current canonical source.
+            previous.pop(pair)
+            changes += 1
+            continue
         existing = manifest.get(driver_key)
         expected = f"assets/car-avatars/{origin_key}-AUTO-{CLASS_SUFFIX[cls]}.png"
         if isinstance(existing, str): existing = {'default': existing}
