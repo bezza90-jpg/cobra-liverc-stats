@@ -32,26 +32,11 @@ export async function buildEventAvatarReferences() {
   const manifest = {};
   const retained = new Set();
 
-  for (const driverKey of Object.keys(avatars).sort()) {
-    const record = typeof avatars[driverKey] === 'string' ? {default:avatars[driverKey]} : avatars[driverKey] || {};
-    const avatarRef = publicAvatarReference(driverKey);
-    for (const className of classOrder) {
-      const sourcePath = record[className];
-      if (typeof sourcePath !== 'string' || !/^assets\/car-avatars\/[A-Z0-9_-]+\.png$/.test(sourcePath)) continue;
-      const source = path.join(publicRoot, 'assets', 'car-avatar-thumbnails', path.basename(sourcePath, '.png') + '.webp');
-      const bytes = await readFile(source);
-      const digest = createHash('sha256').update(bytes).digest('hex').slice(0, 12);
-      const filename = `${avatarRef}-${classSlug(className)}-${digest}.webp`;
-      await copyFile(source, path.join(targetDirectory, filename));
-      retained.add(filename);
-      manifest[avatarRef] ||= {};
-      manifest[avatarRef][className] = `assets/event-avatar-refs/${filename}`;
-    }
-  }
-
   const candidates = new Map();
+  const driverKeyByRef = new Map();
   for (const driver of directory.drivers || []) {
     if (!avatars[driver.k]) continue;
+    driverKeyByRef.set(publicAvatarReference(driver.k), driver.k);
     const label = juniorPublicName(driver.n).toUpperCase();
     const values = candidates.get(label) || [];
     values.push(driver.k);
@@ -72,9 +57,25 @@ export async function buildEventAvatarReferences() {
     }
     await writeJson(file, feed);
   }
-  for (const avatarRef of Object.keys(manifest)) if (!usedRefs.has(avatarRef)) delete manifest[avatarRef];
-  retained.clear();
-  for (const record of Object.values(manifest)) for (const source of Object.values(record)) retained.add(path.basename(source));
+
+  for (const avatarRef of [...usedRefs].sort()) {
+    const driverKey = driverKeyByRef.get(avatarRef);
+    if (!driverKey) continue;
+    const record = typeof avatars[driverKey] === 'string' ? {default:avatars[driverKey]} : avatars[driverKey] || {};
+    for (const className of classOrder) {
+      const sourcePath = record[className];
+      if (typeof sourcePath !== 'string' || !/^assets\/car-avatars\/[A-Z0-9_-]+\.png$/.test(sourcePath)) continue;
+      const source = path.join(publicRoot, 'assets', 'car-avatar-thumbnails', path.basename(sourcePath, '.png') + '.webp');
+      const bytes = await readFile(source);
+      const digest = createHash('sha256').update(bytes).digest('hex').slice(0, 12);
+      const filename = `${avatarRef}-${classSlug(className)}-${digest}.webp`;
+      await copyFile(source, path.join(targetDirectory, filename));
+      retained.add(filename);
+      manifest[avatarRef] ||= {};
+      manifest[avatarRef][className] = `assets/event-avatar-refs/${filename}`;
+    }
+  }
+
   for (const filename of await readdir(targetDirectory)) {
     if (/^[0-9a-f]{20}-[a-z0-9-]+-[0-9a-f]{12}\.webp$/.test(filename) && !retained.has(filename)) await unlink(path.join(targetDirectory, filename));
   }
