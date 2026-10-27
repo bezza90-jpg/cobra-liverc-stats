@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync,assertRosterContinuity,publicEntries,entriesFromOrders,mergeAdminEntries,ticketLimitsFromDefinitions,applySeasonClassOverrides} from './sync-wix-event-entries.mjs';
+import {bookingSlug,formMapping,publicDriverName,publicEntry,londonDate,entrySnapshot,sync,assertRosterContinuity,publicEntries,entriesFromOrders,mergeAdminEntries,ticketLimitsFromDefinitions,reserveTicketsFromDefinitions,applySeasonClassOverrides} from './sync-wix-event-entries.mjs';
 
 test('unchanged entries do not require publishing just because the check time changed',()=>{
   const data={eventDate:'2026-10-11',entries:[{driverName:'TEST DRIVER',className:'Trucks'}]};
@@ -36,6 +36,13 @@ test('Wix ticket definitions expose current class quantities to the event page',
     {name:'4WD SWORD Entry',initialLimit:25},
     {name:'Unrelated ticket',actualLimit:999}
   ]),{'Junior Racers':10,'2-Wheel Drive Buggy':64,'4-Wheel Drive Buggy':25});
+});
+test('Wix ticket definitions expose reserve ticket IDs without credentials',()=>{
+  assert.deepEqual(reserveTicketsFromDefinitions([
+    {id:'two',name:'2WD SWORD Entry'},
+    {id:'four',name:'4WD SWORD Entry'},
+    {id:'other',name:'Unrelated ticket'}
+  ]),{'2-Wheel Drive Buggy':['two'],'4-Wheel Drive Buggy':['four']});
 });
 test('automatic Wix event rolls at UK midnight',()=>{
   assert.equal(londonDate(new Date('2026-10-04T22:59:59Z')),'2026-10-04');

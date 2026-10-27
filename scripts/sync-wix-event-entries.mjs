@@ -134,6 +134,16 @@ export function ticketLimitsFromDefinitions(definitions) {
   }
   return limits;
 }
+export function reserveTicketsFromDefinitions(definitions) {
+  const tickets={};
+  for (const ticket of definitions) {
+    const definition=TICKETS[String(ticket.name || '').trim()];
+    const className=definition?.[0], id=String(ticket.id || '').trim();
+    if (!className || !id) continue;
+    (tickets[className] ||= []).push(id);
+  }
+  return tickets;
+}
 async function guests(eventId,site,key) {
   const result=[]; let cursor='';
   for (let page=0;page<1000;page++) {
@@ -214,7 +224,7 @@ export async function sync({site,key}) {
   console.log('Wix order statuses: '+JSON.stringify(counts));
   const entries=applySeasonClassOverrides(entriesFromOrders(orders,rows,mapping),meeting.date);
   const unique=new Map(entries.map(row=>[`${row.driverName}|${row.className}`,row]));
-  let value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),ticketLimits:ticketLimitsFromDefinitions(definitions),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
+  let value={liveRcEventId:String(meeting.eventId || ''),wixEventId:event.id,eventTitle:meeting.title,eventDate:meeting.date,updatedAt:new Date().toISOString(),ticketLimits:ticketLimitsFromDefinitions(definitions),reserveTicketDefinitionIds:reserveTicketsFromDefinitions(definitions),entries:[...unique.values()].sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName))};
   const admin=JSON.parse(await readFile(new URL('../public/data/admin-event-entries.json',import.meta.url),'utf8').catch(error=>{if (error.code==='ENOENT') return 'null';throw error;}));
   value=mergeAdminEntries(value,admin);
   value.entries=value.entries.sort((a,b)=>a.className.localeCompare(b.className)||a.driverName.localeCompare(b.driverName));
