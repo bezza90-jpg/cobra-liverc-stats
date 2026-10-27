@@ -1,7 +1,17 @@
 {
-  "checkedAt": "2026-10-27T01:45:43.341394+00:00",
-  "updated": 0,
+  "checkedAt": "2026-10-27T02:12:49.704558+00:00",
+  "updated": 3,
   "failures": {
+    "BRUCE|2-Wheel Drive Buggy": {
+      "id": "2ec9fe2b-a163-4bbc-b70d-95a7fb52bc39",
+      "revision": "1q0T-De4yVZ7-UE6LYwqc0Xdpine5Xiq5",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "BRUCE|4-Wheel Drive Buggy": {
+      "id": "2f6eea67-b827-4ee1-8be3-e5821c8e83f7",
+      "revision": "1bxAuVI_GpQxLjIKLDPuyJrJMnQlBK6KZ",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
     "CAERON-JENKINS|2-Wheel Drive Buggy": {
       "id": "94181e0c-c216-4e2a-8a97-90e6edabe355",
       "revision": "10gZqbCW-vC5FioMlNluAvgGhHfU175Os",
