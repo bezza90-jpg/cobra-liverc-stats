@@ -18,9 +18,17 @@ test('3D replay keeps the complete responsive site menu',()=>{
   const html=readFileSync(new URL('../public/virtual-race-replay/3d.html',import.meta.url),'utf8');
   assert.match(html,/class="cobra-mobile-menu"/);
   assert.match(html,/class="cobra-site-menu"/);
-  assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=6"/);
+  assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=7"/);
   assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=8"/);
   assert.match(html,/class="cobra-gpw-logo"/);
+});
+
+test('standalone fallback and booking pages carry the shared privacy footer',()=>{
+  for(const relative of ['../public/404.html','../public/book-in/index.html']) {
+    const html=readFileSync(new URL(relative,import.meta.url),'utf8');
+    assert.match(html,/class="cobra-site-footer"/);
+    assert.match(html,/Privacy &amp; cookies/);
+  }
 });
 
 test('shared controls preserve their viewport position during partial rerenders',()=>{

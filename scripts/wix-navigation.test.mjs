@@ -29,11 +29,14 @@ test('Wix feature links preserve selections while booking, home and unrelated li
   assert.equal(assigned,null);assert.equal(prevented,false);
 });
 
-test('Wix loads the hosted shared header and its two replay destinations',()=>{
+test('Wix loads the hosted shared header and privacy footer',()=>{
   assert.match(snippet,/assets\/wix-site-shell\.js/);
   const loader=readFileSync(new URL('../public/assets/wix-site-shell.js',import.meta.url),'utf8');
   assert.match(loader,/>2D Virtual Replay</);
   assert.match(loader,/>3D Virtual Replay</);
   assert.match(loader,/virtual-race-replay\/3d\.html/);
+  assert.match(loader,/class=\\"cobra-site-footer\\"/);
+  assert.match(loader,/Privacy &amp; cookies/);
+  assert.match(loader,/data-cobra-original-footer/);
   assert.doesNotMatch(snippet,/class="cobra-site-header"/);
 });

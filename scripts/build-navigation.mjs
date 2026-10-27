@@ -2,7 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { addSiteShell } from './site-shell.mjs';
 const shellOnlyPages = ['grand-prix-wales/', 'grand-prix-wales/event-guide/', 'grand-prix-wales/announcements/', 'grand-prix-wales/venue/', 'grand-prix-wales/race-centre/', 'grand-prix-wales/driver-finder/'];
-const pages = ['', 'sword/', 'club/', 'podiums/', 'track-gallery/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/', 'club-news/', 'lap-charts/', 'virtual-race-replay/', 'website-guides/', 'privacy/', ...shellOnlyPages];
+const pages = ['', 'book-in/', 'sword/', 'club/', 'podiums/', 'track-gallery/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/', 'club-news/', 'lap-charts/', 'virtual-race-replay/', 'website-guides/', 'privacy/', ...shellOnlyPages];
 const links = [
   ['', 'Race Stats'], ['sword/', 'SWORD Championship'], ['club/', 'Club Series'],
   ['podiums/', 'Podium Gallery'], ['track-gallery/', 'Track Gallery'], ['setups/', 'Setups & Tips'], ['https://www.cobracardiff.co.uk/event-list', 'Events'], ['event/', 'Current Event'],
@@ -35,6 +35,14 @@ for (const relative of ['virtual-race-replay/3d.html']) {
   const file = fileURLToPath(new URL('../public/' + relative, import.meta.url));
   const html = await readFile(file, 'utf8');
   const updated = addSiteShell(html, '../');
+  if (updated === html) continue;
+  if (check) throw new Error('Navigation is out of date in ' + relative + '; run npm run build:navigation.');
+  await writeFile(file, updated);
+}
+for (const relative of ['404.html']) {
+  const file = fileURLToPath(new URL('../public/' + relative, import.meta.url));
+  const html = await readFile(file, 'utf8');
+  const updated = addSiteShell(html, './');
   if (updated === html) continue;
   if (check) throw new Error('Navigation is out of date in ' + relative + '; run npm run build:navigation.');
   await writeFile(file, updated);
