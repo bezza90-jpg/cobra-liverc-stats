@@ -44,13 +44,15 @@ export function siteHeader(base = './',config=clubConfig) {
 }
 export function siteFooter(base = './',config=clubConfig) {
   const social=[['Facebook',config.social?.facebook],['YouTube',config.social?.youtube]].filter(([,url])=>url).map(([label,url])=>`<a href="${escape(url)}">${label}</a>`).join('');
-  return `<!-- cobra-footer:start --><footer class="cobra-site-footer" style="${themeStyle(config)}"><a href="${escape(config.urls.home)}"><img src="${base}${escape(config.logos.footer)}" width="220" height="56" alt="${escape(config.shortName)} home" loading="lazy" decoding="async"></a><p>${escape(config.footer.strapline).replaceAll('\n','<br>')}</p><p>${escape(config.footer.description)}</p><nav aria-label="Footer"><a href="${base}website-guides/">Help &amp; Website Guides</a><a href="${base}privacy/">Privacy &amp; cookies</a>${social}</nav><p>© ${new Date().getFullYear()} ${escape(config.shortName)}. ${escape(config.footer.credit)}. All rights reserved.</p></footer><!-- cobra-footer:end -->`;
+  return `<!-- cobra-footer:start --><footer class="cobra-site-footer" data-cobra-shared-footer="1" style="${themeStyle(config)}"><a href="${escape(config.urls.home)}"><img src="${base}${escape(config.logos.footer)}" width="220" height="56" alt="${escape(config.shortName)} home" loading="lazy" decoding="async"></a><p>${escape(config.footer.strapline).replaceAll('\n','<br>')}</p><p>${escape(config.footer.description)}</p><nav aria-label="Footer"><a href="${base}website-guides/">Help &amp; Website Guides</a><a href="${base}privacy/">Privacy &amp; cookies</a>${social}</nav><p>© ${new Date().getFullYear()} ${escape(config.shortName)}. ${escape(config.footer.credit)}. All rights reserved.</p></footer><!-- cobra-footer:end -->`;
 }
 export function addSiteShell(html, base='./',config=clubConfig) {
   html = html.replace(/<!-- cobra-shell:start -->[\s\S]*?<!-- cobra-shell:end -->/g,'')
     .replace(/<!-- cobra-footer:start -->[\s\S]*?<!-- cobra-footer:end -->/g,'')
+    .replace(/[ \t]*<footer\b[^>]*>[\s\S]*?<\/footer>[ \t]*/gi,'')
     .replace(/<!-- Cloudflare Web Analytics -->[\s\S]*?<!-- End Cloudflare Web Analytics -->/g,'')
-    .replace(/<link[^>]+data-cobra-shell[^>]*>/g,'').replace(/<script[^>]+data-cobra-shell[^>]*><\/script>/g,'');
-  return html.replace('</head>',`<link data-cobra-shell rel="stylesheet" href="${base}assets/club-theme.css?v=1"><link data-cobra-shell rel="stylesheet" href="${base}assets/site-shell.css?v=7"><script data-cobra-shell type="module" src="${base}assets/site-shell.js?v=8" defer></script>${analyticsMarkup(config)}</head>`)
+    .replace(/<link[^>]+data-cobra-shell[^>]*>/g,'').replace(/<script[^>]+data-cobra-shell[^>]*><\/script>/g,'')
+    .replace(/^[ \t]+$/gm,'');
+  return html.replace('</head>',`<link data-cobra-shell rel="stylesheet" href="${base}assets/club-theme.css?v=1"><link data-cobra-shell rel="stylesheet" href="${base}assets/site-shell.css?v=8"><script data-cobra-shell type="module" src="${base}assets/site-shell.js?v=9" defer></script>${analyticsMarkup(config)}</head>`)
     .replace(/<body\b[^>]*>/,match=>match+siteHeader(base,config)).replace('</body>',siteFooter(base,config)+'</body>');
 }

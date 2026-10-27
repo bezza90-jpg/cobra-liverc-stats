@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,readdirSync} from 'node:fs';
 import {addSiteShell} from './site-shell.mjs';
 test('shared navigation supports repository and domain roots, preserving Wix booking and GPW links',()=>{
   for(const base of ['./','../','../../../','../../../../']) {
@@ -18,8 +18,8 @@ test('3D replay keeps the complete responsive site menu',()=>{
   const html=readFileSync(new URL('../public/virtual-race-replay/3d.html',import.meta.url),'utf8');
   assert.match(html,/class="cobra-mobile-menu"/);
   assert.match(html,/class="cobra-site-menu"/);
-  assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=7"/);
-  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=8"/);
+  assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=8"/);
+  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=9"/);
   assert.match(html,/class="cobra-gpw-logo"/);
 });
 
@@ -28,6 +28,28 @@ test('standalone fallback and booking pages carry the shared privacy footer',()=
     const html=readFileSync(new URL(relative,import.meta.url),'utf8');
     assert.match(html,/class="cobra-site-footer"/);
     assert.match(html,/Privacy &amp; cookies/);
+  }
+});
+
+test('every published page has exactly the same single shared footer',()=>{
+  const root=new URL('../public/',import.meta.url);
+  const pages=[];
+  const walk=directory=>{
+    for(const entry of readdirSync(directory,{withFileTypes:true})){
+      const url=new URL(entry.name+(entry.isDirectory()?'/':''),directory);
+      if(entry.isDirectory()) walk(url);
+      else if(entry.name.endsWith('.html')) pages.push(url);
+    }
+  };
+  walk(root);
+  assert.ok(pages.length>20);
+  for(const page of pages){
+    const html=readFileSync(page,'utf8');
+    assert.equal((html.match(/<footer\b/g)||[]).length,1,`${page.pathname} must contain one footer`);
+    assert.equal((html.match(/data-cobra-shared-footer="1"/g)||[]).length,1,`${page.pathname} must use the shared footer`);
+    for(const phrase of ['South Wales TQ HQ','BRCA.org Affiliated Club','Privacy &amp; cookies','Beryl Media Productions']) {
+      assert.ok(html.includes(phrase),`${page.pathname} is missing ${phrase}`);
+    }
   }
 });
 

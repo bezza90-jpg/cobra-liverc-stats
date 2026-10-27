@@ -36,7 +36,9 @@ test('Wix loads the hosted shared header and privacy footer',()=>{
   assert.match(loader,/>3D Virtual Replay</);
   assert.match(loader,/virtual-race-replay\/3d\.html/);
   assert.match(loader,/class=\\"cobra-site-footer\\"/);
+  assert.match(loader,/data-cobra-shared-footer=\\"1\\"/);
   assert.match(loader,/Privacy &amp; cookies/);
   assert.match(loader,/data-cobra-original-footer/);
+  assert.match(loader,/document\.body\.append\(replacement\)/);
   assert.doesNotMatch(snippet,/class="cobra-site-header"/);
 });
