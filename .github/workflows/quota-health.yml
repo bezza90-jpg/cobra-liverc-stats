@@ -1,0 +1,103 @@
+name: Service quota health
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 7 * * *"
+
+permissions:
+  actions: read
+  contents: read
+  issues: write
+
+concurrency:
+  group: cobra-service-quota-health
+  cancel-in-progress: true
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Measure GitHub limits and maintain warning
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          warning_title="COBRA service quota warning"
+          warnings=()
+
+          core_limit="$(gh api rate_limit --jq '.resources.core.limit')"
+          core_remaining="$(gh api rate_limit --jq '.resources.core.remaining')"
+          core_reset="$(gh api rate_limit --jq '.resources.core.reset | strftime("%Y-%m-%d %H:%M UTC")')"
+          if (( core_remaining < core_limit / 5 )); then
+            warnings+=("GitHub API has only ${core_remaining} of ${core_limit} requests remaining until ${core_reset}.")
+          fi
+
+          repo_kb="$(gh api "repos/$GITHUB_REPOSITORY" --jq '.size')"
+          repo_mb=$(( (repo_kb + 1023) / 1024 ))
+          if (( repo_mb >= 800 )); then
+            warnings+=("Repository storage is about ${repo_mb} MB; GitHub recommends keeping a Pages source repository below 1 GB.")
+          fi
+
+          worktree_bytes="$(du -sb --exclude=.git . | cut -f1)"
+          worktree_mb=$(( (worktree_bytes + 1048575) / 1048576 ))
+          if (( worktree_mb >= 800 )); then
+            warnings+=("Published working files are about ${worktree_mb} MB, approaching the 1 GB Pages site limit.")
+          fi
+
+          cache_json="$(gh api "repos/$GITHUB_REPOSITORY/actions/cache/usage" 2>/dev/null || echo '{}')"
+          cache_bytes="$(jq -r '.active_caches_size_in_bytes // 0' <<<"$cache_json")"
+          cache_count="$(jq -r '.active_caches_count // 0' <<<"$cache_json")"
+          cache_mb=$(( (cache_bytes + 1048575) / 1048576 ))
+          if (( cache_mb >= 8192 )); then
+            warnings+=("Actions caches use about ${cache_mb} MB, above the 80% warning point for GitHub's default 10 GB repository cache allowance.")
+          fi
+
+          artifact_json="$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/artifacts?per_page=100" 2>/dev/null | jq -s '{count:([.[].artifacts[]?]|length),bytes:([.[].artifacts[]?.size_in_bytes]|add//0)}')"
+          artifact_count="$(jq -r '.count' <<<"$artifact_json")"
+          artifact_bytes="$(jq -r '.bytes' <<<"$artifact_json")"
+          artifact_mb=$(( (artifact_bytes + 1048575) / 1048576 ))
+          if (( artifact_mb >= 400 )); then
+            warnings+=("Actions artifacts use about ${artifact_mb} MB. This exceeds the 80% warning point for the 500 MB GitHub Free allowance; the account plan may provide a larger allowance.")
+          fi
+
+          failed="$(gh run list --repo "$GITHUB_REPOSITORY" --limit 40 --json workflowName,conclusion,createdAt,url --jq '[.[] | select(.conclusion=="failure") | select((now-(.createdAt|fromdateiso8601)) < 86400)]')"
+          failed_count="$(jq 'length' <<<"$failed")"
+          if (( failed_count > 0 )); then
+            warnings+=("${failed_count} GitHub workflow run(s) failed in the last 24 hours.")
+          fi
+
+          {
+            echo "# COBRA service quota health"
+            echo
+            echo "Checked: $(date -u '+%Y-%m-%d %H:%M UTC')"
+            echo
+            echo "| Area | Current reading | Alert point |"
+            echo "|---|---:|---:|"
+            echo "| GitHub API | ${core_remaining} / ${core_limit} remaining | below 20% |"
+            echo "| Repository | about ${repo_mb} MB | 800 MB warning; 1 GB Pages recommendation |"
+            echo "| Working site files | about ${worktree_mb} MB | 800 MB warning; 1 GB published-site limit |"
+            echo "| Actions caches | ${cache_mb} MB in ${cache_count} caches | 8 GB warning; 10 GB default allowance |"
+            echo "| Actions artifacts | ${artifact_mb} MB in ${artifact_count} artifacts | 400 MB conservative warning; plan allowance varies |"
+            echo "| Failed workflows, 24h | ${failed_count} | above 0 |"
+            echo "| Pages bandwidth | GitHub provides no live usage counter | 100 GB/month soft limit |"
+            echo
+            echo "Google Apps Script email and reserve web-call usage are shown in the private COBRA reserve manager because GitHub cannot read those account quotas."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          existing="$(gh api "repos/$GITHUB_REPOSITORY/issues?state=open&per_page=100" --jq ".[] | select(.pull_request == null) | select(.title == \"$warning_title\") | .number" | head -n 1)"
+          if (( ${#warnings[@]} )); then
+            body="$(printf '%s\n' "${warnings[@]/#/- }")"
+            body+=$'\n\nOpen the latest **Service quota health** workflow run for the full report.'
+            if [[ -z "$existing" ]]; then
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "$warning_title" --body "$body"
+            fi
+            printf '::warning::%s\n' "${warnings[*]}"
+          elif [[ -n "$existing" ]]; then
+            gh issue close "$existing" --repo "$GITHUB_REPOSITORY" --comment "All measured GitHub quota and workflow checks are healthy again."
+          fi
