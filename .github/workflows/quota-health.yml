@@ -95,7 +95,7 @@ jobs:
             body="$(printf '%s\n' "${warnings[@]/#/- }")"
             body+=$'\n\nOpen the latest **Service quota health** workflow run for the full report.'
             if [[ -z "$existing" ]]; then
-              gh issue create --repo "$GITHUB_REPOSITORY" --title "$warning_title" --body "$body"
+              gh issue create --repo "$GITHUB_REPOSITORY" --title "$warning_title" --body "$body" --assignee "${GITHUB_REPOSITORY_OWNER}"
             fi
             printf '::warning::%s\n' "${warnings[*]}"
           elif [[ -n "$existing" ]]; then
