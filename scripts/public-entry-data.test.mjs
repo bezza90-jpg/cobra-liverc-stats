@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {juniorPublicName,publicEntryData,publicEntryFeed} from './lib/public-entry-data.mjs';
+import {juniorPublicName,publicAvatarReference,publicEntryData,publicEntryFeed} from './lib/public-entry-data.mjs';
 
 test('public entry data omits private transponder fields',()=>{
   const source={driverName:'EXAMPLE DRIVER',className:'2-Wheel Drive Buggy',transponder:'2345678',transponderSource:'wix',chassis:'Example'};
@@ -16,7 +16,9 @@ test('junior public names use first name and surname initial only',()=>{
 
 test('junior public entries remove full-name identity fields',()=>{
   const source={driverKey:'BEN-EVANS',driverName:'Ben Evans',bookingName:'Benjamin Evans',className:'Junior Racers',countryCode:'GB',chassis:'Team Associated'};
-  assert.deepEqual(publicEntryData(source),{driverName:'Ben E.',className:'Junior Racers',countryCode:'GB',chassis:'Team Associated'});
+  assert.deepEqual(publicEntryData(source),{driverName:'Ben E.',className:'Junior Racers',countryCode:'GB',chassis:'Team Associated',avatarRef:publicAvatarReference('BEN-EVANS')});
+  assert.match(publicAvatarReference('BEN-EVANS'),/^[0-9a-f]{20}$/);
+  assert.doesNotMatch(publicAvatarReference('BEN-EVANS'),/BEN|EVANS/i);
 });
 
 test('public entry feed preserves event metadata and sanitises every entry',()=>{

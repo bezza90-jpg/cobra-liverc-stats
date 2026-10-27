@@ -647,14 +647,16 @@
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Associated",
-      "chassisSource": "wix"
+      "chassisSource": "wix",
+      "avatarRef": "024f42f35ac65248b5f6"
     },
     {
       "driverName": "COHEN M.",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "TLR",
-      "chassisSource": "wix"
+      "chassisSource": "wix",
+      "avatarRef": "8a01ee4dded4e1d95301"
     },
     {
       "driverName": "GEORGE B.",
@@ -688,7 +690,8 @@
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Schumacher",
-      "chassisSource": "wix"
+      "chassisSource": "wix",
+      "avatarRef": "526f69d40466b0869151"
     }
   ]
 }

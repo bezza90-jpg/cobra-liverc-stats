@@ -5,7 +5,15 @@ import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
 import {entryIdentity} from './event-entry-identity.js';
 import {compareEntryNames} from './event-entry-order.js';
 const allowedAvatar = /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/;
-function entryAvatar(avatars, revisions, entry) {
+function entryAvatar(avatars, revisions, entry, publicAvatars = {}) {
+  if (/^[0-9a-f]{20}$/.test(entry.avatarRef || '')) {
+    const publicRecord = publicAvatars[entry.avatarRef] || {};
+    const publicClass = typeof publicRecord[entry.className] === 'string' ? entry.className
+      : typeof publicRecord['2-Wheel Drive Buggy'] === 'string' ? '2-Wheel Drive Buggy'
+        : typeof publicRecord['4-Wheel Drive Buggy'] === 'string' ? '4-Wheel Drive Buggy' : 'default';
+    const publicPath = publicRecord[publicClass];
+    if (/^assets\/event-avatar-refs\/[a-z0-9-]+\.webp$/.test(publicPath || '')) return {src:'../' + publicPath, fallback:''};
+  }
   const record = avatars?.[entry.driverKey];
   let className = typeof record === 'string' ? 'default' : (typeof record?.[entry.className] === 'string' ? entry.className : 'default');
   if (entry.className === 'Junior Racers' && typeof record === 'object' && typeof record?.[className] !== 'string') {
@@ -86,7 +94,7 @@ function expectedType(root) {
   return new URLSearchParams(location.search).get('type') === 'sword' ? 'sword' : 'club';
 }
 
-function render(root, data, capacity = {}, calendar = {}, avatars = {}, revisions = {}) {
+function render(root, data, capacity = {}, calendar = {}, avatars = {}, revisions = {}, publicAvatars = {}) {
   const currentEventPage = location.pathname.replace(/\/+$/, '').endsWith('/event');
   const type = expectedType(root);
   const activeSeason = document.body.dataset.activeChampionshipSeason || '';
@@ -258,7 +266,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       const avatarCell = document.createElement('td');
       avatarCell.className = 'event-entry-avatar-cell';
       avatarCell.dataset.label = 'Avatar';
-      const avatar = entryAvatar(avatars, revisions, entry);
+      const avatar = entryAvatar(avatars, revisions, entry, publicAvatars);
       if (avatar) {
         const image = element('img', 'event-entry-avatar');
         image.src = avatar.src;
@@ -345,13 +353,14 @@ if (roots.length) {
     ,fetch('../data/car-avatars.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatar-source-revisions.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/confirmed-event-chassis.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed]) => {
+    ,fetch('../data/event-avatar-refs.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
+  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed,publicAvatars]) => {
     roots.forEach(root => {
       const meeting=nextMeeting(calendar.events || [],expectedType(root));
       const identifiedData={...data,entries:(data.entries || []).map(entry=>entryIdentity(entry,aliases))};
       const identifiedWix={...wix,entries:(wix.entries || []).map(entry=>entryIdentity(entry,aliases))};
       const combined=applyConfirmedChassis(entriesForMeeting(identifiedData,identifiedWix,meeting),confirmed);
-      render(root,combined,capacity,calendar,avatars,revisions);
+      render(root,combined,capacity,calendar,avatars,revisions,publicAvatars);
     });
   })
     .catch(() => roots.forEach(root => {

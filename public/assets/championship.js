@@ -2,7 +2,7 @@ const $ = id => document.getElementById(id);
 if (typeof document !== 'undefined' && document.head?.append && document.createElement) {
   const entriesScript = document.createElement('script');
   entriesScript.type = 'module';
-  entriesScript.src = '../assets/event-entries.js?v=20261025-booking-freshness';
+  entriesScript.src = '../assets/event-entries.js?v=20261027-junior-avatars';
   document.head.append(entriesScript);
 }
 const fmt = new Intl.NumberFormat('en-GB');
