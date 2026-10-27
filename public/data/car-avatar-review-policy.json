@@ -56,6 +56,17 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-10-26"
+    },
+    "RILEY-BUTLER|2-Wheel Drive Buggy": {
+      "submissionIdHash": "9fb3c408a3d3b86c22709d9bbc47f0af31ce0977d87b682a38e25e406dd829cb",
+      "reviewedFileIdHash": "4656c3ece5414d5cc57526c5ffb870f20826c2f40ba1b38485168444778c567e",
+      "sha256": "a9d5d409a608edc6aaf11a00e6faf6e6bd70d20782607ec7d57a9d924a58d20a",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-27T16:53:56.029629+00:00"
     }
   },
   "publishedAssets": {
@@ -219,7 +230,9 @@
     "assets/car-avatars/MIKE-DRISCOLL-REVIEWED-2WD.png": "a952ca1f102588771a4e88255fcc59c8c600d2ee",
     "assets/car-avatar-thumbnails/MIKE-DRISCOLL-REVIEWED-2WD.webp": "0d22c8ce49e30491399d18b0e17573ad0edbbb7e",
     "assets/car-avatars/GRAHAM-KEEP-REVIEWED-2WD.png": "cecbb8b1f4e2c95c807a1fc78d621c025b27fd95",
-    "assets/car-avatar-thumbnails/GRAHAM-KEEP-REVIEWED-2WD.webp": "22fe173599ff67a610a5f9af90eec95b173249c6"
+    "assets/car-avatar-thumbnails/GRAHAM-KEEP-REVIEWED-2WD.webp": "22fe173599ff67a610a5f9af90eec95b173249c6",
+    "assets/car-avatars/RILEY-BUTLER-REVIEWED-2WD.png": "ee161e8618d0ba4cea1291fae305b5cfc4cd83e5",
+    "assets/car-avatar-thumbnails/RILEY-BUTLER-REVIEWED-2WD.webp": "b5cf83b71ec5cbda92d5fa20a487b34685ddbc46"
   },
   "assignments": {
     "BRUCE": {
@@ -396,6 +409,9 @@
     },
     "GRAHAM-KEEP": {
       "2-Wheel Drive Buggy": "assets/car-avatars/GRAHAM-KEEP-REVIEWED-2WD.png"
+    },
+    "RILEY-BUTLER": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/RILEY-BUTLER-REVIEWED-2WD.png"
     }
   },
   "blockedRevisionHashes": [
