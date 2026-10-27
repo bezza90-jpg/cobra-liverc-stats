@@ -49,6 +49,7 @@ export async function buildEventAvatarReferences() {
     if (!feed) continue;
     for (const entry of feed.entries || []) {
       if (entry.className !== 'Junior Racers') continue;
+      if (entry.avatarRef && !driverKeyByRef.has(entry.avatarRef)) delete entry.avatarRef;
       if (!entry.avatarRef) {
         const matches = candidates.get(String(entry.driverName || '').trim().toUpperCase()) || [];
         if (matches.length === 1) { entry.avatarRef = publicAvatarReference(matches[0]); repaired += 1; }
