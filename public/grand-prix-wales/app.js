@@ -1,4 +1,5 @@
 const PUBLIC_ENTRIES_URL='https://grand-prix-wales-entries.bezza90.chatgpt.site/api/public-entries';
+let entryAvatarPreview;
 const GPW_CLASSES=['2WD','4WD','2WD Vintage','4WD Vintage','Stadium Trucks'];
 const COUNTRY_CODES={'United Kingdom':'gb','England':'gb','Wales':'gb','Scotland':'gb','Northern Ireland':'gb','Ireland':'ie','Sweden':'se','Belgium':'be','Netherlands':'nl','Finland':'fi','Denmark':'dk','Germany':'de','France':'fr','Norway':'no'};
 
@@ -12,7 +13,11 @@ const safeUrl=value=>{if(value==null||String(value).trim()==='')return'';try{con
 const countryLabel=country=>{const name=String(country||'').trim(),code=COUNTRY_CODES[name];if(!name)return'';if(!code)return '<small class="entry-country">'+escapeHtml(name)+'</small>';const emoji=String.fromCodePoint(...[...code.toUpperCase()].map(char=>127397+char.charCodeAt()));return '<span class="entry-flag" role="img" aria-label="'+escapeHtml(name)+'" title="'+escapeHtml(name)+'">'+emoji+'</span>'};
 const driverAvatarKey=name=>{const key=String(name||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');return {'MATT-HODGES':'MATTHEW-HODGES','CHRISTOPHER-LEONARD':'CHRIS-LEONARD','PAUL-CURTIS':'BRUCE','PAUL-BRUCE-CURTIS':'BRUCE','BOB-GELSTHARP':'BOBTECH','BOB-BOBTECH-GELSTHARP':'BOBTECH'}[key]||key};
 const avatarClassName=className=>({'2WD':'2-Wheel Drive Buggy','4WD':'4-Wheel Drive Buggy','2WD Vintage':'Vintage','4WD Vintage':'Vintage','Stadium Trucks':'Trucks'}[className]||'default');
-const avatarHtml=(entry,manifest)=>{const avatar=manifest?.[driverAvatarKey(entry.name)],path=typeof avatar==='string'?avatar:avatar?.[avatarClassName(entry.className)]||avatar?.default;if(typeof path!=='string'||!path.startsWith('assets/'))return'<span class="entry-avatar-cell" aria-hidden="true"></span>';return '<span class="entry-avatar-cell"><img class="entry-avatar" src="../'+escapeHtml(path)+'" alt="'+escapeHtml(entry.name)+' car avatar" loading="lazy" decoding="async"></span>'};
+const avatarHtml=(entry,manifest)=>{const avatar=manifest?.[driverAvatarKey(entry.name)],path=typeof avatar==='string'?avatar:avatar?.[avatarClassName(entry.className)]||avatar?.default;if(typeof path!=='string'||!path.startsWith('assets/'))return'<span class="entry-avatar-cell" aria-hidden="true"></span>';return '<span class="entry-avatar-cell"><img class="entry-avatar" src="../'+escapeHtml(path)+'" alt="'+escapeHtml(entry.name)+' car avatar" loading="lazy" decoding="async" tabindex="0" role="button" aria-label="Enlarge '+escapeHtml(entry.name)+' car avatar" title="Enlarge car avatar"></span>'};
+const ensureEntryAvatarPreview=()=>{if(entryAvatarPreview)return entryAvatarPreview;entryAvatarPreview=document.createElement('img');entryAvatarPreview.className='entry-avatar-preview';entryAvatarPreview.alt='';entryAvatarPreview.hidden=true;document.body.append(entryAvatarPreview);return entryAvatarPreview};
+const showEntryAvatarPreview=image=>{const preview=ensureEntryAvatarPreview(),rect=image.getBoundingClientRect(),width=Math.min(260,window.innerWidth-24),height=window.innerWidth<=680?140:170;preview.src=image.currentSrc||image.src;preview.style.width=`${width}px`;preview.style.height=`${height}px`;preview.style.left=`${Math.max(12,Math.min(window.innerWidth-width-12,rect.left+rect.width/2-width/2))}px`;preview.style.top=`${rect.bottom+height+12<window.innerHeight?rect.bottom+8:Math.max(12,rect.top-height-8)}px`;preview.hidden=false};
+const hideEntryAvatarPreview=()=>{if(entryAvatarPreview)entryAvatarPreview.hidden=true};
+const hydrateEntryAvatarPreviews=root=>root.querySelectorAll('.entry-avatar').forEach(image=>{image.addEventListener('pointerenter',()=>showEntryAvatarPreview(image));image.addEventListener('pointerleave',hideEntryAvatarPreview);image.addEventListener('focus',()=>showEntryAvatarPreview(image));image.addEventListener('blur',hideEntryAvatarPreview);image.addEventListener('click',event=>{event.stopPropagation();showEntryAvatarPreview(image)});image.addEventListener('keydown',event=>{if(!['Enter',' '].includes(event.key))return;event.preventDefault();event.stopPropagation();showEntryAvatarPreview(image)})});
 const orderPosts=(posts,preferredOrder)=>{const priorities=new Map((Array.isArray(preferredOrder)?preferredOrder:[]).map((name,index)=>[String(name).trim().toLocaleLowerCase(),index]));return posts.map((post,index)=>({post,index,priority:priorities.get(String(post?.driverName||'').trim().toLocaleLowerCase())})).sort((a,b)=>{const aRank=a.priority??Number.MAX_SAFE_INTEGER,bRank=b.priority??Number.MAX_SAFE_INTEGER;return aRank-bRank||a.index-b.index}).map(item=>item.post)};
 
 async function loadConfirmedEntries(){
@@ -34,6 +39,7 @@ async function loadConfirmedEntries(){
     }).join('');
     const cards=[...classes.querySelectorAll('details.entry-class-card')];
     cards.forEach(card=>card.querySelector('summary')?.addEventListener('click',event=>{event.preventDefault();const nextOpen=!card.open;cards.forEach(item=>{item.open=nextOpen})}));
+    hydrateEntryAvatarPreviews(classes);
   }catch(error){
     message.textContent=error instanceof Error?error.message:'The confirmed entry list is temporarily unavailable.';
   }
