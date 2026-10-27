@@ -42,6 +42,7 @@ jobs:
         with:
           path: public
           name: github-pages-${{ github.run_attempt }}
+          retention-days: 1
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
