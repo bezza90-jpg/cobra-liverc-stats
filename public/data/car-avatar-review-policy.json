@@ -67,6 +67,28 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-10-27T16:53:56.029629+00:00"
+    },
+    "CARL-O-CONNOR|2-Wheel Drive Buggy": {
+      "submissionIdHash": "726371ff72927a148437ff90a10c4a1bdcb2b2e62d8878fdfe1039412a6c58f2",
+      "reviewedFileIdHash": "a92d8471e3dac0fb63c5dfb2ee6a98537195d6c3ffd49f9f51c6be95efd3e598",
+      "sha256": "ef9c9f16887bad8b9ef429b0f3cfc730735ce26fc77be4eb7879ec7cc53ad938",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-27T23:19:55.632476+00:00"
+    },
+    "CARL-O-CONNOR|4-Wheel Drive Buggy": {
+      "submissionIdHash": "df2f9678fe504cba82f9ef7ec06cb4621ed906ba771529e670d20265c5b5470f",
+      "reviewedFileIdHash": "16dd7fba245aea7ad0c785b7580ee4ee4928110d592c47879ce311bcc633442c",
+      "sha256": "281a25ae4061234a5ed48f3676367e24bf9ee5cfc64796555c7a7dfdff2cba98",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-27T23:19:56.804582+00:00"
     }
   },
   "publishedAssets": {
@@ -232,7 +254,11 @@
     "assets/car-avatars/GRAHAM-KEEP-REVIEWED-2WD.png": "cecbb8b1f4e2c95c807a1fc78d621c025b27fd95",
     "assets/car-avatar-thumbnails/GRAHAM-KEEP-REVIEWED-2WD.webp": "22fe173599ff67a610a5f9af90eec95b173249c6",
     "assets/car-avatars/RILEY-BUTLER-REVIEWED-2WD.png": "ee161e8618d0ba4cea1291fae305b5cfc4cd83e5",
-    "assets/car-avatar-thumbnails/RILEY-BUTLER-REVIEWED-2WD.webp": "b5cf83b71ec5cbda92d5fa20a487b34685ddbc46"
+    "assets/car-avatar-thumbnails/RILEY-BUTLER-REVIEWED-2WD.webp": "b5cf83b71ec5cbda92d5fa20a487b34685ddbc46",
+    "assets/car-avatars/CARL-O-CONNOR-REVIEWED-2WD.png": "1ab1318bb115603d945723c69342665b42800e22",
+    "assets/car-avatar-thumbnails/CARL-O-CONNOR-REVIEWED-2WD.webp": "b2fe4ebd40583d1258810feddfc0c094457620e4",
+    "assets/car-avatars/CARL-O-CONNOR-REVIEWED-4WD.png": "11d47d1b9f152bb0b61ae863fd12f6f05fe2be5b",
+    "assets/car-avatar-thumbnails/CARL-O-CONNOR-REVIEWED-4WD.webp": "97e68feffbbe4298d696219096ed9e9ce1a368cc"
   },
   "assignments": {
     "BRUCE": {
@@ -412,6 +438,10 @@
     },
     "RILEY-BUTLER": {
       "2-Wheel Drive Buggy": "assets/car-avatars/RILEY-BUTLER-REVIEWED-2WD.png"
+    },
+    "CARL-O-CONNOR": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/CARL-O-CONNOR-REVIEWED-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/CARL-O-CONNOR-REVIEWED-4WD.png"
     }
   },
   "blockedRevisionHashes": [

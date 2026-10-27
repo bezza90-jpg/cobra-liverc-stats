@@ -176,5 +176,9 @@
   },
   "RILEY-BUTLER": {
     "2-Wheel Drive Buggy": "assets/car-avatars/RILEY-BUTLER-REVIEWED-2WD.png"
+  },
+  "CARL-O-CONNOR": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/CARL-O-CONNOR-REVIEWED-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/CARL-O-CONNOR-REVIEWED-4WD.png"
   }
 }
