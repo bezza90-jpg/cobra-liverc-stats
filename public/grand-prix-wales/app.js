@@ -1,5 +1,7 @@
-// The live build will read only paid entries from the GPW public-entry service.
-// This standalone preview deliberately keeps the list empty.
+const PUBLIC_ENTRIES_URL='https://grand-prix-wales-entries.bezza90.chatgpt.site/api/public-entries';
+const GPW_CLASSES=['2WD','4WD','2WD Vintage','4WD Vintage','Stadium Trucks'];
+const COUNTRY_CODES={'United Kingdom':'gb','England':'gb','Wales':'gb','Scotland':'gb','Northern Ireland':'gb','Ireland':'ie','Sweden':'se','Belgium':'be','Netherlands':'nl','Finland':'fi','Denmark':'dk','Germany':'de','France':'fr','Norway':'no'};
+
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener("click",()=>{
   document.querySelectorAll(".site-header nav a").forEach(item=>item.removeAttribute("aria-current"));
   if(link.closest("nav"))link.setAttribute("aria-current","page");
@@ -7,7 +9,35 @@ document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener("c
 
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'})[char]);
 const safeUrl=value=>{if(value==null||String(value).trim()==='')return'';try{const url=new URL(String(value),location.href);return ['http:','https:'].includes(url.protocol)?url.href:''}catch{return''}};
+const countryLabel=country=>{const name=String(country||'').trim(),code=COUNTRY_CODES[name];if(!name)return'';if(!code)return '<small class="entry-country">'+escapeHtml(name)+'</small>';const emoji=String.fromCodePoint(...[...code.toUpperCase()].map(char=>127397+char.charCodeAt()));return '<span class="entry-flag" role="img" aria-label="'+escapeHtml(name)+'" title="'+escapeHtml(name)+'">'+emoji+'</span>'};
+const driverAvatarKey=name=>{const key=String(name||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');return {'CHRISTOPHER-LEONARD':'CHRIS-LEONARD','PAUL-CURTIS':'BRUCE','PAUL-BRUCE-CURTIS':'BRUCE','BOB-GELSTHARP':'BOBTECH','BOB-BOBTECH-GELSTHARP':'BOBTECH'}[key]||key};
+const avatarClassName=className=>({'2WD':'2-Wheel Drive Buggy','4WD':'4-Wheel Drive Buggy','2WD Vintage':'Vintage','4WD Vintage':'Vintage','Stadium Trucks':'Trucks'}[className]||'default');
+const avatarHtml=(entry,manifest)=>{const avatar=manifest?.[driverAvatarKey(entry.name)],path=typeof avatar==='string'?avatar:avatar?.[avatarClassName(entry.className)]||avatar?.default;if(typeof path!=='string'||!path.startsWith('assets/'))return'';return '<img class="entry-avatar" src="../'+escapeHtml(path)+'" alt="" loading="lazy" decoding="async">'};
 const orderPosts=(posts,preferredOrder)=>{const priorities=new Map((Array.isArray(preferredOrder)?preferredOrder:[]).map((name,index)=>[String(name).trim().toLocaleLowerCase(),index]));return posts.map((post,index)=>({post,index,priority:priorities.get(String(post?.driverName||'').trim().toLocaleLowerCase())})).sort((a,b)=>{const aRank=a.priority??Number.MAX_SAFE_INTEGER,bRank=b.priority??Number.MAX_SAFE_INTEGER;return aRank-bRank||a.index-b.index}).map(item=>item.post)};
+
+async function loadConfirmedEntries(){
+  const message=document.querySelector('#entryMessage'),classes=document.querySelector('#entryClasses');
+  if(!message||!classes)return;
+  try{
+    const [response,avatarResponse]=await Promise.all([fetch(PUBLIC_ENTRIES_URL,{cache:'no-store'}),fetch('../data/car-avatars.json',{cache:'no-cache'}).catch(()=>null)]);
+    if(!response.ok)throw new Error('The confirmed entry list is temporarily unavailable.');
+    const data=await response.json(),entries=Array.isArray(data.entries)?data.entries:[],avatarManifest=avatarResponse?.ok?await avatarResponse.json():{};
+    document.querySelector('#classCount').textContent=entries.length;
+    document.querySelector('#driverCount').textContent=new Set(entries.map(entry=>String(entry.name||'').trim().toLocaleLowerCase()).filter(Boolean)).size;
+    const updated=data.publishedAt?new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}).format(new Date(data.publishedAt)):'';
+    message.textContent=entries.length?(updated?'Confirmed list last updated '+updated+'.':'Confirmed paid and complimentary entries.'):'No confirmed entries have been published yet. The interest list remains private.';
+    classes.innerHTML=GPW_CLASSES.map((className,index)=>{
+      const rows=entries.filter(entry=>entry.className===className);
+      const people=rows.map(entry=>'<li>'+avatarHtml(entry,avatarManifest)+'<span class="entry-driver-name">'+escapeHtml(entry.name)+'</span>'+countryLabel(entry.country)+'</li>').join('');
+      return '<details class="entry-class-card"><summary><span class="entry-class-number">'+String(index+1).padStart(2,'0')+'</span><span class="entry-class-heading"><strong>'+escapeHtml(className)+'</strong><small>'+rows.length+' '+(rows.length===1?'entry':'entries')+'</small></span><span class="entry-class-toggle" aria-hidden="true">⌄</span></summary><div class="entry-class-body">'+(rows.length?'<ol class="entry-list">'+people+'</ol>':'<p>Confirmed entries will appear here.</p>')+'</div></details>';
+    }).join('');
+  }catch(error){
+    message.textContent=error instanceof Error?error.message:'The confirmed entry list is temporarily unavailable.';
+  }
+}
+
+loadConfirmedEntries();
+setInterval(loadConfirmedEntries,60000);
 fetch('data/announcements.json',{cache:'no-store'}).then(response=>response.json()).then(data=>{
   const posts=orderPosts(Array.isArray(data.posts)?data.posts:[],data.preferredOrder).slice(0,3),target=document.querySelector('#latestAnnouncements');if(!target||!posts.length)return;
   target.className='announcement-grid';target.innerHTML=posts.map(post=>{const image=safeUrl(post.image),postUrl=safeUrl(post.postUrl);return `<article class="announcement-card">${image?`<img src="${escapeHtml(image)}" alt="${escapeHtml(post.imageAlt||`${post.driverName||'Driver'} announcement`)}" loading="lazy">`:'<div class="announcement-placeholder">GRAND PRIX<br>OF WALES</div>'}<div class="announcement-card-body"><time>${escapeHtml(post.publishedLabel||'Grand Prix of Wales')}</time><h2>${escapeHtml(post.driverName||post.title||'Driver announcement')}</h2><p>${escapeHtml(post.summary||'Confirmed driver announcement.')}</p>${postUrl?`<a class="text-link" href="${escapeHtml(postUrl)}" target="_blank" rel="noopener">View Facebook post ↗</a>`:''}</div></article>`}).join('');

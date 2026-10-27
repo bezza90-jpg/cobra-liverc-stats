@@ -1,4 +1,15 @@
 (() => {
+  const navGroup = document.querySelector('.gpw-section-nav > div');
+  if (navGroup && !navGroup.querySelector('.gpw-entries-link')) {
+    const entriesLink = document.createElement('a');
+    entriesLink.className = 'gpw-entries-link';
+    entriesLink.href = '/grand-prix-wales/#entries';
+    entriesLink.textContent = 'Confirmed entries';
+    const homeLink = navGroup.querySelector('a');
+    if (homeLink) homeLink.insertAdjacentElement('afterend', entriesLink);
+    else navGroup.prepend(entriesLink);
+  }
+
   const links = Array.from(document.querySelectorAll(
     '.gpw-section-nav a[href], .hub-grid a[href], a.back-link[href]'
   ));
