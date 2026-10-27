@@ -190,6 +190,6 @@ jobs:
               for pair, failure in failures.items():
                   summary.write(f"- {pair}: {failure['error']}\n")
           if failures:
-              raise SystemExit('Some avatars need attention. Successful updates have been deployed; use Site Manager Approvals to retry.')
+              print(f"::warning title=Avatar review needed::{len(failures)} avatar submission(s) need attention. The website was published successfully; use Site Manager Approvals to review them.")
           PY
 
