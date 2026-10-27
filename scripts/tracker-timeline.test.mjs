@@ -4,6 +4,13 @@ import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
 const source=readFileSync(new URL('../public/assets/app.js',import.meta.url),'utf8');
 const timeline=source.slice(source.indexOf('function buildJourneyTimeline('),source.indexOf('\nfunction journeyCutoffDate()'));
+test('focused driver avatar is ready before the tracker first renders or refocuses',()=>{
+ const open=source.slice(source.indexOf('async function openJourneyMap('),source.indexOf('\nfunction recentJourneyDrivers('));
+ const select=source.slice(source.indexOf('async function selectJourneyDriver('),source.indexOf('\nfunction toggleJourneyPlayback('));
+ assert.match(open,/const focusedAvatar = driverKey \? journeyAvatars\.load\(driverKey\)/);
+ assert.ok(open.indexOf('await focusedAvatar;') < open.indexOf('requestAnimationFrame('));
+ assert.ok(select.indexOf('await journeyAvatars.load(driver.k);') < select.indexOf('renderJourneyMap({ focusDriver: true });'));
+});
 test('tracker skips empty rounds and idle starts, retaining recorded endpoints for followed drivers',()=>{
  const slot=(date)=>({start:Date.parse(date+'T09:00:00Z'),end:Date.parse(date+'T18:00:00Z'),name:'Final'});
  const slots=new Map([['empty',slot('2022-01-01')],['first',slot('2022-02-01')],['other',slot('2022-03-01')],['last',slot('2022-06-01')]]);

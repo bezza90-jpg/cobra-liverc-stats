@@ -1705,7 +1705,7 @@ function selectedJourneyStart() {
     .map(run => state.data.raceById[run[0]]?.d).filter(date => date && date >= '2022-01-01').sort()[0] || '2022-01-01';
 }
 
-function selectJourneyDriver() {
+async function selectJourneyDriver() {
   const query = $('journeyDriverSearch').value.trim().toLowerCase();
   if (!query) return;
   const eligibleDrivers = state.data.drivers.filter(row => !journeyExcludedDrivers.has(row.k));
@@ -1714,6 +1714,8 @@ function selectJourneyDriver() {
   journeySelectedKey = driver.k;
   $('journeyDriverSearch').value = driver.n;
   journeyFollowSelected = true;
+  $('journeyFollowStatus').textContent = 'Loading selected driver’s car…';
+  await journeyAvatars.load(driver.k);
   $('journeyFollowStatus').textContent = 'Following selected driver';
   renderJourneyMap({ focusDriver: true });
 }
@@ -1781,6 +1783,9 @@ function toggleJourneyPlayback() {
 
 async function openJourneyMap(driverKey) {
   journeySelectedKey = driverKey;
+  // Start the focused car request immediately. The map can load in parallel,
+  // but its first rendered frame must include the selected driver's avatar.
+  const focusedAvatar = driverKey ? journeyAvatars.load(driverKey) : Promise.resolve(null);
   // Use the newest date from either source. The generated metadata and race
   // index normally agree, but choosing metadata first can strand the tracker
   // on an old meeting after a partial data refresh.
@@ -1819,6 +1824,7 @@ async function openJourneyMap(driverKey) {
     if (!journeyMap) $('journeyMap').textContent = 'Loading road map…';
     await loadJourneyTools();
     await loadMap();
+    await focusedAvatar;
   } catch (error) {
     $('journeyMap').textContent = error.message;
     return;
