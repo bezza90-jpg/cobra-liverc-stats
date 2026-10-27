@@ -47,7 +47,9 @@ jobs:
             git config user.name "COBRA Wix entries updater"
             git config user.email "actions@users.noreply.github.com"
             git add public/data/wix-current-event-entries.json
-            git commit -m "Update current Wix event entries"
+            # The dedicated publish workflow below deploys this data. Avoid a
+            # redundant full statistics build from the generated-data commit.
+            git commit -m "Update current Wix event entries [skip ci]"
             git pull --rebase origin main
             git push origin HEAD:main
           fi

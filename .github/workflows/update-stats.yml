@@ -21,6 +21,7 @@ on:
     branches: [main]
 
 permissions:
+  actions: write
   contents: write
   pages: write
   id-token: write
@@ -114,7 +115,9 @@ jobs:
             git config user.name "COBRA statistics updater"
             git config user.email "actions@users.noreply.github.com"
             git add data/raw public/data public/podium-defaults public/podium-photo-thumbnails public/track-photo-thumbnails public/assets/manufacturers public/assets/car-avatars public/assets/car-avatar-thumbnails public/assets/event-avatar-refs public/virtual-race-replay public/index.html 'public/*/index.html'
-            git commit -m "Update LiveRC statistics"
+            # This run deploys the committed result itself.  Skipping push CI
+            # prevents the generated-data commit starting a second full build.
+            git commit -m "Update LiveRC statistics [skip ci]"
             # A manager/user push can land while this job builds its data.
             # Never force-push: integrate it, validate again, then retry.
             for attempt in 1 2 3; do
@@ -177,18 +180,46 @@ jobs:
         with:
           artifact_name: github-pages-${{ github.run_attempt }}
 
+      - name: Remove superseded website packages
+        if: steps.deployment.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          current_run="$GITHUB_RUN_ID"
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/artifacts?per_page=100" \
+            --jq ".artifacts[] | select(.name | startswith(\"github-pages-\")) | select((.workflow_run.id | tostring) != \"$current_run\") | .id" |
+          while read -r artifact_id; do
+            [[ -z "$artifact_id" ]] && continue
+            echo "Removing superseded Pages package $artifact_id"
+            gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id"
+          done
+
       - name: Report avatar processing failures
         if: steps.car_photos.outputs.pending == 'yes'
+        continue-on-error: true
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
-          report = json.loads(Path('public/data/car-avatar-processing.json').read_text())
+          report_path = Path('public/data/car-avatar-processing.json')
+          if not report_path.exists():
+              print('::warning title=Avatar report unavailable::The website was published, but no avatar processing report was produced.')
+              raise SystemExit(0)
+          try:
+              report = json.loads(report_path.read_text())
+          except (OSError, json.JSONDecodeError) as exc:
+              print(f'::warning title=Avatar report unreadable::The website was published, but its avatar report could not be read: {exc}')
+              raise SystemExit(0)
           failures = report.get('failures', {})
+          if not isinstance(failures, dict):
+              print('::warning title=Avatar report format::The website was published, but its avatar report has an unexpected format.')
+              failures = {}
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
               summary.write(f"\nAvatar updates: {report.get('updated', 0)}. Processing failures: {len(failures)}.\n")
               for pair, failure in failures.items():
-                  summary.write(f"- {pair}: {failure['error']}\n")
+                  error = failure.get('error', 'Review required') if isinstance(failure, dict) else str(failure)
+                  summary.write(f"- {pair}: {error}\n")
           if failures:
               print(f"::warning title=Avatar review needed::{len(failures)} avatar submission(s) need attention. The website was published successfully; use Site Manager Approvals to review them.")
           PY

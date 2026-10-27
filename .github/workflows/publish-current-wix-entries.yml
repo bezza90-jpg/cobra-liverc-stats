@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: read
   pages: write
   id-token: write
@@ -48,3 +49,18 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           artifact_name: github-pages-${{ github.run_attempt }}
+
+      - name: Remove superseded website packages
+        if: steps.deployment.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          current_run="$GITHUB_RUN_ID"
+          gh api --paginate "repos/$GITHUB_REPOSITORY/actions/artifacts?per_page=100" \
+            --jq ".artifacts[] | select(.name | startswith(\"github-pages-\")) | select((.workflow_run.id | tostring) != \"$current_run\") | .id" |
+          while read -r artifact_id; do
+            [[ -z "$artifact_id" ]] && continue
+            echo "Removing superseded Pages package $artifact_id"
+            gh api --method DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id"
+          done
