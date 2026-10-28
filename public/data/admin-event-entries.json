@@ -8,6 +8,14 @@
     {
       "driverName": "Haiden Hicks",
       "className": "Junior Racers"
+    },
+    {
+      "driverName": "Steve Curtis-Rich",
+      "className": "4-Wheel Drive Buggy"
+    },
+    {
+      "driverName": "Paul Curtis",
+      "className": "4-Wheel Drive Buggy"
     }
   ],
   "entries": [
@@ -37,11 +45,6 @@
       "chassis": "Schumacher"
     },
     {
-      "driverName": "Steve Curtis-Rich",
-      "className": "4-Wheel Drive Buggy",
-      "chassis": "Schumacher"
-    },
-    {
       "driverName": "Bob Gelstharp",
       "className": "2-Wheel Drive Buggy",
       "chassis": "Schumacher"
@@ -53,7 +56,7 @@
     },
     {
       "driverName": "Paul Curtis",
-      "className": "4-Wheel Drive Buggy",
+      "className": "2-Wheel Drive Buggy",
       "chassis": "Team Associated"
     },
     {
