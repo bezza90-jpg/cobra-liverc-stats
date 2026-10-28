@@ -438,12 +438,14 @@
     {
       "driverName": "BEN E.",
       "className": "Junior Racers",
-      "chassis": "Associated"
+      "chassis": "Associated",
+      "avatarRef": "024f42f35ac65248b5f6"
     },
     {
       "driverName": "COHEN M.",
       "className": "Junior Racers",
-      "chassis": "TLR"
+      "chassis": "TLR",
+      "avatarRef": "8a01ee4dded4e1d95301"
     },
     {
       "driverName": "GEORGE B.",
@@ -467,7 +469,8 @@
     {
       "driverName": "SEB F.",
       "className": "Junior Racers",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "avatarRef": "526f69d40466b0869151"
     }
   ],
   "entrySources": {
