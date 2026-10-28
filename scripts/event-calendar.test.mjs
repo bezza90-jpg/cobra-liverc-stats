@@ -12,7 +12,7 @@ test('current event exposes booking capacity immediately and loads it directly',
  const entriesScript = await readFile(new URL('../public/assets/event-entries.js', import.meta.url), 'utf8');
  const mobileCss = await readFile(new URL('../public/assets/event-entries.css', import.meta.url), 'utf8');
  assert.match(page, /data-event-entries[^>]*id="eventEntries"/);
- assert.match(page, /event-entries\.js\?v=20261027-junior-avatars/);
+ assert.match(page, /event-entries\.js\?v=20261028-fresh-capacity/);
  assert.doesNotMatch(eventInfo, /createElement\(['"]script['"]\)|entriesScript/);
  assert.match(entriesScript, /getElementById\('eventTitle'\)\?\.closest\('\.panel'\)/);
  assert.doesNotMatch(entriesScript, /querySelector\('main\.info-main > \.panel'\)/);
