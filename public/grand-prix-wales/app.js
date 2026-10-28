@@ -2,6 +2,7 @@ const PUBLIC_ENTRIES_URL='https://grand-prix-wales-entries.bezza90.chatgpt.site/
 let entryAvatarPreview;
 let confirmedEntries=[];
 let confirmedAvatarManifest={};
+let confirmedEntriesFingerprint='';
 const GPW_CLASSES=['2WD','4WD','2WD Vintage','4WD Vintage','Stadium Trucks'];
 const COUNTRY_CODES={'United Kingdom':'gb','England':'gb','Wales':'gb','Scotland':'gb','Northern Ireland':'gb','Ireland':'ie','Sweden':'se','Belgium':'be','Netherlands':'nl','Finland':'fi','Denmark':'dk','Germany':'de','France':'fr','Norway':'no'};
 const CHASSIS_LOGOS={'team associated':'team-associated','associated':'team-associated','schumacher':'schumacher','kyosho':'kyosho','xray':'xray','yokomo':'yokomo','tlr':'tlr','team losi racing':'tlr','sworkz':'sworkz','agama':'agama','tamiya':'tamiya','pr':'pr','pr racing':'pr','r1 wurks':'r1-wurks'};
@@ -17,9 +18,10 @@ const countryLabel=country=>{const name=String(country||'').trim();if(!name)retu
 const chassisHtml=entry=>{const name=String(entry?.chassis||'').trim(),slug=CHASSIS_LOGOS[name.toLocaleLowerCase()];if(!name)return'<span class="entry-chassis-cell entry-chassis-missing" aria-label="Chassis not supplied">—</span>';if(!slug)return'<span class="entry-chassis-cell entry-chassis-text" title="'+escapeHtml(name)+'">'+escapeHtml(name)+'</span>';return '<span class="entry-chassis-cell"><img class="entry-chassis-logo" src="../assets/manufacturers/'+escapeHtml(slug)+'.png" alt="'+escapeHtml(name)+'" title="'+escapeHtml(name)+'" loading="lazy" decoding="async" onerror="this.parentNode.classList.add(\'entry-chassis-text\');this.parentNode.textContent=this.alt"></span>'};
 const driverAvatarKey=name=>{const key=String(name||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');return {'MATT-HODGES':'MATTHEW-HODGES','CHRISTOPHER-LEONARD':'CHRIS-LEONARD','PAUL-CURTIS':'BRUCE','PAUL-BRUCE-CURTIS':'BRUCE','BOB-GELSTHARP':'BOBTECH','BOB-BOBTECH-GELSTHARP':'BOBTECH'}[key]||key};
 const avatarClassName=className=>({'2WD':'2-Wheel Drive Buggy','4WD':'4-Wheel Drive Buggy','2WD Vintage':'Vintage','4WD Vintage':'Vintage','Stadium Trucks':'Trucks'}[className]||'default');
-const avatarHtml=(entry,manifest)=>{const avatar=manifest?.[driverAvatarKey(entry.name)],path=typeof avatar==='string'?avatar:avatar?.[avatarClassName(entry.className)]||avatar?.default;if(typeof path!=='string'||!path.startsWith('assets/'))return'<span class="entry-avatar-cell" aria-hidden="true"></span>';return '<span class="entry-avatar-cell"><img class="entry-avatar" src="../'+escapeHtml(path)+'" alt="'+escapeHtml(entry.name)+' car avatar" loading="lazy" decoding="async" tabindex="0" role="button" aria-label="Enlarge '+escapeHtml(entry.name)+' car avatar" title="Enlarge car avatar"></span>'};
+const avatarThumbnailPath=path=>String(path||'').replace(/^assets\/car-avatars\//,'assets/car-avatar-thumbnails/').replace(/\.[^.]+$/,'.webp');
+const avatarHtml=(entry,manifest)=>{const avatar=manifest?.[driverAvatarKey(entry.name)],path=typeof avatar==='string'?avatar:avatar?.[avatarClassName(entry.className)]||avatar?.default;if(typeof path!=='string'||!path.startsWith('assets/'))return'<span class="entry-avatar-cell" aria-hidden="true"></span>';const thumbnail=avatarThumbnailPath(path);return '<span class="entry-avatar-cell"><img class="entry-avatar" src="../'+escapeHtml(thumbnail)+'" data-full-src="../'+escapeHtml(path)+'" alt="'+escapeHtml(entry.name)+' car avatar" loading="lazy" decoding="async" tabindex="0" role="button" aria-label="Enlarge '+escapeHtml(entry.name)+' car avatar" title="Enlarge car avatar"></span>'};
 const ensureEntryAvatarPreview=()=>{if(entryAvatarPreview)return entryAvatarPreview;entryAvatarPreview=document.createElement('img');entryAvatarPreview.className='entry-avatar-preview';entryAvatarPreview.alt='';entryAvatarPreview.hidden=true;document.body.append(entryAvatarPreview);return entryAvatarPreview};
-const showEntryAvatarPreview=image=>{const preview=ensureEntryAvatarPreview(),rect=image.getBoundingClientRect(),width=Math.min(260,window.innerWidth-24),height=window.innerWidth<=680?140:170;preview.src=image.currentSrc||image.src;preview.style.width=`${width}px`;preview.style.height=`${height}px`;preview.style.left=`${Math.max(12,Math.min(window.innerWidth-width-12,rect.left+rect.width/2-width/2))}px`;preview.style.top=`${rect.bottom+height+12<window.innerHeight?rect.bottom+8:Math.max(12,rect.top-height-8)}px`;preview.hidden=false};
+const showEntryAvatarPreview=image=>{const preview=ensureEntryAvatarPreview(),rect=image.getBoundingClientRect(),width=Math.min(260,window.innerWidth-24),height=window.innerWidth<=680?140:170,fullSrc=image.dataset.fullSrc||image.currentSrc||image.src;if(preview.src!==new URL(fullSrc,location.href).href)preview.src=fullSrc;preview.style.width=`${width}px`;preview.style.height=`${height}px`;preview.style.left=`${Math.max(12,Math.min(window.innerWidth-width-12,rect.left+rect.width/2-width/2))}px`;preview.style.top=`${rect.bottom+height+12<window.innerHeight?rect.bottom+8:Math.max(12,rect.top-height-8)}px`;preview.hidden=false};
 const hideEntryAvatarPreview=()=>{if(entryAvatarPreview)entryAvatarPreview.hidden=true};
 const hydrateEntryAvatarPreviews=root=>root.querySelectorAll('.entry-avatar').forEach(image=>{image.addEventListener('pointerenter',()=>showEntryAvatarPreview(image));image.addEventListener('pointerleave',hideEntryAvatarPreview);image.addEventListener('focus',()=>showEntryAvatarPreview(image));image.addEventListener('blur',hideEntryAvatarPreview);image.addEventListener('click',event=>{event.stopPropagation();showEntryAvatarPreview(image)});image.addEventListener('keydown',event=>{if(!['Enter',' '].includes(event.key))return;event.preventDefault();event.stopPropagation();showEntryAvatarPreview(image)})});
 const orderPosts=(posts,preferredOrder)=>{const priorities=new Map((Array.isArray(preferredOrder)?preferredOrder:[]).map((name,index)=>[String(name).trim().toLocaleLowerCase(),index]));return posts.map((post,index)=>({post,index,priority:priorities.get(String(post?.driverName||'').trim().toLocaleLowerCase())})).sort((a,b)=>{const aRank=a.priority??Number.MAX_SAFE_INTEGER,bRank=b.priority??Number.MAX_SAFE_INTEGER;return aRank-bRank||a.index-b.index}).map(item=>item.post)};
@@ -29,11 +31,15 @@ function renderConfirmedEntries(){
   if(!classes)return;
   const query=String(search?.value||'').trim().toLocaleLowerCase();
   const entries=query?confirmedEntries.filter(entry=>String(entry.name||'').toLocaleLowerCase().includes(query)):confirmedEntries;
-  const keepOpen=query||Boolean(classes.querySelector('details[open]'));
+  const isMobile=window.matchMedia('(max-width:760px)').matches;
+  const existingCards=[...classes.querySelectorAll('details.entry-class-card')];
+  const openClasses=new Set(existingCards.filter(card=>card.open).map(card=>card.dataset.class));
+  const hadCards=existingCards.length>0;
   classes.innerHTML=GPW_CLASSES.map((className,index)=>{
     const rows=entries.filter(entry=>entry.className===className);
     const people=rows.map(entry=>'<li><span class="entry-driver-name">'+escapeHtml(entry.name)+'</span>'+chassisHtml(entry)+'<span class="entry-country-cell">'+countryLabel(entry.country)+'</span>'+avatarHtml(entry,confirmedAvatarManifest)+'</li>').join('');
-    return '<details class="entry-class-card"'+(keepOpen&&rows.length?' open':'')+'><summary><span class="entry-class-number">'+String(index+1).padStart(2,'0')+'</span><span class="entry-class-heading"><strong>'+escapeHtml(className)+'</strong><small>'+rows.length+' '+(rows.length===1?'entry':'entries')+'</small></span><span class="entry-class-toggle" aria-hidden="true">⌄</span></summary><div class="entry-class-body">'+(rows.length?'<div class="entry-list-head"><span>Driver</span><span>Chassis</span><span>Country</span><span>Avatar</span></div><ol class="entry-list">'+people+'</ol>':'<p>'+(query?'No matching drivers in this class.':'Confirmed entries will appear here.')+'</p>')+'</div></details>';
+    const shouldOpen=rows.length&&(!isMobile||query||openClasses.has(className)||(!hadCards&&index===0));
+    return '<details class="entry-class-card" data-class="'+escapeHtml(className)+'"'+(shouldOpen?' open':'')+'><summary><span class="entry-class-number">'+String(index+1).padStart(2,'0')+'</span><span class="entry-class-heading"><strong>'+escapeHtml(className)+'</strong><small>'+rows.length+' '+(rows.length===1?'entry':'entries')+'</small></span><span class="entry-class-toggle" aria-hidden="true">⌄</span></summary><div class="entry-class-body">'+(rows.length?'<div class="entry-list-head"><span>Driver</span><span>Chassis</span><span>Flag</span><span>Car</span></div><ol class="entry-list">'+people+'</ol>':'<p>'+(query?'No matching drivers in this class.':'Confirmed entries will appear here.')+'</p>')+'</div></details>';
   }).join('');
   if(status)status.textContent=query?(entries.length?entries.length+' matching class '+(entries.length===1?'entry':'entries')+'.':'No confirmed drivers match “'+String(search.value).trim()+'”.'):'';
   const cards=[...classes.querySelectorAll('details.entry-class-card')];
@@ -41,20 +47,25 @@ function renderConfirmedEntries(){
   hydrateEntryAvatarPreviews(classes);
 }
 
+const avatarManifestPromise=fetch('../data/car-avatars.json',{cache:'force-cache'}).then(response=>response.ok?response.json():{}).catch(()=>({}));
+avatarManifestPromise.then(manifest=>{confirmedAvatarManifest=manifest;if(confirmedEntries.length)renderConfirmedEntries()});
+
 async function loadConfirmedEntries(){
   const message=document.querySelector('#entryMessage'),classes=document.querySelector('#entryClasses');
   if(!message||!classes)return;
   try{
-    const [response,avatarResponse]=await Promise.all([fetch(PUBLIC_ENTRIES_URL,{cache:'no-store'}),fetch('../data/car-avatars.json',{cache:'no-cache'}).catch(()=>null)]);
+    const response=await fetch(PUBLIC_ENTRIES_URL,{cache:'no-store'});
     if(!response.ok)throw new Error('The confirmed entry list is temporarily unavailable.');
-    const data=await response.json(),entries=Array.isArray(data.entries)?data.entries:[],avatarManifest=avatarResponse?.ok?await avatarResponse.json():{};
+    const data=await response.json(),entries=Array.isArray(data.entries)?data.entries:[];
+    const fingerprint=JSON.stringify([data.publishedAt||'',entries]);
+    const entriesChanged=fingerprint!==confirmedEntriesFingerprint;
     confirmedEntries=entries;
-    confirmedAvatarManifest=avatarManifest;
+    confirmedEntriesFingerprint=fingerprint;
     document.querySelector('#classCount').textContent=entries.length;
     document.querySelector('#driverCount').textContent=new Set(entries.map(entry=>String(entry.name||'').trim().toLocaleLowerCase()).filter(Boolean)).size;
     const updated=data.publishedAt?new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}).format(new Date(data.publishedAt)):'';
     message.textContent=entries.length?(updated?'Confirmed list last updated '+updated+'.':'Confirmed paid and complimentary entries.'):'No confirmed entries have been published yet. The interest list remains private.';
-    renderConfirmedEntries();
+    if(entriesChanged||!classes.querySelector('.entry-class-card'))renderConfirmedEntries();
   }catch(error){
     message.textContent=error instanceof Error?error.message:'The confirmed entry list is temporarily unavailable.';
   }
