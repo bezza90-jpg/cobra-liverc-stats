@@ -97,7 +97,7 @@ async function initialise() {
     }
     uploadConfigured = true;
     updateSubmitReadiness();
-    $('driverSearch').setCustomValidity('Choose your name from the matching list.');
+    if (!selectedDriver) $('driverSearch').setCustomValidity('Choose your name from the matching list.');
     status('Choose your driver, class and car photo.');
   } catch (error) {
     $('driverSearch').placeholder = 'Drivers unavailable';
