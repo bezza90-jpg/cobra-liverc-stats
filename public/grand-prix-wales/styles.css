@@ -13,6 +13,39 @@
 
 .gpw-section-nav{position:sticky;z-index:50;top:0;display:flex;align-items:center;justify-content:center;gap:18px;padding:9px clamp(16px,4vw,54px);background:#0b2014;color:#fff;border-bottom:2px solid var(--green);box-shadow:0 7px 18px rgba(0,0,0,.16)}.gpw-section-nav>div{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}.gpw-section-nav a{display:inline-flex;align-items:center;min-height:34px;padding:5px 10px;border-radius:7px;color:#dce8df;text-decoration:none;font-size:13px;font-weight:850}.gpw-section-nav a:hover,.gpw-section-nav a[aria-current=page]{background:#183722;color:var(--green)}.gpw-section-nav .gpw-enquiries{margin-left:auto;border:1px solid #53665a;color:#fff}.gpw-live .cobra-site-header{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}.gpw-live .cobra-site-footer{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}@media(max-width:760px){.gpw-section-nav{align-items:stretch;flex-direction:column;gap:6px;padding:8px 12px}.gpw-section-nav>div{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}.gpw-section-nav>div::-webkit-scrollbar{display:none}.gpw-section-nav a{white-space:nowrap}.gpw-section-nav .gpw-enquiries{align-self:flex-start;margin-left:0}}
 
+/* GPW pages keep the shared header readable while adding a restrained event-red identity. */
+.gpw-live .cobra-site-header{
+  background:#c91b2d;
+  border-top:5px solid #6d0911;
+  border-bottom:3px solid #9b0e1b;
+  box-shadow:0 8px 22px rgba(95,8,16,.14);
+}
+.gpw-live .cobra-site-header .cobra-book-in{
+  background:#008b13;
+  box-shadow:0 5px 14px rgba(0,88,18,.24);
+}
+.gpw-live .cobra-site-header .cobra-gpw-logo{
+  filter:drop-shadow(0 4px 8px rgba(89,4,12,.13));
+}
+@media(min-width:1051px){
+  .gpw-live .cobra-site-header .cobra-site-menu>a,
+  .gpw-live .cobra-site-header .cobra-menu-group>summary{
+    color:#fff;
+    font-weight:800;
+    text-shadow:0 1px 2px rgba(67,0,8,.28);
+  }
+}
+
+/* The event artwork used to occupy a second, screen-height column. Keep the
+   useful event introduction while bringing visitors to the entries sooner. */
+.gpw-live .hero{
+  min-height:auto;
+  grid-template-columns:1fr;
+}
+.gpw-live .hero-copy{
+  padding-block:clamp(48px,6vw,84px);
+}
+
 .gpw-sheep{display:block;height:auto;pointer-events:none;filter:drop-shadow(0 12px 18px rgba(0,0,0,.2))}.event-hub{position:relative;overflow:hidden}.event-hub>.section-heading,.event-hub>.hub-grid{position:relative;z-index:2}.gpw-sheep-home{position:absolute;z-index:3;right:clamp(24px,6vw,88px);bottom:28px;width:clamp(138px,15vw,210px);transform:rotate(-2deg)}.subhero{position:relative;overflow:hidden}.subhero-inner{position:relative;z-index:2}.gpw-sheep-subhero{position:absolute;z-index:1;right:clamp(18px,5vw,72px);bottom:10px;width:clamp(92px,11vw,150px);opacity:.96}@media(max-width:900px){.gpw-sheep-home{position:static;width:140px;margin:22px 0 0 auto}.gpw-sheep-subhero{width:100px;opacity:.82}}@media(max-width:680px){.gpw-sheep-subhero{right:10px;bottom:8px;width:78px;opacity:.72}}
 
 html.cobra-embedded{scrollbar-width:none;-ms-overflow-style:none}html.cobra-embedded::-webkit-scrollbar{display:none}html.cobra-embedded body.gpw-live{padding-top:54px}html.cobra-embedded .gpw-section-nav{position:fixed;inset:0 0 auto;width:100%}html.cobra-embedded .cobra-site-header,html.cobra-embedded .cobra-site-footer{display:none!important}@media(max-width:760px){html.cobra-embedded body.gpw-live{padding-top:94px}}
@@ -23,3 +56,33 @@ html.gpw-navigating:after{content:"";position:fixed;z-index:9999;top:0;left:0;wi
 .entry-search-panel{display:grid;grid-template-columns:auto minmax(220px,420px) minmax(0,1fr);align-items:center;gap:12px;margin:18px 0 22px;padding:14px 16px;border:1px solid var(--line);border-radius:13px;background:#fff}.entry-search-panel label{color:var(--ink);font-size:13px;font-weight:900}.entry-search-panel input{width:100%;padding:12px 14px;border:1px solid #aebdb2;border-radius:9px;background:#fff;color:var(--ink);font:inherit}.entry-search-panel input:focus{outline:3px solid rgba(0,135,0,.18);border-color:var(--green)}.entry-search-panel p{margin:0;color:var(--muted);font-size:13px}.entry-flag-image{display:block;width:32px;height:20px;border-radius:2px;object-fit:cover;box-shadow:0 0 0 1px rgba(7,20,10,.14)}@media(max-width:680px){.entry-search-panel{grid-template-columns:1fr;gap:7px;padding:13px}.entry-search-panel input{font-size:16px}.entry-search-panel p:empty{display:none}}
 .entry-class-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:15px;overflow:hidden}.entry-class-card:before{content:"";position:absolute;z-index:1;top:0;left:0;width:100%;height:5px;background:var(--red)}.entry-class-card summary{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:14px;min-height:112px;padding:25px 22px 20px;cursor:pointer;list-style:none}.entry-class-card summary::-webkit-details-marker{display:none}.entry-class-card summary:hover{background:#f9fbf8}.entry-class-number{color:#a7b0aa;font-size:12px;font-weight:900}.entry-class-heading{display:grid;gap:4px}.entry-class-heading strong{color:var(--ink);font-size:21px}.entry-class-heading small{color:var(--red);font-size:12px;font-weight:900}.entry-class-toggle{display:grid;place-items:center;width:34px;height:34px;color:#fff;background:var(--deep);border-radius:50%;font-size:22px;transition:transform .2s ease}.entry-class-card[open] .entry-class-toggle{transform:rotate(180deg)}.entry-class-body{padding:0 22px 22px}.entry-class-body p{margin:0;color:var(--muted);font-size:14px}@media(max-width:680px){.entry-class-card summary{min-height:92px;padding:22px 18px 16px}.entry-class-body{padding:0 18px 18px}}
 .entry-avatar-cell{display:grid;place-items:center;width:64px;height:44px}.entry-avatar{display:block;width:58px;height:42px;object-fit:contain;cursor:zoom-in}.entry-avatar:focus-visible{outline:2px solid var(--green);outline-offset:3px}.entry-avatar-preview{position:fixed;z-index:10000;padding:10px;border:1px solid #8bae94;border-radius:12px;background:#f8fbf8;box-shadow:0 10px 30px #082c3c55;object-fit:contain;pointer-events:none}.entry-avatar-preview[hidden]{display:none}.entry-driver-name{color:var(--ink)!important;font-size:14px!important;overflow-wrap:anywhere}@media(max-width:680px){.entry-list-head,.entry-list li{grid-template-columns:minmax(0,1fr) 58px 48px;gap:7px}.entry-avatar-cell{width:48px;height:38px}.entry-avatar{width:46px;height:36px}.entry-list-head{font-size:9px}}
+
+/* Reduce the number of class cards before their labels become cramped. */
+#entryClasses.class-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr))}
+.entry-list-head,.entry-list li{grid-template-columns:minmax(104px,1fr) 58px 48px 58px;gap:8px}
+.entry-list-head span,.entry-driver-name,.entry-chassis-cell{writing-mode:horizontal-tb;text-orientation:mixed;word-break:normal;overflow-wrap:normal;hyphens:none}
+.entry-list-head span{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.entry-driver-name{min-width:0;white-space:normal!important;line-height:1.25}
+.entry-chassis-cell{display:flex;align-items:center;justify-content:center;width:58px;min-width:0;height:34px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.entry-chassis-logo{display:block;max-width:54px;max-height:28px;object-fit:contain}
+.entry-chassis-text{font-size:9px;line-height:1.1}
+.entry-chassis-missing{color:var(--muted)}
+.entry-avatar-cell{width:58px}
+
+@media(max-width:760px){
+  #entryClasses.class-grid{grid-template-columns:1fr}
+  .entry-list-head,.entry-list li{grid-template-columns:minmax(110px,1fr) 50px 42px 50px;gap:6px}
+  .entry-list-head{font-size:8px;letter-spacing:0}
+  .entry-chassis-cell{width:50px}
+  .entry-chassis-logo{max-width:46px;max-height:26px}
+  .entry-avatar-cell{width:50px;height:38px}
+  .entry-avatar{width:48px;height:36px}
+}
+
+@media(max-width:380px){
+  .entry-list-head,.entry-list li{grid-template-columns:minmax(80px,1fr) 44px 36px 44px;gap:5px}
+  .entry-chassis-cell{width:44px}
+  .entry-chassis-logo{max-width:40px}
+  .entry-avatar-cell{width:44px}
+  .entry-avatar{width:42px}
+}
