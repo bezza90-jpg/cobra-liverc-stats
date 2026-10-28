@@ -348,7 +348,7 @@ if (roots.length) {
     fetch(fresh('../data/next-event-entries.json'), {cache:'no-store'}).then(response => { if (!response.ok) throw Error('Entries unavailable'); return response.json(); }),
     fetch(fresh('../data/wix-current-event-entries.json'), {cache:'no-store'}).then(response => response.ok ? response.json() : {}).catch(() => ({})),
     fetch('../data/car-avatar-driver-aliases.json', {cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({}))
-    ,fetch('../data/event-capacities.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
+    ,fetch(fresh('../data/event-capacities.json'), {cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/event-calendar.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatars.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/car-avatar-source-revisions.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
