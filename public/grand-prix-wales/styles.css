@@ -85,4 +85,25 @@ html.gpw-navigating:after{content:"";position:fixed;z-index:9999;top:0;left:0;wi
   .entry-chassis-logo{max-width:40px}
   .entry-avatar-cell{width:44px}
   .entry-avatar{width:42px}
+/* Responsive GPW hero: use one valleys/flag background instead of a separate
+   picture column so the composition stays readable on desktop and mobile. */
+.hero{
+  grid-template-columns:1fr;
+  background-image:
+    linear-gradient(90deg,rgba(7,19,13,.97) 0%,rgba(7,19,13,.90) 42%,rgba(7,19,13,.58) 72%,rgba(7,19,13,.70) 100%),
+    url("assets/welsh-valley-background.webp");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.hero-copy{position:relative;z-index:1;max-width:1180px}
+.hero-art{display:none}
+@media(max-width:680px){
+  .hero{
+    background-image:
+      linear-gradient(180deg,rgba(7,19,13,.94),rgba(7,19,13,.82)),
+      url("assets/welsh-valley-background.webp");
+    background-position:58% center;
+  }
+  .hero-copy{padding-bottom:54px}
 }
