@@ -41,9 +41,19 @@
 .gpw-live .hero{
   min-height:auto;
   grid-template-columns:1fr;
+  background-image:linear-gradient(90deg,rgba(7,19,13,.94) 0%,rgba(7,19,13,.84) 48%,rgba(7,19,13,.5) 100%),url("assets/welsh-valley-background.webp");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
 }
 .gpw-live .hero-copy{
   padding-block:clamp(48px,6vw,84px);
+}
+@media(max-width:680px){
+  .gpw-live .hero{
+    background-image:linear-gradient(180deg,rgba(7,19,13,.9) 0%,rgba(7,19,13,.8) 65%,rgba(7,19,13,.72) 100%),url("assets/welsh-valley-background.webp");
+    background-position:44% center;
+  }
 }
 
 .gpw-sheep{display:block;height:auto;pointer-events:none;filter:drop-shadow(0 12px 18px rgba(0,0,0,.2))}.event-hub{position:relative;overflow:hidden}.event-hub>.section-heading,.event-hub>.hub-grid{position:relative;z-index:2}.gpw-sheep-home{position:absolute;z-index:3;right:clamp(24px,6vw,88px);bottom:28px;width:clamp(138px,15vw,210px);transform:rotate(-2deg)}.subhero{position:relative;overflow:hidden}.subhero-inner{position:relative;z-index:2}.gpw-sheep-subhero{position:absolute;z-index:1;right:clamp(18px,5vw,72px);bottom:10px;width:clamp(92px,11vw,150px);opacity:.96}@media(max-width:900px){.gpw-sheep-home{position:static;width:140px;margin:22px 0 0 auto}.gpw-sheep-subhero{width:100px;opacity:.82}}@media(max-width:680px){.gpw-sheep-subhero{right:10px;bottom:8px;width:78px;opacity:.72}}
