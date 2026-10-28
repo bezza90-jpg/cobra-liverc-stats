@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-27T23:22:41.698Z",
+  "updatedAt": "2026-10-28T00:53:15.667Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -34,6 +34,14 @@
     {
       "driverKey": "CARL-O-CONNOR",
       "driverName": "CARL O'CONNOR",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "CHRIS-BODEN",
+      "driverName": "CHRIS BODEN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
