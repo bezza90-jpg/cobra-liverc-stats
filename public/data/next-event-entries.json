@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-28T14:54:16.207Z",
+  "updatedAt": "2026-10-28T15:00:56.618Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -304,6 +304,15 @@
       "chassisSource": "wix"
     },
     {
+      "driverKey": "BRUCE",
+      "driverName": "Paul \"Bruce\" Curtis",
+      "bookingName": "PAUL CURTIS",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
       "driverKey": "PAUL-TRODDEN",
       "driverName": "PAUL TRODDEN",
       "className": "2-Wheel Drive Buggy",
@@ -594,15 +603,6 @@
       "chassisSource": "wix"
     },
     {
-      "driverKey": "BRUCE",
-      "driverName": "Paul \"Bruce\" Curtis",
-      "bookingName": "PAUL CURTIS",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Team Associated",
-      "chassisSource": "wix"
-    },
-    {
       "driverKey": "RICHARD-HARRISON",
       "driverName": "RICHARD HARRISON",
       "className": "4-Wheel Drive Buggy",
@@ -645,14 +645,6 @@
     {
       "driverKey": "STEVE-CHAPMAN",
       "driverName": "STEVE CHAPMAN",
-      "className": "4-Wheel Drive Buggy",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix"
-    },
-    {
-      "driverKey": "STEVE-CURTIS-RICH",
-      "driverName": "STEVE CURTIS-RICH",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
