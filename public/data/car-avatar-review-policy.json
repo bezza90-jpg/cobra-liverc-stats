@@ -89,6 +89,28 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-10-27T23:19:56.804582+00:00"
+    },
+    "LEE-CHARNOCK|4-Wheel Drive Buggy": {
+      "submissionIdHash": "bb9079b6210a82c63b8b925f1f263dd8bf07b55dd400b54457c6659afcc5b06a",
+      "reviewedFileIdHash": "e0e47e753fa05bbd96c36e74c67b7558075cc1b1febf0f821a86ff9f872ece16",
+      "sha256": "6dc96ab50ef88cb913f8c70130e2960a54e5120adf40c01b4f6d487010076c31",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-28T00:50:33.833227+00:00"
+    },
+    "LEE-CHARNOCK|2-Wheel Drive Buggy": {
+      "submissionIdHash": "d871faf4991f6fb6e38877383d01a59fbc93c8d78650b7227c9c5997c7c8d1eb",
+      "reviewedFileIdHash": "379731eebb819d2ff4064f9d136531cfe5e69243449052aeddcf6323c1a7abd2",
+      "sha256": "8ff9bab6375f8f23d9259198766c83a6391e37ed484bbbe50171b2dda5d52b35",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-28T00:50:35.075653+00:00"
     }
   },
   "publishedAssets": {
@@ -258,7 +280,11 @@
     "assets/car-avatars/CARL-O-CONNOR-REVIEWED-2WD.png": "1ab1318bb115603d945723c69342665b42800e22",
     "assets/car-avatar-thumbnails/CARL-O-CONNOR-REVIEWED-2WD.webp": "b2fe4ebd40583d1258810feddfc0c094457620e4",
     "assets/car-avatars/CARL-O-CONNOR-REVIEWED-4WD.png": "11d47d1b9f152bb0b61ae863fd12f6f05fe2be5b",
-    "assets/car-avatar-thumbnails/CARL-O-CONNOR-REVIEWED-4WD.webp": "97e68feffbbe4298d696219096ed9e9ce1a368cc"
+    "assets/car-avatar-thumbnails/CARL-O-CONNOR-REVIEWED-4WD.webp": "97e68feffbbe4298d696219096ed9e9ce1a368cc",
+    "assets/car-avatars/LEE-CHARNOCK-REVIEWED-4WD.png": "c44c862e61205debd036af5fa43da6e689217530",
+    "assets/car-avatar-thumbnails/LEE-CHARNOCK-REVIEWED-4WD.webp": "b705e103e1d356c3aabc5de32dcd2b99941bf605",
+    "assets/car-avatars/LEE-CHARNOCK-REVIEWED-2WD.png": "e2a4ec1f920bc0366e6b2bc91050fe3ddbfcca7a",
+    "assets/car-avatar-thumbnails/LEE-CHARNOCK-REVIEWED-2WD.webp": "3ecd195af67343a0161487c08bb6f356ec6662c2"
   },
   "assignments": {
     "BRUCE": {
@@ -442,6 +468,10 @@
     "CARL-O-CONNOR": {
       "2-Wheel Drive Buggy": "assets/car-avatars/CARL-O-CONNOR-REVIEWED-2WD.png",
       "4-Wheel Drive Buggy": "assets/car-avatars/CARL-O-CONNOR-REVIEWED-4WD.png"
+    },
+    "LEE-CHARNOCK": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-4WD.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-2WD.png"
     }
   },
   "blockedRevisionHashes": [
