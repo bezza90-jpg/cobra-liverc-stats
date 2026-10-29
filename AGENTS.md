@@ -1,5 +1,19 @@
 # Car avatar review safeguards
 
+## User-operated Cutout Studio workflow (authorised 29 October 2026)
+
+Matt explicitly requested automatic background removal in the new Cutout Studio,
+with a private email link that opens the exact driver/photo and a final checked
+preview followed by Save & process. This is an additional authorised review path:
+browser segmentation is allowed inside that interactive tool. It does not permit
+unattended removal, approval from a spreadsheet status, or alteration of the car.
+`publish-studio-avatars.py` accepts only current, revision-specific preview
+receipts from the fixed review service, verifies the exact PNG hash and class,
+preserves blocklists and newer reviews, and pins only those accepted assets.
+Record `method=cutout-studio` truthfully. Publishing jobs may resize approved
+transparent PNGs; they must never generate cutouts or approve Pending uploads.
+The remaining chat review safeguards below continue to apply to the chat path.
+
 Matt requires processing in his interactive car-approvals chat, using the built-in
 image editing tool for background extraction. Never use rembg, U2NET, browser
 model/canvas masks, thresholding, GrabCut or automatic background-removal fallback.
