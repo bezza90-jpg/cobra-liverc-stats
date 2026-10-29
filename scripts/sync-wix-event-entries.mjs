@@ -61,8 +61,9 @@ export function publicEntries(guest,order,mapping) {
   const ticketName=ticket.name || ticket.ticketName || '';
   // Reserve tickets buy a normal class place, but their hidden buffer must not
   // increase public capacity or replace the normal ticket IDs in the feed.
-  const reserveBase={'2WD SWORD Reserve Entry':'2WD Entry','4WD SWORD Reserve Entry':'4WD Entry','Junior SWORD Reserve Entry':'Junior Entry'};
-  const definition=TICKETS[ticketName] || TICKETS[reserveBase[ticketName]];
+  const reserveMatch=/^(2WD|4WD|Junior) SWORD Reserve (Entry|Pool)$/.exec(ticketName);
+  const reserveBase=reserveMatch ? reserveMatch[1]+' Entry' : ''; 
+  const definition=TICKETS[ticketName] || TICKETS[reserveBase];
   let definitions=definition ? [definition] : [];
   if (ticketName==='Adult Double Class') {
     const selected=String(values[mapping['Classes to enter'] || 'Classes to enter'] || '').split(/[,;\n]+/).map(value=>value.trim()).filter(Boolean);

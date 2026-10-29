@@ -154,7 +154,7 @@ test('paid SWORD reserve tickets publish class details without increasing public
   const order={status:'PAID',tickets:[{ticketNumber:'RESERVE',name:'4WD SWORD Reserve Entry'}]};
   assert.deepEqual(publicEntry(guest,order,{}),{driverName:"CARL O'CONNOR",className:'4-Wheel Drive Buggy',transponder:'2481074',chassis:'XRAY'});
   assert.equal(publicEntry(guest,{...order,status:'PENDING'},{}),null);
-  for(const [name,cls] of [['2WD SWORD Reserve Entry','2-Wheel Drive Buggy'],['Junior SWORD Reserve Entry','Junior Racers']]) assert.equal(publicEntry(guest,{...order,tickets:[{ticketNumber:'RESERVE',name}]},{}).className,cls);
+  for(const [name,cls] of [['2WD SWORD Reserve Entry','2-Wheel Drive Buggy'],['Junior SWORD Reserve Entry','Junior Racers'],['4WD SWORD Reserve Pool','4-Wheel Drive Buggy'],['2WD SWORD Reserve Pool','2-Wheel Drive Buggy'],['Junior SWORD Reserve Pool','Junior Racers']]) assert.equal(publicEntry(guest,{...order,tickets:[{ticketNumber:'RESERVE',name}]},{}).className,cls);
   const tickets=[{id:'normal',name:'4WD SWORD Entry',actualLimit:25},{id:'reserve',name:'4WD SWORD Reserve Entry',actualLimit:5}];
   assert.deepEqual(ticketLimitsFromDefinitions(tickets),{'4-Wheel Drive Buggy':25});
   assert.deepEqual(reserveTicketsFromDefinitions(tickets),{'4-Wheel Drive Buggy':['normal']});
