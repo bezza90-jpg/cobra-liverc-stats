@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-29T14:24:07.355Z",
+  "updatedAt": "2026-10-29T19:59:59.903Z",
   "ticketLimits": {
     "Junior Racers": 10,
     "2-Wheel Drive Buggy": 66,
@@ -306,6 +306,11 @@
       "chassis": "Schumacher"
     },
     {
+      "driverName": "CARL O'CONNOR",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "XRAY"
+    },
+    {
       "driverName": "CHRIS GUNTER",
       "className": "4-Wheel Drive Buggy",
       "chassis": "XRAY"
@@ -406,6 +411,11 @@
       "chassis": "Associated"
     },
     {
+      "driverName": "RILEY BUTLER",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
       "driverName": "ROBERT WEST",
       "className": "4-Wheel Drive Buggy",
       "chassis": "Schumacher"
@@ -481,7 +491,7 @@
     }
   ],
   "entrySources": {
-    "wix": 84,
+    "wix": 86,
     "admin": 8
   }
 }
