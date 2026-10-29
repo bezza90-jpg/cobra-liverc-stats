@@ -59,7 +59,11 @@ export function publicEntries(guest,order,mapping) {
   if (ticket.canceled || ticket.archived || order.archived) return [];
   const values={...(sameName(order,details) ? answers(order.checkoutForm) : {}),...answers(ticket.guestDetails?.form),...answers(details.formResponse)};
   const ticketName=ticket.name || ticket.ticketName || '';
-  let definitions=TICKETS[ticketName] ? [TICKETS[ticketName]] : [];
+  // Reserve tickets buy a normal class place, but their hidden buffer must not
+  // increase public capacity or replace the normal ticket IDs in the feed.
+  const reserveBase={'2WD SWORD Reserve Entry':'2WD Entry','4WD SWORD Reserve Entry':'4WD Entry','Junior SWORD Reserve Entry':'Junior Entry'};
+  const definition=TICKETS[ticketName] || TICKETS[reserveBase[ticketName]];
+  let definitions=definition ? [definition] : [];
   if (ticketName==='Adult Double Class') {
     const selected=String(values[mapping['Classes to enter'] || 'Classes to enter'] || '').split(/[,;\n]+/).map(value=>value.trim()).filter(Boolean);
     const classDefinitions={'2WD':TICKETS['2WD Entry'],'4WD':TICKETS['4WD Entry'],'VINTAGE':TICKETS['Vintage Entry'],'TRUCKS':TICKETS['Mother Trucker Entry']};
