@@ -111,6 +111,17 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-10-28T00:50:35.075653+00:00"
+    },
+    "CRAIG-HARRIS|4-Wheel Drive Buggy": {
+      "submissionIdHash": "4172ffad57fe8d8982626319a928d3cf219473688835f8a7af961275b2ccc3e9",
+      "reviewedFileIdHash": "457339a0b9d7e2d798acc350667f518c03fcd3d57ead7c4728a1b73c3746d1ff",
+      "sha256": "d6afd6c796674d9430d64b226bb88a2539c10a2ce004ec49f291c80bc83e0409",
+      "method": "user-supplied-png",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-29T20:30:29.732041+00:00"
     }
   },
   "publishedAssets": {
@@ -284,7 +295,9 @@
     "assets/car-avatars/LEE-CHARNOCK-REVIEWED-4WD.png": "c44c862e61205debd036af5fa43da6e689217530",
     "assets/car-avatar-thumbnails/LEE-CHARNOCK-REVIEWED-4WD.webp": "b705e103e1d356c3aabc5de32dcd2b99941bf605",
     "assets/car-avatars/LEE-CHARNOCK-REVIEWED-2WD.png": "e2a4ec1f920bc0366e6b2bc91050fe3ddbfcca7a",
-    "assets/car-avatar-thumbnails/LEE-CHARNOCK-REVIEWED-2WD.webp": "3ecd195af67343a0161487c08bb6f356ec6662c2"
+    "assets/car-avatar-thumbnails/LEE-CHARNOCK-REVIEWED-2WD.webp": "3ecd195af67343a0161487c08bb6f356ec6662c2",
+    "assets/car-avatars/CRAIG-HARRIS-REVIEWED-4WD.png": "4365e759f96998fd533241a17186b771f9b84f21",
+    "assets/car-avatar-thumbnails/CRAIG-HARRIS-REVIEWED-4WD.webp": "8618c81e1d1a188146e53bfb1fc4772a97d3aac0"
   },
   "assignments": {
     "BRUCE": {
@@ -472,6 +485,9 @@
     "LEE-CHARNOCK": {
       "4-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-4WD.png",
       "2-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-2WD.png"
+    },
+    "CRAIG-HARRIS": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-HARRIS-REVIEWED-4WD.png"
     }
   },
   "blockedRevisionHashes": [

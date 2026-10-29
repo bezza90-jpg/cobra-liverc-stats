@@ -184,5 +184,8 @@
   "LEE-CHARNOCK": {
     "4-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-4WD.png",
     "2-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-2WD.png"
+  },
+  "CRAIG-HARRIS": {
+    "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-HARRIS-REVIEWED-4WD.png"
   }
 }
