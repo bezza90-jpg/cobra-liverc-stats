@@ -3,7 +3,7 @@
   "wixEventId": "230f6fa1-718c-4a46-9824-a8fe904847b6",
   "eventTitle": "SWORD Round 2 EOS 2026/7",
   "eventDate": "2026-11-01",
-  "updatedAt": "2026-10-29T07:09:31.298Z",
+  "updatedAt": "2026-10-29T14:24:07.355Z",
   "ticketLimits": {
     "Junior Racers": 10,
     "2-Wheel Drive Buggy": 66,
@@ -114,6 +114,11 @@
     {
       "driverName": "HAIDEN HICKS",
       "className": "2-Wheel Drive Buggy"
+    },
+    {
+      "driverName": "HARRY DAVIS",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Associated"
     },
     {
       "driverName": "IAN PEAKMAN",
@@ -460,6 +465,11 @@
       "chassis": "Schumacher"
     },
     {
+      "driverName": "MARCIA D.",
+      "className": "Junior Racers",
+      "chassis": "Associated"
+    },
+    {
       "driverName": "NOAH M.",
       "className": "Junior Racers",
       "chassis": "Associated"
@@ -471,7 +481,7 @@
     }
   ],
   "entrySources": {
-    "wix": 82,
+    "wix": 84,
     "admin": 8
   }
 }
