@@ -47,7 +47,7 @@ function renderConfirmedEntries(){
   hydrateEntryAvatarPreviews(classes);
 }
 
-const avatarManifestPromise=fetch('../data/car-avatars.json',{cache:'force-cache'}).then(response=>response.ok?response.json():{}).catch(()=>({}));
+const avatarManifestPromise=fetch('../data/car-avatars.json',{cache:'no-cache'}).then(response=>response.ok?response.json():{}).catch(()=>({}));
 avatarManifestPromise.then(manifest=>{confirmedAvatarManifest=manifest;if(confirmedEntries.length)renderConfirmedEntries()});
 
 async function loadConfirmedEntries(){
