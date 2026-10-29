@@ -27,6 +27,7 @@ for (const page of pages) {
     updated = updated.replace('</footer>', '<a class="website-guides-link" href="' + base + 'website-guides/" target="_top">Website guides &amp; videos ↗</a></footer>');
   }
   updated = addSiteShell(updated, base);
+  if (shellOnlyPages.includes(page)) updated = updated.replace('class="cobra-gpw-logo" href="https://www.cobracardiff.co.uk/grand-prix-wales"', 'class="cobra-gpw-logo" href="/grand-prix-wales/"');
   if (updated === html) continue;
   if (check) throw new Error('Navigation is out of date in ' + page + 'index.html; run npm run build:navigation.');
   await writeFile(file, updated);

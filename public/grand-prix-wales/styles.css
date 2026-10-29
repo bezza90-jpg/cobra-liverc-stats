@@ -13,28 +13,9 @@
 
 .gpw-section-nav{position:sticky;z-index:50;top:0;display:flex;align-items:center;justify-content:center;gap:18px;padding:9px clamp(16px,4vw,54px);background:#0b2014;color:#fff;border-bottom:2px solid var(--green);box-shadow:0 7px 18px rgba(0,0,0,.16)}.gpw-section-nav>div{display:flex;flex-wrap:wrap;justify-content:center;gap:7px}.gpw-section-nav a{display:inline-flex;align-items:center;min-height:34px;padding:5px 10px;border-radius:7px;color:#dce8df;text-decoration:none;font-size:13px;font-weight:850}.gpw-section-nav a:hover,.gpw-section-nav a[aria-current=page]{background:#183722;color:var(--green)}.gpw-section-nav .gpw-enquiries{margin-left:auto;border:1px solid #53665a;color:#fff}.gpw-live .cobra-site-header{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}.gpw-live .cobra-site-footer{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}@media(max-width:760px){.gpw-section-nav{align-items:stretch;flex-direction:column;gap:6px;padding:8px 12px}.gpw-section-nav>div{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}.gpw-section-nav>div::-webkit-scrollbar{display:none}.gpw-section-nav a{white-space:nowrap}.gpw-section-nav .gpw-enquiries{align-self:flex-start;margin-left:0}}
 
-/* GPW pages keep the shared header readable while adding a restrained event-red identity. */
-.gpw-live .cobra-site-header{
-  background:#c91b2d;
-  border-top:5px solid #6d0911;
-  border-bottom:3px solid #9b0e1b;
-  box-shadow:0 8px 22px rgba(95,8,16,.14);
-}
-.gpw-live .cobra-site-header .cobra-book-in{
-  background:#008b13;
-  box-shadow:0 5px 14px rgba(0,88,18,.24);
-}
-.gpw-live .cobra-site-header .cobra-gpw-logo{
-  filter:drop-shadow(0 4px 8px rgba(89,4,12,.13));
-}
-@media(min-width:1051px){
-  .gpw-live .cobra-site-header .cobra-site-menu>a,
-  .gpw-live .cobra-site-header .cobra-menu-group>summary{
-    color:#fff;
-    font-weight:800;
-    text-shadow:0 1px 2px rgba(67,0,8,.28);
-  }
-}
+/* Keep the same white COBRA header on every GPW route. */
+.gpw-live .cobra-site-header{background:#fff;color:#111;border:0;box-shadow:none;font-family:Arial,Helvetica,sans-serif}
+html.cobra-embedded body.gpw-live>.cobra-site-header{display:flex!important}
 
 /* The event artwork used to occupy a second, screen-height column. Keep the
    useful event introduction while bringing visitors to the entries sooner. */
@@ -58,7 +39,7 @@
 
 .gpw-sheep{display:block;height:auto;pointer-events:none;filter:drop-shadow(0 12px 18px rgba(0,0,0,.2))}.event-hub{position:relative;overflow:hidden}.event-hub>.section-heading,.event-hub>.hub-grid{position:relative;z-index:2}.gpw-sheep-home{position:absolute;z-index:3;right:clamp(24px,6vw,88px);bottom:28px;width:clamp(138px,15vw,210px);transform:rotate(-2deg)}.subhero{position:relative;overflow:hidden}.subhero-inner{position:relative;z-index:2}.gpw-sheep-subhero{position:absolute;z-index:1;right:clamp(18px,5vw,72px);bottom:10px;width:clamp(92px,11vw,150px);opacity:.96}@media(max-width:900px){.gpw-sheep-home{position:static;width:140px;margin:22px 0 0 auto}.gpw-sheep-subhero{width:100px;opacity:.82}}@media(max-width:680px){.gpw-sheep-subhero{right:10px;bottom:8px;width:78px;opacity:.72}}
 
-html.cobra-embedded{scrollbar-width:none;-ms-overflow-style:none}html.cobra-embedded::-webkit-scrollbar{display:none}html.cobra-embedded body.gpw-live{padding-top:54px}html.cobra-embedded .gpw-section-nav{position:fixed;inset:0 0 auto;width:100%}html.cobra-embedded .cobra-site-header,html.cobra-embedded .cobra-site-footer{display:none!important}@media(max-width:760px){html.cobra-embedded body.gpw-live{padding-top:94px}}
+html.cobra-embedded body.gpw-live{padding-top:0}html.cobra-embedded .gpw-section-nav{position:sticky;inset:auto;top:0;width:100%}html.cobra-embedded .cobra-site-footer{display:none!important}
 
 html.gpw-navigating:after{content:"";position:fixed;z-index:9999;top:0;left:0;width:42%;height:3px;background:var(--green);box-shadow:0 0 10px var(--green);animation:gpw-load-progress .7s ease-in-out infinite alternate}@keyframes gpw-load-progress{from{transform:translateX(-20%)}to{transform:translateX(190%)}}
 
