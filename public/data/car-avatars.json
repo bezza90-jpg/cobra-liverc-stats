@@ -189,6 +189,9 @@
     "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-HARRIS-REVIEWED-4WD.png"
   },
   "LEE-SPEIGHT": {
-    "2-Wheel Drive Buggy": "assets/car-avatars/LEE-SPEIGHT-STUDIO-2WD.png"
+    "2-Wheel Drive Buggy": "assets/car-avatars/LEE-SPEIGHT-AI-2WD.png"
+  },
+  "LOUIS-SPEIGHT": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/LOUIS-SPEIGHT-AI-2WD.png"
   }
 }

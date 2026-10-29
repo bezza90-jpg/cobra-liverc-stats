@@ -124,16 +124,26 @@
       "approvedAt": "2026-10-29T20:30:29.732041+00:00"
     },
     "LEE-SPEIGHT|2-Wheel Drive Buggy": {
-      "version": 1,
-      "sha256": "868809a89e4cdc0de8caa1dc007dfc461603910ae149c39538465c00c7ade504",
-      "submissionIdHash": "4c6de8544ab2cef54c448aff2eef80ee3f51c5f3cede0f215f631141af4e7626",
-      "reviewedFileIdHash": "02720d849f49cc4f778135f9d37ac4a79b80f86bfc2d042eff77aa57ce465805",
+      "submissionIdHash": "55cd1410863443fcbb67f0f78564df1fc76457432eec11f7820a0e8d604c2b2d",
+      "reviewedFileIdHash": "132491eb9407c61e9a5f152aa88ecb9a697b2ea13131fa57328af1c442dc0e05",
+      "sha256": "9e8906a8f8f1405b663378881516a6f19e98648ed72b2d2c4da29d95a904cbab",
+      "method": "imagegen",
       "approvedBy": "Matt",
       "previewApproved": true,
       "rightFacing": true,
-      "method": "cutout-studio",
-      "approvedAt": "2026-10-29T22:25:59.423Z",
-      "manualPublish": true
+      "manualPublish": true,
+      "approvedAt": "2026-10-29T23:16:21.623685+00:00"
+    },
+    "LOUIS-SPEIGHT|2-Wheel Drive Buggy": {
+      "submissionIdHash": "211259d5efa0188962591da22420636f42564b632a75f6271566e395c476f48e",
+      "reviewedFileIdHash": "11d0423a78828eee9466472a82700ceb855fef3846139eb6db5df20905176d60",
+      "sha256": "c92b80179cacd414e97bbb64a63df822ca8c8b891e17366893f16b93859733ff",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-29T23:16:23.109962+00:00"
     }
   },
   "publishedAssets": {
@@ -311,7 +321,11 @@
     "assets/car-avatars/CRAIG-HARRIS-REVIEWED-4WD.png": "4365e759f96998fd533241a17186b771f9b84f21",
     "assets/car-avatar-thumbnails/CRAIG-HARRIS-REVIEWED-4WD.webp": "8618c81e1d1a188146e53bfb1fc4772a97d3aac0",
     "assets/car-avatars/LEE-SPEIGHT-STUDIO-2WD.png": "5a1f6290a59c838fdafe571ac5a1e9092b5edb70",
-    "assets/car-avatar-thumbnails/LEE-SPEIGHT-STUDIO-2WD.webp": "5ef914100c6e3c0b89f39e3dc405089d2205a0c8"
+    "assets/car-avatar-thumbnails/LEE-SPEIGHT-STUDIO-2WD.webp": "5ef914100c6e3c0b89f39e3dc405089d2205a0c8",
+    "assets/car-avatars/LEE-SPEIGHT-AI-2WD.png": "b8667e3e57b0a789113e033eadf4f27f1ed12411",
+    "assets/car-avatar-thumbnails/LEE-SPEIGHT-AI-2WD.webp": "ef10dd96c38076ada8c24f2c7c17a8a956365910",
+    "assets/car-avatars/LOUIS-SPEIGHT-AI-2WD.png": "eb3e83cbd2a12b38cc77d1681015ee424154605e",
+    "assets/car-avatar-thumbnails/LOUIS-SPEIGHT-AI-2WD.webp": "041b27fad9436b8884b760120e78f5d4a07090e3"
   },
   "assignments": {
     "BRUCE": {
@@ -504,7 +518,10 @@
       "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-HARRIS-REVIEWED-4WD.png"
     },
     "LEE-SPEIGHT": {
-      "2-Wheel Drive Buggy": "assets/car-avatars/LEE-SPEIGHT-STUDIO-2WD.png"
+      "2-Wheel Drive Buggy": "assets/car-avatars/LEE-SPEIGHT-AI-2WD.png"
+    },
+    "LOUIS-SPEIGHT": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/LOUIS-SPEIGHT-AI-2WD.png"
     }
   },
   "blockedRevisionHashes": [

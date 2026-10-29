@@ -52,3 +52,17 @@ only Reviewed File ID, Reviewed At and Approved and clear M in one batch.
 Background tasks only notify of new Pending items; they must never process or
 approve avatars. Repository publishing validates accepted files; it never creates
 a cut-out. Do not bypass or weaken these checks to make an unreviewed publish pass.
+
+## Preferred workflow — 29 October 2026, AI removal restored
+
+Matt finds manual background editing too time consuming and requests returning
+ to built-in AI image removal for new photos, while limiting changes to the car.
+Use the original uploaded photograph as the image-edit reference. Request only
+background extraction to transparency: preserve camera angle, framing, geometry,
+visible wheel count, tyres, complete wing, suspension, aerial, colours, decals,
+logos and all lettering. Do not redraw, restyle, relight, sharpen, repair, invent
+parts, rotate or mirror. Keep the original unchanged. Compare the exact output
+against the original and disclose visible differences in the approval preview.
+Keep Cutout Studio available for optional touch-ups. This preference does not
+authorise processing a backlog or approving or publishing without the established
+explicit preview acceptance.
