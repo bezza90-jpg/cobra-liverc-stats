@@ -11,7 +11,7 @@ export function eventSpaces(data, meeting, config) {
     const heldFromWix = Number.isInteger(publicLimit) && publicLimit >= 0
       ? Math.max(0,limit-(reserved[name] || []).length-publicLimit)
       : 0;
-    const held = Number.isInteger(override.held?.[name]) && override.held[name] > 0 ? override.held[name] : heldFromWix;
+    const held = Number.isInteger(override.held?.[name]) && override.held[name] >= 0 ? override.held[name] : heldFromWix;
     const entered = Math.max(published + missing + held, confirmed);
     return {name,limit,entered,reserved:missing + held,remaining:Math.max(0,limit-entered),confirmed:confirmed > published};
   });

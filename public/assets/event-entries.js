@@ -1,6 +1,6 @@
 import {addReserveActions} from './event-reserves.js';
 import {entriesForMeeting,applyConfirmedChassis} from './event-entry-merge.js?v=20261019-capacity-live';
-import {eventSpaces} from './event-capacity.js?v=20261019-capacity-live';
+import {eventSpaces} from './event-capacity.js?v=20261029-filled-reserves';
 import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
 import {entryIdentity} from './event-entry-identity.js';
 import {compareEntryNames} from './event-entry-order.js';

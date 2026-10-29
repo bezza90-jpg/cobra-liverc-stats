@@ -20,6 +20,8 @@
     "518556": {
       "limits":{"Junior Racers":10,"4-Wheel Drive Buggy":30,"2-Wheel Drive Buggy":70},
       "salesOpen":"2026-10-19T18:00:00+01:00",
+      "held":{"4-Wheel Drive Buggy":0},
+      "heldNote":"The two released 4WD places are now occupied by paid reserve entries Carl O'Connor and Riley Butler. No additional anonymous 4WD holds remain; named team reservations still apply.",
       "note":"Round 2 opened with 64 public 2WD tickets. Wix quantities may be adjusted as protected places book, but named reservations plus public tickets must never exceed the 70-car total."
     }
   }
