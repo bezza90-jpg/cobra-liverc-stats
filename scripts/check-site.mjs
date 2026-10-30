@@ -22,6 +22,12 @@ async function checkReference(file, reference) {
 }
 const published = await files(site);
 for (const file of published) {
+  // Cutout Studio source snapshots are downloadable archives, not published pages.
+  // Their HTML keeps build-time paths that are resolved when the snapshot is built.
+  const relative = path.relative(site, file);
+  const archivedSource = relative.startsWith(`assets${path.sep}cutout-studio${path.sep}`)
+    && relative.split(path.sep).includes('source');
+  if (archivedSource) continue;
   if (file.endsWith('.html')) {
     const html = await readFile(file, 'utf8');
     for (const match of html.matchAll(/\b(?:href|src)=["']([^"']+)["']/g)) await checkReference(file, match[1]);

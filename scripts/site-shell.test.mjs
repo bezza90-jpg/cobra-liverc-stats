@@ -36,6 +36,7 @@ test('every published page has exactly the same single shared footer',()=>{
   const pages=[];
   const walk=directory=>{
     for(const entry of readdirSync(directory,{withFileTypes:true})){
+      if(entry.isDirectory()&&entry.name==='source'&&directory.pathname.includes('/assets/cutout-studio/')) continue;
       const url=new URL(entry.name+(entry.isDirectory()?'/':''),directory);
       if(entry.isDirectory()) walk(url);
       else if(entry.name.endsWith('.html')) pages.push(url);

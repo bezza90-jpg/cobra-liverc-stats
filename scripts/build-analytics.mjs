@@ -11,6 +11,10 @@ async function htmlFiles(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
   return (await Promise.all(entries.map(entry => {
     const target = path.join(directory, entry.name);
+    const relative = path.relative(publicRoot, target);
+    const archivedSource = relative.startsWith(`assets${path.sep}cutout-studio${path.sep}`)
+      && relative.split(path.sep).includes('source');
+    if (archivedSource) return [];
     return entry.isDirectory() ? htmlFiles(target) : entry.name === 'index.html' ? [target] : [];
   }))).flat();
 }
