@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-29T20:01:31.865Z",
+  "updatedAt": "2026-10-30T23:14:24.195Z",
   "entries": [
     {
       "driverKey": "ADAM-MCBRIDE",
@@ -449,6 +449,14 @@
       "chassisSource": "wix"
     },
     {
+      "driverKey": "TWISTED-BASHER-S",
+      "driverName": "TWISTED BASHER'S",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Associated",
+      "chassisSource": "wix"
+    },
+    {
       "driverKey": "ZACK-TRODDEN",
       "driverName": "ZACK TRODDEN",
       "className": "2-Wheel Drive Buggy",
@@ -463,6 +471,14 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "CARL-O-CONNOR",
+      "driverName": "CARL O'CONNOR",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
       "chassisSource": "wix"
     },
     {
@@ -624,6 +640,14 @@
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
       "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "RILEY-BUTLER",
+      "driverName": "RILEY BUTLER",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
       "chassisSource": "wix"
     },
     {

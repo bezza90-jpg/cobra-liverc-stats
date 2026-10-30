@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-29T20:01:01.403688+00:00",
+  "checkedAt": "2026-10-30T23:13:54.463376+00:00",
   "updated": 0,
   "failures": {
     "BRUCE|2-Wheel Drive Buggy": {
@@ -30,6 +30,11 @@
     "MIKE-MOYSE|2-Wheel Drive Buggy": {
       "id": "0b931113-77cc-4154-aa54-42fe243bc579",
       "revision": "1x-IlwpgbOW4-PcM7zKCp_-741Nw7TJG2",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "CHRIS-REEVES|2-Wheel Drive Buggy": {
+      "id": "befff1b4-7eb5-4f54-8851-e5401174b3f8",
+      "revision": "1GNF3IZsHYGyhoEWuzfZUJNPhgi780CY9",
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     }
   }
