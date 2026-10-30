@@ -98,3 +98,6 @@ html.gpw-navigating:after{content:"";position:fixed;z-index:9999;top:0;left:0;wi
   }
   .hero-copy{padding-bottom:54px}
 }
+
+/* Wix supplies the outer white header; standalone embed links still keep theirs. */
+html.cobra-framed body.gpw-live>.cobra-site-header{display:none!important}

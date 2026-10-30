@@ -13,7 +13,6 @@
   const links = Array.from(document.querySelectorAll(
     '.gpw-section-nav a[href], .hub-grid a[href], a.back-link[href]'
   ));
-  const prefetched = new Set();
 
   function sameSiteUrl(link) {
     try {
@@ -26,21 +25,7 @@
     }
   }
 
-  function prefetch(link) {
-    const url = sameSiteUrl(link);
-    if (!url || url.href === location.href.split('#')[0] || prefetched.has(url.href)) return;
-    prefetched.add(url.href);
-    const hint = document.createElement('link');
-    hint.rel = 'prefetch';
-    hint.as = 'document';
-    hint.href = url.href;
-    document.head.appendChild(hint);
-  }
-
   for (const link of links) {
-    link.addEventListener('pointerenter', () => prefetch(link), { passive: true });
-    link.addEventListener('touchstart', () => prefetch(link), { passive: true });
-    link.addEventListener('focus', () => prefetch(link), { passive: true });
     link.addEventListener('click', () => {
       const url = sameSiteUrl(link);
       if (!url || url.href === location.href.split('#')[0]) return;
@@ -49,10 +34,11 @@
     });
   }
 
-  const warmNextPages = () => links.forEach(prefetch);
-  if ('requestIdleCallback' in window) {
-    window.requestIdleCallback(warmNextPages, { timeout: 1500 });
-  } else {
-    window.setTimeout(warmNextPages, 700);
-  }
+  // Shared site-shell navigation owns deliberate, browser-managed prefetching.
+  // Do not preload the entire GPW hub or start requests on touch/focus here:
+  // those legacy requests can compete with the navigation itself.
+  window.addEventListener('pageshow', () => {
+    document.documentElement.classList.remove('gpw-navigating');
+    document.body.removeAttribute('aria-busy');
+  });
 })();
