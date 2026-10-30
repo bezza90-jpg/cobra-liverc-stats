@@ -193,5 +193,9 @@
   },
   "LOUIS-SPEIGHT": {
     "2-Wheel Drive Buggy": "assets/car-avatars/LOUIS-SPEIGHT-AI-2WD.png"
+  },
+  "OLI-NATRESS": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/OLI-NATRESS-AI-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/OLI-NATRESS-AI-4WD.png"
   }
 }

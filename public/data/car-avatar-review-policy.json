@@ -144,6 +144,28 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-10-29T23:16:23.109962+00:00"
+    },
+    "OLI-NATRESS|2-Wheel Drive Buggy": {
+      "submissionIdHash": "3f618b40568af463a26fea435a5e093dc428f172f7d60eef18f91da087732e12",
+      "reviewedFileIdHash": "98d5302bc70a4d719395cb6a431ae94eb979a05ed3a549e1e1cdb3399012baeb",
+      "sha256": "dcb832fefeb5ed5e8d03ca9926d9bc1f4c95676d5bc9253e0ff8c00361be6cdd",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-30T22:58:00+00:00"
+    },
+    "OLI-NATRESS|4-Wheel Drive Buggy": {
+      "submissionIdHash": "43f5efab862641431484b0370a6df5f4f847747629490f8e2bc3a4916a511778",
+      "reviewedFileIdHash": "bf42befb6f1f96dfb68e8de598d8e9eb242228cb27d16dbdc4141f62b14204da",
+      "sha256": "c3e5a5dcdd0e6171b4700ebc24276e46e4b1b8c97ec42239c24b228a187b066d",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-10-30T22:58:00+00:00"
     }
   },
   "publishedAssets": {
@@ -325,7 +347,11 @@
     "assets/car-avatars/LEE-SPEIGHT-AI-2WD.png": "b8667e3e57b0a789113e033eadf4f27f1ed12411",
     "assets/car-avatar-thumbnails/LEE-SPEIGHT-AI-2WD.webp": "ef10dd96c38076ada8c24f2c7c17a8a956365910",
     "assets/car-avatars/LOUIS-SPEIGHT-AI-2WD.png": "eb3e83cbd2a12b38cc77d1681015ee424154605e",
-    "assets/car-avatar-thumbnails/LOUIS-SPEIGHT-AI-2WD.webp": "041b27fad9436b8884b760120e78f5d4a07090e3"
+    "assets/car-avatar-thumbnails/LOUIS-SPEIGHT-AI-2WD.webp": "041b27fad9436b8884b760120e78f5d4a07090e3",
+    "assets/car-avatars/OLI-NATRESS-AI-2WD.png": "4a652d037d75053b70040d09d0fc046fc6185aef",
+    "assets/car-avatar-thumbnails/OLI-NATRESS-AI-2WD.webp": "b65627ae56c9fbf7d6e0e56f41f045fa719f1899",
+    "assets/car-avatars/OLI-NATRESS-AI-4WD.png": "980a546bbb77f1f10a617bfb26db2289377b7f69",
+    "assets/car-avatar-thumbnails/OLI-NATRESS-AI-4WD.webp": "caf7a508259595faaa89d55993f32ea8dd93d144"
   },
   "assignments": {
     "BRUCE": {
@@ -522,6 +548,10 @@
     },
     "LOUIS-SPEIGHT": {
       "2-Wheel Drive Buggy": "assets/car-avatars/LOUIS-SPEIGHT-AI-2WD.png"
+    },
+    "OLI-NATRESS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/OLI-NATRESS-AI-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/OLI-NATRESS-AI-4WD.png"
     }
   },
   "blockedRevisionHashes": [
