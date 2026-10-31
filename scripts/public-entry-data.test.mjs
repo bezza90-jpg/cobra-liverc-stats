@@ -27,3 +27,25 @@ test('public entry feed preserves event metadata and sanitises every entry',()=>
   assert.deepEqual(result.ticketLimits,{Example:12});
   assert.deepEqual(result.entries,[{driverName:'ONE'},{driverName:'TWO'}]);
 });
+
+test('public entry feed merges duplicate private and masked junior rows',()=>{
+  const avatarRef=publicAvatarReference('BEN-EVANS');
+  const result=publicEntryFeed({entries:[
+    {driverKey:'BEN-EVANS',driverName:'Ben Evans',className:'Junior Racers',countryCode:'GB',chassis:'Team Associated'},
+    {driverName:'Ben E.',className:'Junior Racers',countryCode:'GB',chassis:'Associated',chassisSource:'wix',avatarRef}
+  ]});
+  assert.deepEqual(result.entries,[{
+    driverName:'Ben E.',className:'Junior Racers',countryCode:'GB',
+    chassis:'Associated',chassisSource:'wix',avatarRef
+  }]);
+});
+
+test('public entry feed keeps distinct juniors who share public initials',()=>{
+  const result=publicEntryFeed({entries:[
+    {driverKey:'BEN-EVANS',driverName:'Ben Evans',className:'Junior Racers'},
+    {driverKey:'BEN-EDWARDS',driverName:'Ben Edwards',className:'Junior Racers'}
+  ]});
+  assert.equal(result.entries.length,2);
+  assert.deepEqual(result.entries.map(entry=>entry.driverName),['Ben E.','Ben E.']);
+  assert.notEqual(result.entries[0].avatarRef,result.entries[1].avatarRef);
+});

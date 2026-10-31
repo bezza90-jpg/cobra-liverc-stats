@@ -26,5 +26,25 @@ export function publicEntryData(entry = {}) {
 }
 
 export function publicEntryFeed(feed = {}) {
-  return {...feed, entries:(feed.entries || []).map(publicEntryData)};
+  const entries=[];
+  const juniors=new Map();
+  for (const source of feed.entries || []) {
+    const entry=publicEntryData(source);
+    if (entry.className !== 'Junior Racers') {
+      entries.push(entry);
+      continue;
+    }
+    const identity=entry.avatarRef || String(entry.driverName || '').trim().toUpperCase();
+    const index=juniors.get(identity);
+    if (index === undefined) {
+      juniors.set(identity,entries.length);
+      entries.push(entry);
+      continue;
+    }
+    const current=entries[index];
+    entries[index]=entry.chassisSource === 'wix' && entry.chassis
+      ? {...current,...entry}
+      : {...entry,...current};
+  }
+  return {...feed,entries};
 }
