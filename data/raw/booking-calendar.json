@@ -1,35 +1,11 @@
 {
-  "checkedDate": "2026-10-30",
+  "checkedDate": "2026-10-31",
   "events": [
     {
       "title": "COBRA club day",
-      "date": "2026-09-20",
+      "date": "2027-01-10",
       "type": "club",
-      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day"
-    },
-    {
-      "title": "COBRA club day",
-      "date": "2027-02-07",
-      "type": "club",
-      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-5"
-    },
-    {
-      "title": "COBRA SWORD Round 6",
-      "date": "2027-03-21",
-      "type": "sword",
-      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-6"
-    },
-    {
-      "title": "COBRA SWORD Round 4",
-      "date": "2027-01-24",
-      "type": "sword",
-      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-4"
-    },
-    {
-      "title": "COBRA SWORD Round 3",
-      "date": "2026-12-13",
-      "type": "sword",
-      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-3"
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-4"
     },
     {
       "title": "COBRA SWORD Round 2",
@@ -39,9 +15,39 @@
     },
     {
       "title": "COBRA club day",
-      "date": "2027-01-10",
+      "date": "2027-02-07",
       "type": "club",
-      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-4"
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-5"
+    },
+    {
+      "title": "COBRA SWORD Round 3",
+      "date": "2026-12-13",
+      "type": "sword",
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-3"
+    },
+    {
+      "title": "COBRA SWORD Round 4",
+      "date": "2027-01-24",
+      "type": "sword",
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-4"
+    },
+    {
+      "title": "COBRA SWORD Round 5",
+      "date": "2027-02-21",
+      "type": "sword",
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-5"
+    },
+    {
+      "title": "COBRA SWORD Round 6",
+      "date": "2027-03-21",
+      "type": "sword",
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-6"
+    },
+    {
+      "title": "COBRA club day",
+      "date": "2026-09-20",
+      "type": "club",
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day"
     },
     {
       "title": "COBRA club day",
@@ -57,21 +63,15 @@
     },
     {
       "title": "COBRA club day",
-      "date": "2026-11-29",
-      "type": "club",
-      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-3"
-    },
-    {
-      "title": "COBRA SWORD Round 5",
-      "date": "2027-02-21",
-      "type": "sword",
-      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-sword-round-5"
-    },
-    {
-      "title": "COBRA club day",
       "date": "2027-04-04",
       "type": "club",
       "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-7"
+    },
+    {
+      "title": "COBRA club day",
+      "date": "2026-11-29",
+      "type": "club",
+      "url": "https://www.cobracardiff.co.uk/event-details-1/cobra-club-day-3"
     }
   ]
 }
