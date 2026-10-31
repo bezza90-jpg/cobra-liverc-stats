@@ -10,3 +10,10 @@ test('Bruce uses the correct profile, preserving booking name and event details'
  const other={driverKey:'BRUCE-LEE',driverName:'BRUCE LEE'};
  assert.deepEqual(entryIdentity(other,{'PAUL-CURTIS':{driverKey:'BRUCE',profileName:'Bruce'}}),other);
 });
+
+test('Twisted Bashers booking maps to Caeron Jenkins and retains the booking name',()=>{
+ const row={driverKey:'TWISTED-BASHER-S',driverName:"TWISTED BASHER'S",className:'2-Wheel Drive Buggy'};
+ const result=entryIdentity(row,{'TWISTED-BASHER-S':{driverKey:'CAERON-JENKINS',profileName:'Caeron Jenkins'}});
+ assert.equal(result.driverKey,'CAERON-JENKINS');assert.equal(result.driverName,'Caeron Jenkins');
+ assert.equal(result.bookingName,"TWISTED BASHER'S");
+});
