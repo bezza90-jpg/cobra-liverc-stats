@@ -1,7 +1,8 @@
 {
-  "updatedAt": "2026-10-19T03:56:25Z",
+  "updatedAt": "2026-10-31T16:33:12.367Z",
   "facebookGroup": "https://www.facebook.com/groups/cobracardiff",
   "flyoverEvents": [
+    "518556",
     "518554",
     "518555"
   ],
@@ -216,6 +217,15 @@
     ]
   },
   "events": {
+    "518556": {
+      "name": "SWORD Round 2 EOS 2026/7",
+      "date": "2026-11-01",
+      "showInArchive": true,
+      "designImage": "../track-photos/518556/plan.png",
+      "designLocation": "House of Sport",
+      "flyoverUrl": "../virtual-race-replay/sword-round-2-2026-11-01-flyover.html",
+      "photos": []
+    },
     "518551": {
       "sourcePost": "https://www.facebook.com/groups/cobracardiff/posts/10161385713497465/",
       "designImage": "../track-photos/518551/design.jpg",

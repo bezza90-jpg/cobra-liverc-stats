@@ -36,13 +36,13 @@ async function renderEvent(id,updateAddress=true){
   const race=encodeURIComponent(event.defaultRace||''),eventId=encodeURIComponent(event.id),links=[];
   links.push(actionLink('Event results ↗',`https://cobracardiff.liverc.com/results/?p=view_event&id=${eventId}`,'results'));
   for(const playlist of gallery.youtubePlaylists?.[activeId]||[])links.push(actionLink(`▶ YouTube ${playlist.label}`,playlist.url,'youtube'));
-  links.push(actionLink('2D replay',`../virtual-race-replay/?event=${eventId}&race=${race}`,'primary'));
-  if(threeDAvailable(event))links.push(actionLink('3D replay',`../virtual-race-replay/3d.html?event=${eventId}&race=${race}&flyover=race&autoplay=1`));
+  if(event.defaultRace)links.push(actionLink('2D replay',`../virtual-race-replay/?event=${eventId}&race=${race}`,'primary'));
+  if(event.defaultRace&&threeDAvailable(event))links.push(actionLink('3D replay',`../virtual-race-replay/3d.html?event=${eventId}&race=${race}&flyover=race&autoplay=1`));
   if(designAvailable(event)){
-    links.push(actionLink('Track flyover',`../virtual-race-replay/3d.html?event=${eventId}&race=${race}&flyover=track`,'flyover'));
+    links.push(actionLink('Track flyover',entry.flyoverUrl||`../virtual-race-replay/3d.html?event=${eventId}&race=${race}&flyover=track`,'flyover'));
     links.push(actionLink('Explore track in 3D',`../virtual-race-replay/3d.html?event=${eventId}&race=${race}&explore=track`,'explore'));
   }
-  $('eventActions').innerHTML=links.join('');
+  if(!event.defaultRace)links.push('<span class="availability">Race replays will appear after results are recorded.</span>');$('eventActions').innerHTML=links.join('');
   const originalImage=entry.designImage|| (plan?.image?`../virtual-race-replay/${plan.image}`:'');
   const image=originalImage?await orientedPlanImage(originalImage,entry.designImage?0:plan?.rotation):'';
   if(sequence!==renderSequence)return;
@@ -83,6 +83,6 @@ $('lightboxClose').addEventListener('click',closeLightbox);$('lightboxPrevious')
 document.addEventListener('keydown',event=>{if($('trackLightbox').hidden)return;if(event.key==='Escape')closeLightbox();if(event.key==='ArrowLeft')showLightbox(-1);if(event.key==='ArrowRight')showLightbox(1);});
 
 async function start(){
-  try{const request={cache:'no-store'},[catalogResponse,plansResponse,galleryResponse]=await Promise.all([fetch('../virtual-race-replay/catalog.json',request),fetch('../virtual-race-replay/track-plans.json',request),fetch('../data/track-gallery.json',request)]);if(!catalogResponse.ok||!plansResponse.ok||!galleryResponse.ok)throw Error('The track archive could not be loaded.');const catalog=await catalogResponse.json();plans=await plansResponse.json();gallery=await galleryResponse.json();events=Array.isArray(catalog.events)?catalog.events:[];renderArchive();const requested=new URLSearchParams(location.search).get('event');renderEvent(requested||events[0]?.id,false);}catch(error){$('eventTitle').textContent='Track gallery unavailable';$('eventMeta').textContent=error.message;}
+  try{const request={cache:'no-store'},[catalogResponse,plansResponse,galleryResponse]=await Promise.all([fetch('../virtual-race-replay/catalog.json',request),fetch('../virtual-race-replay/track-plans.json',request),fetch('../data/track-gallery.json',request)]);if(!catalogResponse.ok||!plansResponse.ok||!galleryResponse.ok)throw Error('The track archive could not be loaded.');const catalog=await catalogResponse.json();plans=await plansResponse.json();gallery=await galleryResponse.json();const merged=new Map((Array.isArray(catalog.events)?catalog.events:[]).map(event=>[String(event.id),event]));for(const [id,entry]of Object.entries(gallery.events||{}))if(entry.showInArchive&&entry.name&&entry.date&&!merged.has(id))merged.set(id,{id,name:entry.name,date:entry.date,defaultRace:''});events=[...merged.values()].sort((a,b)=>b.date.localeCompare(a.date));renderArchive();const requested=new URLSearchParams(location.search).get('event');renderEvent(requested||events[0]?.id,false);}catch(error){$('eventTitle').textContent='Track gallery unavailable';$('eventMeta').textContent=error.message;}
 }
 start();
