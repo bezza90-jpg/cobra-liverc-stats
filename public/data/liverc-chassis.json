@@ -774,5 +774,17 @@
   "JONATHAN-MAY": {
     "name": "Schumacher",
     "slug": "schumacher"
+  },
+  "ROBERT-WEST": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "CHRISTOPHER-LEONARD": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "JONATHAN-PUZEY": {
+    "name": "Team Associated",
+    "slug": "team-associated"
   }
 }
