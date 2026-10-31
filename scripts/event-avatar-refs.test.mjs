@@ -20,3 +20,10 @@ test('junior entry avatar links use anonymous references with existing display a
     }
   }
 });
+
+test('the published next-event feed contains each junior only once', async () => {
+  const next = await data('next-event-entries.json');
+  const juniors = next.entries.filter(entry => entry.className === 'Junior Racers');
+  const identities = juniors.map(entry => entry.avatarRef || entry.driverName.trim().toUpperCase());
+  assert.equal(new Set(identities).size, juniors.length);
+});

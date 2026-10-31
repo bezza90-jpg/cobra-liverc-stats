@@ -2,7 +2,7 @@ import {copyFile, mkdir, readFile, readdir, unlink, writeFile} from 'node:fs/pro
 import {createHash} from 'node:crypto';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {juniorPublicName, publicAvatarReference} from './lib/public-entry-data.mjs';
+import {juniorPublicName, publicAvatarReference, publicEntryFeed} from './lib/public-entry-data.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const publicRoot = path.join(root, 'public');
@@ -56,7 +56,7 @@ export async function buildEventAvatarReferences() {
       }
       if (entry.avatarRef) usedRefs.add(entry.avatarRef);
     }
-    await writeJson(file, feed);
+    await writeJson(file, publicEntryFeed(feed));
   }
 
   for (const avatarRef of [...usedRefs].sort()) {
