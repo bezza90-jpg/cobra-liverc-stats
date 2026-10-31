@@ -16,6 +16,9 @@ function element(tag, className, text) {
   if (text) node.textContent = text;
   return node;
 }
+function displayNameFromKey(key) {
+  return String(key).toLocaleLowerCase('en-GB').replace(/(^|[-_])([a-z])/g, (_, separator, letter) => (separator ? ' ' : '') + letter.toLocaleUpperCase('en-GB'));
+}
 function fitDisplayedCar(image) {
   if (image.src.startsWith('data:')) return;
   const fitted = fitAvatarImage(image);
@@ -82,11 +85,21 @@ async function initialise() {
     const aliasBySource = new Map(aliasEntries);
     const displayByCanonical = new Map(aliasEntries.map(([, value]) => [value.driverKey, value.displayName || value.driverKey]));
     const canonicalDrivers = new Map();
+    const registerDriver = (sourceKey, name, preferred = false) => {
+      if (!/^[A-Z0-9_-]+$/.test(String(sourceKey)) || sourceKey === 'BOB-BOBTECH-GELSTHARP') return;
+      const target = aliasBySource.get(sourceKey)?.driverKey || sourceKey;
+      const displayName = displayByCanonical.get(target) || name || displayNameFromKey(target);
+      if (!canonicalDrivers.has(target) || preferred) canonicalDrivers.set(target, { k: target, n: displayName });
+    };
     for (const driver of dashboard.drivers) {
-      if (!/^[A-Za-z0-9_-]+$/.test(String(driver.k)) || !driver.n || driver.k === 'BOB-BOBTECH-GELSTHARP') continue;
+      if (!/^[A-Za-z0-9_-]+$/.test(String(driver.k)) || !driver.n) continue;
       const target = aliasBySource.get(driver.k)?.driverKey || driver.k;
-      if (!canonicalDrivers.has(target) || driver.k === target) canonicalDrivers.set(target, { ...driver, k: target, n: displayByCanonical.get(target) || driver.n });
+      registerDriver(driver.k, driver.n, driver.k === target);
     }
+    // Booking history is deliberately not the source of truth for this gallery.
+    // Every published avatar remains findable even if its driver has no current
+    // or historic booking in the statistics directory.
+    for (const driverKey of Object.keys(manifest)) registerDriver(driverKey, '', true);
     const sourceRevision = (driverKey, className) => {
       if (revisions[driverKey + '|' + className]) return revisions[driverKey + '|' + className];
       for (const [source, value] of aliasEntries) if (value.driverKey === driverKey && revisions[source + '|' + className]) return revisions[source + '|' + className];
