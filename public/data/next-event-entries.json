@@ -4,7 +4,7 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-31T16:45:46.112Z",
+  "updatedAt": "2026-10-31T20:52:10.513Z",
   "entries": [
     {
       "driverName": "GEORGE B.",
@@ -78,7 +78,8 @@
       "driverName": "RILEY BUTLER",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": ""
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
     },
     {
       "driverKey": "STEVE-CHAPMAN",
@@ -191,7 +192,8 @@
       "driverName": "CARL O'CONNOR",
       "className": "4-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Team Associated"
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
     },
     {
       "driverKey": "JON-PAISLEY",
@@ -518,7 +520,7 @@
       "driverName": "GRAHAM KEEP",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Associated",
       "chassisSource": "wix"
     },
     {
@@ -687,7 +689,7 @@
       "driverName": "PAUL TRODDEN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "XRay",
+      "chassis": "XRAY",
       "chassisSource": "wix"
     },
     {
@@ -695,7 +697,7 @@
       "driverName": "ZACK TRODDEN",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "XRay",
+      "chassis": "XRAY",
       "chassisSource": "wix"
     },
     {
@@ -759,19 +761,19 @@
       "driverName": "TWISTED BASHER'S",
       "className": "2-Wheel Drive Buggy",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Associated",
       "chassisSource": "wix"
     },
     {
-      "driverName": "Ben E.",
+      "driverName": "BEN E.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Associated",
       "chassisSource": "wix",
       "avatarRef": "024f42f35ac65248b5f6"
     },
     {
-      "driverName": "Cohen M.",
+      "driverName": "COHEN M.",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "TLR",
@@ -779,10 +781,10 @@
       "avatarRef": "8a01ee4dded4e1d95301"
     },
     {
-      "driverName": "George B.",
+      "driverName": "GEORGE B.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Associated",
       "chassisSource": "wix"
     },
     {
@@ -792,7 +794,7 @@
       "chassis": ""
     },
     {
-      "driverName": "Leo S.",
+      "driverName": "LEO S.",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Schumacher",
@@ -802,18 +804,18 @@
       "driverName": "MARCIA D.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Associated",
       "chassisSource": "wix"
     },
     {
-      "driverName": "Noah M.",
+      "driverName": "NOAH M.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Team Associated",
+      "chassis": "Associated",
       "chassisSource": "wix"
     },
     {
-      "driverName": "Seb F.",
+      "driverName": "SEB F.",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Schumacher",
