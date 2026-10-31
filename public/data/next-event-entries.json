@@ -4,46 +4,52 @@
   "date": "2026-11-01",
   "type": "sword",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518556",
-  "updatedAt": "2026-10-31T23:29:00.198Z",
+  "updatedAt": "2026-10-31T23:35:59.391Z",
   "entries": [
     {
       "driverName": "GEORGE B.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Team Associated"
+      "chassis": "Associated",
+      "chassisSource": "wix"
     },
     {
       "driverName": "MARCIA D.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Team Associated"
+      "chassis": "Associated",
+      "chassisSource": "wix"
     },
     {
       "driverName": "BEN E.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Team Associated",
-      "avatarRef": "024f42f35ac65248b5f6"
+      "chassis": "Associated",
+      "avatarRef": "024f42f35ac65248b5f6",
+      "chassisSource": "wix"
     },
     {
       "driverName": "SEB F.",
       "className": "Junior Racers",
       "countryCode": "GB",
       "chassis": "Schumacher",
-      "avatarRef": "526f69d40466b0869151"
+      "avatarRef": "526f69d40466b0869151",
+      "chassisSource": "wix"
     },
     {
       "driverName": "COHEN M.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Tlr",
-      "avatarRef": "8a01ee4dded4e1d95301"
+      "chassis": "TLR",
+      "avatarRef": "8a01ee4dded4e1d95301",
+      "chassisSource": "wix"
     },
     {
       "driverName": "NOAH M.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Team Associated"
+      "chassis": "Associated",
+      "chassisSource": "wix"
     },
     {
       "driverName": "LEO N.",
@@ -55,7 +61,8 @@
       "driverName": "LEO S.",
       "className": "Junior Racers",
       "countryCode": "GB",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
     },
     {
       "driverKey": "FRAN-BRAVERY",
@@ -763,64 +770,6 @@
       "countryCode": "GB",
       "chassis": "Associated",
       "chassisSource": "wix"
-    },
-    {
-      "driverName": "BEN E.",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": "Associated",
-      "chassisSource": "wix",
-      "avatarRef": "024f42f35ac65248b5f6"
-    },
-    {
-      "driverName": "COHEN M.",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": "TLR",
-      "chassisSource": "wix",
-      "avatarRef": "8a01ee4dded4e1d95301"
-    },
-    {
-      "driverName": "GEORGE B.",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": "Associated",
-      "chassisSource": "wix"
-    },
-    {
-      "driverName": "LEO N.",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": ""
-    },
-    {
-      "driverName": "LEO S.",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix"
-    },
-    {
-      "driverName": "MARCIA D.",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": "Associated",
-      "chassisSource": "wix"
-    },
-    {
-      "driverName": "NOAH M.",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": "Associated",
-      "chassisSource": "wix"
-    },
-    {
-      "driverName": "SEB F.",
-      "className": "Junior Racers",
-      "countryCode": "GB",
-      "chassis": "Schumacher",
-      "chassisSource": "wix",
-      "avatarRef": "526f69d40466b0869151"
     }
   ]
 }
