@@ -46,7 +46,7 @@ test('every archived track photograph exists locally and keeps its Facebook sour
   const gallery=readJson('data/track-gallery.json');
   for(const [eventId,event] of Object.entries(gallery.events)){
     const photos=event.photos||[];
-    if(event.sourcePost)assert.match(event.sourcePost,new RegExp(`facebook\\.com/groups/cobracardiff/posts/`),eventId);
+    if(event.sourcePost)assert.match(event.sourcePost,/facebook\.com\/(?:groups\/cobracardiff\/posts\/|share\/p\/)/,eventId);
     assert.ok(photos.length||event.designImage,eventId);
     if(event.designImage)assert.ok(existsSync(new URL(`track-gallery/${event.designImage}`,publicRoot)),`${eventId}: ${event.designImage}`);
     for(const photo of photos){

@@ -224,7 +224,34 @@
       "designImage": "../track-photos/518556/plan.png",
       "designLocation": "House of Sport",
       "flyoverUrl": "../virtual-race-replay/sword-round-2-2026-11-01-flyover.html",
-      "photos": []
+      "sourcePost": "https://www.facebook.com/share/p/1DucmKzf6V/?mibextid=wwXIfr",
+      "photos": [
+        {
+          "image": "../track-photos/518556/01.jpg",
+          "caption": "SWORD Round 2 track at House of Sport - left-side overview",
+          "location": "House of Sport"
+        },
+        {
+          "image": "../track-photos/518556/02.jpg",
+          "caption": "SWORD Round 2 track at House of Sport - central jump and tabletop section",
+          "location": "House of Sport"
+        },
+        {
+          "image": "../track-photos/518556/03.jpg",
+          "caption": "SWORD Round 2 track at House of Sport - right-side overview",
+          "location": "House of Sport"
+        },
+        {
+          "image": "../track-photos/518556/04.jpg",
+          "caption": "SWORD Round 2 track at House of Sport - full panoramic overview",
+          "location": "House of Sport"
+        },
+        {
+          "image": "../track-photos/518556/05.jpg",
+          "caption": "SWORD Round 2 track at House of Sport - drivers' stand and trackside view",
+          "location": "House of Sport"
+        }
+      ]
     },
     "518551": {
       "sourcePost": "https://www.facebook.com/groups/cobracardiff/posts/10161385713497465/",
