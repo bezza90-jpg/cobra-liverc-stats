@@ -185,7 +185,41 @@ main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
 .championship-race-body:not([hidden]) { padding:7px 0 12px; }
 .championship-race-retry{margin:8px 0;padding:8px 13px;color:#fff;background:var(--green-dark);border:0;border-radius:7px;font:inherit;font-weight:900;cursor:pointer}
 .championship-race-body .driver-run-detail { border-left:0; border-radius:8px; background:#f3f8f4; }
+.championship-race-results{display:grid;gap:12px;padding:10px;border:1px solid #c9ddce;border-radius:10px;background:#f7faf8}
+.championship-race-results>header{display:flex;align-items:end;justify-content:space-between;gap:18px;padding:2px 4px}
+.championship-race-results>header h4{margin:2px 0 0;font-size:1.05rem}
+.championship-race-results>header p{margin:0;color:var(--muted);font-size:.78rem}
+.championship-race-result-table{overflow:hidden;border:1px solid #c8d8cc;border-radius:8px;background:#fff}
+.championship-race-result-head,.championship-race-driver-result>summary{display:grid;grid-template-columns:54px minmax(180px,1.6fr) 72px 104px 92px 116px;align-items:center;gap:10px}
+.championship-race-result-head{padding:9px 12px;color:#486052;background:#edf4ef;font-size:.67rem;font-weight:900;text-transform:uppercase}
+.championship-race-driver-result{border-top:1px solid #e1e9e3}
+.championship-race-driver-result:first-of-type{border-top:0}
+.championship-race-driver-result>summary{min-height:54px;padding:8px 12px;cursor:pointer;list-style:none}
+.championship-race-driver-result>summary::-webkit-details-marker{display:none}
+.championship-race-driver-result>summary:hover{background:#edf8ef}
+.championship-race-driver-result[open]>summary{background:#e1f4e5;border-bottom:1px solid #aad5b3}
+.championship-race-driver-result summary span{min-width:0}
+.championship-race-driver-result summary strong,.championship-race-driver-result summary small{display:block}
+.championship-race-driver-result summary strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.championship-race-driver-result summary small{margin-top:2px;color:var(--muted);font-size:.64rem}
+.championship-result-position{color:var(--green-dark);font-weight:950}
+.championship-result-expand{color:var(--green-dark);font-size:.72rem;font-weight:900;text-align:right}
+.championship-race-driver-result[open] .championship-result-expand::after{content:' ▲'}
+.championship-race-driver-result:not([open]) .championship-result-expand::after{content:' ▼'}
+.championship-race-driver-body{padding:10px;background:#f3f8f4}
+.championship-race-driver-body>.info-muted{margin:8px}
 @media(max-width:760px){.championship-driver-detail{width:calc(100vw - 24px);padding:14px 10px 16px}.championship-driver-detail>header{align-items:flex-start}.championship-collapse{position:sticky;top:8px;z-index:2}.championship-round>summary{align-items:flex-start}.championship-round>summary span:last-child{font-size:.7rem}.championship-race-toggle{align-items:flex-start}.championship-race-toggle span:last-child{max-width:105px;white-space:normal;text-align:right}.championship-driver-toggle{min-width:62px}.championship-driver-toggle span{display:none}}
+@media(max-width:760px){
+  .championship-race-results{padding:6px;gap:8px}
+  .championship-race-results>header{align-items:flex-start;flex-direction:column;gap:3px;padding:4px 5px}
+  .championship-race-result-table{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .championship-race-result-head,.championship-race-driver-result{min-width:690px}
+  .championship-race-driver-body{
+    position:sticky;left:0;box-sizing:border-box;
+    width:calc(var(--championship-visible-width,calc(100vw - 44px)) - 34px);
+    max-width:calc(100vw - 54px);padding:6px;
+  }
+}
 .podium-main { width: min(1380px, calc(100% - 32px)); padding: 28px 0 50px; }
 .podium-layout { display: grid; grid-template-columns: 275px minmax(0, 1fr); gap: 22px; align-items: start; }
 .podium-sidebar { position: sticky; top: 18px; padding: 22px; }

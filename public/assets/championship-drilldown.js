@@ -44,7 +44,18 @@ export function racesForDriver(eventData, className, driverKey) {
   return (eventData?.races || []).filter(race =>
     race.className === className &&
     (race.drivers || []).some(driver => String(driver.key) === String(driverKey))
-  );
+  ).sort((a, b) => {
+    const order = race => {
+      if (race.isFinal || /main events/i.test(race.round || '')) return [0, 0];
+      const qualifier = String(race.round || '').match(/qualifier round\s*(\d+)/i);
+      if (qualifier) return [1, -Number(qualifier[1])];
+      const practice = String(race.round || '').match(/practice round\s*(\d+)/i);
+      if (practice) return [2, -Number(practice[1])];
+      return [3, 0];
+    };
+    const left = order(a), right = order(b);
+    return left[0] - right[0] || left[1] - right[1] || Number(b.id || 0) - Number(a.id || 0);
+  });
 }
 
 function roundMarkup(round, index) {
@@ -58,7 +69,41 @@ function driverMarkup(row) {
 }
 
 function raceMarkup(race) {
-  return `<article class="championship-race" data-race-id="${escapeHtml(race.id)}"><button type="button" class="championship-race-toggle" aria-expanded="false"><span><small>${escapeHtml(race.round || 'Race')}</small><strong>${escapeHtml(race.name)}</strong></span><span>Lap times and chart <b aria-hidden="true">⌄</b></span></button><div class="championship-race-body" hidden></div></article>`;
+  return `<article class="championship-race" data-race-id="${escapeHtml(race.id)}"><button type="button" class="championship-race-toggle" aria-expanded="false"><span><small>${escapeHtml(race.round || 'Race')}</small><strong>${escapeHtml(race.name)}</strong></span><span>Race result and drivers <b aria-hidden="true">⌄</b></span></button><div class="championship-race-body" hidden></div></article>`;
+}
+
+function formatRaceTime(seconds) {
+  const value = Number(seconds);
+  if (!Number.isFinite(value) || value < 0) return '—';
+  const minutes = Math.floor(value / 60);
+  return `${minutes}:${(value - minutes * 60).toFixed(3).padStart(6, '0')}`;
+}
+
+function fastestRaceLap(race, driver) {
+  const laps = (driver.laps || []).filter(lap =>
+    Number.isFinite(Number(lap.seconds)) && Number(lap.seconds) > 0 &&
+    !(race.isFinal && Number(lap.lap) === 1)
+  );
+  return laps.length ? `${Math.min(...laps.map(lap => Number(lap.seconds))).toFixed(3)}s` : '—';
+}
+
+export function raceResultMarkup(race, selectedDriverKey = '') {
+  const drivers = [...(race.drivers || [])].sort((a, b) =>
+    Number(a.finalPosition || 999) - Number(b.finalPosition || 999) ||
+    Number(b.laps?.length || 0) - Number(a.laps?.length || 0) ||
+    Number(a.officialTime || Infinity) - Number(b.officialTime || Infinity)
+  );
+  const rows = drivers.map((driver, index) => {
+    const key = String(driver.key || driver.id || driver.name);
+    const selected = key === String(selectedDriverKey);
+    const position = driver.finalPosition || index + 1;
+    const laps = (driver.laps || []).length;
+    return `<details class="championship-race-driver-result" data-driver-key="${escapeHtml(key)}"${selected ? ' open' : ''}>
+      <summary role="row"><span class="championship-result-position" role="cell">P${escapeHtml(position)}</span><span class="championship-result-driver" role="cell"><strong>${escapeHtml(driver.name)}</strong><small>Grid P${escapeHtml(driver.startPosition || '—')}</small></span><span role="cell"><strong>${laps}</strong><small>Laps</small></span><span role="cell"><strong>${formatRaceTime(driver.officialTime)}</strong><small>Time</small></span><span role="cell"><strong>${fastestRaceLap(race, driver)}</strong><small>Best lap</small></span><span class="championship-result-expand" role="cell">Driver details</span></summary>
+      <div class="championship-race-driver-body"${selected ? ' data-loaded="true"' : ''}>${selected ? driverDetail(race, driver) : '<p class="info-muted">Loading driver details…</p>'}</div>
+    </details>`;
+  }).join('');
+  return `<section class="championship-race-results" aria-label="Complete race result"><header><div><span class="eyebrow">Race result</span><h4>${escapeHtml(race.name)}</h4></div><p>Select any driver to compare laps, pace and position.</p></header><div class="championship-race-result-table" role="table"><div class="championship-race-result-head" role="row"><span role="columnheader">Pos</span><span role="columnheader">Driver</span><span role="columnheader">Laps</span><span role="columnheader">Time</span><span role="columnheader">Best lap</span><span role="columnheader">Details</span></div>${rows}</div></section>`;
 }
 
 async function loadRound(details) {
@@ -95,10 +140,28 @@ async function toggleRace(button) {
     const driver = (race.drivers || []).find(item => String(item.key || item.id || item.name) === row.dataset.driverKey);
     if (!driver) throw new Error('Driver result missing');
     body.dataset.loaded = 'true';
-    body.innerHTML = driverDetail(race, driver);
+    body.innerHTML = raceResultMarkup(race, row.dataset.driverKey);
     scheduleMobileChampionshipAlignment(row.closest('tbody'));
   } catch {
     body.innerHTML = '<p class="info-muted">Lap details are taking longer than expected.</p><button type="button" class="championship-race-retry">Try again</button>';
+  }
+}
+
+async function loadRaceDriver(details) {
+  const body = details.querySelector('.championship-race-driver-body');
+  if (!body || body.dataset.loaded === 'true') return;
+  const article = details.closest('.championship-race');
+  const row = article?.closest('.championship-driver-detail-row');
+  if (!article || !row) return;
+  try {
+    const race = await fetchJson(raceUrl(article.dataset.raceId), raceCache);
+    const driver = (race.drivers || []).find(item => String(item.key || item.id || item.name) === details.dataset.driverKey);
+    if (!driver) throw new Error('Driver result missing');
+    body.dataset.loaded = 'true';
+    body.innerHTML = driverDetail(race, driver);
+    scheduleMobileChampionshipAlignment(row.closest('tbody'));
+  } catch {
+    body.innerHTML = '<p class="info-muted">Driver details are taking longer than expected. Close and reopen this driver to try again.</p>';
   }
 }
 
@@ -182,6 +245,8 @@ export function bindChampionshipDrilldown(tbody) {
   window.addEventListener('resize', () => scheduleMobileChampionshipAlignment(tbody), {passive:true});
 
   tbody.addEventListener('toggle', event => {
+    const driverResult = event.target.closest?.('.championship-race-driver-result');
+    if (driverResult?.open) loadRaceDriver(driverResult);
     const details = event.target.closest?.('.championship-round');
     if (details?.open) loadRound(details);
     scheduleMobileChampionshipAlignment(tbody);

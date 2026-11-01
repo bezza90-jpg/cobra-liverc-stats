@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-import { racesForDriver } from '../public/assets/championship-drilldown.js';
+import { raceResultMarkup, racesForDriver } from '../public/assets/championship-drilldown.js';
 
 test('championship drilldown finds every race for the selected driver and class', async () => {
   const eventData = JSON.parse(await readFile(new URL('../public/virtual-race-replay/events/518555.json', import.meta.url), 'utf8'));
@@ -10,15 +10,27 @@ test('championship drilldown finds every race for the selected driver and class'
 
   assert.equal(races.length, 6);
   assert.deepEqual(races.map(race => race.round), [
-    'Practice Round 1',
-    'Qualifier Round 1',
-    'Qualifier Round 2',
-    'Qualifier Round 3',
+    'Main Events',
     'Qualifier Round 4',
-    'Main Events'
+    'Qualifier Round 3',
+    'Qualifier Round 2',
+    'Qualifier Round 1',
+    'Practice Round 1'
   ]);
   assert.ok(races.every(race => race.className === '2-Wheel Drive Buggy'));
   assert.ok(races.every(race => race.drivers.some(driver => driver.key === 'MATTHEW-HODGES')));
+});
+
+test('expanded races show the complete result and every driver can reveal lap detail', async () => {
+  const race = JSON.parse(await readFile(new URL('../public/virtual-race-replay/races/7178069.json', import.meta.url), 'utf8'));
+  const html = raceResultMarkup(race, 'MATTHEW-HODGES');
+  assert.match(html, /Race result/);
+  assert.match(html, /Select any driver to compare laps, pace and position/);
+  assert.equal((html.match(/class="championship-race-driver-result"/g) || []).length, 10);
+  assert.match(html, /data-driver-key="MATTHEW-HODGES" open/);
+  assert.match(html, /ROBERT WEST/);
+  assert.match(html, /P1/);
+  assert.match(html, /Driver details/);
 });
 
 test('championship rows include an accessible lazy drilldown', async () => {
@@ -36,6 +48,8 @@ test('round and race data are fetched only after expansion', async () => {
   assert.match(source, /virtual-race-replay\/events/);
   assert.match(source, /virtual-race-replay\/races/);
   assert.match(source, /driverDetail\(race, driver\)/);
+  assert.match(source, /raceResultMarkup\(race, row\.dataset\.driverKey\)/);
+  assert.match(source, /championship-race-driver-result/);
   assert.match(source, /cache: 'force-cache'/);
   assert.match(source, /preloadRaces\(races\)/);
   assert.match(source, /championship-race-retry/);
