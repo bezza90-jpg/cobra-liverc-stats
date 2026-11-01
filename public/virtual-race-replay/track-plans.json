@@ -8927,17 +8927,17 @@
     "eventId": "518556",
     "date": "2026-11-01",
     "name": "SWORD Round 2 26/27 011126",
-    "image": "../track-photos/518556/plan.png",
+    "image": "../track-photos/518556/presentation.png",
     "sourceWidth": 2400,
-    "sourceHeight": 1680,
+    "sourceHeight": 1668,
     "presentation": true,
     "border": {
-      "x": 128.5625,
-      "y": 102.8125,
-      "width": 1321.875,
-      "height": 793.125
+      "x": 149.25179856115108,
+      "y": 126.62949640287769,
+      "width": 1280.4964028776978,
+      "height": 768.2978417266187
     },
-    "revision": "20261101-presentation-png",
+    "revision": "20261101-red-jump-presentation",
     "notes": "Ribbon Studio design and the matching presentation PNG supplied together by the organiser.",
     "routeStatus": "confirmed",
     "points": [
@@ -10285,14 +10285,14 @@
     "routeLengthMetres": 146.70917561787658,
     "designVersion": 1,
     "crop": {
-      "x": 0.03125,
-      "y": 0.10416666666666667,
-      "width": 0.9375,
-      "height": 0.8035714285714286
+      "x": 0.049166666666666664,
+      "y": 0.12829736211031176,
+      "width": 0.9016666666666666,
+      "height": 0.7784172661870504
     },
     "loop": {
-      "x": 0.07239774520841159,
-      "y": 0.7342446936610445
+      "x": 0.08874165361377898,
+      "y": 0.7386520833196377
     }
   },
   "date:2026-10-11": {

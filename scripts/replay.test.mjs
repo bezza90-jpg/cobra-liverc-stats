@@ -47,7 +47,7 @@ const catalog=JSON.parse(readFileSync(new URL('catalog.json',base),'utf8'));
 }
 assert.equal(Object.keys(plans).length,28);
 assert.equal(plans['518556'].date,'2026-11-01');
-assert.equal(plans['518556'].image,'../track-photos/518556/plan.png');
+assert.equal(plans['518556'].image,'../track-photos/518556/presentation.png');
 assert.equal(plans['518556'].presentation,true);
 assert.equal(plans['518556'].designVersion,1);
 for(const [id,plan] of Object.entries(plans)){
