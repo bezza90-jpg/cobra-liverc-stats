@@ -45,7 +45,11 @@ const catalog=JSON.parse(readFileSync(new URL('catalog.json',base),'utf8'));
  assert(finishFraction(finishers[0],finishers)>finishFraction(finishers[1],finishers),'winner must park furthest beyond the finish line');
  assert(finishFraction(finishers[1],finishers)>finishFraction(finishers[2],finishers),'finishing order must run from front to back');
 }
-assert.equal(Object.keys(plans).length,27);
+assert.equal(Object.keys(plans).length,28);
+assert.equal(plans['518556'].date,'2026-11-01');
+assert.equal(plans['518556'].image,'../track-photos/518556/plan.png');
+assert.equal(plans['518556'].presentation,true);
+assert.equal(plans['518556'].designVersion,1);
 for(const [id,plan] of Object.entries(plans)){
  if(id.startsWith('date:'))assert.equal(id,`date:${plan.date}`,`${id}: date template match`);
  else assert.equal(catalog.events.find(e=>e.id===id)?.date,plan.date,`${id}: event date match`);

@@ -180,7 +180,7 @@ test('September season opener has a flat 3D route and no invented jumps',async()
 
 test('historic hand-drawn plans retain ordinary flat car motion',async()=>{
  const historic=JSON.parse(await readFile(new URL('../public/virtual-race-replay/track-plans.json',import.meta.url),'utf8'));
- for(const [id,plan] of Object.entries(historic))assert.equal(hasMeasuredJumpMotion(plan),false,`${id} must not infer jumps from a hand-drawn plan`);
+ for(const [id,plan] of Object.entries(historic)){if(id==='518556'){const design=JSON.parse(await readFile(new URL('../public/virtual-race-replay/designs/518556.json',import.meta.url),'utf8'));assert.equal(hasMeasuredJumpMotion(plan),true);assert.equal(plan.designVersion,design.version);assert.equal(plan.points.length,design.points.length);}else assert.equal(hasMeasuredJumpMotion(plan),false,`${id} must not infer jumps from a hand-drawn plan`);}
 });
 
 test('3D avatar colours retain shell, accent and wheel cues',()=>{
