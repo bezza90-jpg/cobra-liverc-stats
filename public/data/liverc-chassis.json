@@ -1,7 +1,7 @@
 {
   "MIKE-DRISCOLL": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Tlr",
+    "slug": "tlr"
   },
   "HARRY-DAVIS": {
     "name": "Team Associated",
@@ -80,8 +80,8 @@
     "slug": "xray"
   },
   "GARETH-MANNING": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Tlr",
+    "slug": "tlr"
   },
   "DAVID-DAWSON": {
     "name": "Team Associated",
@@ -100,8 +100,8 @@
     "slug": "schumacher"
   },
   "MARTYN-PRICE": {
-    "name": "Schumacher",
-    "slug": "schumacher"
+    "name": "Yokomo",
+    "slug": "yokomo"
   },
   "DALE-PRESTON": {
     "name": "Team Associated",
@@ -116,8 +116,8 @@
     "slug": "team-associated"
   },
   "CHRISTOPHER-BAKER": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "R1 Wurks",
+    "slug": "r1-wurks"
   },
   "JOHN-HAMILTON": {
     "name": "Team Associated",
@@ -144,8 +144,8 @@
     "slug": "team-associated"
   },
   "STEVEN-GRIFFITHS": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Xray",
+    "slug": "xray"
   },
   "SIMON-FISHER": {
     "name": "Team Associated",
@@ -176,8 +176,8 @@
     "slug": "xray"
   },
   "COLIN-COURT": {
-    "name": "Tlr",
-    "slug": "tlr"
+    "name": "Xray",
+    "slug": "xray"
   },
   "BRUCE": {
     "name": "Team Associated",
@@ -232,8 +232,8 @@
     "slug": "schumacher"
   },
   "HAIDEN-HICKS": {
-    "name": "Kyosho",
-    "slug": "kyosho"
+    "name": "Team Associated",
+    "slug": "team-associated"
   },
   "DANIEL-GRIFFITHS": {
     "name": "Team Associated",
@@ -512,8 +512,8 @@
     "slug": "schumacher"
   },
   "CARL-O-CONNOR": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Xray",
+    "slug": "xray"
   },
   "LEE-GROVES": {
     "name": "Team Associated",
@@ -708,8 +708,8 @@
     "slug": "schumacher"
   },
   "EDWARD-SCOTT": {
-    "name": "Team Associated",
-    "slug": "team-associated"
+    "name": "Xray",
+    "slug": "xray"
   },
   "LEO-SMITH": {
     "name": "Schumacher",
@@ -786,5 +786,25 @@
   "JONATHAN-PUZEY": {
     "name": "Team Associated",
     "slug": "team-associated"
+  },
+  "STEVE-CHAPMAN": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "RILEY-BUTLER": {
+    "name": "Schumacher",
+    "slug": "schumacher"
+  },
+  "GRAHAM-KEEP": {
+    "name": "Team Associated",
+    "slug": "team-associated"
+  },
+  "PAUL-TRODDEN": {
+    "name": "Xray",
+    "slug": "xray"
+  },
+  "ZACK-TRODDEN": {
+    "name": "Xray",
+    "slug": "xray"
   }
 }
