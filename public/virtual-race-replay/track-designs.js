@@ -54,8 +54,13 @@ export function trackPlanFromDesign(input,base={}){
    jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81,landingAtEnd:Boolean(spec.landingAtEnd),landingInsetMetres:Number(spec.landingInsetMetres)||0,touchdownProgress:Number.isFinite(Number(spec.touchdownProgress))?Number(spec.touchdownProgress):null,flightTimeScale:Number(spec.flightTimeScale)||0,minimumClearanceMetres:Number(spec.minimumClearanceMetres)||0});
   }
  }
- const points=input.points.map(point=>toPlan({x:Number(point.x),y:Number(point.y)}));
- const loop=input.loop?toPlan({x:Number(input.loop.x),y:Number(input.loop.y)}):points[0];
+ let points=input.points.map(point=>toPlan({x:Number(point.x),y:Number(point.y)}));
+ let loop=input.loop?toPlan({x:Number(input.loop.x),y:Number(input.loop.y)}):points[0];
+ if(input.loop){
+  let nearest=null;for(let i=0;i<points.length;i++){const a=points[i],b=points[(i+1)%points.length],dx=b[0]-a[0],dy=b[1]-a[1],t=Math.max(0,Math.min(1,((loop[0]-a[0])*dx+(loop[1]-a[1])*dy)/(dx*dx+dy*dy||1))),p=[a[0]+t*dx,a[1]+t*dy],distance=Math.hypot(p[0]-loop[0],p[1]-loop[1]);if(!nearest||distance<nearest.distance)nearest={i,p,distance};}
+  loop=nearest.p;points=[loop,...points.slice(nearest.i+1),...points.slice(0,nearest.i+1)].filter((p,i,a)=>!i||Math.hypot(p[0]-a[i-1][0],p[1]-a[i-1][1])>1e-8);
+ }
+
  return {...base,
   eventId:String(input.eventId||base.eventId||''),
   date:String(input.eventDate||base.date||''),name:String(input.eventName||input.name||base.name||'COBRA track'),
