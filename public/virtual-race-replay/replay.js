@@ -20,8 +20,8 @@ const planForRace=race=>trackPlans[race.eventId]||trackPlans['date:'+race.date];
 const loopPointFor=plan=>plan.loopRoute?routePoint(plan.loopRoute,plan):planPoint(plan.loop,plan);
 async function loadEventDesign(selected){
  try{
-  const response=await fetch(`designs/${selected.id}.json`);if(response.status===404)return;if(!response.ok)throw Error(`Track design unavailable (${response.status})`);
-  const base=trackPlans[selected.id]||trackPlans['date:'+selected.date]||{};trackPlans[selected.id]=trackPlanFromDesign(await response.json(),base);
+  const response=await fetch(`designs/${selected.id}.json`,{signal:AbortSignal.timeout(15000)});if(response.status===404)return;if(!response.ok)throw Error(`Track design unavailable (${response.status})`);
+  const base={eventId:selected.id,date:String(selected.date||'').slice(0,10),name:selected.name,...(trackPlans[selected.id]||trackPlans['date:'+selected.date]||{})};trackPlans[selected.id]=trackPlanFromDesign(await response.json(),base);
  }catch(error){console.warn('The 3D track design could not be loaded.',error);}
 }
 function layout(race){
@@ -31,7 +31,7 @@ function layout(race){
  const real=race.eventId==='518551'&&$('layoutSelect').value!=='oval';
  const oval='M100 500 V320 Q100 170 250 170 H1330 Q1480 170 1480 320 V680 Q1480 830 1330 830 H250 Q100 830 100 680 V500 Z';
  $('route').setAttribute('d',real?originalRoute:oval);document.querySelector('.centreline').setAttribute('d',real?originalRoute:oval);
- if(!confirmed)document.querySelector('.track>img').src=real?'track-plan.png':'oval-track.png';document.querySelector('.track>img').alt=real?'20 September 2026 COBRA circuit':'Illustrative plain grey perimeter oval';
+ document.querySelector('.track>img').hidden=!confirmed&&!real&&race.eventId!=='499054';if(!confirmed)document.querySelector('.track>img').src=real?'track-plan.png':'oval-track.png';document.querySelector('.track>img').alt=real?'20 September 2026 COBRA circuit':'Illustrative plain grey perimeter oval';
  document.querySelector('.tag').textContent=real?'20 September circuit':'Illustrative perimeter oval';
  document.querySelector('.timing').setAttribute('d',real?'M97 725 H183':'M50 500 H150');document.querySelector('.loop-label').setAttribute('x',real?'200':'165');document.querySelector('.loop-label').setAttribute('y',real?'731':'506');
  $('circuit').setAttribute('aria-label',real?'Replay following the supplied September track':'Replay around an illustrative perimeter oval');
@@ -64,11 +64,11 @@ function options(el,items,blank){el.replaceChildren();if(blank){const o=document
 function listRaces(){return event.races.filter(r=>!selectedDriver||r.drivers.some(d=>d.key===selectedDriver));}
 function raceOptions(preferred){const races=listRaces();options($('raceSelect'),races.map(r=>[r.id,`${r.round} · ${r.name}`]));$('raceSelect').value=races.some(r=>r.id===preferred)?preferred:races[0]?.id||'';$('dayPlay').disabled=!selectedDriver||!races.length;$('dayStatus').textContent=selectedDriver?`${races.length} available races for this driver, in session order.`:'Choose a driver to follow their day.';return races;}
 function syncUrl(){const url=new URL(location.href);url.searchParams.set('event',event.id);url.searchParams.set('race',$('raceSelect').value);if(selectedDriver)url.searchParams.set('driver',selectedDriver);else url.searchParams.delete('driver');if($('layoutSelect').value==='oval')url.searchParams.set('layout','oval');else url.searchParams.delete('layout');url.searchParams.delete('compare');comparisonKeys.forEach(k=>url.searchParams.append('compare',k));history.replaceState(null,'',url);const replay3d=$('open3dReplay');if(replay3d)replay3d.href=`3d.html?event=${event.id}&race=${$('raceSelect').value}`;}
-let eventToken=0;async function changeEvent(preferred){const token=++eventToken;pauseCurrent();dayMode=false;const selected=catalog.events.find(e=>e.id===$('eventSelect').value);$('play').disabled=true;$('message').textContent='Loading event…';try{const response=await fetch(`events/${selected.id}.json`);if(!response.ok)throw Error('Event unavailable');const loaded=await response.json();await loadEventDesign(selected);if(token!==eventToken)return;event=loaded;}catch(error){if(token===eventToken)$('message').textContent=error.message;return;}const drivers=new Map(event.races.flatMap(r=>r.drivers).map(d=>[d.key,d.name]));if(!drivers.has(selectedDriver))selectedDriver='';options($('focus'),[...drivers].sort((a,b)=>a[1].localeCompare(b[1])),'All drivers');$('focus').value=selectedDriver;raceOptions(preferred);dayMode=false;loadRace();}
+let eventToken=0;async function changeEvent(preferred){const token=++eventToken;pauseCurrent();dayMode=false;const selected=catalog.events.find(e=>e.id===$('eventSelect').value);$('play').disabled=true;$('message').textContent='Loading event…';try{const response=await fetch(`events/${selected.id}.json`,{signal:AbortSignal.timeout(20000)});if(!response.ok)throw Error('Event unavailable');const loaded=await response.json();await loadEventDesign(selected);if(token!==eventToken)return;event=loaded;}catch(error){if(token===eventToken)$('message').textContent=error.message;return;}const drivers=new Map(event.races.flatMap(r=>r.drivers).map(d=>[d.key,d.name]));if(!drivers.has(selectedDriver))selectedDriver='';options($('focus'),[...drivers].sort((a,b)=>a[1].localeCompare(b[1])),'All drivers');$('focus').value=selectedDriver;raceOptions(preferred);dayMode=false;loadRace();}
 function nextRace(auto=false){const races=listRaces(),idx=races.findIndex(r=>r.id===$('raceSelect').value);if(idx+1<races.length){$('raceSelect').value=races[idx+1].id;loadRace(auto);}else{dayMode=false;$('dayStatus').textContent='Driver day replay complete.';}}
 async function loadRace(autoplay=false){
- pauseCurrent();cancelAnimationFrame(frame);$('replayLapCharts').innerHTML='<h2>Lap times by driver</h2><p role="status">Loading recorded laps…</p>';const token=++loadToken;const id=$('raceSelect').value;syncUrl();$('message').textContent='Loading lap records…';$('play').disabled=true;$('downloadReplay').disabled=true;$('downloadStatus').textContent='';
- try{if(!/^\d+$/.test(id))throw Error('No matching race.');const response=await fetch(`races/${id}.json`);if(!response.ok)throw Error('Lap records unavailable.');const race=await response.json();if(token!==loadToken)return;
+ pauseCurrent();cancelAnimationFrame(frame);$('replayLapCharts').innerHTML='<h2>Lap times by driver</h2><p role="status">Loading recorded laps…</p>';const token=++loadToken;const id=$('raceSelect').value;syncUrl();$('message').textContent='Loading lap records…';$('raceName').textContent='Loading selected race…';$('raceStatus').textContent='Loading…';$('play').disabled=true;$('downloadReplay').disabled=true;$('downloadStatus').textContent='';
+ try{if(!/^\d+$/.test(id))throw Error('No matching race.');const response=await fetch(`races/${id}.json`,{signal:AbortSignal.timeout(20000)});if(!response.ok)throw Error('Lap records unavailable.');const race=await response.json();if(token!==loadToken)return;
  comparisonKeys=comparisonKeys.filter(k=>race.drivers.some(d=>d.key===k));syncUrl();
  renderLapCharts($('replayLapCharts'),race,comparisonKeys);
  $('comparisonStatus').hidden=!comparisonKeys.length;
@@ -79,7 +79,7 @@ async function loadRace(autoplay=false){
  const duration=Math.max(...drivers.map(d=>d.total));
  const retiredSlots=new Map(drivers.filter(d=>d.total<duration-Math.max(30,d.typical*2)).sort((a,b)=>a.total-b.total||a.number-b.number).map((d,i)=>[d.id,i]));
  let time=0,playing=false,last=0,lastTable=-1,focus=drivers.find(d=>d.key===selectedDriver)?.id||'';
- $('raceDate').textContent=new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(race.date+'T12:00:00Z'));$('raceName').textContent=`${race.event} · ${race.round} · ${race.name}`;$('source').href=race.source;$('timeline').max=duration;$('endTime').textContent=clock(duration);
+ $('raceDate').textContent=new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(String(race.date||event.date).slice(0,10)+'T12:00:00Z'));$('raceName').textContent=`${race.event} · ${race.round} · ${race.name}`;$('source').href=race.source;$('timeline').max=duration;$('endTime').textContent=clock(duration);
  $('cars').replaceChildren();document.querySelectorAll('#circuit filter').forEach(n=>n.remove());const path=$('route'),length=path.getTotalLength(),cars=new Map();
  const planned=$('layoutSelect').value!=='oval';
  const mainStraight=fitted?.mainStraight||(planned&&race.eventId==='518551'?{from:{x:223,y:190},to:{x:1350,y:190}}:planned&&race.eventId==='499054'?{from:{x:190,y:180},to:{x:1410,y:180}}:{from:{x:250,y:170},to:{x:1330,y:170}});
@@ -140,7 +140,7 @@ async function loadRace(autoplay=false){
  document.onvisibilitychange=()=>{if(document.hidden)setPlaying(false)};pauseCurrent=()=>setPlaying(false);
  function tick(now){if(playing){time=Math.min(duration,time+Math.min((now-last)/1000,.1)*+$('speed').value);if(time>=duration){setPlaying(false);if(dayMode){nextRace(true);return;}}render()}last=now;frame=requestAnimationFrame(tick)}render(true);frame=requestAnimationFrame(tick);if(autoplay)setPlaying(true);
 
- }catch(error){if(token!==loadToken)return;$('replayLapCharts').innerHTML='<h2>Lap times by driver</h2><p>Individual lap records are unavailable for this race.</p>';$('message').textContent='The replay could not load. '+error.message;dayMode=false;$('play').disabled=true;}
+ }catch(error){if(token!==loadToken)return;$('replayLapCharts').innerHTML='<h2>Lap times by driver</h2><p>Individual lap records are unavailable for this race.</p>';$('message').textContent='The replay could not load. '+error.message;$('raceName').textContent='Replay unavailable — see the message below';$('raceStatus').textContent='Unable to load';console.error('Replay loading failed',error);dayMode=false;$('play').disabled=true;}
 }
 try{
  const responses=await Promise.all([fetch('catalog.json'),fetch('../data/car-avatars.json'),fetch('track-plans.json')]);if(!responses[0].ok)throw Error('Race catalogue unavailable.');catalog=await responses[0].json();if(responses[1].ok)avatars=await responses[1].json();if(!responses[2].ok)throw Error('Track plan catalogue unavailable.');trackPlans=await responses[2].json();
