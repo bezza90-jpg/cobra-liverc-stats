@@ -1,3 +1,4 @@
+import {passingOffsets} from '../public/virtual-race-replay/passing-lanes.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,readFileSync,readdirSync} from 'node:fs';
@@ -33,7 +34,7 @@ test('track gallery flyovers follow the measured 3D design files',()=>{
   assert.match(replay,/mobileReplayBar\.classList\.add\('c3-flyover-menu-only'\)/);
   assert.match(replayCss,/\.c3-mobile-replay-bar\.c3-flyover-menu-only\{grid-template-columns:1fr\}/);
   assert.match(replay,/params\.get\('explore'\)===\s*'track'/);
-  assert.match(replay,/trackOnlyMode\?\[\]:drivers\.map\(carState\)/);
+  assert.match(replay,/trackOnlyMode\?\[\]:animatePassing\(drivers\.map\(carState\)\)/);
 });
 
 test('flyover camera gives heightless route points a valid ground height',()=>{
@@ -111,3 +112,10 @@ test('track gallery uses shared COBRA branding and a viewport-fitted fullscreen 
   assert.match(css,/height:100dvh/);
   assert.match(css,/object-fit:contain/);
 });
+
+{const car=(id,fraction,other={})=>({id,fraction,active:true,halfWidth:1.2,baseLane:0,...other});
+test('cars move apart before passing and keep their sides through the pass',()=>{let last=null;for(let gap=-6;gap<=6;gap+=.05){const result=passingOffsets([car('A',.5+gap/150),car('B',.5)],150,20);assert(result[0]>=0&&result[1]<=0);if(last)assert(Math.abs(result[0]-last[0])<.03);if(Math.abs(gap)<1)assert(result[0]-result[1]>.9);last=result;}assert(Math.abs(last[0])<1e-10);});
+test('timing-loop passes wrap, with no effect on distant or retired cars',()=>{assert(passingOffsets([car('A',.999),car('B',.001)],150,20)[0]>.45);assert.deepEqual(passingOffsets([car('A',.2),car('B',.5)],150,20),[0,0]);assert.deepEqual(passingOffsets([car('A',.2),car('B',.2,{active:false})],150,20),[0,0]);});
+test('movement respects track edges, preserves input, and seeking is deterministic',()=>{const cars=[car('A',.5,{halfWidth:.75}),car('B',.5,{halfWidth:.75})],before=JSON.stringify(cars),first=passingOffsets(cars,150,20);assert(first.every(x=>Math.abs(x)<=.35));assert.deepEqual(passingOffsets(cars,150,0),[0,0]);passingOffsets(cars,150,100);assert.deepEqual(passingOffsets(cars,150,20),first);assert.equal(JSON.stringify(cars),before);});
+
+}
