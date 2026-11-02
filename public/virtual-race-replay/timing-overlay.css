@@ -13,3 +13,6 @@
 .track-timings-overlay .slow{color:#ff9c80}
 .replay-fullscreen[data-view=timings] .timings-overlay-toggle{display:none}
 @media(max-width:720px){.track-timings-overlay{left:5px;top:5px;width:calc(100% - 10px);max-height:45%}.track-timings-overlay table{font-size:10px}.track-timings-overlay th,.track-timings-overlay td{padding:3px 5px}.track-timings-overlay h2{font-size:12px;padding:4px 6px}.player .bar{flex-wrap:wrap;gap:6px}.timings-overlay-toggle{font-size:12px;padding:6px 9px}}
+.timings-overlay-toggle.timings-toggle-hint{animation:timings-button-cue .7s ease-in-out 3}
+@keyframes timings-button-cue{50%{box-shadow:0 0 0 6px #9bec3950;background:#9bec39;color:#10200e}}
+@media(prefers-reduced-motion:reduce){.timings-overlay-toggle.timings-toggle-hint{animation:none}}

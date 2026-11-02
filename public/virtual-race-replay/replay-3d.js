@@ -1,5 +1,5 @@
 import {passingOffsets} from './passing-lanes.js?v=20261102';
-import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress,raceTimingAtPosition,lapPerformanceAtPosition} from './engine.js?v=20261018-timing-columns-1';
+import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress,raceTimingAtPosition,lapPerformanceAtPosition} from './engine.js?v=20261102-grid-order';
 import {paceMap} from './pace.js?v=20261020-legacy-motion-1';
 import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
 import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261102-loop-start';
@@ -96,7 +96,7 @@ function animatePassing(cars){
 }
 function advanceFollowDriver(){
   const focus=String($('focus').value||''),current=drivers.find(driver=>String(driver.id)===focus);if(!playing||!current||time<current.total||time>=duration)return;
-  const order=ordered(drivers,time),index=order.findIndex(entry=>String(entry.driver.id)===focus),below=index>=0?order.slice(index+1):[],above=index>0?order.slice(0,index):[],next=[...below,...above].find(entry=>!entry.finished);if(!next)return;
+  const order=ordered(drivers,time,pace),index=order.findIndex(entry=>String(entry.driver.id)===focus),below=index>=0?order.slice(index+1):[],above=index>0?order.slice(0,index):[],next=[...below,...above].find(entry=>!entry.finished);if(!next)return;
   const id=String(next.driver.id);$('focus').value=id;viewer.container.querySelector('[data-replay-focus]').value=id;viewer.setFollowCar(id);
 }
 function timingFor(entry){return raceTimingAtPosition(entry);}
@@ -142,7 +142,7 @@ function render(force=false){
   advanceFollowDriver();
   let cars=trackOnlyMode?[]:animatePassing(drivers.map(carState)),focus=trackOnlyMode?'':$('focus').value,follow=cars.find(car=>String(car.id)===focus),followDriver=drivers.find(driver=>String(driver.id)===focus),followStopped=followDriver&&time>=followDriver.total,followState=followStopped?(retiredSlots.has(followDriver.id)?`${surname(followDriver.name)} has retired`:`${surname(followDriver.name)} has finished`):'';viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':followState?`${followState} · race ${playing?'still playing':'paused'}`:playing?'Playing':'Paused';
   const controls=viewer.container.querySelector('[data-replay-controls]');if(controls){controls.querySelector('[data-replay-time]').value=String(time);controls.querySelector('[data-replay-clock]').textContent=clock(time);controls.querySelector('[data-replay-action="play"]').textContent=playing?'Ⅱ Pause':'▶ Play';}const mobilePlay=viewer.container.querySelector('[data-mobile-replay-play]');if(mobilePlay)mobilePlay.textContent=playing?'Ⅱ Pause':'▶ Play';
-  if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);const currentOrder=ordered(drivers,time),leader=currentOrder[0];$('order').replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,false,leader)));for(const body of viewer.container.querySelectorAll('[data-live-timing-body]'))body.replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,true,leader)));}
+  if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);const currentOrder=ordered(drivers,time,pace),leader=currentOrder[0];$('order').replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,false,leader)));for(const body of viewer.container.querySelectorAll('[data-live-timing-body]'))body.replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,true,leader)));}
 }
 function tick(timestamp){if(!playing){frame=0;return;}let delta=Math.min(.12,(timestamp-last)/1000||0);last=timestamp;time=Math.min(duration,time+delta*Number($('speed').value));if(time>=duration)playing=false;render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';frame=playing?requestAnimationFrame(tick):0;}
 function setPlaying(next){cancelAnimationFrame(frame);frame=0;playing=Boolean(next);if(playing){if(time>=duration)time=0;last=performance.now();frame=requestAnimationFrame(tick);}render();$('play').textContent=playing?'Ⅱ Pause':'▶ Play';}
