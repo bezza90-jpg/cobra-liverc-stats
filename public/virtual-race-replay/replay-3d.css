@@ -45,3 +45,16 @@
   }
   .mobile-replay-minimal .cobra3d .c3-timing-overlay[hidden]{display:none!important}
 }
+
+/* Replay controls keep the same order and row width in normal and fullscreen views. */
+#viewer .c3-toolbar [data-action="labels"],#viewer .c3-toolbar [data-action="zoom-out"],#viewer .c3-toolbar [data-action="zoom-in"],#viewer [data-replay-action="back"],#viewer [data-replay-action="forward"],#viewer .c3-replay-controls label:has([data-replay-speed]),.replay-controls #back,.replay-controls #forward,.replay-controls label:has(#speed){display:none}
+#viewer .c3-toolbar [data-action="fullscreen"]{width:144px;min-width:144px;max-width:144px;flex:0 0 144px}
+#viewer [data-replay-action="play"]{min-width:86px}
+#viewer [data-replay-clock]{font-variant-numeric:tabular-nums}
+#viewer:fullscreen .c3-toolbar,#viewer.c3-fallback-fullscreen .c3-toolbar{width:100%;max-width:var(--replay-toolbar-width,100%);box-sizing:border-box;align-self:flex-start}
+@media(max-width:720px),(orientation:landscape) and (max-height:520px) and (max-width:1024px){
+#viewer .c3-replay-controls{grid-template-columns:1fr 1fr}
+#viewer .c3-replay-controls output{grid-column:1/-1}
+#viewer .c3-replay-controls label:has([data-replay-focus]){grid-column:1/-1}
+#viewer:fullscreen .c3-replay-controls,#viewer.c3-fallback-fullscreen .c3-replay-controls{order:21;position:static}
+}
