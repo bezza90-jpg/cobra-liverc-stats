@@ -146,12 +146,13 @@ function render() {
   $('championshipSeason').textContent = `${state.activeSeason} championship standings${seasonIsPartial(state.activeSeason) ? ' · partial archive' : ''}`;
   $('championshipDates').textContent = `${dateFmt.format(new Date(`${dates.startDate}T12:00:00Z`))} to ${dateFmt.format(new Date(`${dates.endDate}T12:00:00Z`))}`;
 
-  const roundHeaders = events.map((event, index) => `<th scope="col"><a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">R${index + 1}</a><small>${dateFmt.format(new Date(`${event.d}T12:00:00Z`))}</small></th>`).join('');
-  $('standingsHead').innerHTML = `<tr><th scope="col">Pos</th><th scope="col">Driver</th><th scope="col" class="result-avatar-heading">Avatar</th><th scope="col">Rounds</th>${roundHeaders}<th scope="col">Dropped</th><th scope="col">Best ${config.bestRounds}</th><th scope="col">TQs</th><th scope="col">Wins</th></tr>`;
+  const roundColumns = Array.from({length:Math.max(events.length,Number(roundTarget)||0)},(_,index)=>events[index]||null);
+  const roundHeaders = roundColumns.map((event, index) => event ? `<th scope="col"><a href="${escapeHtml(event.u)}" target="_blank" rel="noopener">R${index + 1}</a><small>${dateFmt.format(new Date(`${event.d}T12:00:00Z`))}</small></th>` : `<th scope="col">R${index + 1}<small>Not run</small></th>`).join('');
+  $('standingsHead').innerHTML = `<tr><th scope="col">Pos</th><th scope="col">Driver</th><th scope="col" class="result-avatar-heading">Avatar</th><th scope="col">Best ${config.bestRounds}</th><th scope="col">Rounds</th>${roundHeaders}<th scope="col">TQs</th><th scope="col">Wins</th></tr>`;
 
-  const detailColspan = 8 + events.length;
+  const detailColspan = 7 + roundColumns.length;
   $('standingsBody').innerHTML = standings.length ? standings.map(driver => {
-    const roundCells = events.map(event => eventCell(driver, event)).join('');
+    const roundCells = roundColumns.map(event => event ? eventCell(driver, event) : '<td class="round-score empty-score">—</td>').join('');
     const completedRounds = driver.results.slice().sort((a, b) => b.date.localeCompare(a.date)).map(result => {
       const event = events.find(item => item.i === result.eventId);
       return { id: result.eventId, name: event?.n || `Round ${result.eventId}`, date: result.date, position: result.position, score: result.score, tq: result.tq };
@@ -160,10 +161,10 @@ function render() {
     return `<tr class="championship-driver-row" data-driver-key="${escapeHtml(driver.driverKey)}" tabindex="0" role="button" aria-expanded="false" aria-label="Show ${escapeHtml(driver.name)} championship races">
       <td>${driver.rank}${driver.tied ? '=' : ''}</td><td><a class="driver-name" href="../?driver=${encodeURIComponent(driver.driverKey)}">${escapeHtml(driver.name)}</a></td>
       <td class="result-avatar-cell" data-avatar-driver="${escapeHtml(driver.driverKey)}" data-avatar-class="${escapeHtml(activeClass)}" aria-label="Avatar"></td>
-      <td><span class="championship-round-count" aria-label="${driver.results.length} completed rounds">${driver.results.length} rounds</span></td>${roundCells}
-      <td>${driver.highestDrop || '—'}</td><td class="championship-total">${driver.total}</td><td>${driver.tqs}</td><td>${driver.wins}</td>
+      <td class="championship-total">${driver.total}</td><td><span class="championship-round-count" aria-label="${driver.results.length} completed rounds">${driver.results.length}</span></td>${roundCells}
+      <td>${driver.tqs}</td><td>${driver.wins}</td>
     </tr><tr class="championship-driver-detail-row" hidden data-driver-key="${escapeHtml(driver.driverKey)}" data-driver-name="${escapeHtml(driver.name)}" data-class-name="${escapeHtml(activeClass)}" data-rounds="${roundData}"><td colspan="${detailColspan}"></td></tr>`;
-  }).join('') : `<tr><td colspan="${8 + events.length}" class="empty-standings">No ${escapeHtml(classLabels[activeClass] || activeClass)} results have been published for this championship yet.</td></tr>`;
+  }).join('') : `<tr><td colspan="${7 + roundColumns.length}" class="empty-standings">No ${escapeHtml(classLabels[activeClass] || activeClass)} results have been published for this championship yet.</td></tr>`;
   import('./result-avatars.js?v=20261004-display').then(({hydrateResultAvatars}) => hydrateResultAvatars($('standingsBody')));
   import('./championship-drilldown.js?v=20261101-race-results').then(({bindChampionshipDrilldown}) => bindChampionshipDrilldown($('standingsBody')));
 
