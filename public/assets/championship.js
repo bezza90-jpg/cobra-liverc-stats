@@ -134,7 +134,7 @@ function render() {
   whatIfButton.disabled=state.activeSeason!==config.season||events.length>=config.scheduledRounds||!standings.length;
   document.getElementById('whatIfInvitation').hidden=whatIfButton.disabled;
   whatIfButton.title=whatIfButton.disabled?'Available for an active championship with rounds remaining':'Try future scores, dropped results and target championship positions';
-  whatIfButton.onclick=async()=>{whatIfButton.disabled=true;try{const {openWhatIf}=await import('./championship-what-if.js?v=20261102');openWhatIf({data,config,activeClass,season:state.activeSeason,events,standings});}catch(error){console.error(error);whatIfButton.textContent='Calculator unavailable — try refreshing';}finally{whatIfButton.disabled=false;}};
+  whatIfButton.onclick=async()=>{whatIfButton.disabled=true;try{const {openWhatIf}=await import('./championship-what-if.js?v=20261102-phone-png');openWhatIf({data,config,activeClass,season:state.activeSeason,events,standings});}catch(error){console.error(error);whatIfButton.textContent='Calculator unavailable — try refreshing';}finally{whatIfButton.disabled=false;}};
 
   const completedSeason = state.activeSeason !== availableSeasons()[0];
   const roundTarget = completedSeason ? events.length : config.scheduledRounds;

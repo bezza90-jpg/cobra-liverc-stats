@@ -124,3 +124,34 @@ header .race-date{font-size:20px;font-weight:750;color:#ecf2ed;margin:0 0 8px}
     display:block;height:15px;margin:0;
   }
 }
+
+/* Compact timings on the left, track on the right. */
+.replay-view-layout.is-side-by-side{display:grid;grid-template-columns:minmax(350px,.9fr) minmax(0,1.8fr);gap:16px;align-items:start}
+.replay-view-layout.is-side-by-side>.standings{grid-column:1;grid-row:1;min-width:0}
+.replay-view-layout.is-side-by-side>.player{grid-column:2;grid-row:1;min-width:0}
+.replay-view-layout.is-side-by-side .track{height:auto;max-height:580px;aspect-ratio:1579/987}
+.replay-view-layout.is-side-by-side .standings .table-wrap{max-height:700px}
+.replay-view-layout.is-side-by-side .bar{padding:9px 12px;gap:8px}
+.replay-view-layout.is-side-by-side .bar .tag{font-size:10px}
+.replay-view-layout.is-side-by-side .controls{padding:12px}
+.replay-view-layout.is-side-by-side .buttons{gap:6px}
+.replay-view-layout.is-side-by-side .buttons button,.replay-view-layout.is-side-by-side .buttons select{font-size:12px;padding:8px}
+.replay-view-layout.is-side-by-side .buttons .primary{min-width:80px}
+.replay-view-layout.is-side-by-side .standings .section-head,.replay-fullscreen[data-view=both] .standings .section-head{padding:10px}
+.replay-view-layout.is-side-by-side .standings h2,.replay-fullscreen[data-view=both] .standings h2{font-size:17px}
+.replay-view-layout.is-side-by-side table,.replay-fullscreen[data-view=both] .standings table{table-layout:fixed;white-space:normal;width:100%}
+.replay-view-layout.is-side-by-side .table-wrap,.replay-fullscreen[data-view=both] .standings .table-wrap{overflow:auto}
+.replay-view-layout.is-side-by-side th,.replay-view-layout.is-side-by-side td,.replay-fullscreen[data-view=both] .standings th,.replay-fullscreen[data-view=both] .standings td{padding:6px 4px;font-size:11px;letter-spacing:0;overflow-wrap:normal}
+.replay-view-layout.is-side-by-side th,.replay-fullscreen[data-view=both] .standings th{font-size:9px;position:sticky;top:0;background:#18291d;z-index:1}
+.replay-view-layout.is-side-by-side th:nth-child(1),.replay-fullscreen[data-view=both] .standings th:nth-child(1){width:7%}
+.replay-view-layout.is-side-by-side th:nth-child(2),.replay-fullscreen[data-view=both] .standings th:nth-child(2){width:28%}
+.replay-view-layout.is-side-by-side th:nth-child(3),.replay-fullscreen[data-view=both] .standings th:nth-child(3){width:16%}
+.replay-view-layout.is-side-by-side th:nth-child(4),.replay-fullscreen[data-view=both] .standings th:nth-child(4){width:13%}
+.replay-view-layout.is-side-by-side th:nth-child(5),.replay-fullscreen[data-view=both] .standings th:nth-child(5){width:15%}
+.replay-view-layout.is-side-by-side th:nth-child(6),.replay-fullscreen[data-view=both] .standings th:nth-child(6){width:21%}
+.replay-view-layout.is-side-by-side .chip,.replay-fullscreen[data-view=both] .standings .chip{min-width:18px;width:18px;height:20px;border-radius:4px;margin-right:4px;font-size:10px}
+.replay-fullscreen[data-view=both] .fullscreen-panels{display:grid;grid-template-columns:minmax(330px,.9fr) minmax(0,1.8fr);gap:10px;transform:none}
+.replay-fullscreen[data-view=both] .fullscreen-panels>.player{grid-column:2;grid-row:1;min-height:0;height:100%;width:100%}
+.replay-fullscreen[data-view=both] .fullscreen-panels>.standings{grid-column:1;grid-row:1;min-height:0;height:100%;width:100%;overflow:auto}
+@media(max-width:700px){.replay-view-layout.is-side-by-side{display:flex;flex-direction:column}.replay-view-layout.is-side-by-side>.standings,.replay-view-layout.is-side-by-side>.player{width:100%}.replay-fullscreen[data-view=both] .fullscreen-panels{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(0,1fr);overflow:auto}.replay-fullscreen[data-view=both] .fullscreen-panels>.player{grid-column:1;grid-row:1}.replay-fullscreen[data-view=both] .fullscreen-panels>.standings{grid-column:1;grid-row:2}}
+.replay-view-layout.is-side-by-side .standings .section-head,.replay-fullscreen[data-view=both] .standings .section-head{display:none}

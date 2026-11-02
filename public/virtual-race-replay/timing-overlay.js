@@ -15,6 +15,7 @@ if(track&&bar&&source){
  const ready=()=>{if(!timer&&!introDone&&!touched&&inView&&source.children.length&&document.visibilityState!=='hidden')timer=setTimeout(hideIntro,2200);};
  const update=()=>{body.replaceChildren(...[...source.children].map(row=>row.cloneNode(true)));ready();};update();new MutationObserver(update).observe(source,{childList:true,subtree:true,characterData:true});
  const observer=new IntersectionObserver(entries=>{inView=entries.some(e=>e.isIntersecting&&e.intersectionRatio>=.15);ready()},{threshold:.15});observer.observe(track);document.addEventListener('visibilitychange',ready);
+ document.addEventListener('replay-combined-view',()=>{cancelIntro();setVisible(false);});
  button.addEventListener('click',()=>{cancelIntro();setVisible(overlay.hidden);});button.addEventListener('focus',cancelIntro);
  track.addEventListener('pointerdown',event=>{press=null;if(event.button!==0||event.target.closest('button,a,input,select,label,[role="button"]'))return;cancelIntro();press={id:event.pointerId,x:event.clientX,y:event.clientY,time:performance.now()};});
  track.addEventListener('pointerup',event=>{const p=press;press=null;if(!p||event.pointerId!==p.id||Math.hypot(event.clientX-p.x,event.clientY-p.y)>8||performance.now()-p.time>600||event.target.closest('button,a,input,select,label,[role="button"]'))return;setVisible(overlay.hidden);});track.addEventListener('pointercancel',()=>{press=null;});scroll.addEventListener('scroll',cancelIntro,{passive:true});
