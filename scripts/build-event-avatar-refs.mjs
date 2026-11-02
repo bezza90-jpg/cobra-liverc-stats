@@ -25,7 +25,10 @@ async function writeJson(file, value) {
   if (current !== output) await writeFile(file, output);
 }
 
-export async function buildEventAvatarReferences() {
+export async function buildEventAvatarReferences({publicRoot: fixtureRoot} = {}) {
+  const publicRoot = fixtureRoot || path.join(root, 'public');
+  const data = name => path.join(publicRoot, 'data', name);
+  const targetDirectory = path.join(publicRoot, 'assets', 'event-avatar-refs');
   const avatars = await json(data('car-avatars.json'));
   const directory = await json(data('driver-directory.json'), {drivers:[]});
   await mkdir(targetDirectory, {recursive:true});
