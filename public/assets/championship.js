@@ -129,6 +129,13 @@ function render() {
   const events = championshipEvents(activeClass);
   const standings = calculateStandings(activeClass, events);
   const dates = seasonDates(state.activeSeason);
+  let whatIfButton=document.getElementById('whatIfCalculator');
+  if(!whatIfButton){whatIfButton=document.createElement('button');whatIfButton.id='whatIfCalculator';whatIfButton.type='button';whatIfButton.textContent='What If calculator';whatIfButton.style.cssText='margin:10px 0 16px;padding:11px 18px;border:1px solid #088125;border-radius:8px;background:#087b16;color:white;font:750 15px system-ui;cursor:pointer';$('standingsClass').closest('h2').after(whatIfButton);const invitation=document.createElement('h3');invitation.id='whatIfInvitation';invitation.textContent='Dream big and see what you need to get where you want!';invitation.style.cssText='margin:0 0 16px;color:#426142;font-weight:650';whatIfButton.before(invitation);}
+  whatIfButton.disabled=state.activeSeason!==config.season||events.length>=config.scheduledRounds||!standings.length;
+  document.getElementById('whatIfInvitation').hidden=whatIfButton.disabled;
+  whatIfButton.title=whatIfButton.disabled?'Available for an active championship with rounds remaining':'Try future scores, dropped results and target championship positions';
+  whatIfButton.onclick=async()=>{whatIfButton.disabled=true;try{const {openWhatIf}=await import('./championship-what-if.js?v=20261102');openWhatIf({data,config,activeClass,season:state.activeSeason,events,standings});}catch(error){console.error(error);whatIfButton.textContent='Calculator unavailable — try refreshing';}finally{whatIfButton.disabled=false;}};
+
   const completedSeason = state.activeSeason !== availableSeasons()[0];
   const roundTarget = completedSeason ? events.length : config.scheduledRounds;
 
