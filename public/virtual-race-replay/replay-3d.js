@@ -1,3 +1,4 @@
+import {passingOffsets} from './passing-lanes.js?v=20261102';
 import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress,raceTimingAtPosition,lapPerformanceAtPosition} from './engine.js?v=20261018-timing-columns-1';
 import {paceMap} from './pace.js?v=20261020-legacy-motion-1';
 import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
@@ -87,6 +88,12 @@ function carState(driver,index){
   }else if(time>=duration){fraction=finishFraction(driver,drivers);point=viewer.routeAt(fraction);ahead=viewer.routeAt(fraction+.001);yaw=Math.atan2(ahead.y-point.y,ahead.x-point.x);z=activeLift(fraction,speed)+trackSurface;pitch=0;}
   return{id:driver.id,fraction,x:point.x+normal.x*lane,y:point.y+normal.y*lane,z,yaw,pitch,roll,onFire:retired,firePhase:time*7,vehicleType:/^(trucks?|mother truckers?)$/i.test(String(race?.className||'').trim())?'truck':'buggy',length:1.02,width:.66,height:.33,color:driver.color,accentColor:driver.accentColor,secondaryColor:driver.secondaryColor,tertiaryColor:driver.tertiaryColor,wheelColor:driver.wheelColor,colorLayout:driver.colorLayout,label:surname(driver.name),number:driver.number};
 }
+function animatePassing(cars){
+ if(time>=duration)return cars;
+ const entries=cars.map((car,index)=>{const centre=viewer.routeAt(car.fraction),normal={x:-Math.sin(car.yaw),y:Math.cos(car.yaw)};let nearest=null,score=Infinity;for(const point of design.points||[]){const distance=(point.x-centre.x)**2+(point.y-centre.y)**2;if(distance<score){score=distance;nearest=point;}}return{id:car.id,fraction:car.fraction,active:!car.onFire&&time<drivers[index].total,halfWidth:Number(nearest?.w)||1.2,baseLane:(car.x-centre.x)*normal.x+(car.y-centre.y)*normal.y};});
+ const offsets=passingOffsets(entries,viewer.scene.routeLength,time);
+ return cars.map((car,index)=>({...car,x:car.x-Math.sin(car.yaw)*offsets[index],y:car.y+Math.cos(car.yaw)*offsets[index]}));
+}
 function advanceFollowDriver(){
   const focus=String($('focus').value||''),current=drivers.find(driver=>String(driver.id)===focus);if(!playing||!current||time<current.total||time>=duration)return;
   const order=ordered(drivers,time),index=order.findIndex(entry=>String(entry.driver.id)===focus),below=index>=0?order.slice(index+1):[],above=index>0?order.slice(0,index):[],next=[...below,...above].find(entry=>!entry.finished);if(!next)return;
@@ -133,7 +140,7 @@ function addLiveTiming(){
 }
 function render(force=false){
   advanceFollowDriver();
-  let cars=trackOnlyMode?[]:drivers.map(carState),focus=trackOnlyMode?'':$('focus').value,follow=cars.find(car=>String(car.id)===focus),followDriver=drivers.find(driver=>String(driver.id)===focus),followStopped=followDriver&&time>=followDriver.total,followState=followStopped?(retiredSlots.has(followDriver.id)?`${surname(followDriver.name)} has retired`:`${surname(followDriver.name)} has finished`):'';viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':followState?`${followState} · race ${playing?'still playing':'paused'}`:playing?'Playing':'Paused';
+  let cars=trackOnlyMode?[]:animatePassing(drivers.map(carState)),focus=trackOnlyMode?'':$('focus').value,follow=cars.find(car=>String(car.id)===focus),followDriver=drivers.find(driver=>String(driver.id)===focus),followStopped=followDriver&&time>=followDriver.total,followState=followStopped?(retiredSlots.has(followDriver.id)?`${surname(followDriver.name)} has retired`:`${surname(followDriver.name)} has finished`):'';viewer.setFollowCar(focus);if(follow)viewer.target={x:follow.x,y:follow.y,z:Math.max(0,follow.z)};viewer.setCars(cars);$('clock').textContent=clock(time);$('timeline').value=String(time);$('status').textContent=time>=duration?'Race complete':followState?`${followState} · race ${playing?'still playing':'paused'}`:playing?'Playing':'Paused';
   const controls=viewer.container.querySelector('[data-replay-controls]');if(controls){controls.querySelector('[data-replay-time]').value=String(time);controls.querySelector('[data-replay-clock]').textContent=clock(time);controls.querySelector('[data-replay-action="play"]').textContent=playing?'Ⅱ Pause':'▶ Play';}const mobilePlay=viewer.container.querySelector('[data-mobile-replay-play]');if(mobilePlay)mobilePlay.textContent=playing?'Ⅱ Pause':'▶ Play';
   if(force||Math.floor(time*2)!==render.lastOrder){render.lastOrder=Math.floor(time*2);const currentOrder=ordered(drivers,time),leader=currentOrder[0];$('order').replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,false,leader)));for(const body of viewer.container.querySelectorAll('[data-live-timing-body]'))body.replaceChildren(...currentOrder.map((entry,index)=>timingRow(entry,index,true,leader)));}
 }

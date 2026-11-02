@@ -1,7 +1,7 @@
 .player .track{position:relative}
 .timings-overlay-toggle{cursor:pointer;padding:8px 13px;border:1px solid #668752;border-radius:8px;background:#1c3522;color:#efffe5;font:700 13px system-ui;white-space:nowrap}
 .timings-overlay-toggle[aria-pressed=true]{background:#9bec39;color:#10200e;border-color:#9bec39}
-.track-timings-overlay{position:absolute;z-index:3;left:12px;top:12px;width:min(830px,calc(100% - 24px));max-height:48%;display:flex;flex-direction:column;background:#07150ddd;border:1px solid #779a6580;border-radius:9px;box-shadow:0 2px 12px #0007;color:#f4ffef;font:12px/1.4 system-ui;text-align:left;backdrop-filter:blur(3px)}
+.track-timings-overlay{position:absolute;z-index:3;left:12px;top:12px;width:min(830px,calc(100% - 24px));max-height:80%;display:flex;flex-direction:column;background:#07150ddd;border:1px solid #779a6580;border-radius:9px;box-shadow:0 2px 12px #0007;color:#f4ffef;font:12px/1.4 system-ui;text-align:left;backdrop-filter:blur(3px)}
 .track-timings-overlay[hidden]{display:none}
 .track-timings-overlay h2{font-size:15px;color:#a8f34f;margin:0;padding:8px 10px}
 .track-timings-scroll{overflow:auto;min-height:0;overscroll-behavior:contain}
