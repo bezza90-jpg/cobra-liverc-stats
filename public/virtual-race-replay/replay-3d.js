@@ -1,7 +1,7 @@
 import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress,raceTimingAtPosition,lapPerformanceAtPosition} from './engine.js?v=20261018-timing-columns-1';
 import {paceMap} from './pace.js?v=20261020-legacy-motion-1';
 import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
-import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261017-trestle-hop-1';
+import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261102-loop-start';
 import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-6';
 import {sharedRaceVideo} from '../assets/shared-race-video.js?v=20260929-shared-races';
 

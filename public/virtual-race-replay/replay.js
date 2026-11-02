@@ -4,7 +4,7 @@ import {downloadReplayVideo,recordingFormat} from './replay-export.js';
 import {paceMap} from './pace.js';
 import {legacyJumpProfile} from './jumps.js?v=20261020-original-2d-jumps-1';
 import {renderPlan,planPoint,routePath,straightFor,gridPositions,routePoint} from './track-layouts.js?v=20261017-finals-grid';
-import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261017-trestle-hop-1';
+import {trackPlanFromDesign,hasMeasuredJumpMotion} from './track-designs.js?v=20261102-loop-start';
 if(window.self!==window.top)document.documentElement.classList.add('embedded');
 import {prepare,ordered,timeAtProgress,visualFraction,raceTimingAtPosition,lapPerformanceAtPosition} from './engine.js?v=20261018-timing-columns-1';
 const $=id=>document.getElementById(id),svgNS='http://www.w3.org/2000/svg';
