@@ -1,3 +1,4 @@
+import {fullRaceResult,bindFullRaceResult} from './race-result-view.js?v=20261102';
 import { nextMeeting } from './event-calendar.js?v=20260926-midnight';
 import { facebookShareLink, lapLineColour } from './lap-charts.js?v=20261026-native-share';
 
@@ -116,11 +117,7 @@ export function driverDetail(race, driver) {
   return `<div class="driver-run-detail current-event-driver-detail"><div class="run-detail-summary">${averages}<span class="run-summary-fastest"><strong>${best === null ? '—' : `${best.toFixed(3)}s`}</strong><small data-mobile-label="Fastest">Fastest lap</small></span><span><strong>${averageTimed === null ? '—' : `${averageTimed.toFixed(3)}s`}</strong><small data-mobile-label="Average">Average timed lap</small></span><span><strong>${timedLaps.length}</strong><small data-mobile-label="Laps">Timed laps</small></span></div><div class="run-detail-columns"><div class="run-lap-list"><h4>${escapeHtml(driver.name)} lap times</h4><div class="table-wrap"><table class="run-laps-table"><thead><tr><th>Lap</th><th>Time</th><th>Pos</th></tr></thead><tbody>${rows}</tbody></table></div></div><aside class="run-detail-chart"><h4>Lap chart</h4><p class="run-lap-chart-help">Select a point to outline that lap.</p><p class="lap-point-readout" aria-live="polite">Select a point to see its lap time.</p><div class="run-lap-chart-scroll">${lapChart(allLaps, best, prefix, race)}</div><div class="run-lap-chart-legend"><span><i class="lap-fastest"></i>Fastest</span><span><i class="lap-near-fastest"></i>Within 0.3s</span><span><i class="lap-slow"></i>1.5s+ slower</span></div><div class="run-detail-links"><a href="../lap-charts/?race=${encodeURIComponent(race.id)}&driver=${encodeURIComponent(driver.key || driver.name)}">Open full COBRA lap chart</a>${facebookShareLink(race.id,driver.key||driver.id||driver.name)}<a href="../virtual-race-replay/?race=${encodeURIComponent(race.id)}">Watch 2D replay</a></div></aside></div></div>`;
 }
 
-function standingsMarkup(race) {
-  const drivers = [...(race.drivers || [])].sort((a, b) => Number(a.finalPosition || 999) - Number(b.finalPosition || 999));
-  const rows = drivers.map(driver => `<tr><td>P${driver.finalPosition || '—'}</td><td><button type="button" class="current-event-driver" data-driver-key="${escapeHtml(driver.key || driver.id || driver.name)}">${escapeHtml(driver.name)}</button></td><td>${(driver.laps || []).length}</td><td>${formatTime(driver.officialTime)}</td></tr>`).join('');
-  return `<div class="current-event-race-result"><div class="current-event-result-actions">${facebookShareLink(race.id)}</div><div class="table-wrap"><table class="current-event-standings"><thead><tr><th>Pos</th><th>Driver</th><th>Laps</th><th>Time</th></tr></thead><tbody>${rows}</tbody></table></div><div class="current-event-driver-slot" aria-live="polite"></div></div>`;
-}
+export function standingsMarkup(race) { return fullRaceResult(race,'',driverDetail,driver=>{const laps=(driver.laps||[]).filter(l=>Number(l.seconds)>0&&!(isFinalRace(race)&&Number(l.lap)===1));return laps.length?Math.min(...laps.map(l=>Number(l.seconds))).toFixed(3)+'s':'—';}); }
 
 async function raceDetail(raceId) {
   if (!raceCache.has(raceId)) raceCache.set(raceId, fetchJson(`../virtual-race-replay/races/${encodeURIComponent(raceId)}.json`));
@@ -135,6 +132,7 @@ async function loadRace(details) {
     const race = await raceDetail(details.dataset.raceId);
     host.dataset.loaded = 'true';
     host.innerHTML = standingsMarkup(race);
+    bindFullRaceResult(host,race,driverDetail);
     host.dataset.race = JSON.stringify(race);
   } catch {
     raceCache.delete(details.dataset.raceId);

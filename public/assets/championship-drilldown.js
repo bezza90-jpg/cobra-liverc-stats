@@ -1,4 +1,5 @@
-import { driverDetail } from './current-event-feed.js?v=20261024-round-aware-laps';
+import {fullRaceResult} from './race-result-view.js?v=20261102';
+import { driverDetail } from './current-event-feed.js?v=20261102-full-race';
 
 const eventCache = new Map();
 const raceCache = new Map();
@@ -87,24 +88,7 @@ function fastestRaceLap(race, driver) {
   return laps.length ? `${Math.min(...laps.map(lap => Number(lap.seconds))).toFixed(3)}s` : '—';
 }
 
-export function raceResultMarkup(race, selectedDriverKey = '') {
-  const drivers = [...(race.drivers || [])].sort((a, b) =>
-    Number(a.finalPosition || 999) - Number(b.finalPosition || 999) ||
-    Number(b.laps?.length || 0) - Number(a.laps?.length || 0) ||
-    Number(a.officialTime || Infinity) - Number(b.officialTime || Infinity)
-  );
-  const rows = drivers.map((driver, index) => {
-    const key = String(driver.key || driver.id || driver.name);
-    const selected = key === String(selectedDriverKey);
-    const position = driver.finalPosition || index + 1;
-    const laps = (driver.laps || []).length;
-    return `<details class="championship-race-driver-result" data-driver-key="${escapeHtml(key)}"${selected ? ' open' : ''}>
-      <summary role="row"><span class="championship-result-position" role="cell">P${escapeHtml(position)}</span><span class="championship-result-driver" role="cell"><strong>${escapeHtml(driver.name)}</strong><small>Grid P${escapeHtml(driver.startPosition || '—')}</small></span><span role="cell"><strong>${laps}</strong><small>Laps</small></span><span role="cell"><strong>${formatRaceTime(driver.officialTime)}</strong><small>Time</small></span><span role="cell"><strong>${fastestRaceLap(race, driver)}</strong><small>Best lap</small></span><span class="championship-result-expand" role="cell">Driver details</span></summary>
-      <div class="championship-race-driver-body"${selected ? ' data-loaded="true"' : ''}>${selected ? driverDetail(race, driver) : '<p class="info-muted">Loading driver details…</p>'}</div>
-    </details>`;
-  }).join('');
-  return `<section class="championship-race-results" aria-label="Complete race result"><header><div><span class="eyebrow">Race result</span><h4>${escapeHtml(race.name)}</h4></div><p>Select any driver to compare laps, pace and position.</p></header><div class="championship-race-result-table" role="table"><div class="championship-race-result-head" role="row"><span role="columnheader">Pos</span><span role="columnheader">Driver</span><span role="columnheader">Laps</span><span role="columnheader">Time</span><span role="columnheader">Best lap</span><span role="columnheader">Details</span></div>${rows}</div></section>`;
-}
+export function raceResultMarkup(race, selectedDriverKey = '') { return fullRaceResult(race,selectedDriverKey,driverDetail,driver=>fastestRaceLap(race,driver)); }
 
 async function loadRound(details) {
   const body = details.querySelector('.championship-round-body');

@@ -134,7 +134,7 @@ function render() {
   whatIfButton.disabled=state.activeSeason!==config.season||events.length>=config.scheduledRounds||!standings.length;
   document.getElementById('whatIfInvitation').hidden=whatIfButton.disabled;
   whatIfButton.title=whatIfButton.disabled?'Available for an active championship with rounds remaining':'Try future scores, dropped results and target championship positions';
-  whatIfButton.onclick=async()=>{whatIfButton.disabled=true;try{const {openWhatIf}=await import('./championship-what-if.js?v=20261102-phone-png');openWhatIf({data,config,activeClass,season:state.activeSeason,events,standings});}catch(error){console.error(error);whatIfButton.textContent='Calculator unavailable — try refreshing';}finally{whatIfButton.disabled=false;}};
+  whatIfButton.onclick=async()=>{whatIfButton.disabled=true;try{const {openWhatIf}=await import('./championship-what-if.js?v=20261102-attendance');openWhatIf({data,config,activeClass,season:state.activeSeason,events,standings});}catch(error){console.error(error);whatIfButton.textContent='Calculator unavailable — try refreshing';}finally{whatIfButton.disabled=false;}};
 
   const completedSeason = state.activeSeason !== availableSeasons()[0];
   const roundTarget = completedSeason ? events.length : config.scheduledRounds;
@@ -173,7 +173,7 @@ function render() {
     </tr><tr class="championship-driver-detail-row" hidden data-driver-key="${escapeHtml(driver.driverKey)}" data-driver-name="${escapeHtml(driver.name)}" data-class-name="${escapeHtml(activeClass)}" data-rounds="${roundData}"><td colspan="${detailColspan}"></td></tr>`;
   }).join('') : `<tr><td colspan="${7 + roundColumns.length}" class="empty-standings">No ${escapeHtml(classLabels[activeClass] || activeClass)} results have been published for this championship yet.</td></tr>`;
   import('./result-avatars.js?v=20261004-display').then(({hydrateResultAvatars}) => hydrateResultAvatars($('standingsBody')));
-  import('./championship-drilldown.js?v=20261101-race-results').then(({bindChampionshipDrilldown}) => bindChampionshipDrilldown($('standingsBody')));
+  import('./championship-drilldown.js?v=20261102-full-race').then(({bindChampionshipDrilldown}) => bindChampionshipDrilldown($('standingsBody')));
 
   $('roundLinks').innerHTML = events.length ? events.map((event, index) => `<a class="event-link" href="${escapeHtml(event.u)}" target="_blank" rel="noopener">Round ${index + 1}: ${escapeHtml(event.n)}</a>`).join('') : '<p class="empty-state">Rounds will appear automatically after LiveRC publishes the results.</p>';
   $('rulesSummary').textContent = `100 points for 1st, reducing by one point per overall position. TQ earns 1 bonus point. Up to the best ${config.bestRounds} rounds count. DNS and DNF score their published overall position. Ties are decided by the highest dropped score; if that is also equal, the position remains tied.`;

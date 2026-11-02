@@ -1,0 +1,26 @@
+// Public, read-only current-meeting attendance for the championship calculator.
+// Returns existing public driver keys only: no contacts, recipient IDs, tokens or arrival times.
+function publicChampionshipAttendance_(e){
+ const p=e&&e.parameter||{},callback=String(p.callback||'');if(callback&&!/^[A-Za-z_$][A-Za-z0-9_$]{0,80}$/.test(callback))return ContentService.createTextOutput(JSON.stringify({available:false,reason:'Invalid callback.'})).setMimeType(ContentService.MimeType.JSON);const result=publicChampionshipAttendanceData_(p);
+ return ContentService.createTextOutput(callback?callback+'('+JSON.stringify(result)+');':JSON.stringify(result)).setMimeType(callback?ContentService.MimeType.JAVASCRIPT:ContentService.MimeType.JSON);
+}
+function publicChampionshipAttendanceData_(p){
+ const today=Utilities.formatDate(new Date(),'Europe/London','yyyy-MM-dd'),series=String(p.series||''),className=String(p.className||''),empty={available:false,checkedInDriverKeys:[],checkedAt:new Date().toISOString()};if(!['sword','club'].includes(series))return {...empty,reason:'Choose a championship.'};
+ const cache=CacheService.getScriptCache(),cacheKey='public-attendance-v2:'+today+':'+series+':'+className,cached=cache.get(cacheKey);if(cached)return JSON.parse(cached);
+ try{
+  const get=url=>{const r=UrlFetchApp.fetch(url,{muteHttpExceptions:true});if(r.getResponseCode()!==200)throw Error('Public championship data unavailable.');return JSON.parse(r.getContentText());},config=get('https://racehub.cobracardiff.co.uk/data/championships.json')[series];if(!config||!config.classes.includes(className))return {...empty,reason:'Choose a championship class.'};
+  const events=raceDayEvents_(),matches=events.filter(event=>Utilities.formatDate(new Date(event.date),'Europe/London','yyyy-MM-dd')===today&&(/sword/i.test(event.title)===(series==='sword')));if(matches.length!==1){const unavailable={...empty,reason:matches.length?'The current event is ambiguous. Use manual attendance.':'There is no matching COBRA event today.'};cache.put(cacheKey,JSON.stringify(unavailable),25);return unavailable;}
+  const event=matches[0],day=Utilities.formatDate(new Date(event.date),'Europe/London','yyyy-MM-dd');if(day<config.startDate||day>config.endDate)return {...empty,reason:'The event is outside the active championship season.'};
+  const explicit=String(event.title).match(/round\s*(\d+)/i),seasonEvents=events.filter(ev=>{const date=Utilities.formatDate(new Date(ev.date),'Europe/London','yyyy-MM-dd');return date>=config.startDate&&date<=config.endDate&&(/sword/i.test(ev.title)===(series==='sword'))&&(series==='sword'||/club\s*(day|round|meeting)/i.test(ev.title));}).sort((a,b)=>a.date.localeCompare(b.date)),roundNumber=explicit?Number(explicit[1]):seasonEvents.findIndex(ev=>ev.id===event.id)+1;if(!roundNumber||roundNumber>config.scheduledRounds)return {...empty,reason:'The event could not be matched to a championship round.'};
+  const data=get('https://racehub.cobracardiff.co.uk/data/championship-results.json'),eventIds=new Set(data.events.filter(ev=>ev.t===config.eventType&&ev.d>=config.startDate&&ev.d<=today).map(ev=>String(ev.i))),eligible=new Set(data.eventResults.filter(row=>eventIds.has(String(row[0]))&&row[2]===className&&Number(row[4])>0&&/(?:main|final)/i.test(row[7]||'')).map(row=>String(row[3]))),normal=name=>String(name||'').normalize('NFKD').toUpperCase().replace(/[^A-Z0-9]/g,''),names={};
+  for(const driver of data.drivers||[]){if(!eligible.has(String(driver.k)))continue;const key=normal(driver.n);if(names[key]&&names[key]!==driver.k)names[key]=false;else if(!(key in names))names[key]=String(driver.k);}
+  // Class membership stays server-side. Refresh the larger Wix guest list less
+  // often than arrivals; an arrival in another class must not imply this class.
+  const membershipKey='public-attendance-members:'+event.id,stored=cache.get(membershipKey);let members;
+  if(stored)members=JSON.parse(stored);else{members={};for(const row of raceDaySnapshot_(event.id).rows||[]){const name=normal(row.name||row.driver);members[name]=[...new Set([...(members[name]||[]),...(row.classes||[])])];}const encoded=JSON.stringify(members);if(encoded.length<90000)cache.put(membershipKey,encoded,120);}
+  const classLabels={'2-Wheel Drive Buggy':'2WD','4-Wheel Drive Buggy':'4WD','Junior Racers':'Junior','Trucks':'Trucks','Vintage':'Vintage'},label=classLabels[className]||className;
+  const checked=new Set();for(const row of eventCheckins_({eventId:event.id}).rows||[]){if(!row.checkedInAt)continue;const name=normal(row.driver||row.name),key=names[name];if(key&&(members[name]||[]).includes(label))checked.add(key);}
+  const registered=new Set();for(const name of Object.keys(members)){const key=names[name];if(key&&(members[name]||[]).includes(label))registered.add(key);}
+  const result={available:true,event:{id:event.id,title:event.title,date:day,roundNumber:roundNumber,series:series},registeredDriverKeys:[...registered].sort(),checkedInDriverKeys:[...checked].sort(),checkedAt:new Date().toISOString()};cache.put(cacheKey,JSON.stringify(result),25);return result;
+ }catch(error){return {...empty,reason:'Live attendance is temporarily unavailable. Use manual attendance.'};}
+}
