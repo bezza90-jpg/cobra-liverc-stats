@@ -166,6 +166,30 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-10-30T22:58:00+00:00"
+    },
+    "MIKE-MOYSE|2-Wheel Drive Buggy": {
+      "submissionIdHash": "abbcc99705efa0e99798b4a28c73190d3f744b6aa6b96f10c34a1d8a218c51e9",
+      "reviewedFileIdHash": "3060cc323847a17da07d284260557ae27a0eb7dac4c357cc451f4a91efa9e566",
+      "sha256": "df3ca232772d0bd63800d387461ff4b151bfe1ffdddce231eac862e093278d61",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-03T22:14:19.089Z",
+      "source": "Existing finished cutout saved 28 October; authorised for publication 3 November; no new image generation or reshaping."
+    },
+    "MIKE-MOYSE|4-Wheel Drive Buggy": {
+      "submissionIdHash": "a1902a6d655ad185592e844dd61cd28134f5bb681adbea63b4fb8f2d96fc4b97",
+      "reviewedFileIdHash": "ff146622f9d0f8b6e3bd93fab73605750f7fc9a4a86d8dbf88979c457aed75a6",
+      "sha256": "7e86e37681cb653838804d5c1178c54ec9f114b4876241e3378c4b6cdb91e19f",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-03T22:14:21.933Z",
+      "source": "Existing finished cutout saved 28 October; authorised for publication 3 November; no new image generation or reshaping."
     }
   },
   "publishedAssets": {
@@ -351,7 +375,11 @@
     "assets/car-avatars/OLI-NATRESS-AI-2WD.png": "4a652d037d75053b70040d09d0fc046fc6185aef",
     "assets/car-avatar-thumbnails/OLI-NATRESS-AI-2WD.webp": "b65627ae56c9fbf7d6e0e56f41f045fa719f1899",
     "assets/car-avatars/OLI-NATRESS-AI-4WD.png": "980a546bbb77f1f10a617bfb26db2289377b7f69",
-    "assets/car-avatar-thumbnails/OLI-NATRESS-AI-4WD.webp": "caf7a508259595faaa89d55993f32ea8dd93d144"
+    "assets/car-avatar-thumbnails/OLI-NATRESS-AI-4WD.webp": "caf7a508259595faaa89d55993f32ea8dd93d144",
+    "assets/car-avatars/MIKE-MOYSE-REVIEWED-2WD.png": "54c4288d8d230cdd708b860f4cf133dff12a9f64",
+    "assets/car-avatar-thumbnails/MIKE-MOYSE-REVIEWED-2WD.webp": "156b4d6773469eb60b25d04e21e377ad24a02ccc",
+    "assets/car-avatars/MIKE-MOYSE-REVIEWED-4WD.png": "3c4843f1e4fdd9cef511e5e2c71e1d833b233602",
+    "assets/car-avatar-thumbnails/MIKE-MOYSE-REVIEWED-4WD.webp": "4915c5f61a6e7224b2b0eb76d8c5269a8f2a4172"
   },
   "assignments": {
     "BRUCE": {
@@ -552,6 +580,10 @@
     "OLI-NATRESS": {
       "2-Wheel Drive Buggy": "assets/car-avatars/OLI-NATRESS-AI-2WD.png",
       "4-Wheel Drive Buggy": "assets/car-avatars/OLI-NATRESS-AI-4WD.png"
+    },
+    "MIKE-MOYSE": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-MOYSE-REVIEWED-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/MIKE-MOYSE-REVIEWED-4WD.png"
     }
   },
   "blockedRevisionHashes": [

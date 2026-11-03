@@ -197,5 +197,9 @@
   "OLI-NATRESS": {
     "2-Wheel Drive Buggy": "assets/car-avatars/OLI-NATRESS-AI-2WD.png",
     "4-Wheel Drive Buggy": "assets/car-avatars/OLI-NATRESS-AI-4WD.png"
+  },
+  "MIKE-MOYSE": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-MOYSE-REVIEWED-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/MIKE-MOYSE-REVIEWED-4WD.png"
   }
 }
