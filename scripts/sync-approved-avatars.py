@@ -45,7 +45,7 @@ def blocked_revision(revision):
             or hashlib.sha256(revision.encode()).hexdigest() in policy.get('blockedRevisionHashes', []))
 
 
-def require_exact_review(pair, revision, submission_id, photo_bytes=None):
+def require_chat_review(pair, revision, submission_id, photo_bytes=None):
     review = review_policy()['reviews'].get(pair, {})
     if (blocked_revision(revision) or review.get('reviewedFileIdHash') != hashlib.sha256(revision.encode()).hexdigest()
             or review.get('submissionIdHash') != hashlib.sha256(submission_id.encode()).hexdigest()
@@ -286,14 +286,14 @@ def publish(retry_id=''):
         try:
             # An Approved spreadsheet cell is insufficient. Fail before fetching
             # any image unless this exact version was previewed and accepted.
-            require_exact_review(pair, revision, ident)
+            require_chat_review(pair, revision, ident)
             photo = request_jsonp(url, {"action": "image", "id": ident})
             if str(photo.get("id")) != ident or (photo.get('revision') and photo['revision'] != revision):
                 raise ValueError("The approved photo changed during processing. Retry the refresh.")
             decoded = base64.b64decode(photo["base64"], validate=True)
             if not decoded or len(decoded) > 3_000_000:
                 raise ValueError("The approved photo is too large.")
-            require_exact_review(pair, revision, ident, decoded)
+            require_chat_review(pair, revision, ident, decoded)
             avatar_bytes = prepare_avatar(decoded)
         except Exception as error:
             # Keep the previous avatar and continue other submissions. Do not leak URLs/tokens.
