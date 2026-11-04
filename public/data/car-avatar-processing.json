@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-04T06:07:34.188744+00:00",
+  "checkedAt": "2026-11-04T22:07:59.679415+00:00",
   "updated": 0,
   "failures": {
     "BRUCE|2-Wheel Drive Buggy": {
@@ -32,6 +32,11 @@
       "revision": "1af2a6_ynmvC5IK7QLbT3KoavxFO4vzyK",
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     },
+    "MATTY-BOX|2-Wheel Drive Buggy": {
+      "id": "f2712548-17cf-436d-94ed-80d369808f95",
+      "revision": "1BKvlJuCttl4pjb9mdEIivPHibPI2Ezyu",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
     "LOGAN-RHODES|2-Wheel Drive Buggy": {
       "id": "aa25a304-5d19-4c35-9dcc-e281cb7e9ac6",
       "revision": "1dgiZoT2PDiDciqgZkd6rdgFfwOmwkqIP",
@@ -52,6 +57,11 @@
       "revision": "16T9YcXVyDP5ef7gR2gPDDOK_70ApeQxJ",
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     },
+    "RICHARD-GREEN|Vintage": {
+      "id": "5952ec35-2235-47de-ab7e-2808dee129e9",
+      "revision": "15GCRAapyPvs-driISrY5_kLu9koz5ch8",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
     "RICHARD-GREEN|4-Wheel Drive Buggy": {
       "id": "a5147db5-6b25-496b-b8c8-f01107db7b83",
       "revision": "1i4DTGfnWNUEiEgwJrAHDqSs1TwXP1437",
@@ -70,6 +80,11 @@
     "MARK-GIAQUINTO|2-Wheel Drive Buggy": {
       "id": "aa7e1c27-8985-4ec3-8736-5be2256e2676",
       "revision": "14dqdrnhgtIhmrwgCnXTPYIDufcP26I4R",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "ALEX-MACDONALD|2-Wheel Drive Buggy": {
+      "id": "0afdbbbb-0c1d-4ff1-827b-7e9af611c10a",
+      "revision": "1Osh_jfFGvA2Z6CwQchg6viX0447P0V1P",
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     },
     "GARY-MACDONALD|2-Wheel Drive Buggy": {
