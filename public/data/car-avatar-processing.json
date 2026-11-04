@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-03T23:51:17.988756+00:00",
+  "checkedAt": "2026-11-04T06:07:34.188744+00:00",
   "updated": 0,
   "failures": {
     "BRUCE|2-Wheel Drive Buggy": {
@@ -18,13 +18,68 @@
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     },
     "LIAM-TOOLE|4-Wheel Drive Buggy": {
-      "id": "6984b2f3-681e-451a-ada5-df224454f85a",
-      "revision": "1ibxn5yS8K8ChiMwGlX-A3Cvaets2Whze",
+      "id": "d6de37e5-5a1b-4407-9927-47a035073964",
+      "revision": "1HQmCMkSjAR4rExYkor7K9BQIOMsZQaFk",
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     },
     "CHRIS-REEVES|2-Wheel Drive Buggy": {
       "id": "befff1b4-7eb5-4f54-8851-e5401174b3f8",
       "revision": "1GNF3IZsHYGyhoEWuzfZUJNPhgi780CY9",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "ASHLEY-PATTISON|2-Wheel Drive Buggy": {
+      "id": "15616610-3ae9-40a4-b009-8924b859b0b6",
+      "revision": "1af2a6_ynmvC5IK7QLbT3KoavxFO4vzyK",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "LOGAN-RHODES|2-Wheel Drive Buggy": {
+      "id": "aa25a304-5d19-4c35-9dcc-e281cb7e9ac6",
+      "revision": "1dgiZoT2PDiDciqgZkd6rdgFfwOmwkqIP",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "DEWI-JONES|2-Wheel Drive Buggy": {
+      "id": "dcb28766-e385-4f29-859c-a3a826db9ec4",
+      "revision": "15tGYd70lLtFlpUaefHur21IV-jtYBFkh",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "DEWI-JONES|4-Wheel Drive Buggy": {
+      "id": "5f9e4316-695a-4864-8841-03f00d29cbfb",
+      "revision": "1dGNdPN5vlSgmtPZiSuPZSCvFVpPPTOv-",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "CHRIS-GUNTER|2-Wheel Drive Buggy": {
+      "id": "d27e2698-1618-477d-bc31-0261212f3fe6",
+      "revision": "16T9YcXVyDP5ef7gR2gPDDOK_70ApeQxJ",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "RICHARD-GREEN|4-Wheel Drive Buggy": {
+      "id": "a5147db5-6b25-496b-b8c8-f01107db7b83",
+      "revision": "1i4DTGfnWNUEiEgwJrAHDqSs1TwXP1437",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "RICHARD-GREEN|2-Wheel Drive Buggy": {
+      "id": "4a0b13e0-7161-4889-99cb-b6f178a92a85",
+      "revision": "1GWMsBL_O6DOXdWn6kEM4rFkj2pizZRAt",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "RICHARD-GREEN|Trucks": {
+      "id": "364bed8e-a4b6-4760-b4d6-2bcf5beac348",
+      "revision": "1D65LjtqYFFEfjIMgCM0YdLBKXfgscCXV",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "MARK-GIAQUINTO|2-Wheel Drive Buggy": {
+      "id": "aa7e1c27-8985-4ec3-8736-5be2256e2676",
+      "revision": "14dqdrnhgtIhmrwgCnXTPYIDufcP26I4R",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "GARY-MACDONALD|2-Wheel Drive Buggy": {
+      "id": "ea06ab6c-cfbb-4493-8561-b128a628b92d",
+      "revision": "1K7TnPYXX0MqJ4HB-Mb4u6kPbGqZJM8wY",
+      "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
+    },
+    "CAMERON-FELTON|2-Wheel Drive Buggy": {
+      "id": "c64f7827-b679-4f7a-80b7-f81bc97f815a",
+      "revision": "142pKS3qKLMQKL4RfK3sVR64RQYmAEDKL",
       "error": "Exact image requires Matt's preview approval in chat; automatic background removal is prohibited."
     }
   }
