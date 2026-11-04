@@ -190,6 +190,193 @@
       "manualPublish": true,
       "approvedAt": "2026-11-03T22:14:21.933Z",
       "source": "Existing finished cutout saved 28 October; authorised for publication 3 November; no new image generation or reshaping."
+    },
+    "CAERON-JENKINS|2-Wheel Drive Buggy": {
+      "submissionIdHash": "7bd5c46b028549cbbcfe8271dd16ded2cb6d98fe6ee44cc76fbf352aac9b517b",
+      "reviewedFileIdHash": "c173505a13ce1031fe355e57155114f30936e3707d46d377862f5eef8dd8b680",
+      "sha256": "23fcec4aee6d2ad986fc5529fc8b23cf7eb34a919b7d4251f3508631a84fbb16",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-03T22:46:24.047Z"
+    },
+    "LIAM-TOOLE|4-Wheel Drive Buggy": {
+      "submissionIdHash": "1d3b55cadb9d1a8f27865fbbc19ab80473ee4e29a32ca5a5bb1888069e7959de",
+      "reviewedFileIdHash": "91d7595ede34d4982f429e6b3fb08565739d7480ab80c3f5efd8968e8ddf0f94",
+      "sha256": "17c9bf4bbeb5320be3b8e981517ed3e69facc3d10f23bf589ad88afc513fd501",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T01:40:58.703Z"
+    },
+    "ASHLEY-PATTISON|2-Wheel Drive Buggy": {
+      "submissionIdHash": "ab5d0a9613f42c604f500bed4d1a77e83de7135e33c2e5d163742c12076117b5",
+      "reviewedFileIdHash": "e827f3490a6cde33407dd76ae601084110fc3fbe785dfc719dcfcb7754fc998b",
+      "sha256": "c52ecc447888f404f63a4ecda94ff55f2cce68dfc67a00d369312ec20bf31eba",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T03:13:37.883Z"
+    },
+    "MATTY-BOX|2-Wheel Drive Buggy": {
+      "submissionIdHash": "d8447a6a695a13efc7b7a067a554525d3c6093f47fe7ea5128d74aeb767d0566",
+      "reviewedFileIdHash": "135d0472bf2228187dde3f828696bceec758ebd86b2acda8a62a37280f65d33e",
+      "sha256": "a3604c0e1a9d43f80167f532296c939d503059438af092d8c04ad8ff46503ff1",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T21:55:15.070Z"
+    },
+    "LOGAN-RHODES|2-Wheel Drive Buggy": {
+      "submissionIdHash": "3be8714c8cbaafa0b02d8d1c3e7bb6179bbd4c19fd84538b09e977d1e9f29873",
+      "reviewedFileIdHash": "8340bea8df4a8ee3517cf82a64decbed6b758dce001501f91cbcbfba7f096890",
+      "sha256": "d8ab83dce48176bbc35d2f3d230eff49deaedbb20aa51b68189f7032fb8d5bf9",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T02:17:20.194Z"
+    },
+    "DEWI-JONES|2-Wheel Drive Buggy": {
+      "submissionIdHash": "d65cc991d2c4e291c2901e1186fab26731b56b6a35af3c888e1883e77f5e2c9c",
+      "reviewedFileIdHash": "b7cfe32ebfbb4793ad58290eb79e8151b2ffc2c7a3d166124764756db5aab62d",
+      "sha256": "9195b855d0e829c5c13e9da741a188d7a80efd953e7618023c537bd640cbfbb5",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T03:54:33.858Z"
+    },
+    "DEWI-JONES|4-Wheel Drive Buggy": {
+      "submissionIdHash": "34e6cbe681f42e843b80ae77f6c7da6fc7934a05b6fff126ebb1e6c7aca8b0a9",
+      "reviewedFileIdHash": "04e45bbada7f790501eeb3fbecb50b0286d6882421c6d126e30f84bc40d3f9c5",
+      "sha256": "f71251590685f2e156f160b2801d2c0c642dc636b37e53954548564a895f3b87",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T02:35:29.019Z"
+    },
+    "CHRIS-GUNTER|2-Wheel Drive Buggy": {
+      "submissionIdHash": "000e924fc098b04c5100834221cf19a6fb5f9a4380c8f973762e8d7ca2b70de9",
+      "reviewedFileIdHash": "9fc61e238dcbd8d3a7bafda2225201cd237bd39aea10d958ad9848398a03cec9",
+      "sha256": "3793ef52bceb15ac04d85bd06f2fcabb136d819e894e3ccc10004bbdc8ce7955",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T04:02:57.003Z"
+    },
+    "RICHARD-GREEN|Vintage": {
+      "submissionIdHash": "7769614a8257861124b140ed662d50e4433bb69fcae03ece21a1705297d3a461",
+      "reviewedFileIdHash": "f91cf56880e2e28a085e8421ea64892bf3136249d7a599d08cd35ccbae2187fc",
+      "sha256": "b3874e1218901f7c4babc0668f14a52ae65227c948204648656edfd91ab23bd9",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T21:38:44.388Z"
+    },
+    "RICHARD-GREEN|4-Wheel Drive Buggy": {
+      "submissionIdHash": "697f7d30fc97f34629597a3efc55abe659d40c15f935d0e2cf28a777d6ce903f",
+      "reviewedFileIdHash": "df920ede05904734719d36eac402a240dc738466a912f847120af4f56d507912",
+      "sha256": "7a3c15c4c309fe31a27a33dc2cffdef96b581038eabb98f4bcddcf3c29a92d94",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T03:15:55.511Z"
+    },
+    "RICHARD-GREEN|2-Wheel Drive Buggy": {
+      "submissionIdHash": "f8f2b7a996d8a7be13d9ed631ff664512f76121f82f35fdcb4fa98fcfe1bf5d2",
+      "reviewedFileIdHash": "2149b45ad6228671e6b727378a1e5e4368ac30abd1cd8b116dfe74bfabb1e5e1",
+      "sha256": "d2a81000eb6aa6bb721966939139a8b5c7156bb609a833cbe6da359bede33fdf",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T02:32:36.122Z"
+    },
+    "RICHARD-GREEN|Trucks": {
+      "submissionIdHash": "6439bd8b1550b95d978ca9af33f51a6762cdf807f02940b8674d86521c9113d2",
+      "reviewedFileIdHash": "bbe9cd12fd1051144fad5edc2265ace3b2a89ab014324f6b35cf60dd2392fc51",
+      "sha256": "6856ff8f1c7af030346933903d7d737a707b75469d9cd7413145a1f0dc2f4604",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T02:31:36.792Z"
+    },
+    "MARK-GIAQUINTO|2-Wheel Drive Buggy": {
+      "submissionIdHash": "f31b58aecb67f85afd60c4a9190fb72f22e6a8bdf5827599a714367bb09f614e",
+      "reviewedFileIdHash": "0e0d2bdd8de12d51e05ce78a25e3ebd0bf8df856c3dca153463747dd585fd7bb",
+      "sha256": "b9ebf8c71608d506ed2fffb37fcf4a3ec856ad94b030e15bb40a2bdc48b07224",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T03:49:08.310Z"
+    },
+    "ALEX-MACDONALD|2-Wheel Drive Buggy": {
+      "submissionIdHash": "e875d807f0b2f65ce77fed71d8d077a3b35ad4edef376dc67b9ccfb340a89ad4",
+      "reviewedFileIdHash": "60f4cc26f469dd693d5516107c54c2115e9096d1eb76aee679a18bf7d20d30de",
+      "sha256": "d45106cbfef59e55850bac22f2db6089d5b4f51bb4f4c92e5ab8b8dbe2963ead",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T21:38:56.125Z"
+    },
+    "GARY-MACDONALD|2-Wheel Drive Buggy": {
+      "submissionIdHash": "e70a1df1e9d6a13b5a88e80dfbf4d3c5e01fab0d57f1238e92146e2cdea73d66",
+      "reviewedFileIdHash": "d0d9a022c9e896c1cf59bdfa2e445047c4a853722dfd9f8405bcb3900b2f4876",
+      "sha256": "2aefa11d1392096f4e8431283bf606d2225866f7acf39bf66fc48f3f97cb348c",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T02:33:57.544Z"
+    },
+    "CAMERON-FELTON|2-Wheel Drive Buggy": {
+      "submissionIdHash": "79cf76a4546d00df3dfd377e4d24152e0ee86b5069ec7b2908180cdbb7365e12",
+      "reviewedFileIdHash": "cd2c60cd1e09e582584fede0e4ccf70f4f5f039114d9a2daa9ae5aa245fb2d16",
+      "sha256": "6d6b90b6750f36a5ca0e8292035830016553095040420a822603a423c39e88c0",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T02:52:13.604Z"
+    },
+    "CHRIS-REEVES|2-Wheel Drive Buggy": {
+      "submissionIdHash": "8363ca77d0d9849fc585b983f6c1fc7d0172deb6ee92283d87ba9eead186c779",
+      "reviewedFileIdHash": "ca95377d35e08ec6deeeda0d1087222fcb1236210f3852196d67ccf134de97f8",
+      "sha256": "255688a2036868a5fa5e76fd5207d54fa61582cbfd1c59368600cee908fd6033",
+      "method": "original-pixels-preserved",
+      "approvalSource": "final-review-page",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "approvedAt": "2026-11-04T01:42:20.230Z"
     }
   },
   "publishedAssets": {
@@ -379,7 +566,41 @@
     "assets/car-avatars/MIKE-MOYSE-REVIEWED-2WD.png": "54c4288d8d230cdd708b860f4cf133dff12a9f64",
     "assets/car-avatar-thumbnails/MIKE-MOYSE-REVIEWED-2WD.webp": "156b4d6773469eb60b25d04e21e377ad24a02ccc",
     "assets/car-avatars/MIKE-MOYSE-REVIEWED-4WD.png": "3c4843f1e4fdd9cef511e5e2c71e1d833b233602",
-    "assets/car-avatar-thumbnails/MIKE-MOYSE-REVIEWED-4WD.webp": "4915c5f61a6e7224b2b0eb76d8c5269a8f2a4172"
+    "assets/car-avatar-thumbnails/MIKE-MOYSE-REVIEWED-4WD.webp": "4915c5f61a6e7224b2b0eb76d8c5269a8f2a4172",
+    "assets/car-avatars/CAERON-JENKINS-AUTO-2WD.png": "c33c30618e0b8d3bebb70b6f5861a41fb2911315",
+    "assets/car-avatar-thumbnails/CAERON-JENKINS-AUTO-2WD.webp": "80acd550bed15cb6d73055e4e5037fc054ac8469",
+    "assets/car-avatars/LIAM-TOOLE-AUTO-4WD.png": "23e9d3a7647ac88c909726cef8ba578f2fdd3fd7",
+    "assets/car-avatar-thumbnails/LIAM-TOOLE-AUTO-4WD.webp": "a3c6200b193816f43c1ab30c71a154eafb4f0c1f",
+    "assets/car-avatars/ASHLEY-PATTISON-AUTO-2WD.png": "ba15840dcd649edf1460401f72174f2353e16401",
+    "assets/car-avatar-thumbnails/ASHLEY-PATTISON-AUTO-2WD.webp": "0dde7fe073b98754ef3c1f2a9e172e902a4dbacf",
+    "assets/car-avatars/MATTY-BOX-AUTO-2WD.png": "0b16535db0fa9b1132658f2d0228bd5b7cf191a0",
+    "assets/car-avatar-thumbnails/MATTY-BOX-AUTO-2WD.webp": "e57536ad7bb7ac6b53afa46693faeb51aaf51c4e",
+    "assets/car-avatars/LOGAN-RHODES-AUTO-2WD.png": "2803258185a0d03d74bed46e4477961969ddfdaf",
+    "assets/car-avatar-thumbnails/LOGAN-RHODES-AUTO-2WD.webp": "516d28c8d520b2af219b47dee55d9be02019a651",
+    "assets/car-avatars/DEWI-JONES-AUTO-2WD.png": "8202d6b199c4d41785233bccc7244b3966e003d2",
+    "assets/car-avatar-thumbnails/DEWI-JONES-AUTO-2WD.webp": "bc3060996aa1152aaafdc650322388fe14951613",
+    "assets/car-avatars/DEWI-JONES-AUTO-4WD.png": "eb6e88d9212816318c575bf429c776f74a9b575b",
+    "assets/car-avatar-thumbnails/DEWI-JONES-AUTO-4WD.webp": "b57b10457d92ddb067d6c9686bcb71daaf2b3b83",
+    "assets/car-avatars/CHRIS-GUNTER-AUTO-2WD.png": "5a90a92260081a47345da93e8fc82c87bbf419f7",
+    "assets/car-avatar-thumbnails/CHRIS-GUNTER-AUTO-2WD.webp": "bc3853bf478a6b73abd1ebb5e087a71c980d40b7",
+    "assets/car-avatars/RICHARD-GREEN-AUTO-VINTAGE.png": "2aa8729ab38534504b9e7a97c71b80607a408c4c",
+    "assets/car-avatar-thumbnails/RICHARD-GREEN-AUTO-VINTAGE.webp": "d30490111d183fb92a6cb95c6fc8254d9cf1ec9e",
+    "assets/car-avatars/RICHARD-GREEN-AUTO-4WD.png": "69cfcea26d14392376f91366b04228f8cce4bdf2",
+    "assets/car-avatar-thumbnails/RICHARD-GREEN-AUTO-4WD.webp": "a44ed8cafbced83cf573f463472ccecf4cc0ff14",
+    "assets/car-avatars/RICHARD-GREEN-AUTO-2WD.png": "1de3a24cd1b35ce87d25eea402e5f0a60edfa7e3",
+    "assets/car-avatar-thumbnails/RICHARD-GREEN-AUTO-2WD.webp": "c97dfd699f8df04b10f4325a33feeaa4855d6ed1",
+    "assets/car-avatars/RICHARD-GREEN-AUTO-TRUCKS.png": "b5bf96478734490432c72cfab80726ca8d6b2c24",
+    "assets/car-avatar-thumbnails/RICHARD-GREEN-AUTO-TRUCKS.webp": "20c7dee357bd98cbe83e7a475b104dc89ca49737",
+    "assets/car-avatars/MARK-GIAQUINTO-AUTO-2WD.png": "59ff555ae21768f9cb0052b877b733d2fff992ae",
+    "assets/car-avatar-thumbnails/MARK-GIAQUINTO-AUTO-2WD.webp": "e39928dd74f2eec8ebc7c2680a381cdfec5ffb82",
+    "assets/car-avatars/ALEX-MACDONALD-AUTO-2WD.png": "5167caf8b7bec2b1278d8185ba6bed378e1b0211",
+    "assets/car-avatar-thumbnails/ALEX-MACDONALD-AUTO-2WD.webp": "c88dc57f5cb2390d2432a5ed0758f2250e73d3cb",
+    "assets/car-avatars/GARY-MACDONALD-AUTO-2WD.png": "b537460b95b03625be6428b73f267c6701c83863",
+    "assets/car-avatar-thumbnails/GARY-MACDONALD-AUTO-2WD.webp": "4bd971a9930c9170526f86d76d8ed262b43c4d95",
+    "assets/car-avatars/CAMERON-FELTON-AUTO-2WD.png": "feca0bffeb858dbb865472c15ba75c04a949b9c6",
+    "assets/car-avatar-thumbnails/CAMERON-FELTON-AUTO-2WD.webp": "554d54e3f38b0477abef5f08c3a2e578ae0dd62c",
+    "assets/car-avatars/CHRIS-REEVES-AUTO-2WD.png": "5915815007d035d43d47c9b2c9337a7ba375b0c0",
+    "assets/car-avatar-thumbnails/CHRIS-REEVES-AUTO-2WD.webp": "b593405ac791f82c09551bb9e7fd083f0c617f73"
   },
   "assignments": {
     "BRUCE": {
@@ -440,7 +661,8 @@
       "2-Wheel Drive Buggy": "assets/car-avatars/DALE-PRESTON-AUTO-2WD.png"
     },
     "MARK-GIAQUINTO": {
-      "4-Wheel Drive Buggy": "assets/car-avatars/MARK-GIAQUINTO-AUTO-4WD.png"
+      "4-Wheel Drive Buggy": "assets/car-avatars/MARK-GIAQUINTO-AUTO-4WD.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/MARK-GIAQUINTO-AUTO-2WD.png"
     },
     "JOHN-MORDEN": {
       "2-Wheel Drive Buggy": "assets/car-avatars/JOHN-MORDEN-AUTO-2WD.png"
@@ -552,7 +774,8 @@
       "2-Wheel Drive Buggy": "assets/car-avatars/ROGER-MILLS-AUTO-2WD.png"
     },
     "CHRIS-GUNTER": {
-      "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png"
+      "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-2WD.png"
     },
     "GRAHAM-KEEP": {
       "2-Wheel Drive Buggy": "assets/car-avatars/GRAHAM-KEEP-REVIEWED-2WD.png"
@@ -584,6 +807,43 @@
     "MIKE-MOYSE": {
       "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-MOYSE-REVIEWED-2WD.png",
       "4-Wheel Drive Buggy": "assets/car-avatars/MIKE-MOYSE-REVIEWED-4WD.png"
+    },
+    "CAERON-JENKINS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/CAERON-JENKINS-AUTO-2WD.png"
+    },
+    "LIAM-TOOLE": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/LIAM-TOOLE-AUTO-4WD.png"
+    },
+    "ASHLEY-PATTISON": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/ASHLEY-PATTISON-AUTO-2WD.png"
+    },
+    "MATTY-BOX": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MATTY-BOX-AUTO-2WD.png"
+    },
+    "LOGAN-RHODES": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/LOGAN-RHODES-AUTO-2WD.png"
+    },
+    "DEWI-JONES": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/DEWI-JONES-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/DEWI-JONES-AUTO-4WD.png"
+    },
+    "RICHARD-GREEN": {
+      "Vintage": "assets/car-avatars/RICHARD-GREEN-AUTO-VINTAGE.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/RICHARD-GREEN-AUTO-4WD.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/RICHARD-GREEN-AUTO-2WD.png",
+      "Trucks": "assets/car-avatars/RICHARD-GREEN-AUTO-TRUCKS.png"
+    },
+    "ALEX-MACDONALD": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/ALEX-MACDONALD-AUTO-2WD.png"
+    },
+    "GARY-MACDONALD": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/GARY-MACDONALD-AUTO-2WD.png"
+    },
+    "CAMERON-FELTON": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/CAMERON-FELTON-AUTO-2WD.png"
+    },
+    "CHRIS-REEVES": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-REEVES-AUTO-2WD.png"
     }
   },
   "blockedRevisionHashes": [

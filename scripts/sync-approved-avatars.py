@@ -45,16 +45,16 @@ def blocked_revision(revision):
             or hashlib.sha256(revision.encode()).hexdigest() in policy.get('blockedRevisionHashes', []))
 
 
-def require_chat_review(pair, revision, submission_id, photo_bytes=None):
+def require_exact_review(pair, revision, submission_id, photo_bytes=None):
     review = review_policy()['reviews'].get(pair, {})
     if (blocked_revision(revision) or review.get('reviewedFileIdHash') != hashlib.sha256(revision.encode()).hexdigest()
             or review.get('submissionIdHash') != hashlib.sha256(submission_id.encode()).hexdigest()
-            or review.get('method') != 'imagegen'
+            or not (review.get('method') == 'imagegen' or (review.get('method') == 'original-pixels-preserved' and review.get('approvalSource') == 'final-review-page'))
             or review.get('approvedBy') != 'Matt'
             or review.get('previewApproved') is not True
             or review.get('rightFacing') is not True
             or not re.fullmatch(r'[0-9a-f]{64}', str(review.get('sha256', '')))):
-        raise ValueError('Exact image requires Matt\'s preview approval in chat; automatic background removal is prohibited.')
+        raise ValueError('Exact image requires approval of this revision; unapproved processing is prohibited.')
     if photo_bytes is not None and hashlib.sha256(photo_bytes).hexdigest() != review['sha256']:
         raise ValueError('Reviewed image bytes changed; existing image preserved.')
 
@@ -286,14 +286,14 @@ def publish(retry_id=''):
         try:
             # An Approved spreadsheet cell is insufficient. Fail before fetching
             # any image unless this exact version was previewed and accepted.
-            require_chat_review(pair, revision, ident)
+            require_exact_review(pair, revision, ident)
             photo = request_jsonp(url, {"action": "image", "id": ident})
             if str(photo.get("id")) != ident or (photo.get('revision') and photo['revision'] != revision):
                 raise ValueError("The approved photo changed during processing. Retry the refresh.")
             decoded = base64.b64decode(photo["base64"], validate=True)
             if not decoded or len(decoded) > 3_000_000:
                 raise ValueError("The approved photo is too large.")
-            require_chat_review(pair, revision, ident, decoded)
+            require_exact_review(pair, revision, ident, decoded)
             avatar_bytes = prepare_avatar(decoded)
         except Exception as error:
             # Keep the previous avatar and continue other submissions. Do not leak URLs/tokens.
@@ -394,4 +394,3 @@ if __name__ == "__main__":
         publish(args.retry_id)
         report=read_json(REPORT)
         automation_status('needs-attention' if report.get('failures') else 'success',len(report.get('failures',{})))
-

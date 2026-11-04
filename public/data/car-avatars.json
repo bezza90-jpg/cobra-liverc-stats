@@ -57,7 +57,8 @@
     "2-Wheel Drive Buggy": "assets/car-avatars/DALE-PRESTON-AUTO-2WD.png"
   },
   "MARK-GIAQUINTO": {
-    "4-Wheel Drive Buggy": "assets/car-avatars/MARK-GIAQUINTO-AUTO-4WD.png"
+    "4-Wheel Drive Buggy": "assets/car-avatars/MARK-GIAQUINTO-AUTO-4WD.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/MARK-GIAQUINTO-AUTO-2WD.png"
   },
   "JOHN-MORDEN": {
     "2-Wheel Drive Buggy": "assets/car-avatars/JOHN-MORDEN-AUTO-2WD.png"
@@ -169,7 +170,8 @@
     "2-Wheel Drive Buggy": "assets/car-avatars/ROGER-MILLS-AUTO-2WD.png"
   },
   "CHRIS-GUNTER": {
-    "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png"
+    "4-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-4WD.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-GUNTER-AUTO-2WD.png"
   },
   "GRAHAM-KEEP": {
     "2-Wheel Drive Buggy": "assets/car-avatars/GRAHAM-KEEP-REVIEWED-2WD.png"
@@ -201,5 +203,42 @@
   "MIKE-MOYSE": {
     "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-MOYSE-REVIEWED-2WD.png",
     "4-Wheel Drive Buggy": "assets/car-avatars/MIKE-MOYSE-REVIEWED-4WD.png"
+  },
+  "CAERON-JENKINS": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/CAERON-JENKINS-AUTO-2WD.png"
+  },
+  "LIAM-TOOLE": {
+    "4-Wheel Drive Buggy": "assets/car-avatars/LIAM-TOOLE-AUTO-4WD.png"
+  },
+  "ASHLEY-PATTISON": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/ASHLEY-PATTISON-AUTO-2WD.png"
+  },
+  "MATTY-BOX": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/MATTY-BOX-AUTO-2WD.png"
+  },
+  "LOGAN-RHODES": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/LOGAN-RHODES-AUTO-2WD.png"
+  },
+  "DEWI-JONES": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/DEWI-JONES-AUTO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/DEWI-JONES-AUTO-4WD.png"
+  },
+  "RICHARD-GREEN": {
+    "Vintage": "assets/car-avatars/RICHARD-GREEN-AUTO-VINTAGE.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/RICHARD-GREEN-AUTO-4WD.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/RICHARD-GREEN-AUTO-2WD.png",
+    "Trucks": "assets/car-avatars/RICHARD-GREEN-AUTO-TRUCKS.png"
+  },
+  "ALEX-MACDONALD": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/ALEX-MACDONALD-AUTO-2WD.png"
+  },
+  "GARY-MACDONALD": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/GARY-MACDONALD-AUTO-2WD.png"
+  },
+  "CAMERON-FELTON": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/CAMERON-FELTON-AUTO-2WD.png"
+  },
+  "CHRIS-REEVES": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-REEVES-AUTO-2WD.png"
   }
 }
