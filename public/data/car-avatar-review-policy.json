@@ -377,6 +377,18 @@
       "previewApproved": true,
       "rightFacing": true,
       "approvedAt": "2026-11-04T01:42:20.230Z"
+    },
+    "MIKE-DRISCOLL|Trucks": {
+      "version": 1,
+      "sha256": "e58c15c2b016c0475817f429951fad59be48d5029df9bd7617a76aab7c026b6e",
+      "submissionIdHash": "d33cd62165290e2b4d6fbe6c4562c27ff976c55577998161759515e45085a3e9",
+      "reviewedFileIdHash": "f2a223aaa69061bcbf1ad9b0af8db92a62ab05c3cccefcec1c774bbd0fa404de",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-07T01:45:24.478Z",
+      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -600,7 +612,9 @@
     "assets/car-avatars/CAMERON-FELTON-AUTO-2WD.png": "feca0bffeb858dbb865472c15ba75c04a949b9c6",
     "assets/car-avatar-thumbnails/CAMERON-FELTON-AUTO-2WD.webp": "554d54e3f38b0477abef5f08c3a2e578ae0dd62c",
     "assets/car-avatars/CHRIS-REEVES-AUTO-2WD.png": "5915815007d035d43d47c9b2c9337a7ba375b0c0",
-    "assets/car-avatar-thumbnails/CHRIS-REEVES-AUTO-2WD.webp": "b593405ac791f82c09551bb9e7fd083f0c617f73"
+    "assets/car-avatar-thumbnails/CHRIS-REEVES-AUTO-2WD.webp": "b593405ac791f82c09551bb9e7fd083f0c617f73",
+    "assets/car-avatars/MIKE-DRISCOLL-STUDIO-TRUCKS.png": "8db8f2deece5191eae4a7e805d3f88bdebd6c0d0",
+    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-STUDIO-TRUCKS.webp": "bc2ad522a512fb9a573acc69a1cb4e48e57103bd"
   },
   "assignments": {
     "BRUCE": {
@@ -615,7 +629,8 @@
     },
     "MIKE-DRISCOLL": {
       "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-DRISCOLL-REVIEWED-2WD.png",
-      "4-Wheel Drive Buggy": "assets/car-avatars/MIKE-DRISCOLL-AUTO-4WD.png"
+      "4-Wheel Drive Buggy": "assets/car-avatars/MIKE-DRISCOLL-AUTO-4WD.png",
+      "Trucks": "assets/car-avatars/MIKE-DRISCOLL-STUDIO-TRUCKS.png"
     },
     "STEVE-CURTIS-RICH": {
       "default": "assets/car-avatars/STEVE-CURTIS-RICH.png",
