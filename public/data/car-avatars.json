@@ -145,8 +145,9 @@
     "4-Wheel Drive Buggy": "assets/car-avatars/KEVIN-GREENWAY-AUTO-4WD.png"
   },
   "CHRISTOPHER-BAKER": {
-    "4-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-4WD.png",
-    "2-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-2WD.png"
+    "4-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-4WD.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-2WD.png",
+    "Trucks": "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-TRUCKS.png"
   },
   "RICKY-NEWCOMBE": {
     "2-Wheel Drive Buggy": "assets/car-avatars/RICKY-NEWCOMBE-AUTO-2WD.png",
@@ -241,5 +242,9 @@
   },
   "CHRIS-REEVES": {
     "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-REEVES-AUTO-2WD.png"
+  },
+  "CRAIG-GIBSON": {
+    "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-GIBSON-STUDIO-4WD.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/CRAIG-GIBSON-STUDIO-2WD.png"
   }
 }

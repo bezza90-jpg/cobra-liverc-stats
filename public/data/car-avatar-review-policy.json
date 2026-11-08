@@ -389,6 +389,66 @@
       "method": "cutout-studio",
       "approvedAt": "2026-11-07T01:45:24.478Z",
       "manualPublish": true
+    },
+    "CHRISTOPHER-BAKER|Trucks": {
+      "version": 1,
+      "sha256": "aa54163dd957e441299f4e5fdef7a4baac0f435acdb7627a120b1d8138dc5138",
+      "submissionIdHash": "452dc1d54ff65c2e5162d5a3982c4ea455bcd18e19f927a9a4ad0d132bd39893",
+      "reviewedFileIdHash": "f44b8bf57dd6d441c6af0389d488f2d14bc8fa57ee8a3fa5e61ab8f6eb9d7ecb",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-08T19:45:46.004Z",
+      "manualPublish": true
+    },
+    "CHRISTOPHER-BAKER|2-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "cbd9afaf7c509e2c01b4f8d774967b49c1928d2764e1d9789dac607f8f86ce65",
+      "submissionIdHash": "b5a89b267200e61f59db1c124d009dc6e5a51cbf96afe2e2ba52981f8c16447a",
+      "reviewedFileIdHash": "551a8a6d3283cb74ac1bd2064dd21a37eabfd97e4840c162e105baf82be4df27",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-08T19:36:43.246Z",
+      "manualPublish": true
+    },
+    "CHRISTOPHER-BAKER|4-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "2b3b81774d2dc8102996a5e61ba85d7b97bc41089df83deca557b35858864395",
+      "submissionIdHash": "294efd1e509bb7cfce0cfa7f668ab958106dfc6488b45a0a53aa30436507b039",
+      "reviewedFileIdHash": "029d54c1a2c39ff4a2d0196eaea4c645ae287404a005ee61e980919ed585fcb9",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-08T19:28:46.310Z",
+      "manualPublish": true
+    },
+    "CRAIG-GIBSON|4-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "5eeac297b7ebcf979437562650f4da619d09776adaa4790b80d9bb6b0ee1e8d1",
+      "submissionIdHash": "4f02f2373e004d3b5891bb9fc95208adddaac2f423b594faf991c6bb60d10ed1",
+      "reviewedFileIdHash": "bb158018d0e4f84daa6a302bf3de82db565b19ca90277dc49db57f1cff5f0d3a",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-08T19:37:52.790Z",
+      "manualPublish": true
+    },
+    "CRAIG-GIBSON|2-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "8728ec7e5e74e1f6daca968fec554c183548ec1bfbb487f71a8b42317de2036b",
+      "submissionIdHash": "fd726b0a8d7362cb67690c90a9714d8885551d679b43ea62339914ef94ff9f04",
+      "reviewedFileIdHash": "6b419e075fef9a9a999e35204a2d0daf33c945e9d2f04695dba87a26ee2050b2",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-08T19:38:27.757Z",
+      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -614,7 +674,17 @@
     "assets/car-avatars/CHRIS-REEVES-AUTO-2WD.png": "5915815007d035d43d47c9b2c9337a7ba375b0c0",
     "assets/car-avatar-thumbnails/CHRIS-REEVES-AUTO-2WD.webp": "b593405ac791f82c09551bb9e7fd083f0c617f73",
     "assets/car-avatars/MIKE-DRISCOLL-STUDIO-TRUCKS.png": "8db8f2deece5191eae4a7e805d3f88bdebd6c0d0",
-    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-STUDIO-TRUCKS.webp": "bc2ad522a512fb9a573acc69a1cb4e48e57103bd"
+    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-STUDIO-TRUCKS.webp": "bc2ad522a512fb9a573acc69a1cb4e48e57103bd",
+    "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-TRUCKS.png": "ca75eb0052af219664cd47ef55d3edd0fd3e6646",
+    "assets/car-avatar-thumbnails/CHRISTOPHER-BAKER-STUDIO-TRUCKS.webp": "bbaf4806bf828b1a5392cf7265103d0c915690b1",
+    "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-2WD.png": "1fac7c155a4c74aad6e11d91cbf93194768a3bcc",
+    "assets/car-avatar-thumbnails/CHRISTOPHER-BAKER-STUDIO-2WD.webp": "b469f5c3938a28d045637168111dbdf2ec36a5c3",
+    "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-4WD.png": "083603fb6532821f2e7698052f054a6f35130183",
+    "assets/car-avatar-thumbnails/CHRISTOPHER-BAKER-STUDIO-4WD.webp": "f1c26ad4aad5a634b7a00b152d9bb4ef904dd5f7",
+    "assets/car-avatars/CRAIG-GIBSON-STUDIO-4WD.png": "89fa18a78c6e9f446f0bdf5c428acc48bf4c8a4f",
+    "assets/car-avatar-thumbnails/CRAIG-GIBSON-STUDIO-4WD.webp": "ee934e659813c993fec402a686249cfcbe05dff6",
+    "assets/car-avatars/CRAIG-GIBSON-STUDIO-2WD.png": "20e34be205d3a1d2a87efa9133f4f45f37c1347c",
+    "assets/car-avatar-thumbnails/CRAIG-GIBSON-STUDIO-2WD.webp": "f228fc29b9a8f36a4de8b50f4f02954109a8ca67"
   },
   "assignments": {
     "BRUCE": {
@@ -763,8 +833,9 @@
       "4-Wheel Drive Buggy": "assets/car-avatars/KEVIN-GREENWAY-AUTO-4WD.png"
     },
     "CHRISTOPHER-BAKER": {
-      "4-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-4WD.png",
-      "2-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-AUTO-2WD.png"
+      "4-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-4WD.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-2WD.png",
+      "Trucks": "assets/car-avatars/CHRISTOPHER-BAKER-STUDIO-TRUCKS.png"
     },
     "RICKY-NEWCOMBE": {
       "2-Wheel Drive Buggy": "assets/car-avatars/RICKY-NEWCOMBE-AUTO-2WD.png",
@@ -859,6 +930,10 @@
     },
     "CHRIS-REEVES": {
       "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-REEVES-AUTO-2WD.png"
+    },
+    "CRAIG-GIBSON": {
+      "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-GIBSON-STUDIO-4WD.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/CRAIG-GIBSON-STUDIO-2WD.png"
     }
   },
   "blockedRevisionHashes": [
