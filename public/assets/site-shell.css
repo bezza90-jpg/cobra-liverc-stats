@@ -129,3 +129,7 @@ main>.cobra-branded-hero{
  padding:20px max(26px,calc((100vw - 1440px)/2 + 26px));
 }
 @media(max-width:650px){main>.cobra-branded-hero{padding:18px 12px}}
+
+.cobra-site-header .cobra-account-link { flex-shrink: 0; border: 1px solid #cfdbce; border-radius: 9px; padding: 7px 10px; font-size: 12px; font-weight: bold; white-space: nowrap; }
+@media (max-width: 1050px) { .cobra-site-header .cobra-account-link { margin-left: auto; } }
+@media (max-width: 420px) { .cobra-site-header .cobra-account-link { padding: 6px; font-size: 11px; } }

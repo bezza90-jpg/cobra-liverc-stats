@@ -34,13 +34,18 @@ export function siteHeader(base = './',config=clubConfig) {
     return `<a href="${escape(href)}">${escape(brandLabel(label,config))}</a>`;
   };
   const replayLinks = config.features.replays ? `<div class="cobra-mobile-replay-links" aria-label="Virtual race replays"><strong>Virtual race replay</strong><a href="${base}virtual-race-replay/">▶ 2D Replay</a><a href="${base}virtual-race-replay/3d.html">◆ 3D Replay</a></div>` : '';
+  const cobra = config.id === 'cobra-cardiff';
   const groups=menu.map(group=>{
+    if (cobra && group.label === 'Race Day') return '';
+    const items = cobra && group.label === 'Events'
+      ? [...group.links.slice(0, -1), ...menu.find(item => item.label === 'Race Day').links, ...group.links.slice(-1)]
+      : group.links;
     if (group.label==='Home') return link(group.links[0]);
-    const links=group.links.map(link).filter(Boolean).join('');
+    const links=items.map(link).filter(Boolean).join('');
     return links ? `<details class="cobra-menu-group"><summary>${escape(brandLabel(group.label,config))}</summary><div>${links}</div></details>` : '';
   }).join('');
   const partner=config.features.grandPrixWales && config.logos.partner && config.logos.partnerUrl ? `<a class="cobra-gpw-logo" href="${escape(config.logos.partnerUrl)}"><img src="${base}${escape(config.logos.partner)}" width="99" height="59" alt="${escape(config.logos.partnerAlt || '')}" decoding="async"></a>` : '';
-  return `<!-- cobra-shell:start --><header class="cobra-site-header" data-club-id="${escape(config.id)}" data-edition="${escape(config.edition)}" style="${themeStyle(config)}"><div class="cobra-header-inner"><a class="cobra-site-logo" href="${escape(config.urls.home)}" aria-label="${escape(config.shortName)} home"><img src="${base}${escape(config.logos.header)}" width="271" height="69" alt="${escape(config.logos.headerAlt)}" fetchpriority="high"></a><a class="cobra-book-in" href="${escape(config.urls.events)}">Book In</a><details class="cobra-mobile-menu"><summary aria-label="Open site menu">☰ <span>Menu</span></summary><nav class="cobra-site-menu" aria-label="Site">${replayLinks}${groups}</nav></details>${partner}</div></header><!-- cobra-shell:end -->`;
+  return `<!-- cobra-shell:start --><header class="cobra-site-header" data-club-id="${escape(config.id)}" data-edition="${escape(config.edition)}" style="${themeStyle(config)}"><div class="cobra-header-inner"><a class="cobra-site-logo" href="${escape(config.urls.home)}" aria-label="${escape(config.shortName)} home"><img src="${base}${escape(config.logos.header)}" width="271" height="69" alt="${escape(config.logos.headerAlt)}" fetchpriority="high"></a>${cobra ? '' : `<a class="cobra-book-in" href="${escape(config.urls.events)}">Book In</a>`}<details class="cobra-mobile-menu"><summary aria-label="Open site menu">☰ <span>Menu</span></summary><nav class="cobra-site-menu" aria-label="Site">${replayLinks}${groups}</nav></details>${partner}${cobra ? '<a class="cobra-account-link" href="https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/login?returnTo=%2Fracer-profile-preview">Log in / My profile</a>' : ''}</div></header><!-- cobra-shell:end -->`;
 }
 export function siteFooter(base = './',config=clubConfig) {
   const social=[['Facebook',config.social?.facebook],['YouTube',config.social?.youtube]].filter(([,url])=>url).map(([label,url])=>`<a href="${escape(url)}">${label}</a>`).join('');

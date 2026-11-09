@@ -23,3 +23,11 @@
 .hero[data-track-slideshow]::before{z-index:1;pointer-events:none}
 .hero[data-track-slideshow] .hero-copy{z-index:2}
 .track-slide-toggle{position:absolute;z-index:3;right:14px;bottom:14px;background:#09291f;color:#fff;border:1px solid #fff8;border-radius:8px;padding:7px 12px;font:inherit;font-size:13px;cursor:pointer}
+
+/* Keep channel artwork and links aligned across each row. */
+.channel-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.channel-grid .panel { display: flex; flex-direction: column; min-width: 0; }
+.channel-grid .channel-image { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; background: #fff; }
+.channel-grid .button { align-self: flex-start; margin-top: auto; }
+@media (max-width: 900px) { .channel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .channel-grid { grid-template-columns: minmax(0, 1fr); } }

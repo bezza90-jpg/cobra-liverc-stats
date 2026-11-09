@@ -2,12 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,readdirSync} from 'node:fs';
 import {addSiteShell} from './site-shell.mjs';
-test('shared navigation supports repository and domain roots, preserving Wix booking and GPW links',()=>{
+test('shared navigation supports repository and domain roots, preserving Events and GPW links',()=>{
   for(const base of ['./','../','../../../','../../../../']) {
     const html=addSiteShell('<html><head></head><body><main>Race</main></body></html>',base);
     assert.equal(addSiteShell(html,base),html);
     assert.match(html,/https:\/\/www.cobracardiff.co.uk\/grand-prix-wales/);
-    assert.match(html,/https:\/\/www.cobracardiff.co.uk\/event-list/);
+    assert.match(html,/https:\/\/racehub.cobracardiff.co.uk\/events/);
     assert.match(html,/https:\/\/racehub.cobracardiff.co.uk\/privacy\//);
     for(const route of ['?tracker=1','schedule/?type=sword','virtual-race-replay/','virtual-race-replay/3d.html','track-gallery/','website-guides/','privacy/']) assert.ok(html.includes('href="'+base+route+'"'));
     assert.match(html,/2D Virtual Replay<\/a><a[^>]+>3D Virtual Replay<\/a>/);

@@ -1,11 +1,11 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { addSiteShell } from './site-shell.mjs';
-const shellOnlyPages = ['grand-prix-wales/', 'grand-prix-wales/event-guide/', 'grand-prix-wales/announcements/', 'grand-prix-wales/venue/', 'grand-prix-wales/race-centre/', 'grand-prix-wales/driver-finder/'];
+const shellOnlyPages = ['home/', 'events/', 'media/', 'grand-prix-wales/', 'grand-prix-wales/event-guide/', 'grand-prix-wales/announcements/', 'grand-prix-wales/venue/', 'grand-prix-wales/race-centre/', 'grand-prix-wales/driver-finder/'];
 const pages = ['', 'book-in/', 'sword/', 'club/', 'podiums/', 'track-gallery/', 'setups/', 'event/', 'about/', 'briefing/', 'schedule/', 'avatar-upload/', 'car-avatars/', 'club-news/', 'lap-charts/', 'virtual-race-replay/', 'website-guides/', 'privacy/', ...shellOnlyPages];
 const links = [
   ['', 'Race Stats'], ['sword/', 'SWORD Championship'], ['club/', 'Club Series'],
-  ['podiums/', 'Podium Gallery'], ['track-gallery/', 'Track Gallery'], ['setups/', 'Setups & Tips'], ['https://www.cobracardiff.co.uk/event-list', 'Events'], ['event/', 'Current Event'],
+  ['podiums/', 'Podium Gallery'], ['track-gallery/', 'Track Gallery'], ['setups/', 'Setups & Tips'], ['https://racehub.cobracardiff.co.uk/events/', 'Events'], ['event/', 'Current Event'],
   ['about/', 'About & location'], ['website-guides/', 'Website guides & videos'], ['briefing/', 'Drivers Briefing'],
   ['?tracker=1', 'Driver Distance Tracker', 'tracker-nav-button'],
   ['car-avatars/', 'Driver car avatars'],

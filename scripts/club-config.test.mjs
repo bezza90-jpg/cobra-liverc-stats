@@ -8,7 +8,7 @@ test('COBRA remains the safe default club profile',()=>{
   const config=loadClubConfig();
   assert.equal(config.id,'cobra-cardiff');
   assert.equal(config.shortName,'COBRA');
-  assert.equal(config.urls.events,'https://www.cobracardiff.co.uk/event-list');
+  assert.equal(config.urls.events,'https://racehub.cobracardiff.co.uk/events/');
   assert.deepEqual(config.wix.ticketTypes['2WD Entry'],['2-Wheel Drive Buggy','2WD Transponder Number','2WD Chassis']);
 });
 

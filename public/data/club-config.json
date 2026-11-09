@@ -24,10 +24,10 @@
     "grandPrixWales": true
   },
   "urls": {
-    "home": "https://www.cobracardiff.co.uk/",
+    "home": "https://racehub.cobracardiff.co.uk/home/",
     "raceHub": "https://racehub.cobracardiff.co.uk/",
-    "events": "https://www.cobracardiff.co.uk/event-list",
-    "media": "https://www.cobracardiff.co.uk/media",
+    "events": "https://racehub.cobracardiff.co.uk/events/",
+    "media": "https://racehub.cobracardiff.co.uk/media/",
     "contact": "https://www.cobracardiff.co.uk/contact"
   },
   "logos": {
