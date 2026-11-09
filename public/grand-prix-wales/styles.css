@@ -102,3 +102,54 @@ html.gpw-navigating:after{content:"";position:fixed;z-index:9999;top:0;left:0;wi
 
 /* Wix supplies the outer white header; standalone embed links still keep theirs. */
 html.cobra-framed body.gpw-live>.cobra-site-header{display:none!important}
+
+.gpw-booking-card{position:relative;z-index:1;margin-top:clamp(55px,8vw,120px);padding:28px;border-radius:18px;border-top:4px solid var(--red);background:rgba(7,19,13,.94);box-shadow:0 18px 45px #0004;color:#fff}
+.gpw-booking-card h2{margin:0;font-size:29px;line-height:1.15;letter-spacing:-.02em}
+.gpw-booking-card p{font-size:15px;color:#dae4dd}
+.gpw-booking-card .kicker{color:var(--red);font-size:12px}
+.gpw-booking-card .gpw-opening{background:#fce9e9;color:#8d1420;border-radius:10px;padding:13px;font-size:14px}
+.gpw-booking-card .gpw-booking-price{font-size:13px}
+.gpw-booking-closed{display:block;margin:20px 0 12px;padding:13px;text-align:center;border:1px solid #6d8174;border-radius:9px;color:#d2ded6;font-weight:800}
+.gpw-booking-card .button{width:100%}
+@media(max-width:1000px){.hero{grid-template-columns:1fr;padding-right:0;gap:0}.gpw-booking-card{margin:0 24px 40px;max-width:560px}.hero-copy{padding-bottom:28px}}
+
+/* Match the Events card, in a narrower hero layout. */
+.gpw-booking-card{display:grid;grid-template-columns:78px minmax(0,1fr);gap:16px;align-items:center;padding:22px 20px;background:#fffafb;color:#112b22;border:1px solid #deded8;border-left:5px solid #bf1230;border-top:1px solid #deded8;box-shadow:0 12px 30px #0002}
+.gpw-booking-card .gpw-card-logo{display:block;width:78px;height:auto}
+.gpw-booking-card h2{font-size:21px;line-height:1.25;margin:5px 0 7px;letter-spacing:0}
+.gpw-booking-card p{font-size:13px;color:#315c58;margin:0 0 8px}
+.gpw-booking-card .gpw-card-date{font-size:12px}
+.gpw-card-opening{display:inline-block;border-radius:18px;padding:6px 10px;background:#fce8e9;color:#ad0928;font-size:12px;font-weight:700;line-height:1.5}
+.gpw-card-actions{grid-column:1/-1;text-align:center}
+.gpw-card-actions .button{background:#bf1230;color:white;min-height:46px;font-size:15px}
+.gpw-card-actions small{display:block;margin-top:7px;color:#315c58;font-size:12px}
+
+/* Keep the booking card beside the hero copy, overriding the legacy single column. */
+.gpw-live .hero{display:grid;grid-template-columns:minmax(0,1fr) 350px;align-items:start;gap:28px;padding-right:clamp(24px,5vw,90px)}
+.gpw-live .hero>.gpw-booking-card{grid-column:2;grid-row:1;justify-self:end;width:350px;max-width:350px;margin:34px 0 0;padding:18px 16px;gap:12px}
+.gpw-live .hero>.hero-copy{grid-column:1;grid-row:1;min-width:0}
+@media(max-width:850px){.gpw-live .hero{grid-template-columns:1fr;padding-right:0}.gpw-live .hero>.gpw-booking-card{grid-column:1;grid-row:2;justify-self:start;width:calc(100% - 48px);max-width:440px;margin:0 24px 32px}.gpw-live .hero>.hero-copy{grid-column:1;grid-row:1}}
+
+.gpw-live .hero>.gpw-booking-card{box-shadow:0 20px 28px -7px rgba(0,0,0,.60),0 5px 9px rgba(0,0,0,.25)}
+
+/* Reveal more of the Welsh flag in the original artwork. */
+.gpw-live .hero{background-image:linear-gradient(90deg,rgba(7,19,13,.81) 0%,rgba(7,19,13,.73) 48%,rgba(7,19,13,.44) 100%),url("assets/welsh-valley-background.webp")}
+.gpw-live .hero h1,.gpw-live .hero-copy>.intro{text-shadow:0 2px 7px rgba(0,0,0,.65)}
+@media(max-width:680px){.gpw-live .hero{background-image:linear-gradient(180deg,rgba(7,19,13,.80),rgba(7,19,13,.73)),url("assets/welsh-valley-background.webp")}}
+
+.gpw-live .hero>.gpw-booking-rail{grid-column:2;grid-row:1;justify-self:end;width:350px;max-width:350px;margin:34px 0 0;position:relative;z-index:1;display:grid;gap:16px}
+.gpw-booking-rail .gpw-booking-card{margin:0;width:100%;max-width:none;padding:18px 16px;gap:12px;box-shadow:0 20px 28px -7px rgba(0,0,0,.60),0 5px 9px rgba(0,0,0,.25)}
+.gpw-countdown{padding:18px 16px;text-align:center;border:1px solid #91a69a60;border-top:3px solid #bf1230;border-radius:14px;background:rgba(6,29,20,.94);color:white;box-shadow:0 8px 24px #0004}
+.gpw-countdown>p{margin:0 0 12px;text-transform:uppercase;font-size:11px;font-weight:850;letter-spacing:.16em;color:#e4ebe5}
+.gpw-countdown-digits{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.gpw-countdown-digits>div{background:#ffffff0b;border:1px solid #ffffff1e;border-radius:9px;padding:9px 3px}
+.gpw-countdown-digits strong{display:block;font-size:29px;line-height:1.1;font-variant-numeric:tabular-nums;letter-spacing:-1px;color:#fff}
+.gpw-countdown-digits span{display:block;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#bdcfc3;margin-top:6px}
+.gpw-countdown small{display:block;font-size:11px;color:#c4d4ca;margin-top:12px}
+.gpw-countdown .gpw-countdown-ended{font-size:13px;line-height:1.5;letter-spacing:0;text-transform:none;margin:0}
+@media(max-width:850px){.gpw-live .hero>.gpw-booking-rail{grid-column:1;grid-row:2;justify-self:start;width:calc(100% - 48px);max-width:440px;margin:0 24px 32px}}
+.gpw-countdown [hidden]{display:none!important}
+
+.gpw-opening-date{white-space:nowrap}
+
+.gpw-card-opening,.event-row.gpw .pill{text-align:center}

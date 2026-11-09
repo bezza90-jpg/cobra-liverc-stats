@@ -133,3 +133,32 @@ main>.cobra-branded-hero{
 .cobra-site-header .cobra-account-link { flex-shrink: 0; border: 1px solid #cfdbce; border-radius: 9px; padding: 7px 10px; font-size: 12px; font-weight: bold; white-space: nowrap; }
 @media (max-width: 1050px) { .cobra-site-header .cobra-account-link { margin-left: auto; } }
 @media (max-width: 420px) { .cobra-site-header .cobra-account-link { padding: 6px; font-size: 11px; } }
+
+/* Use the same header layout across COBRA pages, including the Wix shell. */
+.cobra-site-header[data-club-id="cobra-cardiff"] .cobra-header-inner {
+  display: flex !important; align-items: center; gap: clamp(8px, 1.3vw, 22px) !important;
+  max-width: 1920px; padding: 8px clamp(12px, 2vw, 30px);
+  min-height: 76px; aspect-ratio: auto; container-type: normal;
+}
+.cobra-site-header[data-club-id="cobra-cardiff"] :is(.cobra-site-logo, .cobra-mobile-menu, .cobra-gpw-logo, .cobra-account-link) {
+  position: static !important; width: auto; margin: 0; padding: 0;
+}
+.cobra-site-header[data-club-id="cobra-cardiff"] .cobra-site-logo { flex: 0 1 220px; min-width: 120px; }
+.cobra-site-header[data-club-id="cobra-cardiff"] .cobra-site-logo img { height: auto; max-height: 64px; }
+.cobra-site-header[data-club-id="cobra-cardiff"] .cobra-gpw-logo { flex: 0 0 108px; }
+.cobra-site-header[data-club-id="cobra-cardiff"] .cobra-gpw-logo img { width: 100%; height: auto; }
+.cobra-site-header[data-club-id="cobra-cardiff"] .cobra-account-link { padding: 7px 10px; font-size: 13px; }
+.cobra-site-header[data-club-id="cobra-cardiff"] :is(.cobra-site-menu > a, .cobra-menu-group > summary, .cobra-menu-group > div > a) { font-size: 16px; }
+@media (min-width: 1051px) {
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-site-menu { justify-content: center; gap: clamp(4px, .65vw, 14px); }
+  .cobra-site-header[data-club-id="cobra-cardiff"] :is(.cobra-site-menu > a, .cobra-menu-group > summary) { padding: 10px 5px; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-menu-group > summary::after { width: 8px; height: 5px; margin-left: 4px; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-search-button { width: 32px; padding: 4px; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-search-button span { font-size: 22px; }
+}
+@media (max-width: 1050px) {
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-header-inner { min-height: 58px; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-site-logo { flex-basis: 165px; min-width: 0; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-gpw-logo { display: none; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-mobile-menu { margin-left: auto; order: 0; }
+}

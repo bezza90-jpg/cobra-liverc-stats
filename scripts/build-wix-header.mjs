@@ -6,11 +6,11 @@ const check=process.argv.includes('--check');
 const root=clubConfig.urls.raceHub;
 const header=siteHeader(root,{...clubConfig,urls:{...clubConfig.urls,events:root+'events/',media:root+'media/'}});
 const footer=siteFooter(root);
-const loader=`import {initSiteHeader,initBackToTop,initNavigationPrefetch,initViewportStability} from './site-shell.js?v=9';
+const loader=`import {initSiteHeader,initBackToTop,initNavigationPrefetch,initViewportStability} from './site-shell.js?v=10';
 
 const headerMarkup=${JSON.stringify(header)};
 const footerMarkup=${JSON.stringify(footer)};
-const stylesheet=new URL('./site-shell.css?v=8',import.meta.url).href;
+const stylesheet=new URL('./site-shell.css?v=9',import.meta.url).href;
 
 if(!document.querySelector('link[data-cobra-wix-shell]')){
   const link=document.createElement('link');
@@ -67,7 +67,7 @@ new MutationObserver(install).observe(document.documentElement,{subtree:true,chi
 install();
 `;
 const links=readFileSync(new URL('../docs/wix-racehub-links.html',import.meta.url),'utf8').trim();
-const snippet=`${links}\n<link rel="stylesheet" href="${root}assets/club-theme.css?v=1">\n<link rel="stylesheet" href="${root}assets/site-shell.css?v=8">\n<script type="module" src="${root}assets/wix-site-shell.js?v=2"></script>\n`;
+const snippet=`${links}\n<link rel="stylesheet" href="${root}assets/club-theme.css?v=1">\n<link rel="stylesheet" href="${root}assets/site-shell.css?v=9">\n<script type="module" src="${root}assets/wix-site-shell.js?v=2"></script>\n`;
 
 const outputs=[
   [new URL('../public/assets/wix-site-shell.js',import.meta.url),loader],

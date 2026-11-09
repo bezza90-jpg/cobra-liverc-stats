@@ -115,8 +115,8 @@ export function initNavigationPrefetch(root = document) {
 }
 
 const SEARCH_PAGES = [
-  ['Home','COBRA indoor RC racing in Cardiff, club information and the latest highlights.','', 'club racing cardiff home'],
-  ['Events and booking','See future COBRA meetings and book your place.','https://www.cobracardiff.co.uk/event-list','events entries guests booking book in'],
+  ['Home','COBRA indoor RC racing in Cardiff, club information and the latest highlights.','home/', 'club racing cardiff home'],
+  ['Events and booking','See future COBRA meetings and book your place.','events/','events entries guests booking book in'],
   ['Current event','Everything for the next race meeting, including entries and useful links.','event/','next meeting entries chassis country'],
   ['Race day schedule','Club-day and SWORD timetables, heat order and race-day timings.','schedule/','timetable times heats finals race order'],
   ['Drivers briefing','Read the safety and race-day briefing before arrival and check-in.','briefing/','rules safety marshalling check in book in'],
@@ -133,7 +133,7 @@ const SEARCH_PAGES = [
   ['Website guides and videos','Watch help videos and read guides to the COBRA website features.','website-guides/','help tutorial instructions reel feature showcase'],
   ['Track gallery','Browse COBRA track layouts and event photographs.','track-gallery/','track layout pictures photos results replay flyover'],
   ['Club news','Read the latest COBRA announcements and updates.','club-news/','news updates announcements'],
-  ['Media','Watch and browse COBRA race media.','https://www.cobracardiff.co.uk/media','video photos gallery'],
+  ['Media','Watch and browse COBRA race media.','media/','video photos gallery'],
   ['Contact COBRA','Send the club a question or request.','https://www.cobracardiff.co.uk/contact','email message enquiry question help']
 ];
 
