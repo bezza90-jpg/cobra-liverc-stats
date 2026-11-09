@@ -4,7 +4,7 @@ import {clubConfig} from './club-config.mjs';
 
 const check=process.argv.includes('--check');
 const root=clubConfig.urls.raceHub;
-const header=siteHeader(root);
+const header=siteHeader(root,{...clubConfig,urls:{...clubConfig.urls,events:root+'events/',media:root+'media/'}});
 const footer=siteFooter(root);
 const loader=`import {initSiteHeader,initBackToTop,initNavigationPrefetch,initViewportStability} from './site-shell.js?v=9';
 
