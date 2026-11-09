@@ -159,6 +159,17 @@ main>.cobra-branded-hero{
 @media (max-width: 1050px) {
   .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-header-inner { min-height: 58px; }
   .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-site-logo { flex-basis: 165px; min-width: 0; }
-  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-gpw-logo { display: none; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-gpw-logo { flex: 0 0 clamp(48px, 12vw, 80px); }
   .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-mobile-menu { margin-left: auto; order: 0; }
+}
+
+@media (max-width: 1050px) {
+  /* Keep full-bleed decoration within the page without creating a scroll container. */
+  html, body { overflow-x: clip; }
+  main > .cobra-branded-hero { width: 100%; margin-inline: 0; }
+}
+@media (max-width: 480px) {
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-header-inner { gap: 6px !important; padding-inline: 8px; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-account-link { padding: 6px; font-size: 11px; }
+  .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-site-menu a { white-space: normal; }
 }
