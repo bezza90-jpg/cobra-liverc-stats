@@ -449,6 +449,18 @@
       "method": "cutout-studio",
       "approvedAt": "2026-11-08T19:38:27.757Z",
       "manualPublish": true
+    },
+    "MIKE-DRISCOLL|Vintage": {
+      "version": 1,
+      "sha256": "3368a7da75716869479cf2a15d124e6522df5433fb1fabff969c684e6eb4b35c",
+      "submissionIdHash": "e82d7997b6ffaba77e6e49314c229c792eb01f9536ccd87fb55cd869480aaf97",
+      "reviewedFileIdHash": "1512165e54f8687448954ff70310318b2ac40664c0408d59126863e2b5fba263",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-10T00:53:47.720Z",
+      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -684,7 +696,9 @@
     "assets/car-avatars/CRAIG-GIBSON-STUDIO-4WD.png": "89fa18a78c6e9f446f0bdf5c428acc48bf4c8a4f",
     "assets/car-avatar-thumbnails/CRAIG-GIBSON-STUDIO-4WD.webp": "ee934e659813c993fec402a686249cfcbe05dff6",
     "assets/car-avatars/CRAIG-GIBSON-STUDIO-2WD.png": "20e34be205d3a1d2a87efa9133f4f45f37c1347c",
-    "assets/car-avatar-thumbnails/CRAIG-GIBSON-STUDIO-2WD.webp": "f228fc29b9a8f36a4de8b50f4f02954109a8ca67"
+    "assets/car-avatar-thumbnails/CRAIG-GIBSON-STUDIO-2WD.webp": "f228fc29b9a8f36a4de8b50f4f02954109a8ca67",
+    "assets/car-avatars/MIKE-DRISCOLL-STUDIO-VINTAGE.png": "178afa85dfcf07d9eb8fce7dca1bc2a46aad13b7",
+    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-STUDIO-VINTAGE.webp": "8cc6f6a0e86e83b609aca083d9a55696e9ca866a"
   },
   "assignments": {
     "BRUCE": {
@@ -700,7 +714,8 @@
     "MIKE-DRISCOLL": {
       "2-Wheel Drive Buggy": "assets/car-avatars/MIKE-DRISCOLL-REVIEWED-2WD.png",
       "4-Wheel Drive Buggy": "assets/car-avatars/MIKE-DRISCOLL-AUTO-4WD.png",
-      "Trucks": "assets/car-avatars/MIKE-DRISCOLL-STUDIO-TRUCKS.png"
+      "Trucks": "assets/car-avatars/MIKE-DRISCOLL-STUDIO-TRUCKS.png",
+      "Vintage": "assets/car-avatars/MIKE-DRISCOLL-STUDIO-VINTAGE.png"
     },
     "STEVE-CURTIS-RICH": {
       "default": "assets/car-avatars/STEVE-CURTIS-RICH.png",
