@@ -178,3 +178,31 @@ initSiteHeader();
 initBackToTop();
 initNavigationPrefetch();
 initViewportStability();
+
+const accountLink = document.querySelector('.cobra-site-header .cobra-account-link');
+if (accountLink) {
+  const signedOut = { label: accountLink.textContent, href: accountLink.href };
+  let requestNumber = 0;
+  const refreshAccountLink = async () => {
+    const currentRequest = ++requestNumber;
+    let signedIn = false;
+    try {
+      const response = await fetch(new URL('/api/header-session', signedOut.href), {
+        credentials: 'include',
+        cache: 'no-store',
+      });
+      signedIn = response.ok && (await response.json()).signedIn === true;
+    } catch {
+      // Keep the sign-in link available when Wix cannot confirm the session.
+    }
+    if (currentRequest !== requestNumber) return;
+    accountLink.classList.toggle('cobra-account-signed-in', signedIn);
+    accountLink.textContent = signedIn ? 'Log Out / My Profile' : signedOut.label;
+    accountLink.href = signedIn ? new URL('/account', signedOut.href).href : signedOut.href;
+  };
+  window.addEventListener('pageshow', refreshAccountLink);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) refreshAccountLink();
+  });
+  refreshAccountLink();
+}
