@@ -137,7 +137,7 @@ main>.cobra-branded-hero{
 /* Use the same header layout across COBRA pages, including the Wix shell. */
 .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-header-inner {
   display: flex !important; align-items: center; gap: clamp(8px, 1.3vw, 22px) !important;
-  max-width: 1920px; padding: 8px clamp(12px, 2vw, 30px);
+  max-width: 1280px; padding: 8px clamp(12px, 2vw, 30px);
   min-height: 76px; aspect-ratio: auto; container-type: normal;
 }
 .cobra-site-header[data-club-id="cobra-cardiff"] :is(.cobra-site-logo, .cobra-mobile-menu, .cobra-gpw-logo, .cobra-account-link) {
