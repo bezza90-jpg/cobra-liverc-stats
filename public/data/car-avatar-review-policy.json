@@ -461,6 +461,18 @@
       "method": "cutout-studio",
       "approvedAt": "2026-11-10T00:53:47.720Z",
       "manualPublish": true
+    },
+    "CAMERON-FELTON|4-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "a0d6b78b27d4cb6cd334c254ab885fda6f843f80fd76cf67c4170293da345cab",
+      "submissionIdHash": "b1989e2e16f3cd7d3978140b65a1178b38c4d07d7c12d21e8e7d5863334b73bc",
+      "reviewedFileIdHash": "ffe3d3173d7caaf2f4c19eb1027fc6cb4a2108cfe614cdc58554c1fa86ad0e57",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-11T16:18:17.905Z",
+      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -698,7 +710,9 @@
     "assets/car-avatars/CRAIG-GIBSON-STUDIO-2WD.png": "20e34be205d3a1d2a87efa9133f4f45f37c1347c",
     "assets/car-avatar-thumbnails/CRAIG-GIBSON-STUDIO-2WD.webp": "f228fc29b9a8f36a4de8b50f4f02954109a8ca67",
     "assets/car-avatars/MIKE-DRISCOLL-STUDIO-VINTAGE.png": "178afa85dfcf07d9eb8fce7dca1bc2a46aad13b7",
-    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-STUDIO-VINTAGE.webp": "8cc6f6a0e86e83b609aca083d9a55696e9ca866a"
+    "assets/car-avatar-thumbnails/MIKE-DRISCOLL-STUDIO-VINTAGE.webp": "8cc6f6a0e86e83b609aca083d9a55696e9ca866a",
+    "assets/car-avatars/CAMERON-FELTON-STUDIO-4WD.png": "23151880e942987c92d550e97ca9376c703404bc",
+    "assets/car-avatar-thumbnails/CAMERON-FELTON-STUDIO-4WD.webp": "b36b768babfabc35b9350f9f41128de247b4c82e"
   },
   "assignments": {
     "BRUCE": {
@@ -941,7 +955,8 @@
       "2-Wheel Drive Buggy": "assets/car-avatars/GARY-MACDONALD-AUTO-2WD.png"
     },
     "CAMERON-FELTON": {
-      "2-Wheel Drive Buggy": "assets/car-avatars/CAMERON-FELTON-AUTO-2WD.png"
+      "2-Wheel Drive Buggy": "assets/car-avatars/CAMERON-FELTON-AUTO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/CAMERON-FELTON-STUDIO-4WD.png"
     },
     "CHRIS-REEVES": {
       "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-REEVES-AUTO-2WD.png"
