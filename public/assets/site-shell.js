@@ -225,7 +225,8 @@ if (accountLink) {
     const currentRequest = ++requestNumber;
     let signedIn = false;
     try {
-      const response = await fetch('/api/header-session', { credentials: 'same-origin', cache: 'no-store' });
+      const sessionUrl = new URL('/api/header-session', location.origin);
+      const response = await fetch(sessionUrl, { credentials: 'same-origin', cache: 'no-store' });
       signedIn = response.ok && (await response.json()).signedIn === true;
     } catch {
       // Keep the sign-in link available when Wix cannot confirm the session.
