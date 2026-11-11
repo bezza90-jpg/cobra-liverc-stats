@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-11T06:02:57.864158+00:00",
+  "checkedAt": "2026-11-11T22:42:58.750615+00:00",
   "updated": 0,
   "failures": {
     "BRUCE|2-Wheel Drive Buggy": {
@@ -10,6 +10,11 @@
     "BRUCE|4-Wheel Drive Buggy": {
       "id": "2f6eea67-b827-4ee1-8be3-e5821c8e83f7",
       "revision": "1bxAuVI_GpQxLjIKLDPuyJrJMnQlBK6KZ",
+      "error": "Exact image requires approval of this revision; unapproved processing is prohibited."
+    },
+    "CAMERON-FELTON|4-Wheel Drive Buggy": {
+      "id": "37939b7c-ac51-4a4e-b235-7e33c589c137",
+      "revision": "1XRqt-ClH6yvV7lCHbEtpto_5vJOrHvOG",
       "error": "Exact image requires approval of this revision; unapproved processing is prohibited."
     }
   }
