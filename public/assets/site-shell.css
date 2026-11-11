@@ -174,8 +174,8 @@ main>.cobra-branded-hero{
   .cobra-site-header[data-club-id="cobra-cardiff"] .cobra-site-menu a { white-space: normal; }
 }
 .cobra-site-header .cobra-account-signed-in {
-  background: #dfffa8 !important;
-  border-color: #6bbd35;
+  background: #b6ff00 !important;
+  border-color: #8ee000;
   color: #000 !important;
-  box-shadow: 0 0 9px #87ed4d99;
+  box-shadow: 0 0 4px #b6ff00, 0 0 12px #a5ff0080;
 }
