@@ -183,22 +183,47 @@ const accountLink = document.querySelector('.cobra-site-header .cobra-account-li
 if (accountLink) {
   const signedOut = { label: accountLink.textContent, href: accountLink.href };
   let requestNumber = 0;
-  const refreshAccountLink = async () => {
-    const currentRequest = ++requestNumber;
-    let signedIn = false;
-    try {
-      const response = await fetch(new URL('/api/header-session', location.hostname === 'racehub.cobracardiff.co.uk' ? signedOut.href : location.origin), {
-        credentials: 'include',
-        cache: 'no-store',
-      });
-      signedIn = response.ok && (await response.json()).signedIn === true;
-    } catch {
-      // Keep the sign-in link available when Wix cannot confirm the session.
-    }
-    if (currentRequest !== requestNumber) return;
+  const bridgeOrigin = new URL(signedOut.href).origin;
+  const bridgeUrl = new URL('/header-session-bridge', bridgeOrigin);
+  bridgeUrl.searchParams.set('parentOrigin', location.origin);
+  const applyAccountState = signedIn => {
     accountLink.classList.toggle('cobra-account-signed-in', signedIn);
     accountLink.textContent = signedIn ? 'Log Out / My Profile' : signedOut.label;
     accountLink.href = signedIn ? new URL('/account', signedOut.href).href : signedOut.href;
+  };
+  const refreshAccountLink = async () => {
+    const currentRequest = ++requestNumber;
+    let signedIn = false;
+    if (location.origin === bridgeOrigin) {
+      try {
+        const response = await fetch('/api/header-session', { credentials: 'same-origin', cache: 'no-store' });
+        signedIn = response.ok && (await response.json()).signedIn === true;
+      } catch {
+        // Keep the sign-in link available when Wix cannot confirm the session.
+      }
+    } else {
+      signedIn = await new Promise(resolve => {
+        const iframe = document.createElement('iframe');
+        iframe.hidden = true;
+        iframe.title = 'COBRA account status';
+        const finish = value => {
+          clearTimeout(timeout);
+          window.removeEventListener('message', onMessage);
+          iframe.remove();
+          resolve(value);
+        };
+        const onMessage = event => {
+          if (event.origin !== bridgeOrigin || event.source !== iframe.contentWindow || event.data?.type !== 'cobra-header-session') return;
+          finish(event.data.signedIn === true);
+        };
+        const timeout = setTimeout(() => finish(false), 8000);
+        window.addEventListener('message', onMessage);
+        iframe.src = bridgeUrl.href;
+        document.body.append(iframe);
+      });
+    }
+    if (currentRequest !== requestNumber) return;
+    applyAccountState(signedIn);
   };
   window.addEventListener('pageshow', refreshAccountLink);
   document.addEventListener('visibilitychange', () => {
