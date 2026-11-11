@@ -182,45 +182,53 @@ initViewportStability();
 const accountLink = document.querySelector('.cobra-site-header .cobra-account-link');
 if (accountLink) {
   const signedOut = { label: accountLink.textContent, href: accountLink.href };
-  let requestNumber = 0;
   const bridgeOrigin = new URL(signedOut.href).origin;
-  const bridgeUrl = new URL('/header-session-bridge', bridgeOrigin);
-  bridgeUrl.searchParams.set('parentOrigin', location.origin);
+  const raceHubOrigin = 'https://racehub.cobracardiff.co.uk';
+  const stateKey = 'cobra-account-state-v1';
   const applyAccountState = signedIn => {
     accountLink.classList.toggle('cobra-account-signed-in', signedIn);
     accountLink.textContent = signedIn ? 'Log Out / My Profile' : signedOut.label;
     accountLink.href = signedIn ? new URL('/account', signedOut.href).href : signedOut.href;
   };
+
+  if (location.origin === raceHubOrigin) {
+    const url = new URL(location.href);
+    const sharedState = url.searchParams.get('cobraAccount');
+    const returnTo = url.searchParams.get('returnTo');
+    if (sharedState === 'signedIn') {
+      localStorage.setItem(stateKey, JSON.stringify({ signedIn: true, updatedAt: Date.now() }));
+    } else if (sharedState === 'signedOut') {
+      localStorage.removeItem(stateKey);
+    }
+    if (sharedState) {
+      url.searchParams.delete('cobraAccount');
+      url.searchParams.delete('returnTo');
+      let returnUrl = null;
+      try { returnUrl = returnTo ? new URL(returnTo, bridgeOrigin) : null; } catch {}
+      if (returnUrl?.origin === bridgeOrigin) location.replace(returnUrl.href);
+      else history.replaceState(history.state, '', url);
+    }
+    let storedState = null;
+    try { storedState = JSON.parse(localStorage.getItem(stateKey)); } catch { localStorage.removeItem(stateKey); }
+    const current = storedState?.signedIn === true && Date.now() - storedState.updatedAt < 86400000;
+    if (!current) localStorage.removeItem(stateKey);
+    applyAccountState(current);
+    window.addEventListener('storage', event => {
+      if (event.key !== stateKey) return;
+      let next = null;
+      try { next = JSON.parse(event.newValue); } catch {}
+      applyAccountState(next?.signedIn === true && Date.now() - next.updatedAt < 86400000);
+    });
+  } else {
+    let requestNumber = 0;
   const refreshAccountLink = async () => {
     const currentRequest = ++requestNumber;
     let signedIn = false;
-    if (location.origin === bridgeOrigin) {
-      try {
-        const response = await fetch('/api/header-session', { credentials: 'same-origin', cache: 'no-store' });
-        signedIn = response.ok && (await response.json()).signedIn === true;
-      } catch {
-        // Keep the sign-in link available when Wix cannot confirm the session.
-      }
-    } else {
-      signedIn = await new Promise(resolve => {
-        const iframe = document.createElement('iframe');
-        iframe.hidden = true;
-        iframe.title = 'COBRA account status';
-        const finish = value => {
-          clearTimeout(timeout);
-          window.removeEventListener('message', onMessage);
-          iframe.remove();
-          resolve(value);
-        };
-        const onMessage = event => {
-          if (event.origin !== bridgeOrigin || event.source !== iframe.contentWindow || event.data?.type !== 'cobra-header-session') return;
-          finish(event.data.signedIn === true);
-        };
-        const timeout = setTimeout(() => finish(false), 8000);
-        window.addEventListener('message', onMessage);
-        iframe.src = bridgeUrl.href;
-        document.body.append(iframe);
-      });
+    try {
+      const response = await fetch('/api/header-session', { credentials: 'same-origin', cache: 'no-store' });
+      signedIn = response.ok && (await response.json()).signedIn === true;
+    } catch {
+      // Keep the sign-in link available when Wix cannot confirm the session.
     }
     if (currentRequest !== requestNumber) return;
     applyAccountState(signedIn);
@@ -230,5 +238,6 @@ if (accountLink) {
     if (!document.hidden) refreshAccountLink();
   });
   refreshAccountLink();
+  }
 }
 
