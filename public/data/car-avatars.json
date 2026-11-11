@@ -248,5 +248,8 @@
   "CRAIG-GIBSON": {
     "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-GIBSON-STUDIO-4WD.png",
     "2-Wheel Drive Buggy": "assets/car-avatars/CRAIG-GIBSON-STUDIO-2WD.png"
+  },
+  "RICH-SAVAGE": {
+    "Vintage": "assets/car-avatars/RICH-SAVAGE-STUDIO-VINTAGE.png"
   }
 }

@@ -473,6 +473,18 @@
       "method": "cutout-studio",
       "approvedAt": "2026-11-11T16:18:17.905Z",
       "manualPublish": true
+    },
+    "RICH-SAVAGE|Vintage": {
+      "version": 1,
+      "sha256": "710933a7a5549df1abdb0021c7078de4a8a5c9c2605d02f346535eea55f1ade2",
+      "submissionIdHash": "674310c02e74e78accfc35f6b0f1c26d3148187ec65ecdaeca0ad4e9b9ed8a7b",
+      "reviewedFileIdHash": "392170d6a6d6ee114c99580a2da478633c71fcaa4b39d4e62547251e9abe0f7b",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-11T23:09:59.137Z",
+      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -712,7 +724,9 @@
     "assets/car-avatars/MIKE-DRISCOLL-STUDIO-VINTAGE.png": "178afa85dfcf07d9eb8fce7dca1bc2a46aad13b7",
     "assets/car-avatar-thumbnails/MIKE-DRISCOLL-STUDIO-VINTAGE.webp": "8cc6f6a0e86e83b609aca083d9a55696e9ca866a",
     "assets/car-avatars/CAMERON-FELTON-STUDIO-4WD.png": "23151880e942987c92d550e97ca9376c703404bc",
-    "assets/car-avatar-thumbnails/CAMERON-FELTON-STUDIO-4WD.webp": "b36b768babfabc35b9350f9f41128de247b4c82e"
+    "assets/car-avatar-thumbnails/CAMERON-FELTON-STUDIO-4WD.webp": "b36b768babfabc35b9350f9f41128de247b4c82e",
+    "assets/car-avatars/RICH-SAVAGE-STUDIO-VINTAGE.png": "18634b1b9e81e43f4c37ec34219efb94f3a4564c",
+    "assets/car-avatar-thumbnails/RICH-SAVAGE-STUDIO-VINTAGE.webp": "7b6f5f90837dda2474048029392a8b08771a6bbf"
   },
   "assignments": {
     "BRUCE": {
@@ -964,6 +978,9 @@
     "CRAIG-GIBSON": {
       "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-GIBSON-STUDIO-4WD.png",
       "2-Wheel Drive Buggy": "assets/car-avatars/CRAIG-GIBSON-STUDIO-2WD.png"
+    },
+    "RICH-SAVAGE": {
+      "Vintage": "assets/car-avatars/RICH-SAVAGE-STUDIO-VINTAGE.png"
     }
   },
   "blockedRevisionHashes": [
