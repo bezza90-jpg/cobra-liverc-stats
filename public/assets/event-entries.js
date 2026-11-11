@@ -304,7 +304,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       }
       driver.append(driverIdentity);
       const chassis = element('td');
-      const slug = {'team associated':'team-associated','associated':'team-associated','schumacher':'schumacher','kyosho':'kyosho','xray':'xray','yokomo':'yokomo','tlr':'tlr','team losi racing':'tlr','sworkz':'sworkz','agama':'agama','tamiya':'tamiya','pr':'pr','pr racing':'pr','r1 wurks':'r1-wurks'}[String(entry.chassis || '').trim().toLowerCase()];
+      const slug = {'team associated':'team-associated','associated':'team-associated','schumacher':'schumacher','kyosho':'kyosho','xray':'xray','yokomo':'yokomo','tlr':'tlr','team losi racing':'tlr','ttech':'ttech','ttech racing concepts':'ttech','sworkz':'sworkz','agama':'agama','tamiya':'tamiya','pr':'pr','pr racing':'pr','r1 wurks':'r1-wurks'}[String(entry.chassis || '').trim().toLowerCase()];
       if (slug) {
         const logo = element('img', 'event-entry-chassis-logo');
         logo.src = '../assets/manufacturers/' + slug + '.png'; logo.alt = entry.chassis; logo.title = entry.chassis; logo.loading = 'lazy';

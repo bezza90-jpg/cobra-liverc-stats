@@ -5,7 +5,7 @@ let confirmedAvatarManifest={};
 let confirmedEntriesFingerprint='';
 const GPW_CLASSES=['2WD','4WD','2WD Vintage','4WD Vintage','Stadium Trucks'];
 const COUNTRY_CODES={'United Kingdom':'gb','England':'gb','Wales':'gb','Scotland':'gb','Northern Ireland':'gb','Ireland':'ie','Sweden':'se','Belgium':'be','Netherlands':'nl','Finland':'fi','Denmark':'dk','Germany':'de','France':'fr','Norway':'no'};
-const CHASSIS_LOGOS={'team associated':'team-associated','associated':'team-associated','schumacher':'schumacher','kyosho':'kyosho','xray':'xray','yokomo':'yokomo','tlr':'tlr','team losi racing':'tlr','sworkz':'sworkz','agama':'agama','tamiya':'tamiya','pr':'pr','pr racing':'pr','r1 wurks':'r1-wurks'};
+const CHASSIS_LOGOS={'team associated':'team-associated','associated':'team-associated','schumacher':'schumacher','kyosho':'kyosho','xray':'xray','yokomo':'yokomo','tlr':'tlr','team losi racing':'tlr','ttech':'ttech','ttech racing concepts':'ttech','sworkz':'sworkz','agama':'agama','tamiya':'tamiya','pr':'pr','pr racing':'pr','r1 wurks':'r1-wurks'};
 
 document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener("click",()=>{
   document.querySelectorAll(".site-header nav a").forEach(item=>item.removeAttribute("aria-current"));

@@ -8,7 +8,7 @@ const COBRA = Object.freeze({
   podiumMaxFileBytes: 8 * 1024 * 1024,
   podiumOriginalMaxFileBytes: 6 * 1024 * 1024,
   allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png', 'webp', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'txt'],
-  brands: ['Team Associated', 'Schumacher', 'XRAY', 'TLR', 'PR Racing', 'Yokomo', 'R1 Wurks', 'Kyosho', 'Serpent', 'Mugen Seiki', 'Tamiya', 'LC Racing', 'Tekno RC', 'Sworkz', 'Other'],
+  brands: ['Team Associated', 'Schumacher', 'XRAY', 'TLR', 'TTech', 'PR Racing', 'Yokomo', 'R1 Wurks', 'Kyosho', 'Serpent', 'Mugen Seiki', 'Tamiya', 'LC Racing', 'Tekno RC', 'Sworkz', 'Other'],
   classes: ['2WD', '4WD', 'Vintage', 'Truck'],
   headers: ['Submission ID', 'Submitted At', 'Status', 'Driver Name', 'Driver Key', 'Manufacturer', 'Car Model', 'Class', 'Event ID', 'Event Name', 'Event Date', 'Notes', 'Original Filename', 'Stored Filename', 'MIME Type', 'File Size', 'Drive File ID', 'Public View URL', 'Public Preview URL', 'Reviewed At'],
   podiumHeaders: ['Submission ID', 'Submitted At', 'Status', 'Uploader Name', 'Event ID', 'Event Name', 'Event Date', 'Race ID', 'Class', 'Final', 'Caption', 'Original Filename', 'Original Stored Filename', 'Original MIME Type', 'Original File Size', 'Original Drive File ID', 'Crop Stored Filename', 'Crop File Size', 'Crop Drive File ID', 'Review Token', 'Review / Re-crop URL', 'Public Image URL', 'Public View URL', 'Reviewed At']
