@@ -19,7 +19,7 @@ test('3D replay keeps the complete responsive site menu',()=>{
   assert.match(html,/class="cobra-mobile-menu"/);
   assert.match(html,/class="cobra-site-menu"/);
   assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=9"/);
-  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=10"/);
+  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=11"/);
   assert.match(html,/class="cobra-gpw-logo"/);
 });
 
