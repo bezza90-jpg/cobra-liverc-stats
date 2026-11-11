@@ -187,7 +187,7 @@ if (accountLink) {
     const currentRequest = ++requestNumber;
     let signedIn = false;
     try {
-      const response = await fetch(new URL('/api/header-session', signedOut.href), {
+      const response = await fetch(new URL('/api/header-session', location.hostname === 'racehub.cobracardiff.co.uk' ? signedOut.href : location.origin), {
         credentials: 'include',
         cache: 'no-store',
       });
@@ -206,3 +206,4 @@ if (accountLink) {
   });
   refreshAccountLink();
 }
+
