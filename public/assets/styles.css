@@ -521,6 +521,7 @@ details .table-wrap { margin: 0 14px 14px; }
 .profile-history { max-height: 520px; }
 .profile-history table { min-width:0; table-layout:fixed; font-size:.68rem; }
 .profile-history th, .profile-history td { padding:7px 5px; white-space:nowrap; }
+.profile-history thead th { position:sticky; z-index:4; top:0; background:#f0f5f1; box-shadow:0 1px 0 var(--line); }
 .profile-history th { overflow:hidden; font-size:.58rem; text-overflow:ellipsis; }
 .profile-history th:nth-child(1) { width:9%; }.profile-history th:nth-child(2) { width:20%; }.profile-history th:nth-child(3) { width:7%; }.profile-history th:nth-child(4) { width:14%; }
 .profile-history th:nth-child(5),.profile-history th:nth-child(6),.profile-history th:nth-child(7),.profile-history th:nth-child(11),.profile-history th:nth-child(12) { width:6%; }

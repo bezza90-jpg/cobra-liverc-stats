@@ -2756,7 +2756,8 @@ async function init() {
       const returnTo = new URLSearchParams(location.search).get('returnTo');
       if (returnTo) {
         const destination = new URL(returnTo, location.href);
-        if (destination.origin === location.origin && destination.pathname !== location.pathname) {
+        const isProfileReturn = destination.origin === 'https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com' && destination.pathname === '/racer-profile-preview';
+        if ((destination.origin === location.origin && destination.pathname !== location.pathname) || isProfileReturn) {
           if (document.referrer === destination.href && history.length > 1) history.back();
           else location.assign(destination.href);
         }
