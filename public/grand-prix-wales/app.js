@@ -14,6 +14,9 @@ document.querySelectorAll('a[href^="#"]').forEach(link=>link.addEventListener("c
 
 const escapeHtml=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'})[char]);
 const safeUrl=value=>{if(value==null||String(value).trim()==='')return'';try{const url=new URL(String(value),location.href);return ['http:','https:'].includes(url.protocol)?url.href:''}catch{return''}};
+const filterValue=value=>String(value||'').trim().toLocaleLowerCase();
+const countryFilterValue=country=>{const name=String(country||'').trim();if(!name)return'';if(/^(uk|gb)$/i.test(name))return'gb';return COUNTRY_CODES[name]||(/^[A-Za-z]{2}$/.test(name)?name.toLowerCase():filterValue(name))};
+const countryFilterLabel=country=>{const name=String(country||'').trim();if(!name)return'';const code=countryFilterValue(name);if(code==='gb')return'United Kingdom';if(/^[a-z]{2}$/.test(code)){try{return new Intl.DisplayNames(['en'],{type:'region'}).of(code.toUpperCase())||name}catch{return name}}return name};
 const countryLabel=country=>{const name=String(country||'').trim();if(!name)return'';const code=COUNTRY_CODES[name]||(/^[A-Za-z]{2}$/.test(name)?name.toLowerCase():'');if(!code)return '<small class="entry-country">'+escapeHtml(name)+'</small>';let label=name;if(/^[A-Za-z]{2}$/.test(name)){try{label=new Intl.DisplayNames(['en'],{type:'region'}).of(code.toUpperCase())||name}catch{label=name}}const supported=['gb','ie','se','be','nl','fi','dk','de','fr','no'];if(!supported.includes(code))return '<small class="entry-country">'+escapeHtml(code.toUpperCase())+'</small>';return '<img class="entry-flag-image" src="assets/flags/'+escapeHtml(code)+'.svg" alt="'+escapeHtml(label)+'" title="'+escapeHtml(label)+'" width="32" height="20" loading="lazy" decoding="async">'};
 const chassisHtml=entry=>{const name=String(entry?.chassis||'').trim(),slug=CHASSIS_LOGOS[name.toLocaleLowerCase()];if(!name)return'<span class="entry-chassis-cell entry-chassis-missing" aria-label="Chassis not supplied">—</span>';if(!slug)return'<span class="entry-chassis-cell entry-chassis-text" title="'+escapeHtml(name)+'">'+escapeHtml(name)+'</span>';return '<span class="entry-chassis-cell"><img class="entry-chassis-logo" src="../assets/manufacturers/'+escapeHtml(slug)+'.png" alt="'+escapeHtml(name)+'" title="'+escapeHtml(name)+'" loading="lazy" decoding="async" onerror="this.parentNode.classList.add(\'entry-chassis-text\');this.parentNode.textContent=this.alt"></span>'};
 const driverAvatarKey=name=>{const key=String(name||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toUpperCase().replace(/[^A-Z0-9]+/g,'-').replace(/^-|-$/g,'');return {'MATT-HODGES':'MATTHEW-HODGES','CHRISTOPHER-LEONARD':'CHRIS-LEONARD','PAUL-CURTIS':'BRUCE','PAUL-BRUCE-CURTIS':'BRUCE','BOB-GELSTHARP':'BOBTECH','BOB-BOBTECH-GELSTHARP':'BOBTECH'}[key]||key};
@@ -27,10 +30,12 @@ const hydrateEntryAvatarPreviews=root=>root.querySelectorAll('.entry-avatar').fo
 const orderPosts=(posts,preferredOrder)=>{const priorities=new Map((Array.isArray(preferredOrder)?preferredOrder:[]).map((name,index)=>[String(name).trim().toLocaleLowerCase(),index]));return posts.map((post,index)=>({post,index,priority:priorities.get(String(post?.driverName||'').trim().toLocaleLowerCase())})).sort((a,b)=>{const aRank=a.priority??Number.MAX_SAFE_INTEGER,bRank=b.priority??Number.MAX_SAFE_INTEGER;return aRank-bRank||a.index-b.index}).map(item=>item.post)};
 
 function renderConfirmedEntries(){
-  const classes=document.querySelector('#entryClasses'),search=document.querySelector('#entrySearch'),status=document.querySelector('#entrySearchStatus');
+  const classes=document.querySelector('#entryClasses'),search=document.querySelector('#entrySearch'),country=document.querySelector('#entryCountry'),chassis=document.querySelector('#entryChassis'),status=document.querySelector('#entrySearchStatus');
   if(!classes)return;
   const query=String(search?.value||'').trim().toLocaleLowerCase();
-  const entries=query?confirmedEntries.filter(entry=>String(entry.name||'').toLocaleLowerCase().includes(query)):confirmedEntries;
+  const countryValue=String(country?.value||''),chassisValue=String(chassis?.value||'');
+  const entries=confirmedEntries.filter(entry=>(!query||String(entry.name||'').toLocaleLowerCase().includes(query))&&(!countryValue||countryFilterValue(entry.country)===countryValue)&&(!chassisValue||filterValue(entry.chassis)===chassisValue));
+  const filtering=Boolean(query||countryValue||chassisValue);
   const isMobile=window.matchMedia('(max-width:760px)').matches;
   const existingCards=[...classes.querySelectorAll('details.entry-class-card')];
   const openClasses=new Set(existingCards.filter(card=>card.open).map(card=>card.dataset.class));
@@ -38,13 +43,29 @@ function renderConfirmedEntries(){
   classes.innerHTML=GPW_CLASSES.map((className,index)=>{
     const rows=entries.filter(entry=>entry.className===className);
     const people=rows.map(entry=>'<li><span class="entry-driver-name">'+escapeHtml(entry.name)+'</span>'+chassisHtml(entry)+'<span class="entry-country-cell">'+countryLabel(entry.country)+'</span>'+avatarHtml(entry,confirmedAvatarManifest)+'</li>').join('');
-    const shouldOpen=rows.length&&(!isMobile||query||openClasses.has(className)||(!hadCards&&index===0));
-    return '<details class="entry-class-card" data-class="'+escapeHtml(className)+'"'+(shouldOpen?' open':'')+'><summary><span class="entry-class-number">'+String(index+1).padStart(2,'0')+'</span><span class="entry-class-heading"><strong>'+escapeHtml(className)+'</strong><small>'+rows.length+' '+(rows.length===1?'entry':'entries')+'</small></span><span class="entry-class-toggle" aria-hidden="true">⌄</span></summary><div class="entry-class-body">'+(rows.length?'<div class="entry-list-head"><span>Driver</span><span>Chassis</span><span>Flag</span><span>Car</span></div><ol class="entry-list">'+people+'</ol>':'<p>'+(query?'No matching drivers in this class.':'Confirmed entries will appear here.')+'</p>')+'</div></details>';
+    const shouldOpen=rows.length&&(!isMobile||filtering||openClasses.has(className)||(!hadCards&&index===0));
+    return '<details class="entry-class-card" data-class="'+escapeHtml(className)+'"'+(shouldOpen?' open':'')+'><summary><span class="entry-class-number">'+String(index+1).padStart(2,'0')+'</span><span class="entry-class-heading"><strong>'+escapeHtml(className)+'</strong><small>'+rows.length+' '+(rows.length===1?'entry':'entries')+'</small></span><span class="entry-class-toggle" aria-hidden="true">⌄</span></summary><div class="entry-class-body">'+(rows.length?'<div class="entry-list-head"><span>Driver</span><span>Chassis</span><span>Flag</span><span>Car</span></div><ol class="entry-list">'+people+'</ol>':'<p>'+(filtering?'No entries match these filters in this class.':'Confirmed entries will appear here.')+'</p>')+'</div></details>';
   }).join('');
-  if(status)status.textContent=query?(entries.length?entries.length+' matching class '+(entries.length===1?'entry':'entries')+'.':'No confirmed drivers match “'+String(search.value).trim()+'”.'):'';
+  if(status)status.textContent=filtering?(entries.length?entries.length+' matching class '+(entries.length===1?'entry':'entries')+'.':'No confirmed entries match these filters.'):'';
   const cards=[...classes.querySelectorAll('details.entry-class-card')];
   cards.forEach(card=>card.querySelector('summary')?.addEventListener('click',event=>{event.preventDefault();const nextOpen=!card.open;if(window.matchMedia('(max-width:760px)').matches){cards.forEach(item=>{item.open=item===card?nextOpen:false});return}cards.forEach(item=>{item.open=nextOpen})}));
   hydrateEntryAvatarPreviews(classes);
+}
+
+function populateConfirmedEntryFilters(){
+  const country=document.querySelector('#entryCountry'),chassis=document.querySelector('#entryChassis');
+  if(country){
+    const selected=country.value,values=new Map();
+    confirmedEntries.forEach(entry=>{const value=countryFilterValue(entry.country);if(value&&!values.has(value))values.set(value,countryFilterLabel(entry.country))});
+    country.replaceChildren(new Option('All countries',''),...[...values].sort((a,b)=>a[1].localeCompare(b[1])).map(([value,label])=>new Option(label,value)));
+    if([...values].some(([value])=>value===selected))country.value=selected;
+  }
+  if(chassis){
+    const selected=chassis.value,values=new Map();
+    confirmedEntries.forEach(entry=>{const label=String(entry.chassis||'').trim(),value=filterValue(label);if(value&&!values.has(value))values.set(value,label)});
+    chassis.replaceChildren(new Option('All chassis',''),...[...values].sort((a,b)=>a[1].localeCompare(b[1])).map(([value,label])=>new Option(label,value)));
+    if([...values].some(([value])=>value===selected))chassis.value=selected;
+  }
 }
 
 const avatarManifestPromise=fetch('../data/car-avatars.json',{cache:'no-cache'}).then(response=>response.ok?response.json():{}).catch(()=>({}));
@@ -61,6 +82,7 @@ async function loadConfirmedEntries(){
     const entriesChanged=fingerprint!==confirmedEntriesFingerprint;
     confirmedEntries=entries;
     confirmedEntriesFingerprint=fingerprint;
+    populateConfirmedEntryFilters();
     document.querySelector('#classCount').textContent=entries.length;
     document.querySelector('#driverCount').textContent=new Set(entries.map(entry=>String(entry.name||'').trim().toLocaleLowerCase()).filter(Boolean)).size;
     const updated=data.publishedAt?new Intl.DateTimeFormat('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}).format(new Date(data.publishedAt)):'';
@@ -72,6 +94,8 @@ async function loadConfirmedEntries(){
 }
 
 document.querySelector('#entrySearch')?.addEventListener('input',renderConfirmedEntries);
+document.querySelector('#entryCountry')?.addEventListener('change',renderConfirmedEntries);
+document.querySelector('#entryChassis')?.addEventListener('change',renderConfirmedEntries);
 loadConfirmedEntries();
 setInterval(loadConfirmedEntries,60000);
 fetch('data/announcements.json',{cache:'no-store'}).then(response=>response.json()).then(data=>{
