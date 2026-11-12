@@ -6,6 +6,7 @@ import { readFile, writeFile, rename } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 import { BASE_URL, driverKey, fetchText, parseArchive, parseEntryList, parseEventIndex, parseOverall } from './lib/liverc.mjs';
 import { londonDate } from '../public/assets/event-calendar.js';
+import { bookingEvent } from '../public/assets/booking-events.js';
 import {publicEntryFeed} from './lib/public-entry-data.mjs';
 export function calendarMeetings(events) {
   return events.filter(event => /^\d{4}-\d{2}-\d{2}$/.test(event.date) &&
@@ -145,7 +146,14 @@ export async function updateEventCalendar(events) {
     }
   }
   const bookings = await loadBookings();
-  for (const meeting of selected) meeting.bookingUrl = matchBooking(meeting, bookings);
+  for (const meeting of selected) {
+    meeting.bookingUrl = matchBooking(meeting, bookings);
+    const mapped = bookingEvent(meeting);
+    if (mapped) {
+      meeting.bookingEventId = mapped.id;
+      meeting.bookingOpenAt = mapped.opensAt;
+    }
+  }
   const file = new URL('../public/data/event-calendar.json', import.meta.url);
   await writeIfChanged(file, {sourceUrl:BASE_URL + '/events/', events:selected});
   const entryCount = await updateNextEventEntries(selected, today);

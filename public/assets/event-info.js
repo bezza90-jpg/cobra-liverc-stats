@@ -1,5 +1,6 @@
 import {installCalendarButton} from './calendar-download.js';
 import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight';
+import {bookingUrlForEvent} from './booking-events.js';
 (async () => {
   'use strict';
   const element = id => document.getElementById(id);
@@ -26,8 +27,9 @@ import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight
       if (event.resultsUrl && /^https:\/\//.test(event.resultsUrl)) element('eventResults').href = event.resultsUrl;
       if (event.eventId) element('eventPodium').href = '../podiums/?event=' + encodeURIComponent(event.eventId);
       const booking = element('eventBooking');
-      if (booking && /^https:\/\/www\.cobracardiff\.co\.uk\/event-details-1\/[^\s]+$/.test(event.bookingUrl || '')) {
-        booking.href = event.bookingUrl;
+      const bookingUrl = bookingUrlForEvent(event);
+      if (booking && bookingUrl) {
+        booking.href = bookingUrl;
         booking.hidden = false;
       }
       if (meeting) installCalendarButton(event, element('eventCalendarActions'));

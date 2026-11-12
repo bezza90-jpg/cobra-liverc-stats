@@ -179,9 +179,9 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     const checked = new Date(data.updatedAt);
     const stamp = Number.isNaN(checked.getTime()) ? '' : ` Last refreshed ${checked.toLocaleString('en-GB',{timeZone:'Europe/London'})} (UK time).`;
     panel.append(element('p','',`Based on current Wix bookings and published LiveRC entries${spaces.some(item=>item.confirmed) ? ', with race-control confirmed entries' : ''}.${stamp} New bookings normally appear after the next automatic update. Club-driver reservations are included where configured. Check availability when booking. Under-16s racing with seniors count in their car class.`));
-    if (!currentEventPage && /^https:\/\/www\.cobracardiff\.co\.uk\/event-details-1\//.test(meeting.bookingUrl || '')) {
+    if (!currentEventPage && meeting.bookingEventId && /^[a-f0-9-]{36}$/i.test(meeting.bookingEventId)) {
       const booking=element('a','event-entry-source','Book this event ↗');
-      booking.href=meeting.bookingUrl; booking.target='_blank'; booking.rel='noopener'; panel.append(booking);
+      booking.href='https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/booking-preview?event='+encodeURIComponent(meeting.bookingEventId); booking.target='_blank'; booking.rel='noopener'; panel.append(booking);
     }
     const eventSummary = currentEventPage ? document.getElementById('eventTitle')?.closest('.panel') : null;
     (eventSummary || content).append(panel);
