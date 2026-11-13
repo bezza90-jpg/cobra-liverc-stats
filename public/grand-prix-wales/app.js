@@ -1,6 +1,8 @@
 const PUBLIC_ENTRIES_URL='https://grand-prix-wales-entries.bezza90.chatgpt.site/api/public-entries';
+const GPW_CAPACITY_URL='https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/api/gpw-capacity';
 let entryAvatarPreview;
 let confirmedEntries=[];
+let confirmedClassCapacities={};
 let confirmedAvatarManifest={};
 let confirmedEntriesFingerprint='';
 const GPW_CLASSES=['2WD','4WD','2WD Vintage','4WD Vintage','Stadium Trucks'];
@@ -28,6 +30,8 @@ const showEntryAvatarPreview=image=>{const preview=ensureEntryAvatarPreview(),re
 const hideEntryAvatarPreview=()=>{if(entryAvatarPreview)entryAvatarPreview.hidden=true};
 const hydrateEntryAvatarPreviews=root=>root.querySelectorAll('.entry-avatar').forEach(image=>{image.addEventListener('pointerenter',()=>showEntryAvatarPreview(image));image.addEventListener('pointerleave',hideEntryAvatarPreview);image.addEventListener('focus',()=>showEntryAvatarPreview(image));image.addEventListener('blur',hideEntryAvatarPreview);image.addEventListener('click',event=>{event.stopPropagation();showEntryAvatarPreview(image)});image.addEventListener('keydown',event=>{if(!['Enter',' '].includes(event.key))return;event.preventDefault();event.stopPropagation();showEntryAvatarPreview(image)})});
 const orderPosts=(posts,preferredOrder)=>{const priorities=new Map((Array.isArray(preferredOrder)?preferredOrder:[]).map((name,index)=>[String(name).trim().toLocaleLowerCase(),index]));return posts.map((post,index)=>({post,index,priority:priorities.get(String(post?.driverName||'').trim().toLocaleLowerCase())})).sort((a,b)=>{const aRank=a.priority??Number.MAX_SAFE_INTEGER,bRank=b.priority??Number.MAX_SAFE_INTEGER;return aRank-bRank||a.index-b.index}).map(item=>item.post)};
+const capacityPosition=(entries,limit)=>Number.isFinite(limit)&&limit>0?Math.max(0,Math.min(100,Math.round(entries/limit*100))):null;
+const capacityMeter=(className,count)=>{const position=capacityPosition(count,Number(confirmedClassCapacities[className]));if(position===null)return'';const state=position>=100?'Full':position>=85?'Nearly full':position>=60?'Filling up':'Spaces available';return '<div class="entry-capacity" role="img" aria-label="'+escapeHtml(className)+' capacity: '+state.toLocaleLowerCase()+'"><span class="entry-capacity-label">Capacity</span><span class="entry-capacity-track" aria-hidden="true"><i style="--entry-capacity:'+position+'%"></i></span><strong>'+state+'</strong></div>'};
 
 function renderConfirmedEntries(){
   const classes=document.querySelector('#entryClasses'),search=document.querySelector('#entrySearch'),country=document.querySelector('#entryCountry'),chassis=document.querySelector('#entryChassis'),status=document.querySelector('#entrySearchStatus');
@@ -42,9 +46,10 @@ function renderConfirmedEntries(){
   const hadCards=existingCards.length>0;
   classes.innerHTML=GPW_CLASSES.map((className,index)=>{
     const rows=entries.filter(entry=>entry.className===className);
+    const totalCount=confirmedEntries.filter(entry=>entry.className===className).length;
     const people=rows.map(entry=>'<li><span class="entry-driver-name">'+escapeHtml(entry.name)+'</span>'+chassisHtml(entry)+'<span class="entry-country-cell">'+countryLabel(entry.country)+'</span>'+avatarHtml(entry,confirmedAvatarManifest)+'</li>').join('');
     const shouldOpen=rows.length&&(!isMobile||filtering||openClasses.has(className)||(!hadCards&&index===0));
-    return '<details class="entry-class-card" data-class="'+escapeHtml(className)+'"'+(shouldOpen?' open':'')+'><summary><span class="entry-class-number">'+String(index+1).padStart(2,'0')+'</span><span class="entry-class-heading"><strong>'+escapeHtml(className)+'</strong><small>'+rows.length+' '+(rows.length===1?'entry':'entries')+'</small></span><span class="entry-class-toggle" aria-hidden="true">⌄</span></summary><div class="entry-class-body">'+(rows.length?'<div class="entry-list-head"><span>Driver</span><span>Chassis</span><span>Flag</span><span>Car</span></div><ol class="entry-list">'+people+'</ol>':'<p>'+(filtering?'No entries match these filters in this class.':'Confirmed entries will appear here.')+'</p>')+'</div></details>';
+    return '<details class="entry-class-card" data-class="'+escapeHtml(className)+'"'+(shouldOpen?' open':'')+'><summary><span class="entry-class-number">'+String(index+1).padStart(2,'0')+'</span><span class="entry-class-heading"><strong>'+escapeHtml(className)+'</strong><small>'+rows.length+' '+(rows.length===1?'entry':'entries')+'</small></span><span class="entry-class-toggle" aria-hidden="true">⌄</span></summary>'+capacityMeter(className,totalCount)+'<div class="entry-class-body">'+(rows.length?'<div class="entry-list-head"><span>Driver</span><span>Chassis</span><span>Flag</span><span>Car</span></div><ol class="entry-list">'+people+'</ol>':'<p>'+(filtering?'No entries match these filters in this class.':'Confirmed entries will appear here.')+'</p>')+'</div></details>';
   }).join('');
   if(status)status.textContent=filtering?(entries.length?entries.length+' matching class '+(entries.length===1?'entry':'entries')+'.':'No confirmed entries match these filters.'):'';
   const cards=[...classes.querySelectorAll('details.entry-class-card')];
@@ -70,6 +75,8 @@ function populateConfirmedEntryFilters(){
 
 const avatarManifestPromise=fetch('../data/car-avatars.json',{cache:'no-cache'}).then(response=>response.ok?response.json():{}).catch(()=>({}));
 avatarManifestPromise.then(manifest=>{confirmedAvatarManifest=manifest;if(confirmedEntries.length)renderConfirmedEntries()});
+
+fetch(GPW_CAPACITY_URL,{cache:'no-store'}).then(response=>response.ok?response.json():null).then(data=>{if(!data?.classes)return;confirmedClassCapacities=data.classes;renderConfirmedEntries()}).catch(()=>{});
 
 async function loadConfirmedEntries(){
   const message=document.querySelector('#entryMessage'),classes=document.querySelector('#entryClasses');
