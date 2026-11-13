@@ -2,7 +2,7 @@ const PUBLIC_ENTRIES_URL='https://grand-prix-wales-entries.bezza90.chatgpt.site/
 const GPW_CAPACITY_URL='https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/api/gpw-capacity';
 let entryAvatarPreview;
 let confirmedEntries=[];
-let confirmedClassCapacities={};
+let confirmedClassRemaining={};
 let confirmedAvatarManifest={};
 let confirmedEntriesFingerprint='';
 const GPW_CLASSES=['2WD','4WD','2WD Vintage','4WD Vintage','Stadium Trucks'];
@@ -30,8 +30,8 @@ const showEntryAvatarPreview=image=>{const preview=ensureEntryAvatarPreview(),re
 const hideEntryAvatarPreview=()=>{if(entryAvatarPreview)entryAvatarPreview.hidden=true};
 const hydrateEntryAvatarPreviews=root=>root.querySelectorAll('.entry-avatar').forEach(image=>{image.addEventListener('pointerenter',()=>showEntryAvatarPreview(image));image.addEventListener('pointerleave',hideEntryAvatarPreview);image.addEventListener('focus',()=>showEntryAvatarPreview(image));image.addEventListener('blur',hideEntryAvatarPreview);image.addEventListener('click',event=>{event.stopPropagation();showEntryAvatarPreview(image)});image.addEventListener('keydown',event=>{if(!['Enter',' '].includes(event.key))return;event.preventDefault();event.stopPropagation();showEntryAvatarPreview(image)})});
 const orderPosts=(posts,preferredOrder)=>{const priorities=new Map((Array.isArray(preferredOrder)?preferredOrder:[]).map((name,index)=>[String(name).trim().toLocaleLowerCase(),index]));return posts.map((post,index)=>({post,index,priority:priorities.get(String(post?.driverName||'').trim().toLocaleLowerCase())})).sort((a,b)=>{const aRank=a.priority??Number.MAX_SAFE_INTEGER,bRank=b.priority??Number.MAX_SAFE_INTEGER;return aRank-bRank||a.index-b.index}).map(item=>item.post)};
-const capacityPosition=(entries,limit)=>Number.isFinite(limit)&&limit>0?Math.max(0,Math.min(100,Math.round(entries/limit*100))):null;
-const capacityMeter=(className,count)=>{const position=capacityPosition(count,Number(confirmedClassCapacities[className]));if(position===null)return'';const state=position>=100?'Full':position>=85?'Nearly full':position>=60?'Filling up':'Spaces available';return '<div class="entry-capacity" role="img" aria-label="'+escapeHtml(className)+' capacity: '+state.toLocaleLowerCase()+'"><span class="entry-capacity-label">Capacity</span><span class="entry-capacity-track" aria-hidden="true"><i style="--entry-capacity:'+position+'%"></i></span><strong>'+state+'</strong></div>'};
+const capacityPosition=(entries,remaining)=>Number.isFinite(remaining)&&remaining>=0&&entries+remaining>0?Math.max(0,Math.min(100,Math.round(entries/(entries+remaining)*100))):null;
+const capacityMeter=(className,count)=>{const position=capacityPosition(count,Number(confirmedClassRemaining[className]));if(position===null)return'';const state=position>=100?'Full':position>=85?'Nearly full':position>=60?'Filling up':'Spaces available';return '<div class="entry-capacity" role="img" aria-label="'+escapeHtml(className)+' capacity: '+state.toLocaleLowerCase()+'"><span class="entry-capacity-label">Capacity</span><span class="entry-capacity-track" aria-hidden="true"><i style="--entry-capacity:'+position+'%"></i></span><strong>'+state+'</strong></div>'};
 
 function renderConfirmedEntries(){
   const classes=document.querySelector('#entryClasses'),search=document.querySelector('#entrySearch'),country=document.querySelector('#entryCountry'),chassis=document.querySelector('#entryChassis'),status=document.querySelector('#entrySearchStatus');
@@ -76,7 +76,7 @@ function populateConfirmedEntryFilters(){
 const avatarManifestPromise=fetch('../data/car-avatars.json',{cache:'no-cache'}).then(response=>response.ok?response.json():{}).catch(()=>({}));
 avatarManifestPromise.then(manifest=>{confirmedAvatarManifest=manifest;if(confirmedEntries.length)renderConfirmedEntries()});
 
-fetch(GPW_CAPACITY_URL,{cache:'no-store'}).then(response=>response.ok?response.json():null).then(data=>{if(!data?.classes)return;confirmedClassCapacities=data.classes;renderConfirmedEntries()}).catch(()=>{});
+fetch(GPW_CAPACITY_URL,{cache:'no-store'}).then(response=>response.ok?response.json():null).then(data=>{if(!data?.remaining)return;confirmedClassRemaining=data.remaining;renderConfirmedEntries()}).catch(()=>{});
 
 async function loadConfirmedEntries(){
   const message=document.querySelector('#entryMessage'),classes=document.querySelector('#entryClasses');
