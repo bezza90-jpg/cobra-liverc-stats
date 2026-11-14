@@ -242,3 +242,26 @@ if (accountLink) {
   }
 }
 
+
+
+const GPW_GUIDED_BOOKING_URL = 'https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/booking-preview?event=50b9c26d-f5c3-4b52-892e-f04509eb9730';
+const GPW_BOOKING_OPENS_AT = Date.parse('2026-11-14T19:00:00Z');
+
+export function initGpwBookingLinks(root = document) {
+  const isOpen = Date.now() >= GPW_BOOKING_OPENS_AT;
+  root.querySelectorAll('.event-row.gpw').forEach(card => {
+    const openingPill = card.querySelector('.pill');
+    if (isOpen && openingPill) openingPill.textContent = 'Booking is open';
+    card.querySelectorAll('a').forEach(link => {
+      if (/book\s*gpw/i.test(link.textContent || '')) {
+        link.href = GPW_GUIDED_BOOKING_URL;
+        link.removeAttribute('target');
+        link.removeAttribute('rel');
+      }
+    });
+    const status = [...card.querySelectorAll('small')].find(node => /booking is being prepared|booking opens/i.test(node.textContent || ''));
+    if (status) status.textContent = isOpen ? 'Guided booking is open' : status.textContent;
+  });
+}
+
+initGpwBookingLinks();
