@@ -79,7 +79,9 @@ try {
   const overrides = mergeOverrides(baseOverrides, manualOverrides);
   for (const entry of roster.entries || []) {
     const driverOverride = overrides.drivers?.[entry.driverKey] || {};
-    const override = driverOverride.classes?.[entry.className] || driverOverride;
+    const classOverride = driverOverride.classes?.[entry.className] || {};
+    if (entry.chassisSource === 'wix' && classOverride.overridesWix !== true) continue;
+    const override = Object.keys(classOverride).length ? classOverride : driverOverride;
     entry.chassis = chassisChoice(override, brands[entry.driverKey]?.name) || entry.chassis || '';
   }
   roster.updatedAt = new Date().toISOString();

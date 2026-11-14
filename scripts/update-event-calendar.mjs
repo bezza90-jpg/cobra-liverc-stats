@@ -55,7 +55,9 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
         ...(key !== sourceKey ? {bookingName:entry.driverName} : {}),
         className: entry.className,
         countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
-        chassis: hasClassOverride ? chassisChoice(override, liveChassis) : entry.chassisSource === 'wix' ? entry.chassis : chassisChoice(override, liveChassis),
+        chassis: hasClassOverride && classOverride.overridesWix === true
+          ? chassisChoice(override, liveChassis)
+          : entry.chassisSource === 'wix' ? entry.chassis : chassisChoice(override, liveChassis),
         ...(entry.chassisSource ? {chassisSource:entry.chassisSource} : {})
       };
     })

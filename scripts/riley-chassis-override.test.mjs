@@ -10,7 +10,7 @@ test('Riley Butler 2WD remains Schumacher without changing his other classes',()
     {driverName:'RILEY BUTLER',className:'4-Wheel Drive Buggy',chassis:'XRay',chassisSource:'wix'}
   ];
   const manual={drivers:{'RILEY-BUTLER':{classes:{
-    '2-Wheel Drive Buggy':{chassis:'Schumacher',mode:'persistent'}
+    '2-Wheel Drive Buggy':{chassis:'Schumacher',mode:'persistent',overridesWix:true}
   }}}};
   const published=enrichNextEventEntries(meeting,rows,{},mergeOverrides({},manual));
   assert.equal(published.entries.find(row=>row.className==='2-Wheel Drive Buggy').chassis,'Schumacher');
