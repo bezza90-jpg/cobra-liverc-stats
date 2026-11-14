@@ -1,5 +1,5 @@
 const PUBLIC_ENTRIES_URL='https://grand-prix-wales-entries.bezza90.chatgpt.site/api/public-entries';
-const GPW_CAPACITY_URL='https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/api/gpw-capacity';
+const GPW_CAPACITY_URL='data/capacity.json';
 let entryAvatarPreview;
 let confirmedEntries=[];
 let confirmedClassRemaining={};
@@ -83,7 +83,18 @@ function populateConfirmedEntryFilters(){
 const avatarManifestPromise=fetch('../data/car-avatars.json',{cache:'no-cache'}).then(response=>response.ok?response.json():{}).catch(()=>({}));
 avatarManifestPromise.then(manifest=>{confirmedAvatarManifest=manifest;if(confirmedEntries.length)renderConfirmedEntries()});
 
-fetch(GPW_CAPACITY_URL,{cache:'no-store'}).then(response=>response.ok?response.json():null).then(data=>{if(!data?.remaining)return;confirmedClassRemaining=data.remaining;renderConfirmedEntries()}).catch(()=>{});
+async function loadClassCapacity() {
+  try {
+    const response = await fetch(GPW_CAPACITY_URL, {cache:'no-cache'});
+    if (!response.ok) return;
+    const data = await response.json();
+    if (!data?.remaining || JSON.stringify(data.remaining) === JSON.stringify(confirmedClassRemaining)) return;
+    confirmedClassRemaining = data.remaining;
+    renderConfirmedEntries();
+  } catch {}
+}
+loadClassCapacity();
+setInterval(loadClassCapacity, 60000);
 
 async function loadConfirmedEntries(){
   const message=document.querySelector('#entryMessage'),classes=document.querySelector('#entryClasses');

@@ -37,16 +37,21 @@ jobs:
         env:
           WIX_SITE_ID: ${{ secrets.WIX_SITE_ID }}
           WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+      - name: Read GPW class stock
+        continue-on-error: true
+        run: node scripts/sync-gpw-capacity.mjs
+        env:
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
       - name: Confirm upcoming-event, capacity and reserve configuration
         run: |
           node scripts/audit-public-personal-data.mjs
           node scripts/check-booking-readiness.mjs
       - name: Save safe public entry data
         run: |
-          if [[ -n "$(git status --porcelain public/data/wix-current-event-entries.json)" ]]; then
+          if [[ -n "$(git status --porcelain public/data/wix-current-event-entries.json public/grand-prix-wales/data/capacity.json)" ]]; then
             git config user.name "COBRA Wix entries updater"
             git config user.email "actions@users.noreply.github.com"
-            git add public/data/wix-current-event-entries.json
+            git add public/data/wix-current-event-entries.json public/grand-prix-wales/data/capacity.json
             # The dedicated publish workflow below deploys this data. Avoid a
             # redundant full statistics build from the generated-data commit.
             git commit -m "Update current Wix event entries [skip ci]"

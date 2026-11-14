@@ -5,11 +5,16 @@ import {entrySnapshot} from './sync-wix-event-entries.mjs';
 
 const expected=JSON.parse(await readFile(new URL('../public/data/wix-current-event-entries.json',import.meta.url),'utf8'));
 const url='https://racehub.cobracardiff.co.uk/data/wix-current-event-entries.json';
+const capacityFile = new URL('../public/grand-prix-wales/data/capacity.json', import.meta.url);
+const expectedCapacity = JSON.parse(await readFile(capacityFile, 'utf8'));
+const capacityUrl = 'https://racehub.cobracardiff.co.uk/grand-prix-wales/data/capacity.json';
 async function matches() {
   try {
     const response=await fetch(`${url}?syncCheck=${Date.now()}`,{cache:'no-store',signal:AbortSignal.timeout(15000)});
     if (!response.ok) return false;
-    return entrySnapshot(await response.json())===entrySnapshot(expected);
+    if (entrySnapshot(await response.json()) !== entrySnapshot(expected)) return false;
+    const capacity = await fetch(`${capacityUrl}?syncCheck=${Date.now()}`, {cache:'no-store', signal:AbortSignal.timeout(15000)});
+    return capacity.ok && JSON.stringify((await capacity.json()).remaining) === JSON.stringify(expectedCapacity.remaining);
   } catch { return false; }
 }
 if (!await matches()) {
