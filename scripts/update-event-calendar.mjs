@@ -1,6 +1,6 @@
 import {canonicalDriverKey,canonicalDriverName} from '../public/assets/driver-identity.js';
 import {normaliseTransponder,validTransponder} from '../public/assets/transponder-number.js';
-import {chassisChoice} from './chassis-choice.mjs';
+import {chassisChoice, mergeOverrides} from './chassis-choice.mjs';
 import {loadBookings, matchBooking} from './booking-calendar.mjs';
 import { readFile, writeFile, rename } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
@@ -46,15 +46,16 @@ export function enrichNextEventEntries(meeting, entries, chassis = {}, overrides
       // replace it. Legacy driver-wide overrides remain a fallback for rows
       // with no class chassis at all.
       const classOverride = driverOverride.classes?.[entry.className] || {};
+      const hasClassOverride = Object.keys(classOverride).length > 0;
       const liveChassis = entry.chassis || chassis[key]?.name || chassis[sourceKey]?.name || '';
-      const override = Object.keys(classOverride).length ? {...driverOverride, ...classOverride} : (entry.chassis ? {} : driverOverride);
+      const override = hasClassOverride ? {...driverOverride, ...classOverride} : (entry.chassis ? {} : driverOverride);
       return {
         driverKey: key,
         driverName: canonicalDriverName(key,entry.driverName),
         ...(key !== sourceKey ? {bookingName:entry.driverName} : {}),
         className: entry.className,
         countryCode: String(override.countryCode || defaultCountryCode).trim().toUpperCase(),
-        chassis: entry.chassisSource === 'wix' ? entry.chassis : chassisChoice(override, liveChassis),
+        chassis: hasClassOverride ? chassisChoice(override, liveChassis) : entry.chassisSource === 'wix' ? entry.chassis : chassisChoice(override, liveChassis),
         ...(entry.chassisSource ? {chassisSource:entry.chassisSource} : {})
       };
     })
@@ -123,7 +124,9 @@ async function updateNextEventEntries(meetings, today) {
   const entries = entryListUrl ? parseEntryList(await fetchText(entryListUrl)) : [];
   const wixSnapshot = JSON.parse(await readFile(new URL('../public/data/wix-current-event-entries.json', import.meta.url), 'utf8').catch(() => 'null'));
   const chassis = JSON.parse(await readFile(new URL('../public/data/liverc-chassis.json', import.meta.url), 'utf8').catch(() => '{}'));
-  const overrides = JSON.parse(await readFile(new URL('../public/data/next-event-entry-overrides.json', import.meta.url), 'utf8').catch(() => '{}'));
+  const baseOverrides = JSON.parse(await readFile(new URL('../public/data/next-event-entry-overrides.json', import.meta.url), 'utf8').catch(() => '{}'));
+  const manualOverrides = JSON.parse(await readFile(new URL('../public/data/manual-chassis-overrides.json', import.meta.url), 'utf8').catch(() => '{}'));
+  const overrides = mergeOverrides(baseOverrides, manualOverrides);
   const mergedEntries=mergeWixEntries(meeting,entries,wixSnapshot);
   await writeIfChanged(destination, publicEntryFeed(enrichNextEventEntries(meeting, mergedEntries, chassis, overrides)));
   return mergedEntries.length;

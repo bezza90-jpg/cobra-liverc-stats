@@ -1,4 +1,4 @@
-import {chassisChoice, releaseChangedChoices} from './chassis-choice.mjs';
+import {chassisChoice, mergeOverrides, releaseChangedChoices} from './chassis-choice.mjs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -71,11 +71,16 @@ await writeFile(dataPath, `${JSON.stringify(brands, null, 2)}\n`);
 const entriesPath = path.join(root, 'public/data/next-event-entries.json');
 try {
   const roster = JSON.parse(await readFile(entriesPath, 'utf8'));
-  const overrides = JSON.parse(await readFile(path.join(root,'public/data/next-event-entry-overrides.json'),'utf8').catch(error => {if(error.code==='ENOENT')return '{}';throw error;}));
-  releaseChangedChoices(overrides, brands);
-  await writeFile(path.join(root,'public/data/next-event-entry-overrides.json'),JSON.stringify(overrides,null,2)+'\n');
+  const overridesPath = path.join(root,'public/data/next-event-entry-overrides.json');
+  const baseOverrides = JSON.parse(await readFile(overridesPath,'utf8').catch(error => {if(error.code==='ENOENT')return '{}';throw error;}));
+  const manualOverrides = JSON.parse(await readFile(path.join(root,'public/data/manual-chassis-overrides.json'),'utf8').catch(error => {if(error.code==='ENOENT')return '{}';throw error;}));
+  releaseChangedChoices(baseOverrides, brands);
+  await writeFile(overridesPath,JSON.stringify(baseOverrides,null,2)+'\n');
+  const overrides = mergeOverrides(baseOverrides, manualOverrides);
   for (const entry of roster.entries || []) {
-    entry.chassis = chassisChoice(overrides.drivers?.[entry.driverKey], brands[entry.driverKey]?.name) || entry.chassis || '';
+    const driverOverride = overrides.drivers?.[entry.driverKey] || {};
+    const override = driverOverride.classes?.[entry.className] || driverOverride;
+    entry.chassis = chassisChoice(override, brands[entry.driverKey]?.name) || entry.chassis || '';
   }
   roster.updatedAt = new Date().toISOString();
   await writeFile(entriesPath, JSON.stringify(roster,null,2)+'\n');

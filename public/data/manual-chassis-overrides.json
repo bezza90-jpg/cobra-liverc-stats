@@ -1,0 +1,14 @@
+{
+  "drivers": {
+    "RILEY-BUTLER": {
+      "classes": {
+        "2-Wheel Drive Buggy": {
+          "chassis": "Schumacher",
+          "mode": "persistent",
+          "updatedAt": "2026-11-14T11:00:00Z",
+          "note": "Confirmed by race control; keep this class-specific value through Wix and LiveRC refreshes."
+        }
+      }
+    }
+  }
+}
