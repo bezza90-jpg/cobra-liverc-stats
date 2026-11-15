@@ -111,10 +111,10 @@ jobs:
       - name: Save updated results
         if: github.event_name != 'schedule' || github.event.schedule != '3-58/5 9-18 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
-          if [[ -n "$(git status --porcelain data/raw public)" ]]; then
+          if [[ -n "$(git status --porcelain)" ]]; then
             git config user.name "COBRA statistics updater"
             git config user.email "actions@users.noreply.github.com"
-            git add -A data/raw public
+            git add -A
             # This run deploys the committed result itself.  Skipping push CI
             # prevents the generated-data commit starting a second full build.
             git commit -m "Update LiveRC statistics [skip ci]"
