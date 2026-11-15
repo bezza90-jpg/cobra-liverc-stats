@@ -100,7 +100,10 @@
   "RICHARD-MORSE": {
     "2-Wheel Drive Buggy": "assets/car-avatars/RICHARD-MORSE-AUTO-2WD.png"
   },
-  "JON-TUCKER": "assets/car-avatars/JON-TUCKER.png",
+  "JON-TUCKER": {
+    "default": "assets/car-avatars/JON-TUCKER.png",
+    "2-Wheel Drive Buggy": "assets/car-avatars/JON-TUCKER-STUDIO-2WD.png"
+  },
   "SPENCER-FARLEY": {
     "4-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-4WD.png",
     "2-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-2WD.png"
@@ -263,6 +266,7 @@
     "4-Wheel Drive Buggy": "assets/car-avatars/KAI-RICHARDS-STUDIO-4WD.png"
   },
   "JAYDEN-RICHARDS": {
-    "2-Wheel Drive Buggy": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png"
+    "2-Wheel Drive Buggy": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png",
+    "Trucks": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-TRUCKS.png"
   }
 }
