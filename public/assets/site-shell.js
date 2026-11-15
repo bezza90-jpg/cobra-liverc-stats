@@ -174,7 +174,7 @@ function initSiteSearch(shell) {
   document.addEventListener('keydown',event=>{if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='k'){event.preventDefault();panel.hidden?open():close();}else if(event.key==='/'&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName)){event.preventDefault();open();}});
 }
 
-const GPW_BOOKING_URL = 'https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/booking-preview?direct=guest&event=50b9c26d-f5c3-4b52-892e-f04509eb9730';
+const GPW_BOOKING_URL = 'https://booking.cobracardiff.co.uk/booking-preview?direct=guest&event=50b9c26d-f5c3-4b52-892e-f04509eb9730';
 
 export function normaliseGpwBookingCards(root = document) {
   const links = [...root.querySelectorAll('a')];
@@ -267,7 +267,7 @@ if (accountLink) {
 
 
 
-const GPW_GUIDED_BOOKING_URL = 'https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/booking-preview?direct=guest&event=50b9c26d-f5c3-4b52-892e-f04509eb9730';
+const GPW_GUIDED_BOOKING_URL = 'https://booking.cobracardiff.co.uk/booking-preview?direct=guest&event=50b9c26d-f5c3-4b52-892e-f04509eb9730';
 const GPW_BOOKING_OPENS_AT = Date.parse('2026-11-14T19:00:00Z');
 
 export function initGpwBookingLinks(root = document) {
