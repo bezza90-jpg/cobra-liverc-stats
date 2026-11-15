@@ -509,6 +509,42 @@
       "method": "imagegen",
       "approvedAt": "2026-11-15T04:51:41.350Z",
       "manualPublish": true
+    },
+    "KAI-RICHARDS|2-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "fb99387f0d50b530f8bbc6fd3089b010a198299ca7dcf4a0d4afd56d0a5af377",
+      "submissionIdHash": "1d6063c3f67b7ad483bc4fafb0a465ac0ac35fa6964be9cf52ee27e4baf8a26b",
+      "reviewedFileIdHash": "43095cca666eff22d9538c1accc2b6d69cc951e0276a5f2013d26e778ada0b83",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-15T17:21:54.919Z",
+      "manualPublish": true
+    },
+    "KAI-RICHARDS|4-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "b364bdb9fcfc03c55045cfd4b84a1a707e20c5f0b3377a7900b17dddf7befca3",
+      "submissionIdHash": "088416d2494f6cfa0495b270494a8ffe9bc9c28230b1e1af9ecf09b1299630a4",
+      "reviewedFileIdHash": "056b115cd580d7d8b4e20dff67aa86eafbb3dfe61110305f0ef902e62e77f2ee",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-15T17:24:03.416Z",
+      "manualPublish": true
+    },
+    "JAYDEN-RICHARDS|2-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "dc3f5deee13ed3f88a79d9c2aa3175c60fafa9f4c85d8881b1d6a10e1cf58e5e",
+      "submissionIdHash": "7e2b0649f52b148a1a4a6162fcf3ccc6e944ea0faad2e2707656b13a9acab936",
+      "reviewedFileIdHash": "acccc83e3627318a407c618c248c19fdea29f2cc472c5bb93e0265e5e80175fe",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "cutout-studio",
+      "approvedAt": "2026-11-15T17:25:14.672Z",
+      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -754,7 +790,13 @@
     "assets/car-avatars/JOHN-MAYES-STUDIO-2WD.png": "eafe33bbde2f4e9ead784ae58eff6b3ede598249",
     "assets/car-avatar-thumbnails/JOHN-MAYES-STUDIO-2WD.webp": "c2991dec39aaccaeb83c1dd5cd68d74852de8eca",
     "assets/car-avatars/PETE-BELSTEN-AI-2WD.png": "77249d7c8e94b5321160c92997a59c027c34b032",
-    "assets/car-avatar-thumbnails/PETE-BELSTEN-AI-2WD.webp": "60400e660daf27422b52c5710beb20ee6d1521d2"
+    "assets/car-avatar-thumbnails/PETE-BELSTEN-AI-2WD.webp": "60400e660daf27422b52c5710beb20ee6d1521d2",
+    "assets/car-avatars/KAI-RICHARDS-STUDIO-2WD.png": "ff5f3f3438908a51a0b4a75d8578183b5c1417dc",
+    "assets/car-avatar-thumbnails/KAI-RICHARDS-STUDIO-2WD.webp": "6b83208c51107b198412c09e1a97578d96460cb8",
+    "assets/car-avatars/KAI-RICHARDS-STUDIO-4WD.png": "0afcaee5345ac391f35928028be617612a4354ad",
+    "assets/car-avatar-thumbnails/KAI-RICHARDS-STUDIO-4WD.webp": "b99b42ae41f2757b9c33c50f20c4dcf85e659511",
+    "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png": "11b5e68501fdbe91a2c6f24f37713f7b91e7aa8e",
+    "assets/car-avatar-thumbnails/JAYDEN-RICHARDS-STUDIO-2WD.webp": "cb19c8591630daba4e6ed2fe4167e9c29af4acaf"
   },
   "assignments": {
     "BRUCE": {
@@ -1015,6 +1057,13 @@
     },
     "PETE-BELSTEN": {
       "2-Wheel Drive Buggy": "assets/car-avatars/PETE-BELSTEN-AI-2WD.png"
+    },
+    "KAI-RICHARDS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/KAI-RICHARDS-STUDIO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/KAI-RICHARDS-STUDIO-4WD.png"
+    },
+    "JAYDEN-RICHARDS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png"
     }
   },
   "blockedRevisionHashes": [
