@@ -497,6 +497,18 @@
       "method": "cutout-studio",
       "approvedAt": "2026-11-15T02:52:10.700Z",
       "manualPublish": true
+    },
+    "PETE-BELSTEN|2-Wheel Drive Buggy": {
+      "version": 1,
+      "sha256": "3429c9448aeedf333f61d7a57d1b61296d42a860bf287af3be69b40576a76376",
+      "submissionIdHash": "1f42c860c71ec21ce1574eaf66664ae851a9f2e8dbed94aa5a823d3667ad8aff",
+      "reviewedFileIdHash": "84e89436aaad5164e343826743742bd2bcdc11cc152f8c7a7977f085529252e0",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "method": "imagegen",
+      "approvedAt": "2026-11-15T04:51:41.350Z",
+      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -740,7 +752,9 @@
     "assets/car-avatars/RICH-SAVAGE-STUDIO-VINTAGE.png": "18634b1b9e81e43f4c37ec34219efb94f3a4564c",
     "assets/car-avatar-thumbnails/RICH-SAVAGE-STUDIO-VINTAGE.webp": "7b6f5f90837dda2474048029392a8b08771a6bbf",
     "assets/car-avatars/JOHN-MAYES-STUDIO-2WD.png": "eafe33bbde2f4e9ead784ae58eff6b3ede598249",
-    "assets/car-avatar-thumbnails/JOHN-MAYES-STUDIO-2WD.webp": "c2991dec39aaccaeb83c1dd5cd68d74852de8eca"
+    "assets/car-avatar-thumbnails/JOHN-MAYES-STUDIO-2WD.webp": "c2991dec39aaccaeb83c1dd5cd68d74852de8eca",
+    "assets/car-avatars/PETE-BELSTEN-AI-2WD.png": "77249d7c8e94b5321160c92997a59c027c34b032",
+    "assets/car-avatar-thumbnails/PETE-BELSTEN-AI-2WD.webp": "60400e660daf27422b52c5710beb20ee6d1521d2"
   },
   "assignments": {
     "BRUCE": {
@@ -998,6 +1012,9 @@
     },
     "JOHN-MAYES": {
       "2-Wheel Drive Buggy": "assets/car-avatars/JOHN-MAYES-STUDIO-2WD.png"
+    },
+    "PETE-BELSTEN": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/PETE-BELSTEN-AI-2WD.png"
     }
   },
   "blockedRevisionHashes": [
