@@ -78,6 +78,15 @@ test('shared shell prefetches only after deliberate hover in browsers with manag
   assert.doesNotMatch(source,/addEventListener\('focusin'/);
 });
 
+test('shared shell leaves one live GPW booking action on every card',()=>{
+  const source=readFileSync(new URL('../public/assets/site-shell.js',import.meta.url),'utf8');
+  assert.match(source,/function normaliseGpwBookingCards/);
+  assert.match(source,/\^View GPW event\\b/);
+  assert.match(source,/\^Book GPW\\b/);
+  assert.match(source,/booking-preview\?direct=guest&event=50b9c26d-f5c3-4b52-892e-f04509eb9730/);
+  assert.match(source,/normaliseGpwBookingCards\(\)/);
+});
+
 test('standalone pages use the shared Club Series hero branding',()=>{
   const css=readFileSync(new URL('../public/assets/site-shell.css',import.meta.url),'utf8');
   const news=readFileSync(new URL('../public/club-news/index.html',import.meta.url),'utf8');
