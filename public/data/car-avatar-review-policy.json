@@ -509,42 +509,6 @@
       "method": "imagegen",
       "approvedAt": "2026-11-15T04:51:41.350Z",
       "manualPublish": true
-    },
-    "KAI-RICHARDS|2-Wheel Drive Buggy": {
-      "version": 1,
-      "sha256": "fb99387f0d50b530f8bbc6fd3089b010a198299ca7dcf4a0d4afd56d0a5af377",
-      "submissionIdHash": "1d6063c3f67b7ad483bc4fafb0a465ac0ac35fa6964be9cf52ee27e4baf8a26b",
-      "reviewedFileIdHash": "43095cca666eff22d9538c1accc2b6d69cc951e0276a5f2013d26e778ada0b83",
-      "approvedBy": "Matt",
-      "previewApproved": true,
-      "rightFacing": true,
-      "method": "cutout-studio",
-      "approvedAt": "2026-11-15T17:21:54.919Z",
-      "manualPublish": true
-    },
-    "KAI-RICHARDS|4-Wheel Drive Buggy": {
-      "version": 1,
-      "sha256": "b364bdb9fcfc03c55045cfd4b84a1a707e20c5f0b3377a7900b17dddf7befca3",
-      "submissionIdHash": "088416d2494f6cfa0495b270494a8ffe9bc9c28230b1e1af9ecf09b1299630a4",
-      "reviewedFileIdHash": "056b115cd580d7d8b4e20dff67aa86eafbb3dfe61110305f0ef902e62e77f2ee",
-      "approvedBy": "Matt",
-      "previewApproved": true,
-      "rightFacing": true,
-      "method": "cutout-studio",
-      "approvedAt": "2026-11-15T17:24:03.416Z",
-      "manualPublish": true
-    },
-    "JAYDEN-RICHARDS|2-Wheel Drive Buggy": {
-      "version": 1,
-      "sha256": "dc3f5deee13ed3f88a79d9c2aa3175c60fafa9f4c85d8881b1d6a10e1cf58e5e",
-      "submissionIdHash": "7e2b0649f52b148a1a4a6162fcf3ccc6e944ea0faad2e2707656b13a9acab936",
-      "reviewedFileIdHash": "acccc83e3627318a407c618c248c19fdea29f2cc472c5bb93e0265e5e80175fe",
-      "approvedBy": "Matt",
-      "previewApproved": true,
-      "rightFacing": true,
-      "method": "cutout-studio",
-      "approvedAt": "2026-11-15T17:25:14.672Z",
-      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -1063,13 +1027,6 @@
     },
     "PETE-BELSTEN": {
       "2-Wheel Drive Buggy": "assets/car-avatars/PETE-BELSTEN-AI-2WD.png"
-    },
-    "KAI-RICHARDS": {
-      "2-Wheel Drive Buggy": "assets/car-avatars/KAI-RICHARDS-STUDIO-2WD.png",
-      "4-Wheel Drive Buggy": "assets/car-avatars/KAI-RICHARDS-STUDIO-4WD.png"
-    },
-    "JAYDEN-RICHARDS": {
-      "2-Wheel Drive Buggy": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png"
     }
   },
   "blockedRevisionHashes": [
