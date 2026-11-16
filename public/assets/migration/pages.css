@@ -21,3 +21,6 @@
 .channel-grid .button { align-self: flex-start; margin-top: auto; }
 @media (max-width: 900px) { .channel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .channel-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Centre each club fact beneath its matching third of the rotating track image. */
+.facts .fact { text-align: center; }
