@@ -59,6 +59,12 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Refresh GPW ticket availability
+        if: github.event_name != 'schedule' || github.event.schedule != '3-58/5 9-18 * * 0' || steps.race_day.outputs.run == 'yes'
+        run: node scripts/sync-gpw-capacity.mjs
+        env:
+          WIX_API_KEY: ${{ secrets.WIX_API_KEY }}
+
       - name: Check LiveRC and rebuild statistics
         if: github.event_name != 'schedule' || github.event.schedule != '3-58/5 9-18 * * 0' || steps.race_day.outputs.run == 'yes'
         run: |
