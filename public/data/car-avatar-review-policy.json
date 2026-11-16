@@ -563,6 +563,18 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-11-16T00:40:14.997Z"
+    },
+    "CHRIS-YOUNG|2-Wheel Drive Buggy": {
+      "version": 1,
+      "submissionIdHash": "de8d0b5be0127afeae1939b41e15f112aea533d42aaf129c3652af9ae8dbe60d",
+      "reviewedFileIdHash": "46ea96bd2f18a858a73982d184cd0c06bcd38e207a062a041cfe17e1bda677c6",
+      "sha256": "ff4c56af935e91f9d3232e6fe2cddc0651d4ba0f9bcd46eeaf9f1626e44f83b1",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T01:47:48.089Z"
     }
   },
   "publishedAssets": {
@@ -818,7 +830,9 @@
     "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-TRUCKS.png": "df94c6445498330589c14dadb4f75b90aa1a9327",
     "assets/car-avatar-thumbnails/JAYDEN-RICHARDS-STUDIO-TRUCKS.webp": "6798a1b2fec06979ea0973571cae9636030aa6b2",
     "assets/car-avatars/JON-TUCKER-STUDIO-2WD.png": "94117c08a2d72deca3330db061c146fd37625fde",
-    "assets/car-avatar-thumbnails/JON-TUCKER-STUDIO-2WD.webp": "4e972e3f30d7fe5df81370f82097bfcb143f9a33"
+    "assets/car-avatar-thumbnails/JON-TUCKER-STUDIO-2WD.webp": "4e972e3f30d7fe5df81370f82097bfcb143f9a33",
+    "assets/car-avatars/CHRIS-YOUNG-AI-2WD.png": "2af291dbd58d68d99feb741ba1881893d1deed2f",
+    "assets/car-avatar-thumbnails/CHRIS-YOUNG-AI-2WD.webp": "f682b839d28271ea76de7dee6df4d32c2459eda5"
   },
   "assignments": {
     "BRUCE": {
@@ -1090,6 +1104,9 @@
     "JAYDEN-RICHARDS": {
       "2-Wheel Drive Buggy": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png",
       "Trucks": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-TRUCKS.png"
+    },
+    "CHRIS-YOUNG": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-YOUNG-AI-2WD.png"
     }
   },
   "blockedRevisionHashes": [
