@@ -1,4 +1,4 @@
-export const bookingHost = 'https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com';
+export const bookingHost = 'https://booking.cobracardiff.co.uk';
 
 export const bookingEvents = Object.freeze({
   'gpw:2026-12-05': Object.freeze({id:'50b9c26d-f5c3-4b52-892e-f04509eb9730',opensAt:'2026-11-14T19:00:00Z'}),
@@ -20,5 +20,5 @@ export function bookingEvent(event) {
 
 export function bookingUrlForEvent(event) {
   const mapped = bookingEvent(event);
-  return mapped ? `${bookingHost}/booking-preview?event=${encodeURIComponent(mapped.id)}` : '';
+  return mapped ? `${bookingHost}/booking-preview?direct=guest&event=${encodeURIComponent(mapped.id)}` : '';
 }
