@@ -271,5 +271,9 @@
   },
   "CHRIS-YOUNG": {
     "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-YOUNG-AI-2WD.png"
+  },
+  "MARTIN-SKAR": {
+    "2-Wheel Drive Buggy": "assets/car-avatars/MARTIN-SKAR-STUDIO-2WD.png",
+    "4-Wheel Drive Buggy": "assets/car-avatars/MARTIN-SKAR-STUDIO-4WD.png"
   }
 }

@@ -575,6 +575,28 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-11-16T01:47:48.089Z"
+    },
+    "MARTIN-SKAR|2-Wheel Drive Buggy": {
+      "submissionIdHash": "53f51bc40acee4aa92ea34ef922684bb1fa1301a4c1709164a023669b4278232",
+      "reviewedFileIdHash": "cf468e82997fff5d6425d03c9d9b5c3bc4bff8aa6c8c5f94f86e1a9e0ec600d2",
+      "sha256": "70e2ad6d8cc0d6dcc6273375a006cb6046fe806232d18bbb90c0ff03a9cf3f92",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T15:11:06.004Z"
+    },
+    "MARTIN-SKAR|4-Wheel Drive Buggy": {
+      "submissionIdHash": "40934b260d4118f3de02fa13a64b3e45910351c4c7fcd39f9970389c3a602a04",
+      "reviewedFileIdHash": "5c586e71148f90f728357331f974ca596f394584463bd2e204d1a6ee4f0e8a7b",
+      "sha256": "ee5b83115365960583aaa9ed1c935c1aa5db0e4131fcac60a3b6a76003856b0e",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T15:11:06.004Z"
     }
   },
   "publishedAssets": {
@@ -832,7 +854,11 @@
     "assets/car-avatars/JON-TUCKER-STUDIO-2WD.png": "94117c08a2d72deca3330db061c146fd37625fde",
     "assets/car-avatar-thumbnails/JON-TUCKER-STUDIO-2WD.webp": "4e972e3f30d7fe5df81370f82097bfcb143f9a33",
     "assets/car-avatars/CHRIS-YOUNG-AI-2WD.png": "2af291dbd58d68d99feb741ba1881893d1deed2f",
-    "assets/car-avatar-thumbnails/CHRIS-YOUNG-AI-2WD.webp": "f682b839d28271ea76de7dee6df4d32c2459eda5"
+    "assets/car-avatar-thumbnails/CHRIS-YOUNG-AI-2WD.webp": "f682b839d28271ea76de7dee6df4d32c2459eda5",
+    "assets/car-avatars/MARTIN-SKAR-STUDIO-2WD.png": "727ae8dcb576559b65558ea31f62b138070f81f6",
+    "assets/car-avatar-thumbnails/MARTIN-SKAR-STUDIO-2WD.webp": "b6a39cca88df713861792455deedb1c72d711848",
+    "assets/car-avatars/MARTIN-SKAR-STUDIO-4WD.png": "fa396fd2ddf43089e65877413ba7122941d1e558",
+    "assets/car-avatar-thumbnails/MARTIN-SKAR-STUDIO-4WD.webp": "cfe9d18e8fa5c7e3e18839fd2af2e1d173fb8b62"
   },
   "assignments": {
     "BRUCE": {
@@ -1107,6 +1133,10 @@
     },
     "CHRIS-YOUNG": {
       "2-Wheel Drive Buggy": "assets/car-avatars/CHRIS-YOUNG-AI-2WD.png"
+    },
+    "MARTIN-SKAR": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/MARTIN-SKAR-STUDIO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/MARTIN-SKAR-STUDIO-4WD.png"
     }
   },
   "blockedRevisionHashes": [
