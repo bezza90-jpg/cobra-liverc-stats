@@ -16,6 +16,7 @@ const currentMotionEvents=new Set(['518554','518555']);
 const resetFlyoverViewport=()=>{if(!galleryFlyoverMode)return;document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0);};
 if(galleryFlyoverMode){
   document.body.classList.add('race-flyover-mode');
+  document.querySelector('.cobra-book-in')?.remove();
   if('scrollRestoration'in history)history.scrollRestoration='manual';
   resetFlyoverViewport();
   addEventListener('pageshow',resetFlyoverViewport);
