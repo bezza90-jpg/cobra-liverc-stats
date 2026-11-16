@@ -545,30 +545,6 @@
       "method": "cutout-studio",
       "approvedAt": "2026-11-15T17:25:14.672Z",
       "manualPublish": true
-    },
-    "JAYDEN-RICHARDS|Trucks": {
-      "version": 1,
-      "sha256": "a1469745060d14b606501d81dedb009a76459640c445593b8754f18a663a50eb",
-      "submissionIdHash": "7e2c582bbcbf8b1e12498af95c3cdddbccd0f08fba83262faf95ee18aa94982a",
-      "reviewedFileIdHash": "1aac4fc736e9ed3192aaa3d3a55662b76ed5e26c3026e5aa329cc2ccee7fc51a",
-      "approvedBy": "Matt",
-      "previewApproved": true,
-      "rightFacing": true,
-      "method": "cutout-studio",
-      "approvedAt": "2026-11-15T17:26:33.500Z",
-      "manualPublish": true
-    },
-    "JON-TUCKER|2-Wheel Drive Buggy": {
-      "version": 1,
-      "sha256": "e741f34ab960e641577ac2ecd29ecbb5d33b38210e1c6c6db1094584a5ada10b",
-      "submissionIdHash": "92ba71b218e010d0abb62b18ffd993135c516ff5d96abd62f2007c25093b234f",
-      "reviewedFileIdHash": "4a46a132dbd8475589cec079cf9f282af81c2bcfbe1ade4a8fcdbb8f3e4c259c",
-      "approvedBy": "Matt",
-      "previewApproved": true,
-      "rightFacing": true,
-      "method": "cutout-studio",
-      "approvedAt": "2026-11-15T17:28:06.581Z",
-      "manualPublish": true
     }
   },
   "publishedAssets": {
@@ -929,8 +905,7 @@
       "2-Wheel Drive Buggy": "assets/car-avatars/RICHARD-MORSE-AUTO-2WD.png"
     },
     "JON-TUCKER": {
-      "default": "assets/car-avatars/JON-TUCKER.png",
-      "2-Wheel Drive Buggy": "assets/car-avatars/JON-TUCKER-STUDIO-2WD.png"
+      "default": "assets/car-avatars/JON-TUCKER.png"
     },
     "SPENCER-FARLEY": {
       "4-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-4WD.png",
@@ -1094,8 +1069,7 @@
       "4-Wheel Drive Buggy": "assets/car-avatars/KAI-RICHARDS-STUDIO-4WD.png"
     },
     "JAYDEN-RICHARDS": {
-      "2-Wheel Drive Buggy": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png",
-      "Trucks": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-TRUCKS.png"
+      "2-Wheel Drive Buggy": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png"
     }
   },
   "blockedRevisionHashes": [
