@@ -509,6 +509,61 @@
       "method": "imagegen",
       "approvedAt": "2026-11-15T04:51:41.350Z",
       "manualPublish": true
+    },
+    "KAI-RICHARDS|2-Wheel Drive Buggy": {
+      "submissionIdHash": "a2399bd8ae564eaf05718566df841f1c83ca50d42117b9bd4c4baa5bd5b2704b",
+      "reviewedFileIdHash": "43095cca666eff22d9538c1accc2b6d69cc951e0276a5f2013d26e778ada0b83",
+      "sha256": "416c32e9dfc28a25be5b365a4280909fa1c6bfae73cde3ed8a692356fc04370b",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T00:40:14.997Z"
+    },
+    "KAI-RICHARDS|4-Wheel Drive Buggy": {
+      "submissionIdHash": "c3129ad55ec7b072b92a24eb4910a5ce0501b75d302753d3cf0c591f64e6c648",
+      "reviewedFileIdHash": "056b115cd580d7d8b4e20dff67aa86eafbb3dfe61110305f0ef902e62e77f2ee",
+      "sha256": "f2004c19b9b0783f0845d2290b9c3d647cc3ec7fe399182752ffb59a97366dae",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T00:40:14.997Z"
+    },
+    "JAYDEN-RICHARDS|2-Wheel Drive Buggy": {
+      "submissionIdHash": "c03e26409d0eace0cde047eb6ed4377afb11f21715cf7edb8d49b5a07484eb60",
+      "reviewedFileIdHash": "acccc83e3627318a407c618c248c19fdea29f2cc472c5bb93e0265e5e80175fe",
+      "sha256": "3e6810955f25e703e67c304ad39581d1c30eaf322bdc1eae642466335de5b07e",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T00:40:14.997Z"
+    },
+    "JAYDEN-RICHARDS|Trucks": {
+      "submissionIdHash": "ec9822f7a532d4368962312e585b213c1bf9e2198829e15d3d51b338ca120053",
+      "reviewedFileIdHash": "1aac4fc736e9ed3192aaa3d3a55662b76ed5e26c3026e5aa329cc2ccee7fc51a",
+      "sha256": "df77a6fe32678a2393a97b3463aff4e3fa259aa739b68f7a7b6491c10859a813",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T00:40:14.997Z"
+    },
+    "JON-TUCKER|2-Wheel Drive Buggy": {
+      "submissionIdHash": "c641da9e19240dd8d4148b3ad12e25d1b2909e805bf1c295b7ad48698c38a7af",
+      "reviewedFileIdHash": "4a46a132dbd8475589cec079cf9f282af81c2bcfbe1ade4a8fcdbb8f3e4c259c",
+      "sha256": "c96b3fc0a4a1f53a906f732458c5acc6b52773e1eab1462471f8e683d4644480",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T00:40:14.997Z"
     }
   },
   "publishedAssets": {
@@ -755,16 +810,16 @@
     "assets/car-avatar-thumbnails/JOHN-MAYES-STUDIO-2WD.webp": "c2991dec39aaccaeb83c1dd5cd68d74852de8eca",
     "assets/car-avatars/PETE-BELSTEN-AI-2WD.png": "77249d7c8e94b5321160c92997a59c027c34b032",
     "assets/car-avatar-thumbnails/PETE-BELSTEN-AI-2WD.webp": "60400e660daf27422b52c5710beb20ee6d1521d2",
-    "assets/car-avatars/KAI-RICHARDS-STUDIO-2WD.png": "ff5f3f3438908a51a0b4a75d8578183b5c1417dc",
-    "assets/car-avatar-thumbnails/KAI-RICHARDS-STUDIO-2WD.webp": "6b83208c51107b198412c09e1a97578d96460cb8",
-    "assets/car-avatars/KAI-RICHARDS-STUDIO-4WD.png": "0afcaee5345ac391f35928028be617612a4354ad",
-    "assets/car-avatar-thumbnails/KAI-RICHARDS-STUDIO-4WD.webp": "b99b42ae41f2757b9c33c50f20c4dcf85e659511",
-    "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png": "11b5e68501fdbe91a2c6f24f37713f7b91e7aa8e",
-    "assets/car-avatar-thumbnails/JAYDEN-RICHARDS-STUDIO-2WD.webp": "cb19c8591630daba4e6ed2fe4167e9c29af4acaf",
-    "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-TRUCKS.png": "ad68af11a8d967ac947d87fba8fb3d1ef864223d",
-    "assets/car-avatar-thumbnails/JAYDEN-RICHARDS-STUDIO-TRUCKS.webp": "8f73ff6caa62a1f65b177cb612b6e8b7bf8f6699",
-    "assets/car-avatars/JON-TUCKER-STUDIO-2WD.png": "5c805cff5ca80a3d4f244703b2be61743fbf14d3",
-    "assets/car-avatar-thumbnails/JON-TUCKER-STUDIO-2WD.webp": "6a265c66c6d948ca7cc4244ca67eb4f2094a3b23"
+    "assets/car-avatars/KAI-RICHARDS-STUDIO-2WD.png": "2699d53a2e3529f1dbfa59d572878afae379ab9a",
+    "assets/car-avatar-thumbnails/KAI-RICHARDS-STUDIO-2WD.webp": "dff7c5f5e926cb09fcc80103d40d6ffe7ed79805",
+    "assets/car-avatars/KAI-RICHARDS-STUDIO-4WD.png": "43d78146e76aa59ee48f45ddcf58b4e73793c10f",
+    "assets/car-avatar-thumbnails/KAI-RICHARDS-STUDIO-4WD.webp": "5c759d7cc0765a157abc049d90acfbcf90fc7aaa",
+    "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png": "6c7b2f99b3e570f5d666734c033ecd18317638f2",
+    "assets/car-avatar-thumbnails/JAYDEN-RICHARDS-STUDIO-2WD.webp": "fcf53b9b2869dd3ef19d40a232291efd978f909f",
+    "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-TRUCKS.png": "df94c6445498330589c14dadb4f75b90aa1a9327",
+    "assets/car-avatar-thumbnails/JAYDEN-RICHARDS-STUDIO-TRUCKS.webp": "6798a1b2fec06979ea0973571cae9636030aa6b2",
+    "assets/car-avatars/JON-TUCKER-STUDIO-2WD.png": "94117c08a2d72deca3330db061c146fd37625fde",
+    "assets/car-avatar-thumbnails/JON-TUCKER-STUDIO-2WD.webp": "4e972e3f30d7fe5df81370f82097bfcb143f9a33"
   },
   "assignments": {
     "BRUCE": {
@@ -869,7 +924,8 @@
       "2-Wheel Drive Buggy": "assets/car-avatars/RICHARD-MORSE-AUTO-2WD.png"
     },
     "JON-TUCKER": {
-      "default": "assets/car-avatars/JON-TUCKER.png"
+      "default": "assets/car-avatars/JON-TUCKER.png",
+      "2-Wheel Drive Buggy": "assets/car-avatars/JON-TUCKER-STUDIO-2WD.png"
     },
     "SPENCER-FARLEY": {
       "4-Wheel Drive Buggy": "assets/car-avatars/SPENCER-FARLEY-AUTO-4WD.png",
@@ -1027,6 +1083,14 @@
     },
     "PETE-BELSTEN": {
       "2-Wheel Drive Buggy": "assets/car-avatars/PETE-BELSTEN-AI-2WD.png"
+    },
+    "KAI-RICHARDS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/KAI-RICHARDS-STUDIO-2WD.png",
+      "4-Wheel Drive Buggy": "assets/car-avatars/KAI-RICHARDS-STUDIO-4WD.png"
+    },
+    "JAYDEN-RICHARDS": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-2WD.png",
+      "Trucks": "assets/car-avatars/JAYDEN-RICHARDS-STUDIO-TRUCKS.png"
     }
   },
   "blockedRevisionHashes": [
