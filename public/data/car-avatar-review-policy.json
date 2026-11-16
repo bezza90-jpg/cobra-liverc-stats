@@ -487,16 +487,15 @@
       "manualPublish": true
     },
     "JOHN-MAYES|2-Wheel Drive Buggy": {
-      "version": 1,
-      "sha256": "bfe8b40f4f6aa2f9b79c04cd47500d642d47c2842f36032d6a747ed8bdc58b58",
       "submissionIdHash": "c132a13ea0c34494143055a3bc5039bde9c66a58287c80cfc796807a78468396",
       "reviewedFileIdHash": "7b587d27c607eb59d9543357c4e78006abc756ab3a5d38576f233e647d22f495",
+      "sha256": "73d378d28d219ba673c0e0699129946bfb1b50043e49ac56c1b834cc35e2b6f1",
+      "method": "imagegen",
       "approvedBy": "Matt",
       "previewApproved": true,
       "rightFacing": true,
-      "method": "cutout-studio",
-      "approvedAt": "2026-11-15T02:52:10.700Z",
-      "manualPublish": true
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T01:20:12.826Z"
     },
     "PETE-BELSTEN|2-Wheel Drive Buggy": {
       "version": 1,
@@ -806,8 +805,8 @@
     "assets/car-avatar-thumbnails/CAMERON-FELTON-STUDIO-4WD.webp": "b36b768babfabc35b9350f9f41128de247b4c82e",
     "assets/car-avatars/RICH-SAVAGE-STUDIO-VINTAGE.png": "18634b1b9e81e43f4c37ec34219efb94f3a4564c",
     "assets/car-avatar-thumbnails/RICH-SAVAGE-STUDIO-VINTAGE.webp": "7b6f5f90837dda2474048029392a8b08771a6bbf",
-    "assets/car-avatars/JOHN-MAYES-STUDIO-2WD.png": "eafe33bbde2f4e9ead784ae58eff6b3ede598249",
-    "assets/car-avatar-thumbnails/JOHN-MAYES-STUDIO-2WD.webp": "c2991dec39aaccaeb83c1dd5cd68d74852de8eca",
+    "assets/car-avatars/JOHN-MAYES-STUDIO-2WD.png": "ffca03a8c7e18cf47313cc19a0fca439c1eb6ee1",
+    "assets/car-avatar-thumbnails/JOHN-MAYES-STUDIO-2WD.webp": "c816bba07ac40f984461f8a136b41bf79136d882",
     "assets/car-avatars/PETE-BELSTEN-AI-2WD.png": "77249d7c8e94b5321160c92997a59c027c34b032",
     "assets/car-avatar-thumbnails/PETE-BELSTEN-AI-2WD.webp": "60400e660daf27422b52c5710beb20ee6d1521d2",
     "assets/car-avatars/KAI-RICHARDS-STUDIO-2WD.png": "2699d53a2e3529f1dbfa59d572878afae379ab9a",
