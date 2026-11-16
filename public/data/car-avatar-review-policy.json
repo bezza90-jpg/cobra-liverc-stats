@@ -597,6 +597,17 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-11-16T15:11:06.004Z"
+    },
+    "DANIEL-POLE|2-Wheel Drive Buggy": {
+      "submissionIdHash": "113c3eb698b1b8cfc63a84553bf693886fd8aff634ba01f66d169ebc8eff9988",
+      "reviewedFileIdHash": "d701c8bb64110c451d4b82892038455e658b903a0e997f2837fb8c33b622836b",
+      "sha256": "d6b3f4aff0ff86b4fd1fc777230163513017ca9130cfdbd31c895d91c3fd9a3c",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-16T23:22:00.000Z"
     }
   },
   "publishedAssets": {
@@ -858,7 +869,9 @@
     "assets/car-avatars/MARTIN-SKAR-STUDIO-2WD.png": "727ae8dcb576559b65558ea31f62b138070f81f6",
     "assets/car-avatar-thumbnails/MARTIN-SKAR-STUDIO-2WD.webp": "b6a39cca88df713861792455deedb1c72d711848",
     "assets/car-avatars/MARTIN-SKAR-STUDIO-4WD.png": "fa396fd2ddf43089e65877413ba7122941d1e558",
-    "assets/car-avatar-thumbnails/MARTIN-SKAR-STUDIO-4WD.webp": "cfe9d18e8fa5c7e3e18839fd2af2e1d173fb8b62"
+    "assets/car-avatar-thumbnails/MARTIN-SKAR-STUDIO-4WD.webp": "cfe9d18e8fa5c7e3e18839fd2af2e1d173fb8b62",
+    "assets/car-avatars/DANIEL-POLE-STUDIO-2WD.png": "e0ceb72620a8a46862571e819ff44ca12e372999",
+    "assets/car-avatar-thumbnails/DANIEL-POLE-STUDIO-2WD.webp": "adf7422309b3ed9c37e534655908b382c1741768"
   },
   "assignments": {
     "BRUCE": {
@@ -1137,6 +1150,9 @@
     "MARTIN-SKAR": {
       "2-Wheel Drive Buggy": "assets/car-avatars/MARTIN-SKAR-STUDIO-2WD.png",
       "4-Wheel Drive Buggy": "assets/car-avatars/MARTIN-SKAR-STUDIO-4WD.png"
+    },
+    "DANIEL-POLE": {
+      "2-Wheel Drive Buggy": "assets/car-avatars/DANIEL-POLE-STUDIO-2WD.png"
     }
   },
   "blockedRevisionHashes": [
