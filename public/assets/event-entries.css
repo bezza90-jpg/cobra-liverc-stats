@@ -16,3 +16,21 @@
 .event-entry-table th,.event-entry-table td{padding:11px 12px}
 .event-entry-chassis-logo{width:58px;height:30px}
 @media(max-width:760px){.event-entry-classes{grid-template-columns:minmax(0,1fr)}}
+
+
+/* GPW-style capacity header for the compact current-event class columns. */
+.event-entry-class>summary{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;min-width:0}
+.event-entry-class-title{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.event-entry-class-capacity{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:9px;min-width:0}
+.event-entry-class-capacity-track{display:block;min-width:0;height:10px;border-radius:999px;background:#dce5df;overflow:hidden}
+.event-entry-class-capacity-fill{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#62d72d 0%,#e4ce26 65%,#f07a2c 100%)}
+.event-entry-class-capacity-status{color:#87958b;font-size:.72rem;font-weight:800;white-space:nowrap}
+.event-entry-table-wrap{max-width:100%;overflow-x:hidden}
+.event-entry-table{table-layout:fixed}
+.event-entry-table th:first-child,.event-entry-table td:first-child{width:auto}
+.event-entry-table th:nth-child(2),.event-entry-table td:nth-child(2){width:72px}
+.event-entry-table th:nth-child(3),.event-entry-table td:nth-child(3){width:50px}
+.event-entry-table th:nth-child(4),.event-entry-table td:nth-child(4){width:66px}
+.event-entry-table td,.event-entry-table th{min-width:0;overflow:hidden}
+.event-entry-driver,.event-entry-driver a{min-width:0;overflow-wrap:anywhere}
+@media(max-width:620px){.event-entry-table-wrap{overflow:visible}.event-entry-table{table-layout:auto}.event-entry-table th,.event-entry-table td{width:100%!important;overflow:visible}}
