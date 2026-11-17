@@ -247,11 +247,20 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     const group = element('details', 'event-entry-class');
     group.open = true;
     const heading = element('summary');
-    heading.append(element('span', '', className), element('strong', '', String(entries.length)));
+    const compactClassName = currentEventPage ? ({
+      '2-Wheel Drive Buggy':'2WD',
+      '4-Wheel Drive Buggy':'4WD',
+      'Junior Racers':'Juniors',
+      'Vintage':'Vintage',
+      'Stadium Trucks':'Trucks'
+    }[className] || className) : className;
+    heading.append(element('span', '', compactClassName), element('strong', '', String(entries.length)));
     const wrap = element('div', 'event-entry-table-wrap');
     const table = element('table', 'event-entry-table');
     const head = document.createElement('thead');
-    head.innerHTML = '<tr><th scope="col">Country</th><th scope="col">No.</th><th scope="col">Driver</th><th scope="col" class="event-entry-avatar-heading">Avatar</th><th scope="col">Chassis</th></tr>';
+    head.innerHTML = currentEventPage
+      ? '<tr><th scope="col">Driver</th><th scope="col">Chassis</th><th scope="col">Flag</th><th scope="col" class="event-entry-avatar-heading">Car</th></tr>'
+      : '<tr><th scope="col">Country</th><th scope="col">No.</th><th scope="col">Driver</th><th scope="col" class="event-entry-avatar-heading">Avatar</th><th scope="col">Chassis</th></tr>';
     const body = document.createElement('tbody');
     for (const [index, entry] of entries.entries()) {
       const row = document.createElement('tr');
@@ -322,7 +331,9 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       if (!entry.chassis) chassis.classList.add('event-entry-missing');
       const number = element('td', 'event-entry-number', String(index + 1));
       number.dataset.label = 'No.';
-      row.append(country, number, driver, avatarCell, chassis);
+      row.append(...(currentEventPage
+        ? [driver, chassis, country, avatarCell]
+        : [country, number, driver, avatarCell, chassis]));
       body.append(row);
     }
     table.append(head, body);
