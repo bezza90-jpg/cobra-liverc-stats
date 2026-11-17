@@ -175,6 +175,51 @@ function initSiteSearch(shell) {
 }
 
 const GPW_BOOKING_URL = 'https://booking.cobracardiff.co.uk/booking-preview?direct=guest&event=50b9c26d-f5c3-4b52-892e-f04509eb9730';
+const OPEN_CLUB_EVENT_ID = '9147a804-de9d-4d34-b73e-8138a2d3ab43';
+const OPEN_CLUB_BOOKING_URL = `https://booking.cobracardiff.co.uk/booking-preview?direct=guest&event=${OPEN_CLUB_EVENT_ID}`;
+
+export function normaliseOpenClubBookingCards(root = document) {
+  const links = [...root.querySelectorAll(`a[href*="${OPEN_CLUB_EVENT_ID}"]`)];
+  for (const link of links) {
+    const card = link.closest('.event-row');
+    if (!card) continue;
+    const pill = card.querySelector('.pill');
+    if (pill) pill.textContent = 'Booking is open';
+    const details = link.closest('details');
+    if (details) {
+      const direct = root.createElement('a');
+      direct.className = 'button';
+      direct.href = OPEN_CLUB_BOOKING_URL;
+      direct.textContent = 'Book this event →';
+      details.replaceWith(direct);
+    } else {
+      link.href = OPEN_CLUB_BOOKING_URL;
+    }
+  }
+}
+
+export function markGpwWeekendInCalendar(root = document) {
+  const title = root.querySelector('#calendar-title');
+  const grid = root.querySelector('#calendar-grid');
+  if (!title || !grid || title.textContent.trim() !== 'December 2026') return;
+  const day = [...grid.querySelectorAll('.day')].find(node => node.firstChild?.nodeValue?.trim() === '6');
+  if (!day) return;
+  day.classList.add('event');
+  if (!day.querySelector('small')) {
+    const label = root.createElement('small');
+    label.textContent = 'GPW';
+    day.append(label);
+  }
+}
+
+export function initGpwWeekendCalendar(root = document) {
+  const calendar = root.querySelector('#calendar-grid');
+  if (!calendar) return;
+  const refresh = () => requestAnimationFrame(() => markGpwWeekendInCalendar(root));
+  root.querySelector('#prev')?.addEventListener('click', refresh);
+  root.querySelector('#next')?.addEventListener('click', refresh);
+  refresh();
+}
 
 export function normaliseGpwBookingCards(root = document) {
   const links = [...root.querySelectorAll('a')];
@@ -201,6 +246,8 @@ initBackToTop();
 initNavigationPrefetch();
 initViewportStability();
 normaliseGpwBookingCards();
+normaliseOpenClubBookingCards();
+initGpwWeekendCalendar();
 
 const accountLink = document.querySelector('.cobra-site-header .cobra-account-link');
 if (accountLink) {
