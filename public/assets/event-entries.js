@@ -42,7 +42,7 @@ function entrySection(type = '') {
   section.dataset.eventEntries = '';
   section.id = 'eventEntries';
   if (type) section.dataset.eventType = type;
-  section.innerHTML = '<div class="event-entries-heading"><div><p class="eyebrow">Next meeting</p><h2 data-entry-title>Event entries</h2><p data-entry-summary>Loading entries from LiveRC…</p></div></div><div data-entry-content></div>';
+  section.innerHTML = '<div class="event-entries-heading"><div><p class="eyebrow">Next meeting</p><h2 data-entry-title>Event entries</h2><p data-entry-summary>Loading confirmed bookings…</p></div></div><div data-entry-content></div>';
   return section;
 }
 
@@ -113,7 +113,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
   const content = root.querySelector('[data-entry-content]');
   title.textContent = currentEventPage ? 'Driver entries' : (data.title || 'Next COBRA event');
   const eventDate = data.date ? new Date(data.date + 'T12:00:00Z').toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'long', year:'numeric', timeZone:'UTC'}) : '';
-  summary.textContent = `${data.entries.length} ${data.entries.length === 1 ? 'entry' : 'entries'} published in LiveRC${!currentEventPage && eventDate ? ` · ${eventDate}` : ''}`;
+  summary.textContent = `${data.entries.length} confirmed ${data.entries.length === 1 ? 'entry' : 'entries'} following successful checkout${!currentEventPage && eventDate ? ` · ${eventDate}` : ''}`;
   let updated = root.querySelector('[data-entry-updated]');
   if (!updated) {
     updated = element('p', 'event-entries-updated');
@@ -178,7 +178,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     addReserveActions(cards,meeting).catch(()=>{});
     const checked = new Date(data.updatedAt);
     const stamp = Number.isNaN(checked.getTime()) ? '' : ` Last refreshed ${checked.toLocaleString('en-GB',{timeZone:'Europe/London'})} (UK time).`;
-    panel.append(element('p','',`Based on current Wix bookings and published LiveRC entries${spaces.some(item=>item.confirmed) ? ', with race-control confirmed entries' : ''}.${stamp} New bookings normally appear after the next automatic update. Club-driver reservations are included where configured. Check availability when booking. Under-16s racing with seniors count in their car class.`));
+    panel.append(element('p','',`Based on successful checkouts and race-control published entries.${stamp} New paid bookings appear automatically. Unpublished manual reservations remain private. Check availability when booking. Under-16s racing with seniors count in their car class.`));
     if (!currentEventPage && meeting.bookingEventId && /^[a-f0-9-]{36}$/i.test(meeting.bookingEventId)) {
       const booking=element('a','event-entry-source','Book this event ↗');
       booking.href='https://headless-bkqwbmqsasx-bezza90-1407.wix-site-host.com/booking-preview?event='+encodeURIComponent(meeting.bookingEventId); booking.target='_blank'; booking.rel='noopener'; panel.append(booking);
@@ -187,7 +187,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     (eventSummary || content).append(panel);
   }
   if (!data.entries.length) {
-    content.append(element('p', 'event-entries-empty', 'Entries will appear here when they are published in LiveRC.'));
+    content.append(element('p', 'event-entries-empty', 'Driver entries will appear here following successful checkout.'));
     return;
   }
 
@@ -354,17 +354,28 @@ if (roots.length) {
     ,fetch('../data/car-avatar-source-revisions.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/confirmed-event-chassis.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
     ,fetch('../data/event-avatar-refs.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-  ]).then(([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed,publicAvatars]) => {
+  ]).then(async ([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed,publicAvatars]) => {
     roots.forEach(root => {
       const meeting=nextMeeting(calendar.events || [],expectedType(root));
       const identifiedData={...data,entries:(data.entries || []).map(entry=>entryIdentity(entry,aliases))};
-      const identifiedWix={...wix,entries:(wix.entries || []).map(entry=>entryIdentity(entry,aliases))};
-      const combined=applyConfirmedChassis(entriesForMeeting(identifiedData,identifiedWix,meeting),confirmed);
-      render(root,combined,capacity,calendar,avatars,revisions,publicAvatars);
+      const liveUrl=meeting?.date && meeting?.type
+        ? `https://booking.cobracardiff.co.uk/api/public-meeting-bookings?type=${encodeURIComponent(meeting.type)}&date=${encodeURIComponent(meeting.date)}&fresh=${Date.now()}`
+        : '';
+      const livePromise=liveUrl
+        ? fetch(liveUrl,{cache:'no-store'}).then(response=>response.ok?response.json():null).catch(()=>null)
+        : Promise.resolve(null);
+      livePromise.then(live=>{
+        const bookingData=live?.active
+          ? {...live,eventDate:live.date,updatedAt:new Date().toISOString()}
+          : wix;
+        const identifiedWix={...bookingData,entries:(bookingData.entries || []).map(entry=>entryIdentity(entry,aliases))};
+        const combined=applyConfirmedChassis(entriesForMeeting(identifiedData,identifiedWix,meeting),confirmed);
+        render(root,combined,capacity,calendar,avatars,revisions,publicAvatars);
+      });
     });
   })
     .catch(() => roots.forEach(root => {
       const summary = root.querySelector('[data-entry-summary]');
-      if (summary) summary.textContent = 'Entries are temporarily unavailable. Please check LiveRC.';
+      if (summary) summary.textContent = 'Confirmed bookings are temporarily unavailable. Please try again shortly.';
     }));
 }
