@@ -270,6 +270,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       const track = element('span', 'event-entry-class-capacity-track');
       const fill = element('span', 'event-entry-class-capacity-fill');
       fill.style.width = occupiedPercent + '%';
+      track.style.setProperty('--event-entry-capacity', occupiedPercent + '%');
       track.setAttribute('role', 'progressbar');
       track.setAttribute('aria-label', compactClassName + ' capacity');
       track.setAttribute('aria-valuemin', '0');
