@@ -19,7 +19,7 @@ test('3D replay keeps the complete responsive site menu',()=>{
   assert.match(html,/class="cobra-mobile-menu"/);
   assert.match(html,/class="cobra-site-menu"/);
   assert.match(html,/data-cobra-shell rel="stylesheet" href="\.\.\/assets\/site-shell\.css\?v=9"/);
-  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=13"/);
+  assert.match(html,/data-cobra-shell type="module" src="\.\.\/assets\/site-shell\.js\?v=14"/);
   assert.match(html,/class="cobra-gpw-logo"/);
 });
 
@@ -73,7 +73,7 @@ test('shared shell prefetches only after deliberate hover in browsers with manag
   assert.match(source,/connection\?\.saveData/);
   assert.match(source,/effectiveType/);
   assert.match(source,/url\.origin !== location\.origin/);
-  assert.match(source,/setTimeout\(\(\) => prefetch\(event\.target\), 300\)/);
+  assert.match(source,/setTimeout\(\(\) => prefetch\(anchor\), 300\)/);
   assert.doesNotMatch(source,/addEventListener\('pointerdown'/);
   assert.doesNotMatch(source,/addEventListener\('focusin'/);
 });

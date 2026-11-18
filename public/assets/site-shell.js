@@ -85,21 +85,21 @@ export function initNavigationPrefetch(root = document) {
   // by the same click in Firefox and Safari. Use only browser-managed
   // speculation after a deliberate mouse hover.
   if (!supportsSpeculationRules) return;
+  const publicDestinations = new Set([
+    '/home/', '/events/', '/event/', '/grand-prix-wales/', '/about/', '/track-gallery/',
+    '/club/', '/sword/', '/podiums/', '/schedule/', '/briefing/', '/club-news/', '/media/',
+  ]);
   const queued = new Set();
   let hoverTimer = 0;
-  const candidate = target => {
-    const anchor = target?.closest?.('a[href]');
-    if (!anchor || anchor.hasAttribute('download') || anchor.target === '_blank') return null;
+  const anchorFor = target => target?.closest?.('a[href]');
+  const prefetch = anchor => {
+    if (anchor.hasAttribute('download') || (anchor.target && anchor.target !== '_self')) return;
     const url = new URL(anchor.href, location.href);
-    if (url.origin !== location.origin || !/^https?:$/.test(url.protocol)) return null;
+    if (url.origin !== location.origin || url.search || !publicDestinations.has(url.pathname)) return;
     url.hash = '';
-    const current = new URL(location.href); current.hash = '';
-    if (url.href === current.href || queued.has(url.href) || queued.size >= 6) return null;
-    return url;
-  };
-  const prefetch = target => {
-    const url = candidate(target);
-    if (!url) return;
+    const current = new URL(location.href);
+    current.hash = '';
+    if (url.href === current.href || queued.has(url.href) || queued.size >= 6) return;
     queued.add(url.href);
     const rules = root.createElement('script');
     rules.type = 'speculationrules';
@@ -108,10 +108,15 @@ export function initNavigationPrefetch(root = document) {
   };
   root.addEventListener('pointerover', event => {
     if (event.pointerType && event.pointerType !== 'mouse') return;
+    const anchor = anchorFor(event.target);
+    if (!anchor || anchor === anchorFor(event.relatedTarget)) return;
     clearTimeout(hoverTimer);
-    hoverTimer = setTimeout(() => prefetch(event.target), 300);
+    hoverTimer = setTimeout(() => prefetch(anchor), 300);
   }, {passive: true});
-  root.addEventListener('pointerout', () => clearTimeout(hoverTimer), {passive: true});
+  root.addEventListener('pointerout', event => {
+    const anchor = anchorFor(event.target);
+    if (anchor && anchor !== anchorFor(event.relatedTarget)) clearTimeout(hoverTimer);
+  }, {passive: true});
 }
 
 const SEARCH_PAGES = [
