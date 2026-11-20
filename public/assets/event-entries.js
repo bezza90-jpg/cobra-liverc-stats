@@ -31,7 +31,7 @@ function installStyles() {
   if (document.querySelector('link[data-event-entries-styles]')) return;
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = '../assets/event-entries.css?v=15';
+  link.href = '../assets/event-entries.css?v=16';
   link.dataset.eventEntriesStyles = '';
   document.head.append(link);
 }
@@ -243,7 +243,23 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     if (!groups.has(entry.className)) groups.set(entry.className, []);
     groups.get(entry.className).push(entry);
   }
-  for (const [className, entries] of groups) {
+  const classOrder = new Map([
+    ['2-Wheel Drive Buggy', 0],
+    ['2WD', 0],
+    ['4-Wheel Drive Buggy', 1],
+    ['4WD', 1],
+    ['Junior Racers', 2],
+    ['Juniors', 2],
+    ['Vintage', 3],
+    ['Stadium Trucks', 4],
+    ['Trucks', 4]
+  ]);
+  const orderedGroups = [...groups.entries()].sort(([classA], [classB]) => {
+    const orderDifference = (classOrder.get(classA) ?? 99) - (classOrder.get(classB) ?? 99);
+    return orderDifference || classA.localeCompare(classB);
+  });
+  const renderedGroups = [];
+  for (const [className, entries] of orderedGroups) {
     entries.sort(compareEntryNames);
     const group = element('details', 'event-entry-class');
     group.open = true;
@@ -288,9 +304,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     const wrap = element('div', 'event-entry-table-wrap');
     const table = element('table', 'event-entry-table');
     const head = document.createElement('thead');
-    head.innerHTML = currentEventPage
-      ? '<tr><th scope="col">Driver</th><th scope="col">Chassis</th><th scope="col">Flag</th><th scope="col" class="event-entry-avatar-heading">Car</th></tr>'
-      : '<tr><th scope="col">Country</th><th scope="col">No.</th><th scope="col">Driver</th><th scope="col" class="event-entry-avatar-heading">Avatar</th><th scope="col">Chassis</th></tr>';
+    head.innerHTML = '<tr><th scope="col">Driver</th><th scope="col">Chassis</th><th scope="col">Flag</th><th scope="col" class="event-entry-avatar-heading">Car</th></tr>';
     const body = document.createElement('tbody');
     for (const [index, entry] of entries.entries()) {
       const row = document.createElement('tr');
@@ -359,17 +373,27 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       } else { chassis.textContent = entry.chassis || 'Not listed'; }
       chassis.dataset.label = 'Chassis';
       if (!entry.chassis) chassis.classList.add('event-entry-missing');
-      const number = element('td', 'event-entry-number', String(index + 1));
-      number.dataset.label = 'No.';
-      row.append(...(currentEventPage
-        ? [driver, chassis, country, avatarCell]
-        : [country, number, driver, avatarCell, chassis]));
+      row.append(driver, chassis, country, avatarCell);
       body.append(row);
     }
     table.append(head, body);
     wrap.append(table);
     group.append(heading, wrap);
-    classes.append(group);
+    renderedGroups.push({className, group});
+  }
+  const vintageGroup = renderedGroups.find(({className}) => className.toLowerCase() === 'vintage');
+  const truckGroups = renderedGroups.filter(({className}) => ['trucks', 'stadium trucks'].includes(className.toLowerCase()));
+  const shouldStackVintageAndTrucks = Boolean(vintageGroup && truckGroups.length);
+  const stackedGroups = new Set(shouldStackVintageAndTrucks ? [vintageGroup, ...truckGroups] : []);
+  for (const rendered of renderedGroups) {
+    if (stackedGroups.has(rendered)) {
+      if (rendered !== vintageGroup) continue;
+      const stack = element('div', 'event-entry-class-stack');
+      stack.append(vintageGroup.group, ...truckGroups.map(({group}) => group));
+      classes.append(stack);
+      continue;
+    }
+    classes.append(rendered.group);
   }
   content.append(classes);
   search.addEventListener('input', () => {
