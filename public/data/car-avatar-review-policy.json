@@ -608,6 +608,17 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-11-16T23:22:00.000Z"
+    },
+    "LEE-CHARNOCK|Vintage": {
+      "submissionIdHash": "616bd1a1a6e6b81b0e5a4dbb2bfca1579bf45684d21481301c017877291f74c6",
+      "reviewedFileIdHash": "d8ecd4f815a6a79f2b4fd31c9d96d724a5dc5cd93a033e179ef33a08cef41cd2",
+      "sha256": "cdb2f625d489c5eacc3740b4d42f4c0bf0292ec8c4c2609cc81e6c33cab3eced",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-21T18:35:36Z"
     }
   },
   "publishedAssets": {
@@ -871,7 +882,9 @@
     "assets/car-avatars/MARTIN-SKAR-STUDIO-4WD.png": "fa396fd2ddf43089e65877413ba7122941d1e558",
     "assets/car-avatar-thumbnails/MARTIN-SKAR-STUDIO-4WD.webp": "cfe9d18e8fa5c7e3e18839fd2af2e1d173fb8b62",
     "assets/car-avatars/DANIEL-POLE-STUDIO-2WD.png": "e0ceb72620a8a46862571e819ff44ca12e372999",
-    "assets/car-avatar-thumbnails/DANIEL-POLE-STUDIO-2WD.webp": "adf7422309b3ed9c37e534655908b382c1741768"
+    "assets/car-avatar-thumbnails/DANIEL-POLE-STUDIO-2WD.webp": "adf7422309b3ed9c37e534655908b382c1741768",
+    "assets/car-avatars/LEE-CHARNOCK-REVIEWED-VINTAGE.png": "4257a44f53cfc2c1e205bbfdd223a4acc26e083e",
+    "assets/car-avatar-thumbnails/LEE-CHARNOCK-REVIEWED-VINTAGE.webp": "f80c70b8f3f17770c9cd5f9e0fed1c12ecf3be85"
   },
   "assignments": {
     "BRUCE": {
@@ -1066,7 +1079,8 @@
     },
     "LEE-CHARNOCK": {
       "4-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-4WD.png",
-      "2-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-2WD.png"
+      "2-Wheel Drive Buggy": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-2WD.png",
+      "Vintage": "assets/car-avatars/LEE-CHARNOCK-REVIEWED-VINTAGE.png"
     },
     "CRAIG-HARRIS": {
       "4-Wheel Drive Buggy": "assets/car-avatars/CRAIG-HARRIS-REVIEWED-4WD.png"
