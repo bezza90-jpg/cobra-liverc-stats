@@ -240,9 +240,11 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
   const hideAvatarPreview = () => { avatarPreview.hidden = true; };
   const groups = new Map();
   for (const entry of data.entries) {
-    if (!groups.has(entry.className)) groups.set(entry.className, []);
-    groups.get(entry.className).push(entry);
+    const name = currentEventPage && /^(junior|juniors|junior racers)$/i.test(entry.className) ? 'Junior Racers' : entry.className;
+    if (!groups.has(name)) groups.set(name, []);
+    groups.get(name).push(entry);
   }
+  if (currentEventPage && !groups.has('Junior Racers')) groups.set('Junior Racers', []);
   const classOrder = new Map([
     ['2-Wheel Drive Buggy', 0],
     ['2WD', 0],
@@ -267,7 +269,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     const compactClassName = currentEventPage ? ({
       '2-Wheel Drive Buggy':'2WD',
       '4-Wheel Drive Buggy':'4WD',
-      'Junior Racers':'Juniors',
+      'Junior Racers':'Junior',
       'Vintage':'Vintage',
       'Stadium Trucks':'Trucks',
       'Trucks':'Trucks'
@@ -383,13 +385,14 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
   }
   const vintageGroup = renderedGroups.find(({className}) => className.toLowerCase() === 'vintage');
   const truckGroups = renderedGroups.filter(({className}) => ['trucks', 'stadium trucks'].includes(className.toLowerCase()));
-  const shouldStackVintageAndTrucks = Boolean(vintageGroup && truckGroups.length);
-  const stackedGroups = new Set(shouldStackVintageAndTrucks ? [vintageGroup, ...truckGroups] : []);
+  const junior = currentEventPage && renderedGroups.find(({className}) => className === 'Junior Racers');
+  const column = [vintageGroup, ...truckGroups, junior].filter(Boolean);
+  const stackedGroups = new Set(column.length > 1 ? column : []);
   for (const rendered of renderedGroups) {
     if (stackedGroups.has(rendered)) {
-      if (rendered !== vintageGroup) continue;
+      if (rendered !== column[0]) continue;
       const stack = element('div', 'event-entry-class-stack');
-      stack.append(vintageGroup.group, ...truckGroups.map(({group}) => group));
+      stack.append(...column.map(({group}) => group));
       classes.append(stack);
       continue;
     }
@@ -401,7 +404,7 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
     for (const row of classes.querySelectorAll('tbody tr')) row.hidden = !!query && !row.dataset.search.includes(query);
     for (const group of classes.querySelectorAll('details')) {
       const visible = [...group.querySelectorAll('tbody tr')].some(row => !row.hidden);
-      group.hidden = !visible;
+      group.hidden = !!query && !visible;
       if (query && visible) group.open = true;
     }
   });
