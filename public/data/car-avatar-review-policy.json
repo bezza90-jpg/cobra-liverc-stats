@@ -619,9 +619,22 @@
       "rightFacing": true,
       "manualPublish": true,
       "approvedAt": "2026-11-21T18:35:36Z"
+    },
+    "JOSH-HADDOCK|Trucks": {
+      "submissionIdHash": "90d4a94c4f7da6ada3eda986ea27379449f1132790787cab1540376d403bcfb0",
+      "reviewedFileIdHash": "44980a7078987f67c40c77f7d2c1b0bf922651ee1013bee023b33d912f52551d",
+      "sha256": "9dd6c193312dfc3d4878e605906021cdd5622ef03598ba9fa3f8915a8507b34e",
+      "method": "imagegen",
+      "approvedBy": "Matt",
+      "previewApproved": true,
+      "rightFacing": true,
+      "manualPublish": true,
+      "approvedAt": "2026-11-21T21:17:30.902Z"
     }
   },
   "publishedAssets": {
+    "assets/car-avatar-thumbnails/JOSH-HADDOCK-AUTO-TRUCKS.webp": "421c16ea450e5ce94cb38d7626b081ce44e43181",
+    "assets/car-avatars/JOSH-HADDOCK-AUTO-TRUCKS.png": "93c94e76b75374d56ed32444d4d848867039162c",
     "assets/car-avatar-thumbnails/AINSLEY-EVANS-AUTO-2WD.webp": "b0422754d5791f3c089aacc74990c23aadd75a49",
     "assets/car-avatar-thumbnails/AINSLEY-EVANS-AUTO-VINTAGE.webp": "648bad64078b98b8a969b0f20ed8c2a9492827a1",
     "assets/car-avatar-thumbnails/BEN-EVANS-AUTO-2WD.webp": "9b1c981393ff7bcfa833aa9fe9480d2d30b761df",
@@ -1167,6 +1180,9 @@
     },
     "DANIEL-POLE": {
       "2-Wheel Drive Buggy": "assets/car-avatars/DANIEL-POLE-STUDIO-2WD.png"
+    },
+    "JOSH-HADDOCK": {
+      "Trucks": "assets/car-avatars/JOSH-HADDOCK-AUTO-TRUCKS.png"
     }
   },
   "blockedRevisionHashes": [
