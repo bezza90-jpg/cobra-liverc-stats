@@ -283,7 +283,9 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       'Stadium Trucks':'Trucks'
     }[className]);
     if (currentEventPage && classCapacity?.limit) {
-      const occupiedPercent = Math.max(0, Math.min(100, Math.round(classCapacity.entered / classCapacity.limit * 100)));
+      const occupied = Math.max(classCapacity.entered, entries.length);
+      const remaining = Math.max(0, classCapacity.limit - occupied);
+      const occupiedPercent = Math.min(100, Math.round(occupied / classCapacity.limit * 100));
       const capacityHeader = element('span', 'event-entry-class-capacity');
       const track = element('span', 'event-entry-class-capacity-track');
       const fill = element('span', 'event-entry-class-capacity-fill');
@@ -295,8 +297,8 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
       track.setAttribute('aria-valuemax', '100');
       track.setAttribute('aria-valuenow', String(occupiedPercent));
       track.append(fill);
-      const nearlyFull = classCapacity.remaining <= Math.max(2, Math.ceil(classCapacity.limit * .2));
-      const status = classCapacity.remaining <= 0 ? 'Class full'
+      const nearlyFull = remaining <= Math.max(2, Math.ceil(classCapacity.limit * .2));
+      const status = remaining <= 0 ? 'Class full'
         : nearlyFull ? 'Nearly full'
           : occupiedPercent >= 50 ? 'Filling up' : 'Spaces available';
       capacityHeader.append(track, element('span', 'event-entry-class-capacity-status', status));
