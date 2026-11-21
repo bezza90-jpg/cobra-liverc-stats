@@ -5,17 +5,23 @@ import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
 import {entryIdentity} from './event-entry-identity.js';
 import {compareEntryNames} from './event-entry-order.js';
 const allowedAvatar = /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/;
+const avatarClassName = className => ({
+  '2WD': '2-Wheel Drive Buggy',
+  '4WD': '4-Wheel Drive Buggy',
+  'Stadium Trucks': 'Trucks'
+}[className] || className);
 function entryAvatar(avatars, revisions, entry, publicAvatars = {}) {
+  const requestedClass = avatarClassName(entry.className);
   if (/^[0-9a-f]{20}$/.test(entry.avatarRef || '')) {
     const publicRecord = publicAvatars[entry.avatarRef] || {};
-    const publicClass = typeof publicRecord[entry.className] === 'string' ? entry.className
+    const publicClass = typeof publicRecord[requestedClass] === 'string' ? requestedClass
       : typeof publicRecord['2-Wheel Drive Buggy'] === 'string' ? '2-Wheel Drive Buggy'
         : typeof publicRecord['4-Wheel Drive Buggy'] === 'string' ? '4-Wheel Drive Buggy' : 'default';
     const publicPath = publicRecord[publicClass];
     if (/^assets\/event-avatar-refs\/[a-z0-9-]+\.webp$/.test(publicPath || '')) return {src:'../' + publicPath, fallback:''};
   }
   const record = avatars?.[entry.driverKey];
-  let className = typeof record === 'string' ? 'default' : (typeof record?.[entry.className] === 'string' ? entry.className : 'default');
+  let className = typeof record === 'string' ? 'default' : (typeof record?.[requestedClass] === 'string' ? requestedClass : 'default');
   if (entry.className === 'Junior Racers' && typeof record === 'object' && typeof record?.[className] !== 'string') {
     className = typeof record['2-Wheel Drive Buggy'] === 'string' ? '2-Wheel Drive Buggy'
       : typeof record['4-Wheel Drive Buggy'] === 'string' ? '4-Wheel Drive Buggy'
