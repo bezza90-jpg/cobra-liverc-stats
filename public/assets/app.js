@@ -202,13 +202,16 @@ function ensureDriverRatingSummaries(data = state.data, ratingClass = '') {
     if (!resultsByRace.has(run[0])) resultsByRace.set(run[0], []);
     resultsByRace.get(run[0]).push(run);
   }
-  const races = Object.entries(data?.raceById || {}).sort(([idA, a], [idB, b]) =>
+  const numericCompare = new Intl.Collator('en', { numeric: true }).compare;
+  const races = Object.entries(data?.raceById || {}).filter(([, race]) =>
+    race?.d && race.d >= '2022-01-01' && !/^Practice\b/i.test(race.r || '') && classMatches(race.c, ratingPool)
+  ).sort(([idA, a], [idB, b]) =>
     a.d.localeCompare(b.d)
-    || String(a.e).localeCompare(String(b.e), 'en', { numeric: true })
-    || String(a.c).localeCompare(String(b.c), 'en', { numeric: true })
+    || numericCompare(String(a.e), String(b.e))
+    || numericCompare(String(a.c), String(b.c))
     || Number(Boolean(a.f)) - Number(Boolean(b.f))
-    || String(a.r).localeCompare(String(b.r), 'en', { numeric: true })
-    || idA.localeCompare(idB, 'en', { numeric: true }));
+    || numericCompare(String(a.r), String(b.r))
+    || numericCompare(idA, idB));
   const sessions = [];
   const qualifyingSessions = new Map();
   const qualifyingResultLaps = run => Number(String(run?.[3] || '').match(/^(\d+)\//)?.[1] || 0);
@@ -221,7 +224,6 @@ function ensureDriverRatingSummaries(data = state.data, ratingClass = '') {
     return Number.isFinite(seconds) ? seconds : Infinity;
   };
   for (const [raceId, race] of races) {
-    if (!race?.d || race.d < '2022-01-01' || /^Practice\b/i.test(race.r || '') || !classMatches(race.c, ratingPool)) continue;
     const qualifying = /^Qualifier\s+Round\b/i.test(race.r || '');
     const sessionKey = qualifying ? `${race.d}|${race.e}|${race.c}|${String(race.r).toLowerCase()}` : `race:${raceId}`;
     let session = qualifyingSessions.get(sessionKey);
@@ -236,7 +238,9 @@ function ensureDriverRatingSummaries(data = state.data, ratingClass = '') {
     if (field.length < 2) continue;
     const overallPosition = new Map();
     if (qualifying) {
-      field.slice().sort((a, b) => qualifyingResultLaps(b) - qualifyingResultLaps(a) || qualifyingResultTime(a) - qualifyingResultTime(b) || Number(a[2]) - Number(b[2]) || String(a[1]).localeCompare(String(b[1]))).forEach((run, index) => overallPosition.set(run, index + 1));
+      const ranked = field.map(run => ({ run, laps: qualifyingResultLaps(run), time: qualifyingResultTime(run) }));
+      ranked.sort((a, b) => b.laps - a.laps || a.time - b.time || Number(a.run[2]) - Number(b.run[2]) || String(a.run[1]).localeCompare(String(b.run[1])));
+      ranked.forEach(({ run }, index) => overallPosition.set(run, index + 1));
     }
     const positionFor = run => qualifying ? overallPosition.get(run) : Number(run[2]);
     const before = new Map(field.map(run => [run[1], driverRatingSummaries.get(run[1]).total]));

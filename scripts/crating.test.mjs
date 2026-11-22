@@ -123,6 +123,13 @@ test('Junior ratings remain separate while senior class results establish their 
   const juniors = context.ensureDriverRatingSummaries(data, 'Junior Racers');
   const twoWheelDrive = context.ensureDriverRatingSummaries(data, '2-Wheel Drive Buggy');
   assert.ok(juniors.get('FINLEY-OLDFIELD').starts >= 20, 'Finley retains his Junior history');
-  assert.equal(twoWheelDrive.get('FINLEY-OLDFIELD').starts, 0, 'Finley has no invented senior result');
+  const recorded2WD = new Set(data.raceResults
+    .filter(run => run[1] === 'FINLEY-OLDFIELD' && data.raceById[run[0]]?.c === '2-Wheel Drive Buggy')
+    .map(run => run[0]));
+  const finley2WD = twoWheelDrive.get('FINLEY-OLDFIELD');
+  assert.equal(finley2WD.starts, finley2WD.raceChanges.size);
+  for (const raceId of finley2WD.raceChanges.keys()) {
+    assert.ok(recorded2WD.has(raceId), 'Each senior rating change has a recorded 2WD result');
+  }
   assert.ok(twoWheelDrive.get('HAIDEN-HICKS').starts > 0, 'Haiden is calibrated by his recorded senior results');
 });
