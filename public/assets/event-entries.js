@@ -1,7 +1,8 @@
 import {addReserveActions} from './event-reserves.js';
 import {entriesForMeeting,applyConfirmedChassis} from './event-entry-merge.js?v=20261019-capacity-live';
 import {eventSpaces} from './event-capacity.js?v=20261029-filled-reserves';
-import {nextMeeting, getEventCalendar} from './event-calendar.js?v=20261122-shared-calendar';
+import {getPublicMeetingEntries} from './public-meeting-entries.js';
+import {nextMeeting} from './event-calendar.js?v=20261122-shared-calendar';
 import {entryIdentity} from './event-entry-identity.js';
 import {compareEntryNames} from './event-entry-order.js';
 const allowedAvatar = /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/;
@@ -428,7 +429,6 @@ if (roots.length) {
   const fresh = path => `${path}?fresh=${Date.now()}`;
   const optionalData = (path, cache = 'no-cache') =>
     fetch(path, {cache}).then(response => response.ok ? response.json() : {}).catch(() => ({}));
-  const calendarReady = getEventCalendar().catch(() => ({}));
   const assetsReady = Promise.all([
     fetch(fresh('../data/next-event-entries.json'), {cache:'no-store'}).then(response => {
       if (!response.ok) throw Error('Entries unavailable');
@@ -442,26 +442,8 @@ if (roots.length) {
     optionalData('../data/confirmed-event-chassis.json'),
     optionalData('../data/event-avatar-refs.json')
   ]);
-  const feeds = new Map();
-  async function loadMeeting(root) {
-    const calendar = await calendarReady;
-    const meeting = nextMeeting(calendar.events || [], expectedType(root));
-    let live = null;
-    if (meeting?.date && meeting?.type) {
-      const params = new URLSearchParams({type:meeting.type, date:meeting.date});
-      const key = params.toString();
-      if (!feeds.has(key)) {
-        params.set('fresh', String(Date.now()));
-        const url = 'https://booking.cobracardiff.co.uk/api/public-meeting-bookings?' + params;
-        feeds.set(key, fetch(url, {cache:'no-store'}).then(response => response.ok ? response.json() : null).catch(() => null));
-      }
-      live = await feeds.get(key);
-    }
-    return {calendar, meeting, live};
-  }
-
   roots.forEach(root => {
-    Promise.all([loadMeeting(root), assetsReady]).then(([
+    Promise.all([getPublicMeetingEntries(expectedType(root)), assetsReady]).then(([
       {calendar, meeting, live}, [data, wix, aliases, capacity, avatars, revisions, confirmed, publicAvatars]
     ]) => {
       const currentPage = location.pathname.replace(/\/+$/, '').endsWith('/event');
