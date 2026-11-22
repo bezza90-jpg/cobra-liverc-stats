@@ -44,7 +44,7 @@ import {bookingUrlForEvent} from './booking-events.js';
       if (scheduledMeeting?.eventId === '518557' && kind === 'club') {
         element('scheduleEvent').textContent += ' — Heat allocation for each qualifying round: 5 heats for 2WD and 3 heats for 4WD. Round and finish times below are approximate. Follow race control for the running order.';
       }
-      for (const entry of schedules[kind] || []) {
+      for (const entry of schedules.events?.[scheduledMeeting?.eventId] || schedules[kind] || []) {
         const row = document.createElement('li');
         const content = document.createElement('div');
         content.className = 'schedule-content';

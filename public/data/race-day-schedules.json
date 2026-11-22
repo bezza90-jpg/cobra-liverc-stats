@@ -70,5 +70,56 @@
       "time": "Racing finish approx. 16:40",
       "description": "For a typical 10–12-heat meeting, allow until around 16:20–17:00 for racing, final marshalling and pack-away. Smaller meetings may finish earlier; delays can extend the day. Any help packing away is appreciated."
     }
-  ]
+  ],
+  "events": {
+    "518557": [
+      {
+        "label": "Doors open / check-in",
+        "time": "08:30",
+        "description": "Self check-in at race control. Tick your name off before practising."
+      },
+      {
+        "label": "Open practice",
+        "time": "Normally 08:30–09:30",
+        "description": "The track opens when the race director says, normally at 08:30. Open practice runs until 09:30."
+      },
+      {
+        "label": "Drivers’ briefing",
+        "time": "09:30"
+      },
+      {
+        "label": "Controlled practice",
+        "description": "Eleven 3-minute heats with 2 minutes for changeover. One heat each for Vintage, Trucks and Junior joins the five 2WD and three 4WD heats.",
+        "time": "Approx. 09:50"
+      },
+      {
+        "label": "Qualifying round 1",
+        "description": "Each round allows 77 minutes for eleven 5-minute races and changeovers, with 8 minutes between rounds.",
+        "time": "Approx. 10:50"
+      },
+      {
+        "time": "Approx. 12:15",
+        "label": "Qualifying round 2"
+      },
+      {
+        "time": "Approx. 13:40",
+        "label": "Qualifying round 3"
+      },
+      {
+        "label": "Qualifying round 4",
+        "description": "The round should finish around 16:20. Race control will then prepare and publish the finals.",
+        "time": "Approx. 15:05"
+      },
+      {
+        "label": "Finals",
+        "description": "Allow for eleven single-leg finals at full allocation, starting about 8 minutes apart. The final heat is expected to start around 17:55.",
+        "time": "Approx. 16:35"
+      },
+      {
+        "label": "Racing finishes / track pack-away",
+        "description": "Pack-away follows the last race. The finish estimate depends on turnout, stoppages and the final running order.",
+        "time": "Approx. 18:00"
+      }
+    ]
+  }
 }
