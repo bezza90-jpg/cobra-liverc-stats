@@ -22,6 +22,15 @@ import {bookingUrlForEvent} from './booking-events.js';
       element('eventTitle').textContent = event.title || 'Next COBRA race meeting';
       element('eventType').textContent = event.type === 'sword' ? 'SWORD Championship' : event.type === 'club' ? 'COBRA Club Series' : 'Upcoming meeting';
       element('eventDate').textContent = event.date ? new Date(event.date + 'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'}) : 'Next meeting to be announced';
+      if (event.date === '2026-11-29' && !element('vintageFullNotice')) {
+        const notice = document.createElement('p');
+        notice.id = 'vintageFullNotice';
+        notice.className = 'event-entries-empty';
+        const heading = document.createElement('strong');
+        heading.textContent = 'Vintage is full · reserves only';
+        notice.append(heading, '. Please contact race control to request a reserve place. No payment is due.');
+        element('eventDate').after(notice);
+      }
       element('eventVenue').textContent = event.venue || 'Cardiff City House of Sport, Cardiff CF11 8AW';
       if (element('eventDirections')) element('eventDirections').href = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(event.venue || 'Cardiff City House of Sport, Clos Parc Morganwg, Cardiff CF11 8AW');
       if (event.resultsUrl && /^https:\/\//.test(event.resultsUrl)) element('eventResults').href = event.resultsUrl;
