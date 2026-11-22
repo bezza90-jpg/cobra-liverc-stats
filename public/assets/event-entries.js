@@ -418,6 +418,12 @@ function render(root, data, capacity = {}, calendar = {}, avatars = {}, revision
   });
 }
 
+function showEntriesUnavailable(root) {
+  root.querySelector('[data-entry-summary]').textContent = 'Driver entries are temporarily unavailable. Please try again shortly.';
+  root.querySelector('[data-entry-content]').replaceChildren();
+  root.querySelector('[data-entry-updated]')?.remove();
+}
+
 if (roots.length) {
   const fresh = path => `${path}${path.includes('?') ? '&' : '?'}fresh=${Date.now()}`;
   Promise.all([
@@ -441,17 +447,20 @@ if (roots.length) {
         ? fetch(liveUrl,{cache:'no-store'}).then(response=>response.ok?response.json():null).catch(()=>null)
         : Promise.resolve(null);
       livePromise.then(live=>{
+        const currentPage = location.pathname.replace(/\/+$/, '').endsWith('/event');
+        if (currentPage && (!meeting || live?.active !== true || live.date !== meeting.date ||
+            live.type !== meeting.type || !Array.isArray(live.entries))) {
+          showEntriesUnavailable(root);
+          return;
+        }
         const bookingData=live?.active
           ? {...live,eventDate:live.date,updatedAt:new Date().toISOString()}
           : wix;
         const identifiedWix={...bookingData,entries:(bookingData.entries || []).map(entry=>entryIdentity(entry,aliases))};
         const combined=applyConfirmedChassis(entriesForMeeting(identifiedData,identifiedWix,meeting),confirmed);
         render(root,combined,capacity,calendar,avatars,revisions,publicAvatars);
-      });
+      }).catch(() => showEntriesUnavailable(root));
     });
   })
-    .catch(() => roots.forEach(root => {
-      const summary = root.querySelector('[data-entry-summary]');
-      if (summary) summary.textContent = 'Confirmed bookings are temporarily unavailable. Please try again shortly.';
-    }));
+    .catch(() => roots.forEach(showEntriesUnavailable));
 }
