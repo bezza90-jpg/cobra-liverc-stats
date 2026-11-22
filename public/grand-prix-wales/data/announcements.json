@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-03",
+  "updatedAt": "2026-11-22T16:56:12Z",
   "facebookPageUrl": "https://www.facebook.com/profile.php?id=61584502714320",
   "preferredOrder": [
     "Marcus Kaerup",
@@ -98,6 +98,12 @@
       "imageAlt": "Grand Prix of Wales free-entry announcement for Dan Cooper",
       "summary": "Dan Cooper won a free Grand Prix of Wales entry in the MKGP raffle.",
       "postUrl": "https://www.facebook.com/permalink.php?story_fbid=pfbid0yTsGMTfnrv7jGLndqKZQoMJHNa7x7dDEzWebjfH4EcF5DKyrZnLfXqDnHHzckoG4l&id=61584502714320"
+    },
+    {
+      "driverName": "Daniel Kobbervik",
+      "image": "/grand-prix-wales/assets/announcements/daniel-kobbervik.jpg",
+      "imageAlt": "Daniel Kobbervik holding his Schumacher buggy at the track",
+      "summary": "Daniel Kobbervik joins the Grand Prix of Wales field in Cardiff."
     }
   ]
 }
