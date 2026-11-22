@@ -1,18 +1,17 @@
 import {installCalendarButton} from './calendar-download.js';
-import { nextMeeting, londonDate } from './event-calendar.js?v=20260926-midnight';
+import { nextMeeting, londonDate, getEventCalendar } from './event-calendar.js?v=20261122-shared-calendar';
 import {bookingUrlForEvent} from './booking-events.js';
 (async () => {
   'use strict';
   const element = id => document.getElementById(id);
   try {
-    const [eventResponse, scheduleResponse, calendarResponse] = await Promise.all([
+    const [eventResponse, scheduleResponse, calendar] = await Promise.all([
       fetch('../data/current-event.json', {cache:'no-cache'}),
       element('scheduleSteps') ? fetch('../data/race-day-schedules.json', {cache:'no-cache'}) : Promise.resolve(null),
-      fetch('../data/event-calendar.json', {cache:'no-cache'})
+      getEventCalendar()
     ]);
-    if (!eventResponse.ok || (scheduleResponse && !scheduleResponse.ok) || !calendarResponse.ok) throw Error('Event information unavailable');
+    if (!eventResponse.ok || (scheduleResponse && !scheduleResponse.ok)) throw Error('Event information unavailable');
     const settings = await eventResponse.json();
-    const calendar = await calendarResponse.json();
     const meeting = nextMeeting(calendar.events);
     const event = {venue:settings.venue, ...meeting};
     const schedules = scheduleResponse ? await scheduleResponse.json() : {};

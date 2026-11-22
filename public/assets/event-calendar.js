@@ -17,3 +17,27 @@ export function nextMeeting(events, type = '', now = new Date()) {
   const latest = matching.at(-1);
   return latest && today < monthAfter(latest.date) ? latest : null;
 }
+
+let calendarRequest;
+let receivedAt = 0;
+
+// The entries, briefing and live results read the same public calendar on arrival.
+export function getEventCalendar() {
+  if (!calendarRequest || (receivedAt && Date.now() - receivedAt >= 5000)) {
+    receivedAt = 0;
+    calendarRequest = fetch(new URL('../data/event-calendar.json', import.meta.url), {cache: 'no-cache'})
+      .then(response => {
+        if (!response.ok) throw Error('Event calendar unavailable');
+        return response.json();
+      })
+      .then(calendar => {
+        receivedAt = Date.now();
+        return calendar;
+      })
+      .catch(error => {
+        calendarRequest = undefined;
+        throw error;
+      });
+  }
+  return calendarRequest;
+}

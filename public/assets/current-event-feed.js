@@ -1,5 +1,5 @@
 import {fullRaceResult,bindFullRaceResult} from './race-result-view.js?v=20261102';
-import { nextMeeting } from './event-calendar.js?v=20260926-midnight';
+import { nextMeeting, getEventCalendar } from './event-calendar.js?v=20261122-shared-calendar';
 import { facebookShareLink, lapLineColour } from './lap-charts.js?v=20261026-native-share';
 
 const REFRESH_MS = 60_000;
@@ -168,7 +168,7 @@ async function showFeed(eventData, races) {
 async function refreshFeed() {
   if (document.hidden) return;
   try {
-    const calendar = await fetchJson('../data/event-calendar.json');
+    const calendar = await getEventCalendar();
     const meeting = nextMeeting(calendar.events || []);
     if (!meeting?.eventId) return;
     const eventData = await fetchJson(`../virtual-race-replay/events/${encodeURIComponent(meeting.eventId)}.json`);

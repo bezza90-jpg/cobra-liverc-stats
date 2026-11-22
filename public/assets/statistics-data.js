@@ -8,3 +8,15 @@ export async function loadStatisticsData(fetcher = fetch) {
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return { data: await response.json(), videosReady };
 }
+
+let pageStatistics;
+
+export function getPageStatistics() {
+  if (!pageStatistics) {
+    pageStatistics = loadStatisticsData().catch(error => {
+      pageStatistics = undefined;
+      throw error;
+    });
+  }
+  return pageStatistics;
+}

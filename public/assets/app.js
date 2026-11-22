@@ -2,7 +2,7 @@ import {fullRaceResult,bindFullRaceResult} from './race-result-view.js?v=2026110
 import {canonicalDriverKey} from './driver-identity.js';
 import {createAvatarLoader} from './avatar-loader.js';
 import {trackerDrivers} from './tracker-priority.js';
-import {loadStatisticsData} from './statistics-data.js';
+import {getPageStatistics} from './statistics-data.js?v=20261122-early';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
 import {chartShareUrl, facebookShareLink, lapLineColour, lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261026-native-share';
@@ -2365,7 +2365,7 @@ async function init() {
   const startupParams = new URLSearchParams(window.location.search);
   if (startupParams.get('tracker') === '1' || startupParams.has('map')) loadJourneyTools().catch(() => {});
   try {
-    const { data, videosReady } = await loadStatisticsData();
+    const { data, videosReady } = await getPageStatistics();
     loadingControls.forEach((control,index)=>control.disabled=priorDisabled[index]);
     data.videos = [];
     videosReady.then(videos => {

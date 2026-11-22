@@ -1,7 +1,7 @@
 import {addReserveActions} from './event-reserves.js';
 import {entriesForMeeting,applyConfirmedChassis} from './event-entry-merge.js?v=20261019-capacity-live';
 import {eventSpaces} from './event-capacity.js?v=20261029-filled-reserves';
-import {nextMeeting} from './event-calendar.js?v=20260926-midnight';
+import {nextMeeting, getEventCalendar} from './event-calendar.js?v=20261122-shared-calendar';
 import {entryIdentity} from './event-entry-identity.js';
 import {compareEntryNames} from './event-entry-order.js';
 const allowedAvatar = /^assets\/(?:car-avatars\/[A-Z0-9_-]+|matt-hodges-car)\.png$/;
@@ -428,7 +428,7 @@ if (roots.length) {
   const fresh = path => `${path}?fresh=${Date.now()}`;
   const optionalData = (path, cache = 'no-cache') =>
     fetch(path, {cache}).then(response => response.ok ? response.json() : {}).catch(() => ({}));
-  const calendarReady = optionalData('../data/event-calendar.json');
+  const calendarReady = getEventCalendar().catch(() => ({}));
   const assetsReady = Promise.all([
     fetch(fresh('../data/next-event-entries.json'), {cache:'no-store'}).then(response => {
       if (!response.ok) throw Error('Entries unavailable');

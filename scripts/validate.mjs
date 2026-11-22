@@ -19,7 +19,7 @@ const [events, entries, eventResults, races, raceResults, dashboard, championshi
   readFile(path.join(root, 'public/assets/styles.css'), 'utf8')
 ]);
 
-const statisticsDataJs = appJs.includes("from './statistics-data.js'") ? await readFile(path.join(root, 'public/assets/statistics-data.js'), 'utf8') : '';
+const statisticsDataJs = /from '\.\/statistics-data\.js(?:\?[^']*)?'/.test(appJs) ? await readFile(path.join(root, 'public/assets/statistics-data.js'), 'utf8') : '';
 const errors = [];
 const unique = (rows, key, label) => {
   const values = new Set();

@@ -21,7 +21,7 @@ test('Current Event does not request unused schedule data', async () => {
   const source=(await readFile(new URL('../public/assets/event-info.js',import.meta.url),'utf8')).replace(/^import [^\n]*\n/gm,'');
   const calls=[];
   const nodes=Object.fromEntries(['eventTitle','eventType','eventDate','eventVenue','eventDirections','eventResults','eventPodium','eventBooking','scheduleLink'].map(id=>[id,{}]));
-  const context=vm.createContext({document:{getElementById:id=>nodes[id]},fetch:async url=>{calls.push(url);return {ok:true,json:async()=>({events:[],venue:'Cardiff'})}},installCalendarButton:()=>{},nextMeeting:()=>({title:'Test meeting',type:'club'}),londonDate:()=>'',Date,URLSearchParams,location:{search:''},setInterval(){},encodeURIComponent});
+  const context=vm.createContext({document:{getElementById:id=>nodes[id]},fetch:async url=>{calls.push(url);return {ok:true,json:async()=>({events:[],venue:'Cardiff'})}},getEventCalendar:async()=>{calls.push("shared calendar");return {events:[]}},installCalendarButton:()=>{},nextMeeting:()=>({title:'Test meeting',type:'club'}),londonDate:()=>'',Date,URLSearchParams,location:{search:''},setInterval(){},encodeURIComponent});
   vm.runInContext(source,context);
   for(let i=0;i<10;i++) await Promise.resolve();
   assert.equal(nodes.eventTitle.textContent,'Test meeting');
