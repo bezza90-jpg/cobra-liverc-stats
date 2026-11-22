@@ -11,6 +11,9 @@
     "club": {}
   },
   "events": {
+    "518557": {
+      "limits":{"Junior Racers":10,"4-Wheel Drive Buggy":30,"2-Wheel Drive Buggy":50,"Trucks":10,"Vintage":10}
+    },
     "518554": {
       "limits":{"Junior Racers":12,"4-Wheel Drive Buggy":30,"2-Wheel Drive Buggy":80},
       "reserved":{},
