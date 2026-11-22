@@ -425,42 +425,56 @@ function showEntriesUnavailable(root) {
 }
 
 if (roots.length) {
-  const fresh = path => `${path}${path.includes('?') ? '&' : '?'}fresh=${Date.now()}`;
-  Promise.all([
-    fetch(fresh('../data/next-event-entries.json'), {cache:'no-store'}).then(response => { if (!response.ok) throw Error('Entries unavailable'); return response.json(); }),
-    fetch(fresh('../data/wix-current-event-entries.json'), {cache:'no-store'}).then(response => response.ok ? response.json() : {}).catch(() => ({})),
-    fetch('../data/car-avatar-driver-aliases.json', {cache:'no-cache'}).then(response => response.ok ? response.json() : {}).catch(() => ({}))
-    ,fetch(fresh('../data/event-capacities.json'), {cache:'no-store'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-    ,fetch('../data/event-calendar.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-    ,fetch('../data/car-avatars.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-    ,fetch('../data/car-avatar-source-revisions.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-    ,fetch('../data/confirmed-event-chassis.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-    ,fetch('../data/event-avatar-refs.json', {cache:'no-cache'}).then(r=>r.ok?r.json():{}).catch(()=>({}))
-  ]).then(async ([data,wix,aliases,capacity,calendar,avatars,revisions,confirmed,publicAvatars]) => {
-    roots.forEach(root => {
-      const meeting=nextMeeting(calendar.events || [],expectedType(root));
-      const identifiedData={...data,entries:(data.entries || []).map(entry=>entryIdentity(entry,aliases))};
-      const liveUrl=meeting?.date && meeting?.type
-        ? `https://booking.cobracardiff.co.uk/api/public-meeting-bookings?type=${encodeURIComponent(meeting.type)}&date=${encodeURIComponent(meeting.date)}&fresh=${Date.now()}`
-        : '';
-      const livePromise=liveUrl
-        ? fetch(liveUrl,{cache:'no-store'}).then(response=>response.ok?response.json():null).catch(()=>null)
-        : Promise.resolve(null);
-      livePromise.then(live=>{
-        const currentPage = location.pathname.replace(/\/+$/, '').endsWith('/event');
-        if (currentPage && (!meeting || live?.active !== true || live.date !== meeting.date ||
-            live.type !== meeting.type || !Array.isArray(live.entries))) {
-          showEntriesUnavailable(root);
-          return;
-        }
-        const bookingData=live?.active
-          ? {...live,eventDate:live.date,updatedAt:new Date().toISOString()}
-          : wix;
-        const identifiedWix={...bookingData,entries:(bookingData.entries || []).map(entry=>entryIdentity(entry,aliases))};
-        const combined=applyConfirmedChassis(entriesForMeeting(identifiedData,identifiedWix,meeting),confirmed);
-        render(root,combined,capacity,calendar,avatars,revisions,publicAvatars);
-      }).catch(() => showEntriesUnavailable(root));
-    });
-  })
-    .catch(() => roots.forEach(showEntriesUnavailable));
+  const fresh = path => `${path}?fresh=${Date.now()}`;
+  const optionalData = (path, cache = 'no-cache') =>
+    fetch(path, {cache}).then(response => response.ok ? response.json() : {}).catch(() => ({}));
+  const calendarReady = optionalData('../data/event-calendar.json');
+  const assetsReady = Promise.all([
+    fetch(fresh('../data/next-event-entries.json'), {cache:'no-store'}).then(response => {
+      if (!response.ok) throw Error('Entries unavailable');
+      return response.json();
+    }),
+    optionalData(fresh('../data/wix-current-event-entries.json'), 'no-store'),
+    optionalData('../data/car-avatar-driver-aliases.json'),
+    optionalData(fresh('../data/event-capacities.json'), 'no-store'),
+    optionalData('../data/car-avatars.json'),
+    optionalData('../data/car-avatar-source-revisions.json'),
+    optionalData('../data/confirmed-event-chassis.json'),
+    optionalData('../data/event-avatar-refs.json')
+  ]);
+  const feeds = new Map();
+  async function loadMeeting(root) {
+    const calendar = await calendarReady;
+    const meeting = nextMeeting(calendar.events || [], expectedType(root));
+    let live = null;
+    if (meeting?.date && meeting?.type) {
+      const params = new URLSearchParams({type:meeting.type, date:meeting.date});
+      const key = params.toString();
+      if (!feeds.has(key)) {
+        params.set('fresh', String(Date.now()));
+        const url = 'https://booking.cobracardiff.co.uk/api/public-meeting-bookings?' + params;
+        feeds.set(key, fetch(url, {cache:'no-store'}).then(response => response.ok ? response.json() : null).catch(() => null));
+      }
+      live = await feeds.get(key);
+    }
+    return {calendar, meeting, live};
+  }
+
+  roots.forEach(root => {
+    Promise.all([loadMeeting(root), assetsReady]).then(([
+      {calendar, meeting, live}, [data, wix, aliases, capacity, avatars, revisions, confirmed, publicAvatars]
+    ]) => {
+      const currentPage = location.pathname.replace(/\/+$/, '').endsWith('/event');
+      if (currentPage && (!meeting || live?.active !== true || live.date !== meeting.date ||
+          live.type !== meeting.type || !Array.isArray(live.entries))) {
+        showEntriesUnavailable(root);
+        return;
+      }
+      const identifiedData = {...data, entries:(data.entries || []).map(entry => entryIdentity(entry, aliases))};
+      const bookingData = live?.active ? {...live, eventDate:live.date, updatedAt:new Date().toISOString()} : wix;
+      const identifiedWix = {...bookingData, entries:(bookingData.entries || []).map(entry => entryIdentity(entry, aliases))};
+      const combined = applyConfirmedChassis(entriesForMeeting(identifiedData, identifiedWix, meeting), confirmed);
+      render(root, combined, capacity, calendar, avatars, revisions, publicAvatars);
+    }).catch(() => showEntriesUnavailable(root));
+  });
 }
