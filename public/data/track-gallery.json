@@ -4,7 +4,8 @@
   "flyoverEvents": [
     "518556",
     "518554",
-    "518555"
+    "518555",
+    "planned-9147a804-de9d-4d34-b73e-8138a2d3ab43"
   ],
   "youtubePlaylists": {
     "427338": [
@@ -950,6 +951,14 @@
           "location": "House of Sport"
         }
       ]
+    },
+    "planned-9147a804-de9d-4d34-b73e-8138a2d3ab43": {
+      "name": "COBRA club day",
+      "date": "2026-11-29",
+      "showInArchive": true,
+      "designImage": "../track-photos/planned-9147a804-de9d-4d34-b73e-8138a2d3ab43/presentation.png",
+      "flyoverUrl": "../virtual-race-replay/track-planned-9147a804-de9d-4d34-b73e-8138a2d3ab43-flyover.html",
+      "exploreUrl": "../virtual-race-replay/track-planned-9147a804-de9d-4d34-b73e-8138a2d3ab43-explore.html"
     }
   }
 }
