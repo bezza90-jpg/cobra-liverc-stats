@@ -26,7 +26,7 @@ const CATALOG={
   cnc_kick:{name:'Kicker',length:.667,width:2.44,parts:[[0,.667,'KICKER']],height:.217},
   cnc_egg:{name:'Egg lander',length:2.317,width:2.44,parts:[[0,2.317,'EGG LANDER']],height:.323},
   cnc_wedge:{name:'Wedge lander',length:2.338,width:2.44,parts:[[0,2.338,'WEDGE LANDER']],height:.276},
-  cnc_ripple:{name:'Triple ripple',length:2.364,width:2.44,parts:[[0,2.364,'TRIPLE RIPPLE']],height:.16,heightEstimated:true},
+  cnc_ripple:{name:'Triple ripple',length:2.364,width:2.44,parts:[[0,2.364,'TRIPLE RIPPLE']],height:.06,heightEstimated:true},
   cnc_ttup:{name:'Tabletop up ramp',length:1.325,width:2.44,parts:[[0,1.325,'UP']],height:.463},
   cnc_tttop:{name:'Tabletop top',length:2.44,width:2.44,parts:[[0,2.44,'TOP']],height:.446},
   cnc_ttdown:{name:'Tabletop down ramp',length:2.442,width:2.44,parts:[[0,2.442,'DOWN']],height:.446},
@@ -135,7 +135,8 @@ function heightProfile(label,t,height){
 
 function addRampPart(scene,item,spec,part,index,options={}){
   let [offset,length,label]=part,width=Number(spec.width||2.4),height=Number(spec.partHeights?.[index]??spec.height??.04);
-  let segments=/EGG|WEDGE|BROAD RAMP/i.test(label)?28:/ROLLER|RIPPLE/i.test(label)?18:8,topRows=[];
+  const ripple=/RIPPLE/i.test(label);
+  let segments=ripple?48:/EGG|WEDGE|BROAD RAMP/i.test(label)?28:/ROLLER/i.test(label)?18:8,topRows=[];
   let shadowShift=height*.62,shadowLift=.034;
   scene.polygons.push(polygon([
     add(localPoint(item,offset,-width/2,shadowLift),vec(shadowShift,shadowShift*.48,0)),
@@ -149,9 +150,10 @@ function addRampPart(scene,item,spec,part,index,options={}){
   }
   for(let i=0;i<segments;i++){
     let a=topRows[i],b=topRows[i+1];
-    scene.polygons.push(polygon([a[0],b[0],b[1],a[1]],'#c92731','#4a0b10','ramp'));
-    if(!options.omitNegativeSide)scene.polygons.push(polygon([localPoint(item,offset+length*i/segments,-width/2,.03),a[0],b[0],localPoint(item,offset+length*(i+1)/segments,-width/2,.03)],'#761019','#3c070b','ramp-side'));
-    if(!options.omitPositiveSide)scene.polygons.push(polygon([localPoint(item,offset+length*i/segments,width/2,.03),localPoint(item,offset+length*(i+1)/segments,width/2,.03),b[1],a[1]],'#8d121c','#3c070b','ramp-side'));
+    const surface=ripple?colour('#c92731',1+(b[0].z-a[0].z)*segments/length*.35):'#c92731';
+    scene.polygons.push(polygon([a[0],b[0],b[1],a[1]],surface,ripple?null:'#4a0b10','ramp'));
+    if(!options.omitNegativeSide)scene.polygons.push(polygon([localPoint(item,offset+length*i/segments,-width/2,.03),a[0],b[0],localPoint(item,offset+length*(i+1)/segments,-width/2,.03)],'#761019',ripple?null:'#3c070b','ramp-side'));
+    if(!options.omitPositiveSide)scene.polygons.push(polygon([localPoint(item,offset+length*i/segments,width/2,.03),localPoint(item,offset+length*(i+1)/segments,width/2,.03),b[1],a[1]],'#8d121c',ripple?null:'#3c070b','ramp-side'));
   }
   if(!options.omitStartCap)scene.polygons.push(polygon([localPoint(item,offset,-width/2,.03),localPoint(item,offset,width/2,.03),topRows[0][1],topRows[0][0]],'#701019','#3c070b','ramp-side'));
   if(!options.omitEndCap)scene.polygons.push(polygon([localPoint(item,offset+length,-width/2,.03),topRows.at(-1)[0],topRows.at(-1)[1],localPoint(item,offset+length,width/2,.03)],'#701019','#3c070b','ramp-side'));
