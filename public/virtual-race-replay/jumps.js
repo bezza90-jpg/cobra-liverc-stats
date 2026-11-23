@@ -28,7 +28,7 @@ export function legacyJumpProfile(samples,polygons=[],height=6,features=[]){
   return indices.length>1?[indices[0]/(samples.length-1),indices.at(-1)/(samples.length-1)]:null;
  };
  const elevated=features.map(feature=>{
-  const takeoff=region(feature.takeoff),landing=region(feature.landing);
+  const takeoff=region(feature.takeoff,null,feature.landAtFarEdge),landing=region(feature.landing,null,feature.landAtFarEdge);
   return takeoff&&landing&&landing[0]>takeoff[1]?{takeoff,landing}:null;
  }).filter(Boolean);
  return fraction=>{
@@ -73,7 +73,7 @@ function surfaceProfile(name,t){
  if(name.includes('roller'))return Math.sin(t*Math.PI);
  if(name.includes('linear')&&name.includes('up'))return t;
  if(name.includes('linear')&&name.includes('down'))return 1-t;
- if(name.includes('kicker'))return 1-Math.cos(t*Math.PI/2);
+ if(name.includes('kicker'))return smooth(t);
  if(name.includes('up'))return smooth(t);
  if(name.includes('egg')||name.includes('wedge')){
   const rise=name.includes('egg')?.2:.15;
@@ -98,10 +98,11 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
    start=null;
   }
  }
- const region=(polygon,direction)=>{
+ const region=(polygon,direction,exact=false)=>{
   const indices=samples.map((point,i)=>insidePolygon(point,polygon)?i:-1).filter(i=>i>=0);
-  if(!indices.length)return null;
+  if(!indices.length||(!exact&&indices.length<2))return null;
   const first=indices[0],last=indices.at(-1),reverse=direction&&distance(samples[first],{x:direction[1][0],y:direction[1][1]})<distance(samples[first],{x:direction[0][0],y:direction[0][1]});
+  if(!exact)return {from:first/(samples.length-1),to:last/(samples.length-1),reverse};
   function edge(inner,outer){
    if(outer<0||outer>=samples.length)return inner;
    let lo=0,hi=1;const a=samples[inner],b=samples[outer];
@@ -118,7 +119,7 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
  const elevated=[...features,...rollerFlights].map(feature=>{
   const takeoff=Array.isArray(feature.takeoffRange)?{from:Number(feature.takeoffRange[0]),to:Number(feature.takeoffRange[1]),reverse:false}:region(feature.takeoff),landing=Array.isArray(feature.landingRange)?{from:Number(feature.landingRange[0]),to:Number(feature.landingRange[1]),reverse:false}:region(feature.landing);
   if(!takeoff||!landing)return null;
-  const kicker=feature.takeoffProfile==='kicker';
+  const kicker=feature.landAtFarEdge===true;
   if(kicker&&landing.to<takeoff.from)landing={...landing,from:landing.from+1,to:landing.to+1};
   if(landing.from<takeoff.to-.00001)return null;
   if(!kicker)return {...feature,takeoff,landing};

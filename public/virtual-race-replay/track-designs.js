@@ -57,7 +57,7 @@ export function trackPlanFromDesign(input,base={}){
    landers.push({item,first,last});
   if(spec.flight){
    const takeoff=built[spec.flight[0]],landing=built[spec.flight[1]];
-   jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81,landingAtEnd:Boolean(spec.landingAtEnd),landingInsetMetres:Number(spec.landingInsetMetres)||0,touchdownProgress:Number.isFinite(Number(spec.touchdownProgress))?Number(spec.touchdownProgress):null,flightTimeScale:Number(spec.flightTimeScale)||0,minimumClearanceMetres:Number(spec.minimumClearanceMetres)||0});
+   jumpFeatures.push({name:item.key,landAtFarEdge:takeoff.profile==='kicker',takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81,landingAtEnd:Boolean(spec.landingAtEnd),landingInsetMetres:Number(spec.landingInsetMetres)||0,touchdownProgress:Number.isFinite(Number(spec.touchdownProgress))?Number(spec.touchdownProgress):null,flightTimeScale:Number(spec.flightTimeScale)||0,minimumClearanceMetres:Number(spec.minimumClearanceMetres)||0});
   }
  }
  // Match separately placed boards along the kicker's heading, within its lane.
@@ -70,7 +70,7 @@ export function trackPlanFromDesign(input,base={}){
    if(forward<-.1||forward>6||Math.abs(side)>spec.width/2||Math.cos((candidate.item.angle-item.angle)*Math.PI/180)<.65)continue;
    if(forward<best){nearest=candidate;best=forward;}
   }
-  if(nearest)jumpFeatures.push({name:item.key,takeoff:first.polygon,landing:nearest.last.polygon,takeoffProfile:'kicker',landingProfile:nearest.last.profile,takeoffHeightMm:first.heightMm,landingHeightMm:nearest.last.heightMm});
+  if(nearest)jumpFeatures.push({name:item.key,landAtFarEdge:true,takeoff:first.polygon,landing:nearest.last.polygon,takeoffProfile:'kicker',landingProfile:nearest.last.profile,takeoffHeightMm:first.heightMm,landingHeightMm:nearest.last.heightMm});
  }
  let points=input.points.map(point=>toPlan({x:Number(point.x),y:Number(point.y)}));
  let loop=input.loop?toPlan({x:Number(input.loop.x),y:Number(input.loop.y)}):points[0];
