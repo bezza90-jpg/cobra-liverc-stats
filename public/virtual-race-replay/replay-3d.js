@@ -1,8 +1,8 @@
 import {passingOffsets} from './passing-lanes.js?v=20261102';
 import {prepare,ordered,positionAt,visualFraction,finishFraction,timeAtProgress,raceTimingAtPosition,lapPerformanceAtPosition} from './engine.js?v=20261102-grid-order';
 import {paceMap} from './pace.js?v=20261020-legacy-motion-1';
-import {jumpProfile} from './jumps.js?v=20261017-trestle-hop-1';
-import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261102-loop-start';
+import {jumpProfile} from './jumps.js?v=20261123-edge-flight';
+import {trackPlanFromDesign,designFromTrackPlan} from './track-designs.js?v=20261123-edge-flight';
 import {avatarThumbnailPath,loadAvatarColours,avatarColourOverride} from './avatar-colours.js?v=20261017-6';
 import {sharedRaceVideo} from '../assets/shared-race-video.js?v=20260929-shared-races';
 
@@ -61,6 +61,63 @@ function configurePhysics(){
   pace=currentMotionEvents.has(String(eventId))
     ?paceMap(rawRoute(),{profile:'race',minimumSpeed:.56,maximumSpeed:1.75})
     :paceMap(rawRoute(),{profile:'legacy-smooth',minimumSpeed:.62,maximumSpeed:1.7});
+}
+function addLapPreview(){
+  const panel=viewer.container,lapSeconds=15.6;
+  const button=document.createElement('button'),hit=document.createElement('button');
+  button.type=hit.type='button';
+  button.style.cssText='position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:12px;z-index:30;padding:9px 14px;background:#102219;color:white;border:2px solid white;border-radius:8px;cursor:pointer';
+  hit.style.cssText='position:absolute;z-index:4;border:0;padding:0;background:transparent;cursor:pointer;transform:translate(-50%,-50%)';
+  hit.setAttribute('aria-label','Hide preview car');hit.title='Hide car';
+  panel.append(button,hit);
+  let running=false,frameId=0,start=0;
+  const count=2048,length=viewer.scene.routeLength,weights=[],times=[0];
+  // Preserve the corner pacing. Ease into each launch, coast through flight,
+  // then accelerate away. Normalising travel time keeps the lap at 15.6 s.
+  for(let i=0;i<count;i++){
+    const f=(i+.5)/count;
+    let speed=pace.speedAtDistance(f);
+    for(const {lip,end} of lift.kickerFlights||[]){
+      const offset=((f-lip+1.5)%1)-.5,span=end-lip;
+      const blend=offset<0?1+offset*length/2.5:offset<=span?1:1-(offset-span)*length/3;
+      if(blend<=0)continue;
+      const coast=Math.min(.92,pace.speedAtDistance(lip));
+      const u=Math.min(1,blend),smooth=u*u*(3-2*u);
+      speed+=(coast-speed)*smooth;
+    }
+    weights.push(1/speed);times.push(times[i]+weights[i]);
+  }
+  const total=times[count],origin=routeFractionNear(design.loop||viewer.scene.route[0]);
+  const lapOrigin=times[Math.floor(origin*count)]/total;
+  function drawCar(now){
+    if(!running)return;
+    const target=(((now-start)/1000/lapSeconds+lapOrigin)%1)*total;
+    let lo=0,hi=count;
+    while(hi-lo>1){const mid=(hi+lo)>>1;if(times[mid]<=target)lo=mid;else hi=mid;}
+    const fraction=(lo+(target-times[lo])/weights[lo])/count;
+    const point=viewer.routeAt(fraction),speed=length*total/(count*lapSeconds*weights[lo]);
+    const delta=.22/viewer.scene.routeLength,angle=Math.atan2(lift(fraction+delta,speed)-lift(fraction-delta,speed),.44);
+    const car={id:'lap-preview',number:1,vehicleType:'buggy',color:'#a8ef27',fraction,x:point.x,y:point.y,z:.035+lift(fraction,speed),yaw:Math.atan2(point.ty,point.tx),pitch:Math.max(-.35,Math.min(.35,angle)),length:1.02,width:.66,height:.33};
+    viewer.setCars([car]);
+    const camera=viewer.camera(),screen=viewer.project({...car,z:car.z+.16},camera);
+    hit.hidden=!screen;
+    if(screen){
+      const canvas=viewer.canvas.getBoundingClientRect(),bounds=panel.getBoundingClientRect();
+      const ratio=canvas.width/camera.width,size=Math.max(26,camera.focal/screen.depth*ratio);
+      hit.style.left=(canvas.left-bounds.left+screen.x*ratio)+'px';hit.style.top=(canvas.top-bounds.top+screen.y*ratio)+'px';
+      hit.style.width=size+'px';hit.style.height=Math.max(24,size*.75)+'px';
+    }
+    frameId=requestAnimationFrame(drawCar);
+  }
+  function show(value){
+    running=value;cancelAnimationFrame(frameId);hit.hidden=!value;
+    if(trackFlyoverMode)viewer.setFollowCar(value?'lap-preview':'');
+    button.textContent=value?'Hide car':'Show car · 15.6 s lap';
+    button.setAttribute('aria-pressed',String(value));
+    if(value){start=performance.now();drawCar(start);}else viewer.setCars([]);
+  }
+  button.onclick=()=>show(!running);hit.onclick=()=>show(false);
+  show(trackFlyoverMode||params.get('car')==='1');
 }
 function configureGrid(){
   if(!race.isFinal)return;
@@ -229,6 +286,7 @@ async function start(){
       requestAnimationFrame(()=>viewer.resize());
     }
     if(trackOnlyMode){$('back2d').href='../track-gallery/?event='+eventId;$('back2d').textContent='← Track gallery';document.body.classList.add('track-only-mode');viewer.container.classList.add('c3-track-only');$('raceSelect').closest('label').hidden=true;$('focus').closest('label').hidden=true;$('official').hidden=true;$('youtube').hidden=true;document.querySelector('.replay-controls').hidden=true;document.querySelector('.race-order').hidden=true;$('replayMethod').hidden=true;viewer.container.querySelector('[data-replay-controls]').hidden=true;const mobileReplayBar=viewer.container.querySelector('.c3-mobile-replay-bar');{mobileReplayBar.classList.add('c3-flyover-menu-only');mobileReplayBar.querySelector('[data-mobile-replay-play]').hidden=true;}viewer.container.querySelector('[data-action="car-labels"]').hidden=true;const flyoverButton=viewer.container.querySelector('[data-action="flyover"]');if(trackExploreMode)flyoverButton.hidden=true;else flyoverButton.textContent='Track flyover';}
+    if(trackOnlyMode)addLapPreview();
     $('raceSelect').disabled=false;if(!trackOnlyMode)await loadRace(initial);if(trackFlyoverMode){resetFlyoverViewport();requestAnimationFrame(()=>requestAnimationFrame(resetFlyoverViewport));}if(raceFlyoverMode&&!trackOnlyMode){viewer.startFlyover(true);resetFlyoverViewport();requestAnimationFrame(()=>requestAnimationFrame(resetFlyoverViewport));}if(autoPlay&&!trackOnlyMode)setPlaying(true);if(trackOnlyMode){$('raceTitle').textContent=trackFlyoverMode?'Automatic flyover of the measured track · no cars shown':'Drag to rotate · right-drag to pan · scroll to zoom · no cars shown';$('status').textContent=trackFlyoverMode?'Track flyover running':'Explore the track from any angle';}
   }catch(error){$('status').textContent=error.message;$('status').className='error';console.error(error);}
 }

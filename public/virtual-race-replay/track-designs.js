@@ -5,10 +5,12 @@ const RAMP_CATALOG={
  cnc_tt_long_up:{width:2.44,parts:[[0,2.4,'tabletop-up',446],[2.4,2.44,'flat',446],[4.84,2.442,'tabletop-down',446]],flight:[0,2]},
  cnc_small:{width:2.44,parts:[[0,1.299,'roller',171]],rollerFlight:{speedFlightRatio:.06,minimumFlightDistanceMetres:.7,maximumFlightDistanceMetres:4.8}},
  cnc_big:{width:2.44,parts:[[0,1.584,'roller',276]]},
+ cobra_small_launch:{width:2.4,parts:[[0,.537008,'kicker',164.528]]},
+ cobra_broad_ramp:{width:2.4,parts:[[0,2.602684,'broad-ramp',280]]},
  cnc_kick:{width:2.44,parts:[[0,.667,'kicker',217]]},
  cnc_egg:{width:2.44,parts:[[0,2.317,'egg-lander',323]]},
  cnc_wedge:{width:2.44,parts:[[0,2.338,'wedge-lander',276]]},
- cnc_ripple:{width:2.44,parts:[[0,2.364,'triple-ripple',160]]},
+ cnc_ripple:{width:2.44,parts:[[0,2.364,'triple-ripple',60]]},
  cnc_ttup:{width:2.44,parts:[[0,1.325,'tabletop-up',463]]},
  cnc_tttop:{width:2.44,parts:[[0,2.44,'flat',446]]},
  cnc_ttdown:{width:2.44,parts:[[0,2.442,'tabletop-down',446]]},
@@ -18,8 +20,8 @@ const RAMP_CATALOG={
  trestle_24:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,2.4,'flat',396],[3.6,2.4,'linear-down',396]]},
  trestle_36:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,3.6,'flat',396],[4.8,2.4,'linear-down',396]]},
  trestle_48:{width:2.4,parts:[[0,1.2,'linear-up',396],[1.2,4.8,'flat',396],[6,2.4,'linear-down',396]]},
- jump_trestle_12:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'linear-up',396],[3.367,1.2,'flat',396],[4.567,2.4,'linear-down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,flightTimeScale:1.7,minimumClearanceMetres:1.05},
- jump_trestle_24:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'linear-up',396],[3.367,2.4,'flat',396],[5.767,2.4,'linear-down',396]],flight:[0,2],landingAtEnd:true,landingInsetMetres:.2,flightTimeScale:1.8,minimumClearanceMetres:1.25}
+ jump_trestle_12:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'linear-up',396],[3.367,1.2,'flat',396],[4.567,2.4,'linear-down',396]],flight:[0,3],landingAtEnd:true,landingInsetMetres:0,flightTimeScale:1.7,minimumClearanceMetres:1.05},
+ jump_trestle_24:{width:2.44,parts:[[0,.667,'kicker',217],[2.167,1.2,'linear-up',396],[3.367,2.4,'flat',396],[5.767,2.4,'linear-down',396]],flight:[0,3],landingAtEnd:true,landingInsetMetres:0,flightTimeScale:1.8,minimumClearanceMetres:1.25}
 };
 
 const routeLength=points=>points.reduce((total,point,index)=>{
@@ -39,7 +41,7 @@ export function trackPlanFromDesign(input,base={}){
   const half=itemWidth/2,corners=[transform(item,offset,-half),transform(item,offset+length,-half),transform(item,offset+length,half),transform(item,offset,half)];
   return corners.map(toPlan);
  };
- const jumpSurfaces=[],jumpFeatures=[];
+ const jumpSurfaces=[],jumpFeatures=[],launches=[],landers=[];
  for(const item of input.items||[]){
   const spec=RAMP_CATALOG[item.key];if(!spec)continue;
   const built=spec.parts.map(([offset,length,profile,heightMm,lateral=0,angleOffset=0])=>{
@@ -49,10 +51,26 @@ export function trackPlanFromDesign(input,base={}){
    const surface={name:item.key,profile,heightMm,polygon:box(piece,0,length,spec.width),direction:[toPlan(start),toPlan(end)],launchCars:Boolean(rollerFlight),speedFlightRatio:Number(rollerFlight?.speedFlightRatio)||0,minimumFlightDistanceMetres:Number(rollerFlight?.minimumFlightDistanceMetres)||0,maximumFlightDistanceMetres:Number(rollerFlight?.maximumFlightDistanceMetres)||0};
    jumpSurfaces.push(surface);return surface;
   });
+  const first=built[0],last=built.at(-1);
+  if(first.profile==='kicker'&&!spec.flight)launches.push({item,spec,first});
+  if(/egg-lander|wedge-lander|broad-ramp|linear-down|tabletop-down/.test(last.profile)&&first.profile!=='kicker')
+   landers.push({item,first,last});
   if(spec.flight){
    const takeoff=built[spec.flight[0]],landing=built[spec.flight[1]];
    jumpFeatures.push({name:item.key,takeoff:takeoff.polygon,landing:landing.polygon,takeoffProfile:takeoff.profile,landingProfile:landing.profile,takeoffHeightMm:takeoff.heightMm,landingHeightMm:landing.heightMm,gravity:9.81,landingAtEnd:Boolean(spec.landingAtEnd),landingInsetMetres:Number(spec.landingInsetMetres)||0,touchdownProgress:Number.isFinite(Number(spec.touchdownProgress))?Number(spec.touchdownProgress):null,flightTimeScale:Number(spec.flightTimeScale)||0,minimumClearanceMetres:Number(spec.minimumClearanceMetres)||0});
   }
+ }
+ // Match separately placed boards along the kicker's heading, within its lane.
+ for(const {item,spec,first} of launches){
+  const lip=transform(item,spec.parts[0][1],0),angle=item.angle*Math.PI/180;
+  let nearest=null,best=Infinity;
+  for(const candidate of landers){
+   const dx=candidate.item.x-lip.x,dy=candidate.item.y-lip.y;
+   const forward=dx*Math.cos(angle)+dy*Math.sin(angle),side=-dx*Math.sin(angle)+dy*Math.cos(angle);
+   if(forward<-.1||forward>6||Math.abs(side)>spec.width/2||Math.cos((candidate.item.angle-item.angle)*Math.PI/180)<.65)continue;
+   if(forward<best){nearest=candidate;best=forward;}
+  }
+  if(nearest)jumpFeatures.push({name:item.key,takeoff:first.polygon,landing:nearest.last.polygon,takeoffProfile:'kicker',landingProfile:nearest.last.profile,takeoffHeightMm:first.heightMm,landingHeightMm:nearest.last.heightMm});
  }
  let points=input.points.map(point=>toPlan({x:Number(point.x),y:Number(point.y)}));
  let loop=input.loop?toPlan({x:Number(input.loop.x),y:Number(input.loop.y)}):points[0];

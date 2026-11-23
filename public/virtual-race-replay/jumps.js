@@ -67,12 +67,14 @@ function surfaceProfile(name,t){
  if(name.includes('ground'))return 0;
  if(name.includes('tabletop')&&name.includes('up'))return 1-Math.cos(t*Math.PI/2);
  if(name.includes('tabletop')&&name.includes('down'))return Math.cos(t*Math.PI/2);
+ if(name==='broad-ramp')return smooth(t<=.75?t/.75:(1-t)/.25);
  if(name.includes('roller-launch'))return Math.sin(t*Math.PI/2);
  if(name.includes('triple')||name.includes('ripple'))return Math.sin(t*Math.PI*3)**2;
  if(name.includes('roller'))return Math.sin(t*Math.PI);
  if(name.includes('linear')&&name.includes('up'))return t;
  if(name.includes('linear')&&name.includes('down'))return 1-t;
- if(name.includes('kicker')||name.includes('up'))return smooth(t);
+ if(name.includes('kicker'))return 1-Math.cos(t*Math.PI/2);
+ if(name.includes('up'))return smooth(t);
  if(name.includes('egg')||name.includes('wedge')){
   const rise=name.includes('egg')?.2:.15;
   if(t<=rise)return smooth(t/rise);
@@ -98,9 +100,15 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
  }
  const region=(polygon,direction)=>{
   const indices=samples.map((point,i)=>insidePolygon(point,polygon)?i:-1).filter(i=>i>=0);
-  if(indices.length<2)return null;
+  if(!indices.length)return null;
   const first=indices[0],last=indices.at(-1),reverse=direction&&distance(samples[first],{x:direction[1][0],y:direction[1][1]})<distance(samples[first],{x:direction[0][0],y:direction[0][1]});
-  return{from:first/(samples.length-1),to:last/(samples.length-1),reverse};
+  function edge(inner,outer){
+   if(outer<0||outer>=samples.length)return inner;
+   let lo=0,hi=1;const a=samples[inner],b=samples[outer];
+   for(let k=0;k<18;k++){const t=(lo+hi)/2;if(insidePolygon({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t},polygon))lo=t;else hi=t;}
+   return inner+(outer-inner)*(lo+hi)/2;
+  }
+  return{from:edge(first,first-1)/(samples.length-1),to:edge(last,last+1)/(samples.length-1),reverse};
  };
  const shaped=surfaces.map(surface=>{const interval=region(surface.polygon,surface.direction);return interval?{...surface,interval}:null;}).filter(Boolean);
  const rollerFlights=shaped.filter(surface=>surface.launchCars).map(surface=>{
@@ -109,13 +117,39 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
  });
  const elevated=[...features,...rollerFlights].map(feature=>{
   const takeoff=Array.isArray(feature.takeoffRange)?{from:Number(feature.takeoffRange[0]),to:Number(feature.takeoffRange[1]),reverse:false}:region(feature.takeoff),landing=Array.isArray(feature.landingRange)?{from:Number(feature.landingRange[0]),to:Number(feature.landingRange[1]),reverse:false}:region(feature.landing);
-  return takeoff&&landing&&landing.from>takeoff.to?{...feature,takeoff,landing}:null;
+  if(!takeoff||!landing)return null;
+  const kicker=feature.takeoffProfile==='kicker';
+  if(kicker&&landing.to<takeoff.from)landing={...landing,from:landing.from+1,to:landing.to+1};
+  if(landing.from<takeoff.to-.00001)return null;
+  if(!kicker)return {...feature,takeoff,landing};
+  // Fit one continuous arc above every board from the lip to the final edge.
+  const span=landing.to-takeoff.to,start=feature.takeoffHeightMm/1000,end=surfaceProfile(feature.landingProfile,1)*feature.landingHeightMm/1000;
+  let arc=.12;
+  for(const surface of shaped){
+   let {from,to}=surface.interval;
+   if(to<takeoff.to&&landing.to>1){from++;to++;}
+   if(to<=takeoff.to||from>=landing.to)continue;
+   for(let i=0;i<=64;i++){
+    const u=i/64,t=(from+u*(to-from)-takeoff.to)/span;
+    if(t<=0||t>=1)continue;
+    const z=surfaceProfile(surface.profile,surface.interval.reverse?1-u:u)*surface.heightMm/1000;
+    arc=Math.max(arc,(z-start*(1-t)-end*t)/(4*t*(1-t))+.06);
+   }
+  }
+  return {...feature,takeoff,landing,arc,end};
  }).filter(Boolean);
  const routeLengthMetres=Number(options.routeLengthMetres)||1,referenceHeightMetres=(Number(options.referenceHeightMm)||323)/1000,pixelsPerMetre=height/referenceHeightMetres;
- return(fraction,speedMps=8)=>{
+ const heightAt=(fraction,speedMps=8)=>{
   const f=((fraction%1)+1)%1;
   for(const feature of elevated){
-   const {takeoff,landing}=feature;if(f<takeoff.from||f>landing.to)continue;
+   const {takeoff,landing}=feature,position=landing.to>1&&f<takeoff.from?f+1:f;
+   if(position<takeoff.from||position>landing.to)continue;
+   if(feature.arc!==undefined&&position>=takeoff.to){
+    const t=(position-takeoff.to)/(landing.to-takeoff.to);
+    const seconds=(landing.to-takeoff.to)*routeLengthMetres/clamp(speedMps,2,25);
+    const arc=Math.max(feature.arc,9.81*seconds*seconds/8);
+    return (feature.takeoffHeightMm/1000*(1-t)+feature.end*t+4*arc*t*(1-t))*pixelsPerMetre;
+   }
    const takeoffHeight=Number(feature.takeoffHeightMm),landingHeight=Number(feature.landingHeightMm),startHeight=(Number.isFinite(takeoffHeight)?takeoffHeight:217)/1000,endHeight=(Number.isFinite(landingHeight)?landingHeight:startHeight*1000)/1000;
    const profileName=String(feature.takeoffProfile||feature.name||'').toLowerCase();
    if(f<takeoff.to){const u=(f-takeoff.from)/(takeoff.to-takeoff.from),takeoffShape=profileName.includes('roller')?'roller-launch':profileName.includes('tabletop')?profileName:'kicker';return surfaceProfile(takeoffShape,u)*startHeight*pixelsPerMetre;}
@@ -137,4 +171,6 @@ export function jumpProfile(samples,polygons=[],height=6,features=[],options={})
   const u=(f-interval[0])/(interval[1]-interval[0]);
   return height*Math.sin(Math.PI*u)**2;
  };
+ heightAt.kickerFlights=elevated.filter(feature=>feature.arc!==undefined).map(feature=>({lip:feature.takeoff.to,end:feature.landing.to}));
+ return heightAt;
 }
