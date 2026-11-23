@@ -206,10 +206,16 @@ async function start(){
     const measured=!design.flatReplay;$('physicsStatus').textContent=measured?'Measured ramps · gravity 9.81 m/s²':'Flat replay · no inferred jumps';
     $('replayMethod').innerHTML=measured?'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times. Their position between timing-loop crossings is estimated along the confirmed Track Designer centre line. Ramp heights are measured; airborne motion uses gravity at 9.81 m/s².':'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times and follow the confirmed event route. This plan does not contain measured ramp positions, so the replay deliberately keeps the cars on the flat circuit.';
     viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:!trackOnlyMode,flyover:trackFlyoverMode,trackOnly:trackOnlyMode});if(!galleryFlyoverMode&&!trackOnlyMode)document.body.classList.add('mobile-replay-minimal');addViewerReplayControls();if(!trackOnlyMode){addLiveTiming();placeYouTubeLink();}configurePhysics();
-    if(trackExploreMode){
+    if(trackOnlyMode){
       const panel=viewer.container;
       panel.classList.add('c3-fallback-fullscreen');
       document.body.classList.add('c3-fullscreen-open');
+      if(trackFlyoverMode){
+        const syncFlyoverLayout=()=>document.body.classList.toggle('race-flyover-mode',
+          panel.classList.contains('c3-fallback-fullscreen')||document.fullscreenElement===panel);
+        new MutationObserver(syncFlyoverLayout).observe(panel,{attributes:true,attributeFilter:['class']});
+        document.addEventListener('fullscreenchange',syncFlyoverLayout);
+      }
       viewer.updateFullscreenButton();
       const exit=document.createElement('button');
       exit.type='button';
