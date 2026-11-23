@@ -21,6 +21,8 @@ const CATALOG={
   trestle_side:{name:'Side tabletop',length:7.2,width:2.4,parts:[[0,2.4,'UP'],[2.4,2.4,'TOP'],[4.8,2.4,'DOWN']],height:.446},
   cnc_small:{name:'Small roller',length:1.299,width:2.44,parts:[[0,1.299,'SMALL ROLLER']],height:.171},
   cnc_big:{name:'Large roller',length:1.584,width:2.44,parts:[[0,1.584,'LARGE ROLLER']],height:.276},
+  cobra_small_launch:{name:'Small launch kicker',length:.537008,width:2.4,parts:[[0,.537008,'SMALL KICKER']],height:.164528},
+  cobra_broad_ramp:{name:'Broad ramp',length:2.602684,width:2.4,parts:[[0,2.602684,'BROAD RAMP']],height:.28},
   cnc_kick:{name:'Kicker',length:.667,width:2.44,parts:[[0,.667,'KICKER']],height:.217},
   cnc_egg:{name:'Egg lander',length:2.317,width:2.44,parts:[[0,2.317,'EGG LANDER']],height:.323},
   cnc_wedge:{name:'Wedge lander',length:2.338,width:2.44,parts:[[0,2.338,'WEDGE LANDER']],height:.276},
@@ -107,6 +109,11 @@ function localPoint(item,x,y,z){let angle=(Number(item.angle)||0)*Math.PI/180,c=
 
 function heightProfile(label,t,height){
   label=String(label).toUpperCase();
+  if(label==='BROAD RAMP'){
+    // The long approach crests roughly three quarters of the way across the board.
+    const crest=.75, u=t<=crest?t/crest:(1-t)/(1-crest);
+    return height*u*u*(3-2*u);
+  }
   if(label.includes('TRIPLE')||label.includes('RIPPLE'))return height*Math.pow(Math.sin(t*Math.PI*3),2);
   if(label.includes('ROLLER')||label==='ROLL')return height*Math.sin(t*Math.PI);
   // The THR landers have no square leading wall. Their nose rises from the
@@ -128,7 +135,7 @@ function heightProfile(label,t,height){
 
 function addRampPart(scene,item,spec,part,index,options={}){
   let [offset,length,label]=part,width=Number(spec.width||2.4),height=Number(spec.partHeights?.[index]??spec.height??.04);
-  let segments=/EGG|WEDGE/i.test(label)?28:/ROLLER|RIPPLE/i.test(label)?18:8,topRows=[];
+  let segments=/EGG|WEDGE|BROAD RAMP/i.test(label)?28:/ROLLER|RIPPLE/i.test(label)?18:8,topRows=[];
   let shadowShift=height*.62,shadowLift=.034;
   scene.polygons.push(polygon([
     add(localPoint(item,offset,-width/2,shadowLift),vec(shadowShift,shadowShift*.48,0)),
