@@ -64,6 +64,9 @@ function configurePhysics(){
 }
 function addLapPreview(){
   const panel=viewer.container,lapSeconds=15.6;
+  const livery={color:'#a8ef27'};
+  const avatar=avatarThumbnailPath(avatarManifest,'MATTHEW-HODGES','2-Wheel Drive Buggy');
+  if(avatar)loadAvatarColours(avatar).then(profile=>Object.assign(livery,profile)).catch(()=>{});
   const button=document.createElement('button'),hit=document.createElement('button');
   button.type=hit.type='button';
   button.style.cssText='position:absolute;bottom:max(12px,env(safe-area-inset-bottom));left:12px;z-index:30;padding:9px 14px;background:#102219;color:white;border:2px solid white;border-radius:8px;cursor:pointer';
@@ -97,7 +100,7 @@ function addLapPreview(){
     const fraction=(lo+(target-times[lo])/weights[lo])/count;
     const point=viewer.routeAt(fraction),speed=length*total/(count*lapSeconds*weights[lo]);
     const delta=.22/viewer.scene.routeLength,angle=Math.atan2(lift(fraction+delta,speed)-lift(fraction-delta,speed),.44);
-    const car={id:'lap-preview',number:1,vehicleType:'buggy',color:'#a8ef27',fraction,x:point.x,y:point.y,z:.035+lift(fraction,speed),yaw:Math.atan2(point.ty,point.tx),pitch:Math.max(-.35,Math.min(.35,angle)),length:1.02,width:.66,height:.33};
+    const car={id:'lap-preview',number:1,vehicleType:'buggy',...livery,fraction,x:point.x,y:point.y,z:.035+lift(fraction,speed),yaw:Math.atan2(point.ty,point.tx),pitch:Math.max(-.35,Math.min(.35,angle)),length:1.02,width:.66,height:.33};
     viewer.setCars([car]);
     const camera=viewer.camera(),screen=viewer.project({...car,z:car.z+.16},camera);
     hit.hidden=!screen;
