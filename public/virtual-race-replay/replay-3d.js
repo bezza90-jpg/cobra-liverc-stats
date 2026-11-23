@@ -10,6 +10,7 @@ const $=id=>document.getElementById(id);
 const palette=['#85ed40','#56d7ff','#ffca53','#ff7eb1','#c0a2ff','#ff9868','#58e3bb','#e6ebed','#ddea62','#5a92ff','#ff5656','#cda47b'];
 const clock=seconds=>`${Math.floor(seconds/60)}:${(seconds%60).toFixed(1).padStart(4,'0')}`;
 const params=new URLSearchParams(location.search);if(document.body.dataset.trackEvent&&!params.has('event'))params.set('event',document.body.dataset.trackEvent);if(document.body.dataset.trackMode==='flyover'&&!params.has('flyover'))params.set('flyover','track');
+if(document.body.dataset.trackMode==='explore'&&!params.has('explore'))params.set('explore','track');
 const trackFlyoverMode=params.get('flyover')==='track',raceFlyoverMode=params.get('flyover')==='race',trackExploreMode=params.get('explore')==='track',trackOnlyMode=trackFlyoverMode||trackExploreMode,autoPlay=params.get('autoplay')==='1';
 const galleryFlyoverMode=trackFlyoverMode||raceFlyoverMode;
 const currentMotionEvents=new Set(['518554','518555']);
@@ -205,7 +206,23 @@ async function start(){
     const measured=!design.flatReplay;$('physicsStatus').textContent=measured?'Measured ramps · gravity 9.81 m/s²':'Flat replay · no inferred jumps';
     $('replayMethod').innerHTML=measured?'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times. Their position between timing-loop crossings is estimated along the confirmed Track Designer centre line. Ramp heights are measured; airborne motion uses gravity at 9.81 m/s².':'Choose a driver above, then press <strong>Follow selected car</strong> in the 3D viewer. Cars use their recorded lap times and follow the confirmed event route. This plan does not contain measured ramp positions, so the replay deliberately keeps the cars on the flat circuit.';
     viewer=window.CobraTrack3D.mount($('viewer'),{design,heightScale:1,view:'3d',zoom:1.35,carLabels:!trackOnlyMode,flyover:trackFlyoverMode,trackOnly:trackOnlyMode});if(!galleryFlyoverMode&&!trackOnlyMode)document.body.classList.add('mobile-replay-minimal');addViewerReplayControls();if(!trackOnlyMode){addLiveTiming();placeYouTubeLink();}configurePhysics();
-    if(trackOnlyMode){$('back2d').href='../track-gallery/?event='+eventId;$('back2d').textContent='← Track gallery';document.body.classList.add('track-only-mode');viewer.container.classList.add('c3-track-only');$('raceSelect').closest('label').hidden=true;$('focus').closest('label').hidden=true;$('official').hidden=true;$('youtube').hidden=true;document.querySelector('.replay-controls').hidden=true;document.querySelector('.race-order').hidden=true;$('replayMethod').hidden=true;viewer.container.querySelector('[data-replay-controls]').hidden=true;const mobileReplayBar=viewer.container.querySelector('.c3-mobile-replay-bar');if(trackExploreMode)mobileReplayBar.hidden=true;else{mobileReplayBar.classList.add('c3-flyover-menu-only');mobileReplayBar.querySelector('[data-mobile-replay-play]').hidden=true;}viewer.container.querySelector('[data-action="car-labels"]').hidden=true;const flyoverButton=viewer.container.querySelector('[data-action="flyover"]');if(trackExploreMode)flyoverButton.hidden=true;else flyoverButton.textContent='Track flyover';}
+    if(trackExploreMode){
+      const panel=viewer.container;
+      panel.classList.add('c3-fallback-fullscreen');
+      document.body.classList.add('c3-fullscreen-open');
+      viewer.updateFullscreenButton();
+      const exit=document.createElement('button');
+      exit.type='button';
+      exit.textContent='Exit full screen';
+      exit.className='track-preview-exit';
+      exit.addEventListener('click',()=>viewer.toggleFullscreen());
+      panel.prepend(exit);
+      document.addEventListener('keydown',event=>{
+        if(event.key==='Escape'&&!document.fullscreenElement&&panel.classList.contains('c3-fallback-fullscreen'))exit.click();
+      });
+      requestAnimationFrame(()=>viewer.resize());
+    }
+    if(trackOnlyMode){$('back2d').href='../track-gallery/?event='+eventId;$('back2d').textContent='← Track gallery';document.body.classList.add('track-only-mode');viewer.container.classList.add('c3-track-only');$('raceSelect').closest('label').hidden=true;$('focus').closest('label').hidden=true;$('official').hidden=true;$('youtube').hidden=true;document.querySelector('.replay-controls').hidden=true;document.querySelector('.race-order').hidden=true;$('replayMethod').hidden=true;viewer.container.querySelector('[data-replay-controls]').hidden=true;const mobileReplayBar=viewer.container.querySelector('.c3-mobile-replay-bar');{mobileReplayBar.classList.add('c3-flyover-menu-only');mobileReplayBar.querySelector('[data-mobile-replay-play]').hidden=true;}viewer.container.querySelector('[data-action="car-labels"]').hidden=true;const flyoverButton=viewer.container.querySelector('[data-action="flyover"]');if(trackExploreMode)flyoverButton.hidden=true;else flyoverButton.textContent='Track flyover';}
     $('raceSelect').disabled=false;if(!trackOnlyMode)await loadRace(initial);if(trackFlyoverMode){resetFlyoverViewport();requestAnimationFrame(()=>requestAnimationFrame(resetFlyoverViewport));}if(raceFlyoverMode&&!trackOnlyMode){viewer.startFlyover(true);resetFlyoverViewport();requestAnimationFrame(()=>requestAnimationFrame(resetFlyoverViewport));}if(autoPlay&&!trackOnlyMode)setPlaying(true);if(trackOnlyMode){$('raceTitle').textContent=trackFlyoverMode?'Automatic flyover of the measured track · no cars shown':'Drag to rotate · right-drag to pan · scroll to zoom · no cars shown';$('status').textContent=trackFlyoverMode?'Track flyover running':'Explore the track from any angle';}
   }catch(error){$('status').textContent=error.message;$('status').className='error';console.error(error);}
 }

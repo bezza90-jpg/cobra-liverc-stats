@@ -58,3 +58,6 @@
 #viewer .c3-replay-controls label:has([data-replay-focus]){grid-column:1/-1}
 #viewer:fullscreen .c3-replay-controls,#viewer.c3-fallback-fullscreen .c3-replay-controls{order:21;position:static}
 }
+
+.track-preview-exit{display:none}
+.cobra3d.c3-fallback-fullscreen>.track-preview-exit,.cobra3d:fullscreen>.track-preview-exit{display:block;position:absolute;top:auto;bottom:max(12px,env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right));z-index:30;min-height:44px;padding:8px 16px;border:2px solid white;border-radius:8px;background:#11251a;color:white;font-weight:700;cursor:pointer}
