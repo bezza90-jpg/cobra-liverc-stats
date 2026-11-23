@@ -110,8 +110,8 @@ function localPoint(item,x,y,z){let angle=(Number(item.angle)||0)*Math.PI/180,c=
 function heightProfile(label,t,height){
   label=String(label).toUpperCase();
   if(label==='BROAD RAMP'){
-    // The long approach crests roughly three quarters of the way across the board.
-    const crest=.75, u=t<=crest?t/crest:(1-t)/(1-crest);
+    // The crest faces the incoming kicker, followed by the long landing slope.
+    const crest=.25, u=t<=crest?t/crest:(1-t)/(1-crest);
     return height*u*u*(3-2*u);
   }
   if(label.includes('TRIPLE')||label.includes('RIPPLE'))return height*Math.pow(Math.sin(t*Math.PI*3),2);

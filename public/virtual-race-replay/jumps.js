@@ -67,7 +67,7 @@ function surfaceProfile(name,t){
  if(name.includes('ground'))return 0;
  if(name.includes('tabletop')&&name.includes('up'))return 1-Math.cos(t*Math.PI/2);
  if(name.includes('tabletop')&&name.includes('down'))return Math.cos(t*Math.PI/2);
- if(name==='broad-ramp')return smooth(t<=.75?t/.75:(1-t)/.25);
+ if(name==='broad-ramp')return smooth(t<=.25?t/.25:(1-t)/.75);
  if(name.includes('roller-launch'))return Math.sin(t*Math.PI/2);
  if(name.includes('triple')||name.includes('ripple'))return Math.sin(t*Math.PI*3)**2;
  if(name.includes('roller'))return Math.sin(t*Math.PI);
