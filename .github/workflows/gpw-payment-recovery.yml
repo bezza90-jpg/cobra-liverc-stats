@@ -23,9 +23,10 @@ jobs:
           const response = await fetch('https://booking.cobracardiff.co.uk/api/gpw-payment-recovery', {
             method: 'POST',
             redirect: 'error',
-            headers: { authorization: 'Bearer ' + process.env.GPW_RECOVERY_TOKEN },
+            headers: { 'x-cobra-gpw-recovery': process.env.GPW_RECOVERY_TOKEN },
             signal: AbortSignal.timeout(180000)
           });
+          if (!response.headers.get('content-type')?.includes('application/json')) throw Error('GPW recovery returned HTTP ' + response.status);
           const summary = await response.json();
           console.log({ checked: summary.checked, paid: summary.paid, emailsSent: summary.emailsSent, needsReview: summary.needsReview });
           if (!response.ok || summary.needsReview !== 0) throw Error('GPW recovery needs attention.');
