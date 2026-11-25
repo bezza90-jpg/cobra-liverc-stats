@@ -61,3 +61,22 @@
 
 .track-preview-exit{display:none}
 .cobra3d.c3-fallback-fullscreen>.track-preview-exit,.cobra3d:fullscreen>.track-preview-exit{display:block;position:absolute;top:auto;bottom:max(12px,env(safe-area-inset-bottom));right:max(12px,env(safe-area-inset-right));z-index:30;min-height:44px;padding:8px 16px;border:2px solid white;border-radius:8px;background:#11251a;color:white;font-weight:700;cursor:pointer}
+/* Give the mobile controls their own layer above the track and its timing overlays. */
+@media (max-width: 720px), (orientation: landscape) and (max-height: 520px) and (max-width: 1024px) {
+  #viewer.cobra3d { isolation: isolate; }
+  #viewer > .c3-canvas-wrap { z-index: 0; }
+  #viewer > .c3-mobile-replay-bar { position: relative; z-index: 2; }
+  #viewer.c3-mobile-controls-open:is(:fullscreen, .c3-fallback-fullscreen) > .c3-toolbar,
+  :is(.mobile-replay-minimal, .race-flyover-mode) #viewer.c3-mobile-controls-open > .c3-toolbar {
+    display: grid;
+    position: absolute;
+    inset: 57px 0 auto;
+    z-index: 1;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100% - 57px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    background: #102219;
+  }
+}
