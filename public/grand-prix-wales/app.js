@@ -1,5 +1,5 @@
 const PUBLIC_ENTRIES_URL='https://grand-prix-wales-entries.bezza90.chatgpt.site/api/public-entries';
-const GPW_CAPACITY_URL='data/capacity.json';
+const GPW_CAPACITY_URL='https://booking.cobracardiff.co.uk/api/gpw-capacity';
 let entryAvatarPreview;
 let confirmedEntries=[];
 let confirmedClassRemaining={};
@@ -84,17 +84,30 @@ const avatarManifestPromise=fetch('../data/car-avatars.json',{cache:'no-cache'})
 avatarManifestPromise.then(manifest=>{confirmedAvatarManifest=manifest;if(confirmedEntries.length)renderConfirmedEntries()});
 
 async function loadClassCapacity() {
+  let remaining = {};
   try {
-    const response = await fetch(GPW_CAPACITY_URL, {cache:'no-cache'});
-    if (!response.ok) return;
-    const data = await response.json();
-    if (!data?.remaining || JSON.stringify(data.remaining) === JSON.stringify(confirmedClassRemaining)) return;
-    confirmedClassRemaining = data.remaining;
-    renderConfirmedEntries();
-  } catch {}
+    const response = await fetch(GPW_CAPACITY_URL, {cache:'no-store', signal:AbortSignal.timeout(15000)});
+    if (response.ok) {
+      const data = await response.json();
+      for (const name of GPW_CLASSES) {
+        const count = data.remaining?.[name];
+        if (Number.isSafeInteger(count) && count >= 0) remaining[name] = count;
+      }
+    }
+  } catch {
+    // Missing live stock is shown as unavailable until the next successful check.
+  }
+  if (JSON.stringify(remaining) !== JSON.stringify(confirmedClassRemaining)) {
+    confirmedClassRemaining = remaining;
+    for (const card of document.querySelectorAll('#entryClasses .entry-class-card')) {
+      const name = card.dataset.class;
+      const meter = card.querySelector('.entry-capacity');
+      if (meter) meter.outerHTML = capacityMeter(name, confirmedEntries.filter(entry => entry.className === name).length);
+    }
+  }
+  setTimeout(loadClassCapacity, 60000);
 }
 loadClassCapacity();
-setInterval(loadClassCapacity, 60000);
 
 async function loadConfirmedEntries(){
   const message=document.querySelector('#entryMessage'),classes=document.querySelector('#entryClasses');
