@@ -109,7 +109,9 @@ test('expanded lap details prefetch their exact full chart page', async () => {
   assert.match(app, /link\.rel = 'prefetch'/);
   assert.match(app, /link\.as = 'document'/);
   assert.match(app, /prefetchFullLapChart\(raceId, driverKey\)/);
-  assert.match(html, /lap-charts\.js\?v=20261024-linked-laps/);
+  const modulePath = app.match(/from '\.\/(lap-charts\.js[^']*)'/)?.[1];
+  assert.ok(modulePath, 'statistics must import the chart module');
+  assert.ok(html.includes(`rel="modulepreload" href="assets/${modulePath}"`), 'preload must match the actual chart import');
 });
 
 test('Pages builds keep chart previews within a compact budget and remove stale output', async () => {
