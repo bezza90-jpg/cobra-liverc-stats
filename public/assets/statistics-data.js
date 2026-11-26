@@ -4,7 +4,7 @@ export async function loadStatisticsData(fetcher = fetch) {
     .then(response => response.ok ? response.json() : { videos: [] })
     .then(data => data.videos || [])
     .catch(() => []);
-  const response = await fetcher('data/dashboard.json', { cache: 'no-cache' });
+  const response = await fetcher('data/dashboard.json', { priority: 'high' });
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return { data: await response.json(), videosReady };
 }

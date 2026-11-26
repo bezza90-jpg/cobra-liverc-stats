@@ -2,7 +2,7 @@ import {fullRaceResult,bindFullRaceResult} from './race-result-view.js?v=2026110
 import {canonicalDriverKey} from './driver-identity.js';
 import {createAvatarLoader} from './avatar-loader.js';
 import {trackerDrivers} from './tracker-priority.js';
-import {getPageStatistics} from './statistics-data.js?v=20261122-early';
+import {getPageStatistics} from './statistics-data.js?v=20261126-archive';
 import {averageLapText, fastestLapText} from './lap-result-format.js';
 import {potentialRun} from './potential-run.js';
 import {chartShareUrl, facebookShareLink, lapLineColour, lapPerformanceClass, renderLapCharts} from './lap-charts.js?v=20261026-native-share';
