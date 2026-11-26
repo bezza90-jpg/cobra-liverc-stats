@@ -2546,7 +2546,8 @@ async function init() {
         const detailRow = groupButton.closest('tr')?.nextElementSibling;
         if (!detailRow?.classList.contains('driver-races-detail-row')) return;
         const opening = detailRow.hidden;
-        if (opening && detailRow.dataset.loaded !== 'true') {
+        // Only full-profile meeting rows are populated on demand. Leaderboard rows already contain their races.
+        if (opening && detailRow.dataset.eventId && detailRow.dataset.loaded !== 'true') {
           const profile = state.profileEvidence;
           const eventId = detailRow.dataset.eventId;
           const className = detailRow.dataset.className;
