@@ -159,3 +159,13 @@ test('paid SWORD reserve tickets publish class details without increasing public
   assert.deepEqual(ticketLimitsFromDefinitions(tickets),{'4-Wheel Drive Buggy':25});
   assert.deepEqual(reserveTicketsFromDefinitions(tickets),{'4-Wheel Drive Buggy':['normal']});
 });
+
+test('club-day ticket titles use the selections on the ticket holder form',()=>{
+  const run=(name,classes)=>publicEntries(attendingGuest,{status:'PAID',tickets:[{...ticket,name,guestDetails:{form:{inputValues:[{inputName:'choices',values:classes}]}}}]},{'Classes to enter':'choices'}).map(row=>row.className);
+  assert.deepEqual(run('Adult \u2014 Two Classes',['2WD','4WD']),['2-Wheel Drive Buggy','4-Wheel Drive Buggy']);
+  assert.throws(()=>run('Adult \u2014 Two Classes',['4WD','4WD']),/incomplete/);
+  assert.throws(()=>run('Adult \u2014 Two Classes',['Vintage']),/incomplete/);
+  assert.deepEqual(run('Adult \u2014 One Class',['Vintage']),['Vintage']);
+  assert.throws(()=>run('Adult \u2014 One Class',['2WD','Vintage']),/incomplete/);
+  assert.deepEqual(run('Junior Driver',[]),['Junior Racers']);
+});

@@ -63,9 +63,11 @@ export function publicEntries(guest,order,mapping) {
   // increase public capacity or replace the normal ticket IDs in the feed.
   const reserveMatch=/^(2WD|4WD|Junior) SWORD Reserve (Entry|Pool)$/.exec(ticketName);
   const reserveBase=reserveMatch ? reserveMatch[1]+' Entry' : ''; 
-  const definition=TICKETS[ticketName] || TICKETS[reserveBase];
+  const definition=TICKETS[ticketName] || TICKETS[reserveBase] || (ticketName==='Junior Driver' ? TICKETS['Junior Entry'] : undefined);
   let definitions=definition ? [definition] : [];
-  if (ticketName==='Adult Double Class') {
+  const driverName=publicDriverName(details.firstName,details.lastName);
+  const single=ticketName==='Adult \u2014 One Class';
+  if (single || ticketName==='Adult Double Class' || ticketName==='Adult \u2014 Two Classes') {
     const selected=String(values[mapping['Classes to enter'] || 'Classes to enter'] || '').split(/[,;\n]+/).map(value=>value.trim()).filter(Boolean);
     const classDefinitions={'2WD':TICKETS['2WD Entry'],'4WD':TICKETS['4WD Entry'],'VINTAGE':TICKETS['Vintage Entry'],'TRUCKS':TICKETS['Mother Trucker Entry']};
     definitions=selected.map(value=>{
@@ -73,10 +75,18 @@ export function publicEntries(guest,order,mapping) {
       const aliases={'2-WHEEL DRIVE BUGGY':'2WD','4-WHEEL DRIVE BUGGY':'4WD','2WD ENTRY':'2WD','4WD ENTRY':'4WD','VINTAGE ENTRY':'VINTAGE','TRUCK':'TRUCKS','MOTHER TRUCKER ENTRY':'TRUCKS','MOTHER TRUCKERS ENTRY':'TRUCKS'};
       return classDefinitions[aliases[name] || name];
     });
-    if (definitions.length!==2 || definitions.some(value=>!value) || definitions[0][0]===definitions[1][0]) throw Error('A paid double-class ticket has incomplete or unrecognised class selections; retaining the published roster.');
+    const names=definitions.map(item=>item?.[0]);
+    // These legacy one-class forms already have both entries confirmed by Race Control.
+    // Scope the exception to the verified event, driver and exact pair of classes.
+    const legacyPair=order.eventId==='9147a804-de9d-4d34-b73e-8138a2d3ab43' && single &&
+      ((driverName==='JAMIE DAVIES' && names.includes('Vintage')) ||
+       (driverName==='MARTYN HADLEY' && names.includes('Trucks'))) && names.includes('2-Wheel Drive Buggy');
+    const expectedCount=single && !legacyPair ? 1 : 2;
+    if (names.length!==expectedCount || names.includes(undefined) || new Set(names).size!==expectedCount) {
+      throw Error('A paid class ticket has incomplete or unrecognised class selections; retaining the published roster.');
+    }
   }
   if (!definitions.length) throw Error('Unrecognised attending paid Wix ticket type: '+ticketName+'; retaining the published roster.');
-  const driverName=publicDriverName(details.firstName,details.lastName);
   if (!driverName) throw Error('An attending paid ticket has incomplete driver details; retaining the published roster.');
   return definitions.map(([className,label,chassisLabel])=>{
     const number=values[mapping[label] || label] || '';
