@@ -3,8 +3,69 @@
   "wixEventId": "9147a804-de9d-4d34-b73e-8138a2d3ab43",
   "eventTitle": "Club Day 29th November 2026",
   "eventDate": "2026-11-29",
-  "updatedAt": "2026-11-02T02:17:10.962Z",
+  "updatedAt": "2026-11-26T22:39:52.847Z",
   "ticketLimits": {},
   "reserveTicketDefinitionIds": {},
-  "entries": []
+  "entries": [
+    {
+      "driverName": "BEN SMITH",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "GRAHAM KEEP",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "JAMIE DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "MARTYN HADLEY",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "SIMON HALL",
+      "className": "2-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "BEN SMITH",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "GRAHAM KEEP",
+      "className": "4-Wheel Drive Buggy",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "COHEN M.",
+      "className": "Junior Racers",
+      "chassis": "R1 Wurks"
+    },
+    {
+      "driverName": "DANIEL H.",
+      "className": "Junior Racers",
+      "chassis": "Schumacher"
+    },
+    {
+      "driverName": "NOAH M.",
+      "className": "Junior Racers",
+      "chassis": "Team Associated"
+    },
+    {
+      "driverName": "MARTYN HADLEY",
+      "className": "Trucks",
+      "chassis": "XRay"
+    },
+    {
+      "driverName": "JAMIE DAVIES",
+      "className": "Vintage",
+      "chassis": "Yokomo"
+    }
+  ]
 }
