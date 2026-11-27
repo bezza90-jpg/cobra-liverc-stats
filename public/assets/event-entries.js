@@ -430,11 +430,6 @@ if (roots.length) {
   const optionalData = (path, cache = 'no-cache') =>
     fetch(path, {cache}).then(response => response.ok ? response.json() : {}).catch(() => ({}));
   const assetsReady = Promise.all([
-    fetch(fresh('../data/next-event-entries.json'), {cache:'no-store'}).then(response => {
-      if (!response.ok) throw Error('Entries unavailable');
-      return response.json();
-    }),
-    optionalData(fresh('../data/wix-current-event-entries.json'), 'no-store'),
     optionalData('../data/car-avatar-driver-aliases.json'),
     optionalData(fresh('../data/event-capacities.json'), 'no-store'),
     optionalData('../data/car-avatars.json'),
@@ -444,19 +439,26 @@ if (roots.length) {
   ]);
   roots.forEach(root => {
     Promise.all([getPublicMeetingEntries(expectedType(root)), assetsReady]).then(([
-      {calendar, meeting, live}, [data, wix, aliases, capacity, avatars, revisions, confirmed, publicAvatars]
+      {calendar, meeting, live}, [aliases, capacity, avatars, revisions, confirmed, publicAvatars]
     ]) => {
-      const currentPage = location.pathname.replace(/\/+$/, '').endsWith('/event');
-      if (currentPage && (!meeting || live?.active !== true || live.date !== meeting.date ||
-          live.type !== meeting.type || !Array.isArray(live.entries))) {
+      const {activeChampionshipSeason, currentChampionshipSeason} = document.body.dataset;
+      if (activeChampionshipSeason && currentChampionshipSeason && activeChampionshipSeason !== currentChampionshipSeason) {
+        root.hidden = true;
+        return;
+      }
+      if (!meeting || live?.active !== true || live.date !== meeting.date ||
+          live.type !== meeting.type || !Array.isArray(live.entries)) {
         showEntriesUnavailable(root);
         return;
       }
-      // The current event uses the live confirmed roster, including when it is empty.
-      const identifiedData = {...data, entries:currentPage ? [] : (data.entries || []).map(entry => entryIdentity(entry, aliases))};
-      const bookingData = live?.active ? {...live, eventDate:live.date, updatedAt:new Date().toISOString()} : wix;
-      const identifiedWix = {...bookingData, entries:(bookingData.entries || []).map(entry => entryIdentity(entry, aliases))};
-      const combined = applyConfirmedChassis(entriesForMeeting(identifiedData, identifiedWix, meeting), confirmed);
+      const entries = live.entries.map(row => {
+        const entry = entryIdentity(row, aliases);
+        const label = String(entry.className || '').trim();
+        const className = /^(junior|juniors|junior racers)$/i.test(label) ? 'Junior Racers' : avatarClassName(label);
+        return {...entry, className};
+      });
+      const bookings = {...live, entries, eventDate:live.date, updatedAt:live.updatedAt || new Date().toISOString()};
+      const combined = applyConfirmedChassis(entriesForMeeting({}, bookings, meeting), confirmed);
       render(root, combined, capacity, calendar, avatars, revisions, publicAvatars);
     }).catch(() => showEntriesUnavailable(root));
   });
