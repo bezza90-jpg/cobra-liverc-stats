@@ -452,7 +452,8 @@ if (roots.length) {
         showEntriesUnavailable(root);
         return;
       }
-      const identifiedData = {...data, entries:(data.entries || []).map(entry => entryIdentity(entry, aliases))};
+      // The current event uses the live confirmed roster, including when it is empty.
+      const identifiedData = {...data, entries:currentPage ? [] : (data.entries || []).map(entry => entryIdentity(entry, aliases))};
       const bookingData = live?.active ? {...live, eventDate:live.date, updatedAt:new Date().toISOString()} : wix;
       const identifiedWix = {...bookingData, entries:(bookingData.entries || []).map(entry => entryIdentity(entry, aliases))};
       const combined = applyConfirmedChassis(entriesForMeeting(identifiedData, identifiedWix, meeting), confirmed);
