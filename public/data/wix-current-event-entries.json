@@ -45,12 +45,14 @@
     {
       "driverName": "COHEN M.",
       "className": "Junior Racers",
-      "chassis": "R1 Wurks"
+      "chassis": "R1 Wurks",
+      "avatarRef": "8a01ee4dded4e1d95301"
     },
     {
       "driverName": "DANIEL H.",
       "className": "Junior Racers",
-      "chassis": "Schumacher"
+      "chassis": "Schumacher",
+      "avatarRef": "610d2c8bf9464b9d21e1"
     },
     {
       "driverName": "NOAH M.",
