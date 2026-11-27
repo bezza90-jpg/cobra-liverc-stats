@@ -4,6 +4,102 @@
   "date": "2026-11-29",
   "type": "club",
   "sourceUrl": "https://cobracardiff.liverc.com/results/?p=view_event&id=518557",
-  "updatedAt": "2026-11-26T22:40:48.808Z",
-  "entries": []
+  "updatedAt": "2026-11-27T01:22:40.798Z",
+  "entries": [
+    {
+      "driverKey": "BEN-SMITH",
+      "driverName": "BEN SMITH",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "GRAHAM-KEEP",
+      "driverName": "GRAHAM KEEP",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "JAMIE-DAVIES",
+      "driverName": "JAMIE DAVIES",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "XRay",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MARTYN-HADLEY",
+      "driverName": "MARTYN HADLEY",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "XRay",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "SIMON-HALL",
+      "driverName": "SIMON HALL",
+      "className": "2-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "BEN-SMITH",
+      "driverName": "BEN SMITH",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "GRAHAM-KEEP",
+      "driverName": "GRAHAM KEEP",
+      "className": "4-Wheel Drive Buggy",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverName": "COHEN M.",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "R1 Wurks",
+      "chassisSource": "wix",
+      "avatarRef": "8a01ee4dded4e1d95301"
+    },
+    {
+      "driverName": "DANIEL H.",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Schumacher",
+      "chassisSource": "wix",
+      "avatarRef": "610d2c8bf9464b9d21e1"
+    },
+    {
+      "driverName": "NOAH M.",
+      "className": "Junior Racers",
+      "countryCode": "GB",
+      "chassis": "Team Associated",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "MARTYN-HADLEY",
+      "driverName": "MARTYN HADLEY",
+      "className": "Trucks",
+      "countryCode": "GB",
+      "chassis": "XRay",
+      "chassisSource": "wix"
+    },
+    {
+      "driverKey": "JAMIE-DAVIES",
+      "driverName": "JAMIE DAVIES",
+      "className": "Vintage",
+      "countryCode": "GB",
+      "chassis": "Yokomo",
+      "chassisSource": "wix"
+    }
+  ]
 }
