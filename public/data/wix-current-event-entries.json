@@ -3,7 +3,7 @@
   "wixEventId": "9147a804-de9d-4d34-b73e-8138a2d3ab43",
   "eventTitle": "Club Day 29th November 2026",
   "eventDate": "2026-11-29",
-  "updatedAt": "2026-11-27T01:57:28.779Z",
+  "updatedAt": "2026-11-27T10:42:03.374Z",
   "ticketLimits": {},
   "reserveTicketDefinitionIds": {},
   "entries": [
@@ -45,14 +45,12 @@
     {
       "driverName": "COHEN M.",
       "className": "Junior Racers",
-      "chassis": "R1 Wurks",
-      "avatarRef": "8a01ee4dded4e1d95301"
+      "chassis": "R1 Wurks"
     },
     {
       "driverName": "DANIEL H.",
       "className": "Junior Racers",
-      "chassis": "Schumacher",
-      "avatarRef": "610d2c8bf9464b9d21e1"
+      "chassis": "Schumacher"
     },
     {
       "driverName": "NOAH M.",
